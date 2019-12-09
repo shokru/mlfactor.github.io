@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Machine Learning for Factor Investing</title>
+  <meta name="description" content="Machine Learning for Factor Investing">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  
+  
+  
+
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="interp.html">
+<link rel="next" href="unsup.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="preface.html"><a href="preface.html#foreword"><i class="fa fa-check"></i><b>1.1</b> Foreword</a></li>
+<li class="chapter" data-level="1.2" data-path="preface.html"><a href="preface.html#what-this-book-is-not-about"><i class="fa fa-check"></i><b>1.2</b> What this book is not about</a></li>
+<li class="chapter" data-level="1.3" data-path="preface.html"><a href="preface.html#the-targeted-audience"><i class="fa fa-check"></i><b>1.3</b> The targeted audience</a></li>
+<li class="chapter" data-level="1.4" data-path="preface.html"><a href="preface.html#how-this-book-is-structured"><i class="fa fa-check"></i><b>1.4</b> How this book is structured</a></li>
+<li class="chapter" data-level="1.5" data-path="preface.html"><a href="preface.html#companion-website"><i class="fa fa-check"></i><b>1.5</b> Companion website</a></li>
+<li class="chapter" data-level="1.6" data-path="preface.html"><a href="preface.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="preface.html"><a href="preface.html#coding-instructions"><i class="fa fa-check"></i><b>1.7</b> Coding instructions</a></li>
+<li class="chapter" data-level="1.8" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i><b>1.8</b> Acknowledgements</a></li>
+<li class="chapter" data-level="1.9" data-path="preface.html"><a href="preface.html#future-developments"><i class="fa fa-check"></i><b>1.9</b> Future developments</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="notdata.html"><a href="notdata.html"><i class="fa fa-check"></i><b>2</b> Notations and data</a><ul>
+<li class="chapter" data-level="2.1" data-path="notdata.html"><a href="notdata.html#notations"><i class="fa fa-check"></i><b>2.1</b> Notations</a></li>
+<li class="chapter" data-level="2.2" data-path="notdata.html"><a href="notdata.html#dataset"><i class="fa fa-check"></i><b>2.2</b> Dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>3</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1" data-path="intro.html"><a href="intro.html#context"><i class="fa fa-check"></i><b>3.1</b> Context</a></li>
+<li class="chapter" data-level="3.2" data-path="intro.html"><a href="intro.html#portfolio-construction-the-workflow"><i class="fa fa-check"></i><b>3.2</b> Portfolio construction: the workflow</a></li>
+<li class="chapter" data-level="3.3" data-path="intro.html"><a href="intro.html#machine-learning-is-no-magic-wand"><i class="fa fa-check"></i><b>3.3</b> Machine Learning is no Magic Wand</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="factor.html"><a href="factor.html"><i class="fa fa-check"></i><b>4</b> Factor investing and asset pricing anomalies</a><ul>
+<li class="chapter" data-level="4.1" data-path="factor.html"><a href="factor.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="factor.html"><a href="factor.html#detecting-anomalies"><i class="fa fa-check"></i><b>4.2</b> Detecting anomalies</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>4.2.1</b> Simple portfolio sorts</a></li>
+<li class="chapter" data-level="4.2.2" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>4.2.2</b> Factors</a></li>
+<li class="chapter" data-level="4.2.3" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>4.2.3</b> Predictive regressions, sorts, and p-value issues</a></li>
+<li class="chapter" data-level="4.2.4" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>4.2.4</b> Fama-Macbeth regressions</a></li>
+<li class="chapter" data-level="4.2.5" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>4.2.5</b> Factor competition</a></li>
+<li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.4</b> The link with machine learning</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.4.1</b> A short list of recent references</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.4.2</b> Explicit connexions with asset pricing models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>4.5</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="Data.html"><a href="Data.html"><i class="fa fa-check"></i><b>5</b> Data preprocessing</a><ul>
+<li class="chapter" data-level="5.1" data-path="Data.html"><a href="Data.html#know-your-data"><i class="fa fa-check"></i><b>5.1</b> Know your data</a></li>
+<li class="chapter" data-level="5.2" data-path="Data.html"><a href="Data.html#missing-data"><i class="fa fa-check"></i><b>5.2</b> Missing data</a></li>
+<li class="chapter" data-level="5.3" data-path="Data.html"><a href="Data.html#outlier-detection"><i class="fa fa-check"></i><b>5.3</b> Outlier detection</a></li>
+<li class="chapter" data-level="5.4" data-path="Data.html"><a href="Data.html#feateng"><i class="fa fa-check"></i><b>5.4</b> Feature engineering</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="Data.html"><a href="Data.html#feature-selection"><i class="fa fa-check"></i><b>5.4.1</b> Feature selection</a></li>
+<li class="chapter" data-level="5.4.2" data-path="Data.html"><a href="Data.html#scaling"><i class="fa fa-check"></i><b>5.4.2</b> Scaling the predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="Data.html"><a href="Data.html#labelling"><i class="fa fa-check"></i><b>5.5</b> Labelling</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="Data.html"><a href="Data.html#simple-labels"><i class="fa fa-check"></i><b>5.5.1</b> Simple labels</a></li>
+<li class="chapter" data-level="5.5.2" data-path="Data.html"><a href="Data.html#categorical-labels"><i class="fa fa-check"></i><b>5.5.2</b> Categorical labels</a></li>
+<li class="chapter" data-level="5.5.3" data-path="Data.html"><a href="Data.html#the-triple-barrier-method"><i class="fa fa-check"></i><b>5.5.3</b> The triple barrier method</a></li>
+<li class="chapter" data-level="5.5.4" data-path="Data.html"><a href="Data.html#filtering-the-sample"><i class="fa fa-check"></i><b>5.5.4</b> Filtering the sample</a></li>
+<li class="chapter" data-level="5.5.5" data-path="Data.html"><a href="Data.html#horizons"><i class="fa fa-check"></i><b>5.5.5</b> Return horizons</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Discussion on persistence</a></li>
+<li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macro-economic-variables"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#code-and-results"><i class="fa fa-check"></i><b>5.8</b> Code and results</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
+<li class="chapter" data-level="5.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>5.8.2</b> Impact of rescaling: toy example</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#simple-regressions"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
+<li class="chapter" data-level="6.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>6.1.2</b> Forms of penalizations</a></li>
+<li class="chapter" data-level="6.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>6.1.3</b> Illustrations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="lasso.html"><a href="lasso.html#sparse-hedging-for-minimum-variance-portfolios"><i class="fa fa-check"></i><b>6.2</b> Sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="lasso.html"><a href="lasso.html#presentation-and-derivations"><i class="fa fa-check"></i><b>6.2.1</b> Presentation and derivations</a></li>
+<li class="chapter" data-level="6.2.2" data-path="lasso.html"><a href="lasso.html#sparseex"><i class="fa fa-check"></i><b>6.2.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="lasso.html"><a href="lasso.html#predictive-regressions"><i class="fa fa-check"></i><b>6.3</b> Predictive regressions</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="lasso.html"><a href="lasso.html#literature-review-and-principle"><i class="fa fa-check"></i><b>6.3.1</b> Literature review and principle</a></li>
+<li class="chapter" data-level="6.3.2" data-path="lasso.html"><a href="lasso.html#code-and-results-1"><i class="fa fa-check"></i><b>6.3.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="lasso.html"><a href="lasso.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>7</b> Tree-based methods</a><ul>
+<li class="chapter" data-level="7.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>7.1</b> Simple trees</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>7.1.1</b> Principle</a></li>
+<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#further-details-on-classification"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
+<li class="chapter" data-level="7.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>7.1.3</b> Pruning criteria</a></li>
+<li class="chapter" data-level="7.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>7.1.4</b> Code and interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>7.2</b> Random forests</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
+<li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-2"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#boosted-trees-adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
+<li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="trees.html"><a href="trees.html#boosted-trees-extreme-gradient-boosting"><i class="fa fa-check"></i><b>7.4</b> Boosted trees: extreme gradient boosting</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="trees.html"><a href="trees.html#managing-loss"><i class="fa fa-check"></i><b>7.4.1</b> Managing Loss</a></li>
+<li class="chapter" data-level="7.4.2" data-path="trees.html"><a href="trees.html#penalisation"><i class="fa fa-check"></i><b>7.4.2</b> Penalisation</a></li>
+<li class="chapter" data-level="7.4.3" data-path="trees.html"><a href="trees.html#aggregation"><i class="fa fa-check"></i><b>7.4.3</b> Aggregation</a></li>
+<li class="chapter" data-level="7.4.4" data-path="trees.html"><a href="trees.html#tree-structure"><i class="fa fa-check"></i><b>7.4.4</b> Tree structure</a></li>
+<li class="chapter" data-level="7.4.5" data-path="trees.html"><a href="trees.html#boostext"><i class="fa fa-check"></i><b>7.4.5</b> Extensions</a></li>
+<li class="chapter" data-level="7.4.6" data-path="trees.html"><a href="trees.html#boostcode"><i class="fa fa-check"></i><b>7.4.6</b> Code and results</a></li>
+<li class="chapter" data-level="7.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>7.4.7</b> Instance weighting</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>7.5</b> Discussion</a></li>
+<li class="chapter" data-level="7.6" data-path="trees.html"><a href="trees.html#coding-exercises-3"><i class="fa fa-check"></i><b>7.6</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>8</b> Neural networks</a><ul>
+<li class="chapter" data-level="8.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>8.1</b> The original perceptron</a></li>
+<li class="chapter" data-level="8.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron"><i class="fa fa-check"></i><b>8.2</b> Multilayer perceptron</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
+<li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
+<li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
+<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification-1"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>8.3</b> How deep should we go? And other practical issues</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>8.3.1</b> Architectural choices</a></li>
+<li class="chapter" data-level="8.3.2" data-path="NN.html"><a href="NN.html#frequency-of-weight-updates-and-learning-duration"><i class="fa fa-check"></i><b>8.3.2</b> Frequency of weight updates and learning duration</a></li>
+<li class="chapter" data-level="8.3.3" data-path="NN.html"><a href="NN.html#penalizations-and-dropout"><i class="fa fa-check"></i><b>8.3.3</b> Penalizations and dropout</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
+<li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
+<li class="chapter" data-level="8.5.2" data-path="NN.html"><a href="NN.html#code-and-results-3"><i class="fa fa-check"></i><b>8.5.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>8.6</b> Other common architectures</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>8.6.1</b> Generative adversarial networks</a></li>
+<li class="chapter" data-level="8.6.2" data-path="NN.html"><a href="NN.html#autoencoders"><i class="fa fa-check"></i><b>8.6.2</b> Auto-encoders</a></li>
+<li class="chapter" data-level="8.6.3" data-path="NN.html"><a href="NN.html#a-word-on-convolutional-networks"><i class="fa fa-check"></i><b>8.6.3</b> A word on convolutional networks</a></li>
+<li class="chapter" data-level="8.6.4" data-path="NN.html"><a href="NN.html#advanced-architectures"><i class="fa fa-check"></i><b>8.6.4</b> Advanced architectures</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="NN.html"><a href="NN.html#coding-exercises-4"><i class="fa fa-check"></i><b>8.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>9</b> Support vector machines</a><ul>
+<li class="chapter" data-level="9.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>9.1</b> SVM for classification</a></li>
+<li class="chapter" data-level="9.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>9.2</b> SVM for regression</a></li>
+<li class="chapter" data-level="9.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>9.3</b> Practice</a></li>
+<li class="chapter" data-level="9.4" data-path="svm.html"><a href="svm.html#coding-exercises-5"><i class="fa fa-check"></i><b>9.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>10</b> Bayesian methods</a><ul>
+<li class="chapter" data-level="10.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>10.1</b> The Bayesian framework</a></li>
+<li class="chapter" data-level="10.2" data-path="bayes.html"><a href="bayes.html#bayesian-sampling"><i class="fa fa-check"></i><b>10.2</b> Bayesian sampling</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="bayes.html"><a href="bayes.html#gibbs-sampling"><i class="fa fa-check"></i><b>10.2.1</b> Gibbs sampling</a></li>
+<li class="chapter" data-level="10.2.2" data-path="bayes.html"><a href="bayes.html#metropolis-hastings-sampling"><i class="fa fa-check"></i><b>10.2.2</b> Metropolis-Hastings sampling</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="bayes.html"><a href="bayes.html#bayesian-linear-regression"><i class="fa fa-check"></i><b>10.3</b> Bayesian linear regression</a></li>
+<li class="chapter" data-level="10.4" data-path="bayes.html"><a href="bayes.html#naive-bayes-classifier"><i class="fa fa-check"></i><b>10.4</b> Naive Bayes classifier</a></li>
+<li class="chapter" data-level="10.5" data-path="bayes.html"><a href="bayes.html#BART"><i class="fa fa-check"></i><b>10.5</b> Bayesian additive trees</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="bayes.html"><a href="bayes.html#general-formulation"><i class="fa fa-check"></i><b>10.5.1</b> General formulation</a></li>
+<li class="chapter" data-level="10.5.2" data-path="bayes.html"><a href="bayes.html#priors"><i class="fa fa-check"></i><b>10.5.2</b> Priors</a></li>
+<li class="chapter" data-level="10.5.3" data-path="bayes.html"><a href="bayes.html#sampling-and-predictions"><i class="fa fa-check"></i><b>10.5.3</b> Sampling and predictions</a></li>
+<li class="chapter" data-level="10.5.4" data-path="bayes.html"><a href="bayes.html#code"><i class="fa fa-check"></i><b>10.5.4</b> Code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="valtune.html"><a href="valtune.html"><i class="fa fa-check"></i><b>11</b> Validating and tuning</a><ul>
+<li class="chapter" data-level="11.1" data-path="valtune.html"><a href="valtune.html#mlmetrics"><i class="fa fa-check"></i><b>11.1</b> Learning metrics</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="valtune.html"><a href="valtune.html#regression-analysis"><i class="fa fa-check"></i><b>11.1.1</b> Regression analysis</a></li>
+<li class="chapter" data-level="11.1.2" data-path="valtune.html"><a href="valtune.html#classification-analysis"><i class="fa fa-check"></i><b>11.1.2</b> Classification analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="valtune.html"><a href="valtune.html#validation"><i class="fa fa-check"></i><b>11.2</b> Validation</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-theory"><i class="fa fa-check"></i><b>11.2.1</b> The variance-bias tradeoff: theory</a></li>
+<li class="chapter" data-level="11.2.2" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-illustration"><i class="fa fa-check"></i><b>11.2.2</b> The variance-bias tradeoff: illustration</a></li>
+<li class="chapter" data-level="11.2.3" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-principle"><i class="fa fa-check"></i><b>11.2.3</b> The risk of overfitting: principle</a></li>
+<li class="chapter" data-level="11.2.4" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-some-solutions"><i class="fa fa-check"></i><b>11.2.4</b> The risk of overfitting: some solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="valtune.html"><a href="valtune.html#the-search-for-good-hyperparameters"><i class="fa fa-check"></i><b>11.3</b> The search for good hyperparameters</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="valtune.html"><a href="valtune.html#methods"><i class="fa fa-check"></i><b>11.3.1</b> Methods</a></li>
+<li class="chapter" data-level="11.3.2" data-path="valtune.html"><a href="valtune.html#example-grid-search"><i class="fa fa-check"></i><b>11.3.2</b> Example: grid search</a></li>
+<li class="chapter" data-level="11.3.3" data-path="valtune.html"><a href="valtune.html#example-bayesian-optimization"><i class="fa fa-check"></i><b>11.3.3</b> Example: Bayesian optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="valtune.html"><a href="valtune.html#short-discussion-on-validation-in-backtests"><i class="fa fa-check"></i><b>11.4</b> Short discussion on validation in backtests</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ensemble.html"><a href="ensemble.html"><i class="fa fa-check"></i><b>12</b> Ensemble models</a><ul>
+<li class="chapter" data-level="12.1" data-path="ensemble.html"><a href="ensemble.html#linear-ensembles"><i class="fa fa-check"></i><b>12.1</b> Linear ensembles</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="ensemble.html"><a href="ensemble.html#principles"><i class="fa fa-check"></i><b>12.1.1</b> Principles</a></li>
+<li class="chapter" data-level="12.1.2" data-path="ensemble.html"><a href="ensemble.html#example"><i class="fa fa-check"></i><b>12.1.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>12.2</b> Stacked ensembles</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>12.2.1</b> Two stage training</a></li>
+<li class="chapter" data-level="12.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-4"><i class="fa fa-check"></i><b>12.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>12.3</b> Extensions</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>12.3.1</b> Exogenous variables</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>12.3.2</b> Shrinking inter-model correlations</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ensemble.html"><a href="ensemble.html#exercise"><i class="fa fa-check"></i><b>12.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="backtest.html"><a href="backtest.html"><i class="fa fa-check"></i><b>13</b> Portfolio backtesting</a><ul>
+<li class="chapter" data-level="13.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>13.1</b> Setting the protocol</a></li>
+<li class="chapter" data-level="13.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>13.2</b> Turning signals into portfolio weights</a></li>
+<li class="chapter" data-level="13.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>13.3</b> Performance metrics</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>13.3.1</b> Discussion</a></li>
+<li class="chapter" data-level="13.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>13.3.2</b> Pure performance and risk indicators</a></li>
+<li class="chapter" data-level="13.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>13.3.3</b> Factor-based evaluation</a></li>
+<li class="chapter" data-level="13.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>13.3.4</b> Risk-adjusted measures</a></li>
+<li class="chapter" data-level="13.3.5" data-path="backtest.html"><a href="backtest.html#transaction-costs-and-turnover"><i class="fa fa-check"></i><b>13.3.5</b> Transaction costs and turnover</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="backtest.html"><a href="backtest.html#common-errors-and-issues"><i class="fa fa-check"></i><b>13.4</b> Common errors and issues</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="backtest.html"><a href="backtest.html#forward-looking-data"><i class="fa fa-check"></i><b>13.4.1</b> Forward looking data</a></li>
+<li class="chapter" data-level="13.4.2" data-path="backtest.html"><a href="backtest.html#backtest-overfitting"><i class="fa fa-check"></i><b>13.4.2</b> Backtest overfitting</a></li>
+<li class="chapter" data-level="13.4.3" data-path="backtest.html"><a href="backtest.html#simple-saveguards"><i class="fa fa-check"></i><b>13.4.3</b> Simple saveguards</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="backtest.html"><a href="backtest.html#implication-of-non-stationarity-forecasting-is-hard"><i class="fa fa-check"></i><b>13.5</b> Implication of non-stationarity: forecasting is hard</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="backtest.html"><a href="backtest.html#general-comments"><i class="fa fa-check"></i><b>13.5.1</b> General comments</a></li>
+<li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-6"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
+<li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
+<li class="chapter" data-level="14.2.2" data-path="interp.html"><a href="interp.html#shapley-values"><i class="fa fa-check"></i><b>14.2.2</b> Shapley values</a></li>
+<li class="chapter" data-level="14.2.3" data-path="interp.html"><a href="interp.html#breakdown"><i class="fa fa-check"></i><b>14.2.3</b> Breakdown</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>15</b> Two key concepts: causality and non-stationarity</a><ul>
+<li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
+<li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
+<li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
+<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
+<li class="chapter" data-level="16.1" data-path="unsup.html"><a href="unsup.html#corpred"><i class="fa fa-check"></i><b>16.1</b> The problem with correlated predictors</a></li>
+<li class="chapter" data-level="16.2" data-path="unsup.html"><a href="unsup.html#principal-component-analysis-and-autoencoders"><i class="fa fa-check"></i><b>16.2</b> Principal component analysis and autoencoders</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="unsup.html"><a href="unsup.html#a-bit-of-algebra"><i class="fa fa-check"></i><b>16.2.1</b> A bit of algebra</a></li>
+<li class="chapter" data-level="16.2.2" data-path="unsup.html"><a href="unsup.html#pca"><i class="fa fa-check"></i><b>16.2.2</b> PCA</a></li>
+<li class="chapter" data-level="16.2.3" data-path="unsup.html"><a href="unsup.html#ae"><i class="fa fa-check"></i><b>16.2.3</b> Autoencoders</a></li>
+<li class="chapter" data-level="16.2.4" data-path="unsup.html"><a href="unsup.html#application"><i class="fa fa-check"></i><b>16.2.4</b> Application</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>16.3</b> Clustering via k-means</a></li>
+<li class="chapter" data-level="16.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>16.4</b> Nearest neighbors</a></li>
+<li class="chapter" data-level="16.5" data-path="unsup.html"><a href="unsup.html#coding-exercise"><i class="fa fa-check"></i><b>16.5</b> Coding exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>17</b> Reinforcement learning</a><ul>
+<li class="chapter" data-level="17.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>17.1</b> Theoretical layout</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="RL.html"><a href="RL.html#general-framework"><i class="fa fa-check"></i><b>17.1.1</b> General framework</a></li>
+<li class="chapter" data-level="17.1.2" data-path="RL.html"><a href="RL.html#q-learning"><i class="fa fa-check"></i><b>17.1.2</b> Q-learning</a></li>
+<li class="chapter" data-level="17.1.3" data-path="RL.html"><a href="RL.html#sarsa"><i class="fa fa-check"></i><b>17.1.3</b> SARSA</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="RL.html"><a href="RL.html#issues-and-potential-solutions"><i class="fa fa-check"></i><b>17.2</b> Issues and potential solutions</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>17.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="17.2.2" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>17.2.2</b> Policy gradient</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>17.3</b> Simple examples</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>17.3.1</b> Q-learning with simulations</a></li>
+<li class="chapter" data-level="17.3.2" data-path="RL.html"><a href="RL.html#q-learning-with-market-data"><i class="fa fa-check"></i><b>17.3.2</b> Q-learning with market data</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>17.4</b> Concluding remarks</a></li>
+<li class="chapter" data-level="17.5" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>17.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="NLP.html"><a href="NLP.html"><i class="fa fa-check"></i><b>18</b> Natural Language Processing</a></li>
+<li class="chapter" data-level="19" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>19</b> Conclusion</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="data-description.html"><a href="data-description.html"><i class="fa fa-check"></i><b>A</b> Data Description</a></li>
+<li class="chapter" data-level="B" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html"><i class="fa fa-check"></i><b>B</b> Solution to exercises</a><ul>
+<li class="chapter" data-level="B.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-4"><i class="fa fa-check"></i><b>B.1</b> Chapter 4</a></li>
+<li class="chapter" data-level="B.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-5"><i class="fa fa-check"></i><b>B.2</b> Chapter 5</a></li>
+<li class="chapter" data-level="B.3" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-6"><i class="fa fa-check"></i><b>B.3</b> Chapter 6</a></li>
+<li class="chapter" data-level="B.4" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-7"><i class="fa fa-check"></i><b>B.4</b> Chapter 7</a></li>
+<li class="chapter" data-level="B.5" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-8"><i class="fa fa-check"></i><b>B.5</b> Chapter 8</a></li>
+<li class="chapter" data-level="B.6" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-9"><i class="fa fa-check"></i><b>B.6</b> Chapter 9</a></li>
+<li class="chapter" data-level="B.7" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-12"><i class="fa fa-check"></i><b>B.7</b> Chapter 12</a></li>
+<li class="chapter" data-level="B.8" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-13"><i class="fa fa-check"></i><b>B.8</b> Chapter 13</a><ul>
+<li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.1</b> Functional programming in the backtest</a></li>
+<li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.2</b> Advanced weighting function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning for Factor Investing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="causality" class="section level1">
+<h1><span class="header-section-number">Chapter 15</span> Two key concepts: causality and non-stationarity</h1>
+<p>A prominent point of criticism faced by ML tools is their inability to uncover causality relationship between features and labels because they are mostly focused (by design) to capture correlations. Correlations are much weaker than causality because they characterize a two way relationship (<span class="math inline">\(\textbf{X}\leftrightarrow \textbf{y}\)</span>) while causality specifies a direction <span class="math inline">\(\textbf{X}\rightarrow \textbf{y}\)</span> or <span class="math inline">\(\textbf{X}\leftarrow \textbf{y}\)</span>. One fashionable example is sentiment. Many academic articles seem to find that sentiment (irrespectively of its definition) is a significant driver of future returns. A high sentiment for a particular stock may increase the demand for this stock and push its price up (though contrarian reasonings may also apply: if sentiment is high, it is a sign that mean-reversion is possibly about to happen). The reverse causation is also plausible: returns may well cause sentiment. If a stock experiences a long period of market growth, people become bullish about this stock and sentiment increases (this notably comes from extrapolation, see <span class="citation">Barberis et al. (<a href="#ref-barberis2015x">2015</a>)</span> for a theoretical model). In <span class="citation">Coqueret (<a href="#ref-coqueret2018economic">2018</a>)</span>, it is found (in opposition to most findings in this field), that the latter relationship (returns <span class="math inline">\(\rightarrow\)</span> sentiment) is more likely. This result is backed by causality driven tests (see Section <a href="causality.html#granger">15.1.1</a>).</p>
+<p>Statistical causality is a large field and we refer to <span class="citation">Pearl (<a href="#ref-pearl2009causality">2009</a>)</span> for a deep dive into this topic. Recently, researchers have sought to link causality with ML approaches (see, e.g., <span class="citation">Peters, Janzing, and Schölkopf (<a href="#ref-peters2017elements">2017</a>)</span>, <span class="citation">Heinze-Deml, Peters, and Meinshausen (<a href="#ref-heinze2018invariant">2018</a>)</span>, <span class="citation">Arjovsky et al. (<a href="#ref-arjovsky2019invariant">2019</a>)</span>). The key notion in their work is <strong>invariance</strong>.</p>
+<p>Often, data is collected not at once, but from difference sources at different moments. Some relationships found in these different sources will changes while others may remain the same. The relationships that are invariant to changing environments are likely to stem from (and signal) causality. One counter-example is the following (related in <span class="citation">Beery, Van Horn, and Perona (<a href="#ref-beery2018recognition">2018</a>)</span>): training a computer vision algorithm to discriminate between cows and camels will lead the algorithm to focus on grass versus sand! Thus, a picture of a camel on grass will be classified as cow while a cow on sand would be labelled “camel”. It is only with pictures of these two animals in different contexts (environments) that the learner will end up truly finding what makes a cow and a camel. A camel will remain a camel no matter where it is pictured: it should be recognized as such by the learner. If so, the representation of the camel becomes invariant over all datasets and the learner has discovered causality, i.e., the true attributes that make a camel a camel (overall silhouette, shape of the back, face, color (possibly misleading!), etc.).</p>
+<p>This search for invariance makes sense for many disciplines like computer vision or natural language processing (languages don’t change much). In finance, it is not obvious that invariance may exist. Market conditions are known to be time-varying and the relationships between firm characteristics also change from year to year. One solution to this issue may simply be to embrace non-stationarity. In Chapter <a href="backtest.html#backtest">13</a>, we advocate to do that by updating models as frequently as possible with rolling training sets: this allows the predictions to be based on the most recent trends. In Section <a href="causality.html#nonstat">15.2</a> below, we introduce other theoretical and practical options.</p>
+<div id="causality-1" class="section level2">
+<h2><span class="header-section-number">15.1</span> Causality</h2>
+<p>Traditional machine learning models aim to uncover relationships between variables but do not usually specify <em>directions</em> for these relationships. One typical example is the linear regression. If we write <span class="math inline">\(y=a+bx+\epsilon\)</span>, then it is also true that <span class="math inline">\(x=b^{-1}(y-a-\epsilon)\)</span>, which is of course also a linear relationship (with respect to <span class="math inline">\(y\)</span>). These equations do not define causation whereby <span class="math inline">\(x\)</span> would be a clear determinant of <span class="math inline">\(y\)</span> (<span class="math inline">\(x \rightarrow y\)</span>, but the opposite could be false).</p>
+<div id="granger" class="section level3">
+<h3><span class="header-section-number">15.1.1</span> Granger causality</h3>
+<p>The most notable tool first proposed by <span class="citation">Granger (<a href="#ref-granger1969investigating">1969</a>)</span> is probably the simplest. For simplicity, we consider only two stationary processes, <span class="math inline">\(X_t\)</span> and <span class="math inline">\(Y_t\)</span>. A strict definition of causality could be the following. <span class="math inline">\(X\)</span> can be said to cause <span class="math inline">\(Y\)</span>, whenever, for some integer <span class="math inline">\(k\)</span>,
+<span class="math display">\[(Y_{t+1},\dots,Y_{t+k})|(\mathcal{F}_{Y,t}\cup \mathcal{F}_{X,t}) \quad  \overset{d}{\neq} \quad (Y_{t+1},\dots,Y_{t+k})|\mathcal{F}_{Y,t},\]</span>
+that is, when the distribution of future values of <span class="math inline">\(Y_t\)</span>, conditionally on the knowledge of both processes is not the same as the distribution with the sole knowledge of the filtration <span class="math inline">\(\mathcal{F}_{Y,t}\)</span>. Hence <span class="math inline">\(X\)</span> does have an impact on <span class="math inline">\(Y\)</span> because its trajectory alters that of <span class="math inline">\(Y\)</span>.</p>
+<p>Now, this formulation is too vague and impossible to handle numerically, thus we simplify the setting via a linear formulation. We keep the same notations as Section 5 of the original paper <span class="citation">Granger (<a href="#ref-granger1969investigating">1969</a>)</span>. The tests consists in two regressions:
+<span class="math display">\[\begin{align*}
+X_t&amp;=\sum_{j=1}^ma_jX_{t-j}+\sum_{j=1}^mb_jY_{t-j} + \epsilon_t \\
+Y_y&amp;=\sum_{j=1}^mc_jX_{t-j}+\sum_{j=1}^md_jY_{t-j} + \nu_t
+\end{align*}\]</span>
+where for simplicity, it is assumed that both processes have zero mean. The usual assumptions apply: the Gaussian noises <span class="math inline">\(\epsilon_t\)</span> and <span class="math inline">\(\nu_t\)</span> are uncorrelated in every possible way (mutually and through time). The test is the following: if one <span class="math inline">\(b_j\)</span> is nonzero, then it is said that <span class="math inline">\(Y\)</span> Granger-causes <span class="math inline">\(X\)</span> and if one <span class="math inline">\(c_j\)</span> is nonzero, <span class="math inline">\(X\)</span> Granger-causes <span class="math inline">\(Y\)</span>. The two are not mutually exclusive and it is widely accepted that feedback loops can very well occur.</p>
+<p>Statistically, under the null hypothesis, <span class="math inline">\(b_1=\dots=b_m=0\)</span> (<em>resp.</em> <span class="math inline">\(c_1=\dots=c_m=0\)</span>), which can be tested using the usual Fischer distribution. Obviously, the linear restriction can be dismissed but the tests are then much more complex. The main financial article in this direction is <span class="citation">Hiemstra and Jones (<a href="#ref-hiemstra1994testing">1994</a>)</span>.</p>
+<p>There are many R packages that embed Granger causality functionalities. One of the most widespread is <em>lmtest</em> so we work with it below. The syntax is incredibly simple. The <em>order</em> is the maximum lag <span class="math inline">\(m\)</span> in the above equation. We test if market capitalization averaged over the past 6 months Granger-causes 1 month ahead returns for one particular stock (the first in the sample).</p>
+
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1"><span class="kw">library</span>(lmtest)</a>
+<a class="sourceLine" id="cb180-2" data-line-number="2">x_granger &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># X variable =...</span></a>
+<a class="sourceLine" id="cb180-3" data-line-number="3"><span class="st">                               </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># ... stock nb 1</span></a>
+<a class="sourceLine" id="cb180-4" data-line-number="4"><span class="st">                               </span><span class="kw">pull</span>(Mkt_Cap_6M_Usd)         <span class="co"># ... &amp; Market cap</span></a>
+<a class="sourceLine" id="cb180-5" data-line-number="5">y_granger &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Y variable = ...</span></a>
+<a class="sourceLine" id="cb180-6" data-line-number="6"><span class="st">                               </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># ... stock nb 1</span></a>
+<a class="sourceLine" id="cb180-7" data-line-number="7"><span class="st">                               </span><span class="kw">pull</span>(R1M_Usd)                <span class="co"># ... &amp; 1M return</span></a>
+<a class="sourceLine" id="cb180-8" data-line-number="8">fit_granger &lt;-<span class="st"> </span><span class="kw">grangertest</span>(x_granger,                       <span class="co"># X variable</span></a>
+<a class="sourceLine" id="cb180-9" data-line-number="9">                           y_granger,                       <span class="co"># Y variable</span></a>
+<a class="sourceLine" id="cb180-10" data-line-number="10">                           <span class="dt">order =</span> <span class="dv">6</span>,                       <span class="co"># Maximmum lag</span></a>
+<a class="sourceLine" id="cb180-11" data-line-number="11">                           <span class="dt">na.action =</span> na.omit)             <span class="co"># What to do with missing data</span></a>
+<a class="sourceLine" id="cb180-12" data-line-number="12">fit_granger</a></code></pre></div>
+<pre><code>## Granger causality test
+## 
+## Model 1: y_granger ~ Lags(y_granger, 1:6) + Lags(x_granger, 1:6)
+## Model 2: y_granger ~ Lags(y_granger, 1:6)
+##   Res.Df Df     F    Pr(&gt;F)    
+## 1    149                       
+## 2    155 -6 4.111 0.0007554 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<p></p>
+<p>The test is directional and only test if <span class="math inline">\(X\)</span> Granger-causes <span class="math inline">\(Y\)</span>. In order to test the reverse effect, it is required to inverse the arguments in the function. In the output above, the <span class="math inline">\(p\)</span>-value is very low, hence the probability of observing similar samples as ours knowing that <span class="math inline">\(H_0\)</span> holds is negligible. Thus is seems that market capitalization does Granger cause one month returns.</p>
+</div>
+<div id="causal-additive-models" class="section level3">
+<h3><span class="header-section-number">15.1.2</span> Causal additive models</h3>
+<p>The zoo of causal model encompasses a variety of beasts. The interested reader can have a peek at <span class="citation">Pearl (<a href="#ref-pearl2009causality">2009</a>)</span>, <span class="citation">Peters, Janzing, and Schölkopf (<a href="#ref-peters2017elements">2017</a>)</span> and <span class="citation">Maathuis et al. (<a href="#ref-maathuis2018handbook">2018</a>)</span> and the references therein. It is always hard to single out one type of model in particular so we choose one that can be explained with simple mathematical tools.</p>
+<p>We start with the simplest definition of a structural causal model (SCM), where we follow here Chapter 3 of <span class="citation">Peters, Janzing, and Schölkopf (<a href="#ref-peters2017elements">2017</a>)</span>. The idea behind these models is to introduce some hierarchy (i.e., some additional structure) in the model. Formally, this gives
+<span class="math display">\[\begin{align*}
+X&amp;=\epsilon_X \\ 
+Y&amp;=f(X,\epsilon_Y),
+\end{align*}\]</span>
+where the <span class="math inline">\(\epsilon_X\)</span> and <span class="math inline">\(\epsilon_Y\)</span> are independent noise variables. Plainly, a realization of <span class="math inline">\(X\)</span> is drawn randomly and has then an impact on the realization of <span class="math inline">\(Y\)</span> via <span class="math inline">\(f\)</span>. Now this scheme could be more complex if the number of observed variable was larger. Imagine a third variable comes in so that
+<span class="math display">\[\begin{align*}
+X&amp;=\epsilon_X \\ 
+Y&amp;=f(X,\epsilon_Y),\\
+Z&amp;=g(Y,\epsilon_Z)
+\end{align*}\]</span></p>
+<p>In this case, <span class="math inline">\(X\)</span> has a causation effect on <span class="math inline">\(Y\)</span> and then <span class="math inline">\(Y\)</span> has a causation effect on <span class="math inline">\(Z\)</span>. We thus have the following connexions:
+<span class="math display">\[\begin{array}{ccccccc} X &amp; &amp;&amp;&amp;\\
+&amp;\searrow &amp; &amp;&amp;\\
+&amp;&amp;Y&amp;\rightarrow&amp;Z. \\
+&amp;\nearrow &amp;&amp;\nearrow&amp; \\
+\epsilon_Y &amp; &amp;\epsilon_Z 
+\end{array}\]</span></p>
+<p>The above representation is called a graph and graph theory has its own nomenclature, which we very briefly summarize. The variables are often referred to as <em>vertices</em> (or <em>nodes</em>) and the arrows as <em>edges</em>. Because arrows have a direction, they are called <em>directed</em> edges. When two vertices are connected via an edge, they are called <em>adjacent</em>. A sequence of adjacent vertices is called a <em>path</em> and it is directed if all edges are arrows. Within a directed path, a vertex that comes first is a parent node and the one just after is a child node.</p>
+<p>Graphs can be summarized by adjacency matrices. An adjacency matrix <span class="math inline">\(\textbf{A}=A_{ij}\)</span> is a matrix filled with zeros and ones. <span class="math inline">\(A_{ij}=1\)</span> whenever there is an edge from vertex <span class="math inline">\(i\)</span> to vertex <span class="math inline">\(j\)</span>. Usually, self-loops (<span class="math inline">\(X \rightarrow X\)</span>) are prohibited so that adjacency matrices have zeros on the diagonal. If we consider a simplified version of the above graph like <span class="math inline">\(X \rightarrow Y \rightarrow Z\)</span>, the corresponding adjacency matrix is</p>
+<p><span class="math display">\[\textbf{A}=\begin{bmatrix} 
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1 \\
+0&amp; 0&amp;0
+\end{bmatrix}.\]</span></p>
+<p>where letters <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(Z\)</span> are naturally ordered alphabetically. There are only two arrows: from <span class="math inline">\(X\)</span> to <span class="math inline">\(Y\)</span> (first row, second column) and from <span class="math inline">\(Y\)</span> to <span class="math inline">\(Z\)</span> (second row, third column).</p>
+<p>A <em>cycle</em> is a particular type of path that creates a loop, i.e., when the first vertice is also the last. The sequence <span class="math inline">\(X \rightarrow Y \rightarrow Z \rightarrow X\)</span> is a cycle. Technically, cycles pose problems. To illustrate this, consider the simple sequence <span class="math inline">\(X \rightarrow Y \rightarrow X\)</span>. This would imply that a realization of <span class="math inline">\(X\)</span> causes <span class="math inline">\(Y\)</span> which in turn would cause the realization of <span class="math inline">\(Y\)</span>. While Granger causality can be viewed as allowing this kind of connexion, general causal models usually avoid cycles and work with direct acyclic graphs (DAGs).</p>
+<p>Equipped with these tools, we can explicit a very general form of models:
+<span class="math display">\[\begin{equation}
+X_j=f_j\left(\textbf{X}_{\text{pa}_D(j)},\epsilon_j  \right),
+\label{eq:CAM0}
+\end{equation}\]</span></p>
+<p>where the noise variables are mutually independent. The notation <span class="math inline">\(\text{pa}_D(j)\)</span> refers to the set of parent nodes of vertex <span class="math inline">\(j\)</span> within the graph structure <span class="math inline">\(D\)</span>. Hence, <span class="math inline">\(X_j\)</span> is a function of all of its parents and some noise term <span class="math inline">\(\epsilon_j\)</span>. An additive causal model is a mild simplification of the above specification:</p>
+<p><span class="math display">\[\begin{equation}
+X_j=\sum_{k\in \text{pa}_D(j)}f_{j,k}\left(\textbf{X}_{k}  \right)+\epsilon_j,
+\label{eq:CAM}
+\end{equation}\]</span></p>
+<p>where the nonlinear effect of each variable is cumulative, hence the term ‘<em>additive</em>’. Note that there is no time index there. In contrast to Granger causality, there is no natural ordering. Such models are very complex and hard to estimate. The details can be found in <span class="citation">Bühlmann et al. (<a href="#ref-buhlmann2014cam">2014</a>)</span>. Fortunately, the authors have developed an R package that determines the DAG <span class="math inline">\(D\)</span>.</p>
+<p>Below, we build the adjacency matrix pertaining to the small set of predictor variables plus the 1 month ahead return (on the training sample). We use the <em>CAM</em> package which has a very simple syntax.</p>
+
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1"><span class="kw">library</span>(CAM)</a>
+<a class="sourceLine" id="cb182-2" data-line-number="2">fit_cam &lt;-<span class="st"> </span><span class="kw">CAM</span>(training_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;R1M_Usd&quot;</span>, features_short)))</a>
+<a class="sourceLine" id="cb182-3" data-line-number="3">fit_cam<span class="op">$</span>Adj</a></code></pre></div>
+<pre><code>## 8 x 8 sparse Matrix of class &quot;dgCMatrix&quot;
+##                     
+## [1,] . 1 1 1 1 1 1 1
+## [2,] . . . 1 . . 1 .
+## [3,] . 1 . 1 . . 1 1
+## [4,] . . . . . . . .
+## [5,] . 1 1 1 . 1 1 1
+## [6,] . 1 1 1 . . 1 1
+## [7,] . . . 1 . . . .
+## [8,] . 1 . 1 . . 1 .</code></pre>
+<p></p>
+<p>The matrix is not too sparse, which means that a the model has uncovered many relationships between the variables within the sample. Sadly, none are in the direction that are of interest for the prediction task that we seek. Indeed, the first variable is the one we want to predict and its column is empty. However, its row is full, which indicates the reverse effect: future returns cause the predictors values, which may seem rather counter-intuitive.</p>
+</div>
+</div>
+<div id="nonstat" class="section level2">
+<h2><span class="header-section-number">15.2</span> Dealing with changing environments</h2>
+<p>The most common assumption in machine learning contributions is that the samples that are studied are i.i.d. realizations of a phenomenon that we are trying to characterize. This constraint is natural because if the relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(y\)</span> always changes, then it is very hard to infer anything from observations. One major problem in Finance is that this is often the case: markets, behaviors, policies, etc., evolve all the time. This can be seen as a consequence of absence of arbitrage: if a trading strategy worked all the time, all agents would eventually adopt it via herding, which would annihilate the corresponding gains.<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> If the strategy is kept private, its holder would become infinitely rich, which obviously has never happened.</p>
+<p>There are several ways to define changes in environments. If we denote with <span class="math inline">\(\mathbb{P}_{XY}\)</span> the multivariate distribution of all variables, with <span class="math inline">\(\mathbb{P}_{XY}=\mathbb{P}_{X}\mathbb{P}_{Y|X}\)</span>, then two simple changes are possible:
+- <strong>covariate shift</strong>: <span class="math inline">\(\mathbb{P}_{X}\)</span> changes but <span class="math inline">\(\mathbb{P}_{Y|X}\)</span> does not: the features have a fluctuating distribution, but their relationship with <span class="math inline">\(Y\)</span> holds still;<br />
+- <strong>concept drift</strong>: <span class="math inline">\(\mathbb{P}_{Y|X}\)</span> changes but <span class="math inline">\(\mathbb{P}_{X}\)</span> does not: features are stable, but their relation to <span class="math inline">\(Y\)</span> is altered.</p>
+<p>Obviously, we omit the case when both items change as it is too complex to handle. In factor investing, the feature engineering process (see Section <a href="Data.html#feateng">5.4</a>) is parlty designed to bypass the risk of covariate shift. Uniformization guarantees that the marginals stay the same but correlations between features may of course change. The main issue is probably concept drift when the way features explain the label changes through time. In <span class="citation">Cornuejols, Miclet, and Barra (<a href="#ref-cornuejols2011apprentissage">2018</a>)</span>, the authors distinguish four types of drifts, which we reproduce in Figure <a href="causality.html#fig:conceptchange">15.1</a>. In factor models, changes are presumably a combination of all four types: they can be abrupt during crashes, but most of the time they are progressive (gradual or incremental) and nerver ending (continuously recurring).</p>
+<div class="figure" style="text-align: center"><span id="fig:conceptchange"></span>
+<img src="images/conceptchange" alt="Different flavours of concept change." width="300px" />
+<p class="caption">
+FIGURE 15.1: Different flavours of concept change.
+</p>
+</div>
+<p>Naturally, if we aknowledge that the environment changes, it appears logical to adapt models accordingly, i.e., dynamically. This gives rise to the so-called <strong>stability-plasticity dilemma</strong>. This dilemma is a trade-off between model <strong>reactiveness</strong> (new instances have an important impact on updates) versus <strong>stability</strong> (these instances may not be representative of a slower trend and thus shift the model in a suboptimal direction). Practically,</p>
+<p><a href="backtest.html#protocol">13.1</a></p>
+<p>There is of course no perfect solution to changing financial environements. Below, we mention two routes that are taken in the ML literature to overcome the problem of non-stationarity in the data generating process. But first, we propose a clear verification that markets do experience time-varying distributions.</p>
+<div id="non-stationarity-an-obvious-illustration" class="section level3">
+<h3><span class="header-section-number">15.2.1</span> Non-stationarity: an obvious illustration</h3>
+<p>One of the most basic practices in (financial) econometrics is to work with returns (relative price changes). The simple reason is that returns seem to behave consistently through time (monthly returns are bounded, they usually lie between -1 and +1). Prices on the other hand shift and often, some prices never come back to past values. This makes prices harder to study.</p>
+<p>Stationarity is a key notion in financial econometrics: it is much easier to characterize a phenomenon that remains the same through time. Sadly, the distribution of returns is not stationary: both the mean and the variance of returns change along cycles.</p>
+<p>Below, we illustrate this fact by computing the average monthly return for all calendar years in the whole dataset.</p>
+
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb184-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">          </span><span class="co"># Create a year variable</span></a>
+<a class="sourceLine" id="cb184-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Group by year</span></a>
+<a class="sourceLine" id="cb184-4" data-line-number="4"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">avg_ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb184-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_ret)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:statplot"></span>
+<img src="ML_factor_files/figure-html/statplot-1.png" alt="Average monthly return on a yearly basis." width="350px" />
+<p class="caption">
+FIGURE 15.2: Average monthly return on a yearly basis.
+</p>
+</div>
+<p></p>
+<p>These changes in the mean are also accompanied by variations in the second moment (variance/volatility). This effect, known as volatility clustering has been widely documented ever since the theoretical breakthrough of <span class="citation">Engle (<a href="#ref-engle1982autoregressive">1982</a>)</span> (and even well before). We refer for instance to <span class="citation">Cont (<a href="#ref-cont2007volatility">2007</a>)</span> for more details on this topic. For the computation of realized volatility in R, we strongly recommend Chapter 4 in <span class="citation">Regenstein Jr (<a href="#ref-regenstein2018reproducible">2018</a>)</span>.</p>
+<p>In terms of machine learning models, this is also true. Below, we estimate a pure characteristic regression with one predictor, the market capitalization averaged over the past 6 months. The label is the 6 month forward return.</p>
+
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb185-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Create a year variable</span></a>
+<a class="sourceLine" id="cb185-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># Group by year</span></a>
+<a class="sourceLine" id="cb185-4" data-line-number="4"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">beta_cap =</span> <span class="kw">lm</span>(R6M_Usd <span class="op">~</span><span class="st"> </span>Mkt_Cap_6M_Usd) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Perform regression</span></a>
+<a class="sourceLine" id="cb185-5" data-line-number="5"><span class="st">                  </span><span class="kw">coef</span>() <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Extract coefs</span></a>
+<a class="sourceLine" id="cb185-6" data-line-number="6"><span class="st">                  </span><span class="kw">t</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Transpose</span></a>
+<a class="sourceLine" id="cb185-7" data-line-number="7"><span class="st">                  </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Format into df</span></a>
+<a class="sourceLine" id="cb185-8" data-line-number="8"><span class="st">                  </span><span class="kw">pull</span>(Mkt_Cap_6M_Usd)) <span class="op">%&gt;%</span><span class="st">                 </span><span class="co"># Pull coef (remove intercept)</span></a>
+<a class="sourceLine" id="cb185-9" data-line-number="9"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> beta_cap)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st">      </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb185-10" data-line-number="10"><span class="st">    </span><span class="kw">theme_grey</span>()</a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:conceptdriftemp"></span>
+<img src="ML_factor_files/figure-html/conceptdriftemp-1.png" alt="Variations in betas with respect to 6 month market capitalization" width="350px" />
+<p class="caption">
+FIGURE 15.3: Variations in betas with respect to 6 month market capitalization
+</p>
+</div>
+<p></p>
+<p>The figure highlights the concept drift: overall, the relationship between capitalization and returns is negative (the <strong>size effect</strong> again). Sometimes it is markedly negative, sometimes, not so much. The ability of capitalization to explain returns is time-varying and models must adapt accordingly.</p>
+</div>
+<div id="online-learning" class="section level3">
+<h3><span class="header-section-number">15.2.2</span> Online learning</h3>
+<p>Online learning refers to a subset of machine learning in which new information arrives progressively and the integration of this flow is performed iteratively (the term ‘<em>online</em>’ is not linked to internet). In order to take the latest data updates into account, it is imperative to update the model (stating the obvious). This is clearly the case in finance and this topic is closely related to the discussion on learning windows in Section <a href="backtest.html#protocol">13.1</a>.</p>
+<p>The problem is that if a 2019 model is trained on data from 2010 to 2019, the (dynamic) 2020 model will have to be re-trained with the whole dataset including the latest points from 2020. This can be heavy and including just the latest points in the learning process would substantially decrease its computational cost. In neural networks, the sequential batch updating of weights can allow a progressive change in the model. Nonetheless, this is typically impossible for decision trees because the splits are decided once and for all. One notable exception is <span class="citation">Basak (<a href="#ref-basak2004online">2004</a>)</span> but in that case, the construction of the trees differs strongly from the original algorithm (and spirit).</p>
+<p>An exhaustive review of techniques pertaining to online learning is presented in <span class="citation">Hoi et al. (<a href="#ref-hoi2018online">2018</a>)</span> (section 4.11 is even dedicated to portfolio selection). The book <span class="citation">Hazan and others (<a href="#ref-hazan2016introduction">2016</a>)</span> covers online convex optimization which is a very close domain with a large overlap with online learning. The presentation below is adapted from the second and third parts of the first survey.</p>
+<p>Datasets are indexed by time: we write <span class="math inline">\(\textbf{X}_t\)</span> and <span class="math inline">\(\textbf{y}_t\)</span> for features and labels (the usual column index (<span class="math inline">\(k\)</span>) and row index (<span class="math inline">\(i\)</span>) will not be used in this section). Time has a bounded horizon <span class="math inline">\(T\)</span>. The machine learning model depends on some parameters <span class="math inline">\(\boldsymbol{\theta}\)</span> and we denote it with <span class="math inline">\(f_{\boldsymbol{\theta}}\)</span>. At time <span class="math inline">\(t\)</span> (when dataset (<span class="math inline">\(\textbf{X}_t\)</span>, <span class="math inline">\(\textbf{y}_t\)</span>) is gathered), the loss function <span class="math inline">\(L\)</span> fo the trained model naturally depends on the data (<span class="math inline">\(\textbf{X}_t\)</span>, <span class="math inline">\(\textbf{y}_t\)</span>) and on the model via <span class="math inline">\(\boldsymbol{\theta}_t\)</span> which are the parameter values fitted to the time-<span class="math inline">\(t\)</span> data. For notational simplicity, we henceforth write <span class="math inline">\(L_t(\boldsymbol{\theta}_t)=L(\textbf{X}_t,\textbf{y}_t,\boldsymbol{\theta}_t )\)</span>. The key quantity in online learning is the regret over the whole time sequence:
+<span class="math display">\[\begin{equation}
+R_T=\sum_{t=1}^TL_t(\boldsymbol{\theta}_t)-\underset{\boldsymbol{\theta}^*\in \boldsymbol{\Theta}}{\inf} \ \sum_{t=1}^TL_t(\boldsymbol{\theta}^*).
+\label{eq:regret}
+\end{equation}\]</span></p>
+<p>The regret is the total loss incurred by the models <span class="math inline">\(\boldsymbol{\theta}_t\)</span> minus the minimal loss that could have obtained with full knowledge of the data sequence (hence computed in hindsight). The basic methods in online learning are in fact quite similar to the batch-training of neural networks. The updating of the parameter is based on
+<span class="math display">\[\begin{equation}
+\textbf{z}_{t+1}=\boldsymbol{\theta}_t-\eta_t\nabla L_t(\boldsymbol{\theta}_t),
+\label{eq:online1}
+\end{equation}\]</span>
+where <span class="math inline">\(\nabla L_t(\boldsymbol{\theta}_t)\)</span> denotes the gradient of the current loss <span class="math inline">\(L_t\)</span>. One problem that can arise is when <span class="math inline">\(\textbf{z}_{t+1}\)</span> falls out of the bounds that are prescribed for <span class="math inline">\(\boldsymbol{\theta}_t\)</span>. Thus, the candidate vector for the new parameters, <span class="math inline">\(\textbf{z}_{t+1}\)</span>, is projected onto the feasible domain which we call <span class="math inline">\(S\)</span> here:
+<span class="math display">\[\begin{equation}
+\boldsymbol{\theta}_{t+1}=\Pi_S(\textbf{z}_{t+1}), \quad \text{with} \quad \Pi_S(\textbf{u}) = \underset{\boldsymbol{\theta}\in S}{\text{argmin}} \ ||\boldsymbol{\theta}-\textbf{u}||_2.
+\label{eq:online2}
+\end{equation}\]</span>
+Hence <span class="math inline">\(\boldsymbol{\theta}_{t+1}\)</span> is as close as possible to the intermediate choice <span class="math inline">\(\textbf{z}_{t+1}\)</span>. In <span class="citation">Hazan, Agarwal, and Kale (<a href="#ref-hazan2007logarithmic">2007</a>)</span>, it is shown that under suitable assumptions (e.g., <span class="math inline">\(L_t\)</span> being strictly convex with bounded gradient <span class="math inline">\(\left|\left|\underset{\boldsymbol{\theta}}{\sup} \, \nabla L_t(\boldsymbol{\theta})\right|\right|\le G\)</span>), the regret <span class="math inline">\(R_T\)</span> satisfies
+<span class="math display">\[R_T \le \frac{G^2}{2H}(1+\log(T)),\]</span>
+where <span class="math inline">\(H\)</span> is a scaling factor for the learning rate (also called step sizes): <span class="math inline">\(\eta_t=(Ht)^{-1}\)</span>.</p>
+<p>More sophisticated online algorithms generalize <a href="#eq:online1">(<strong>??</strong>)</a> and <a href="#eq:online2">(<strong>??</strong>)</a> by integrating the Hessian matrix <span class="math inline">\(\nabla^2 L_t(\boldsymbol{\theta}):=[\nabla^2 L_t]_{i,j}=\frac{\partial}{\partial \boldsymbol{\theta}_i \partial \boldsymbol{\theta}_j}L_t(\partial \boldsymbol{\theta})\)</span> and/or by including penalizations to reduce instability in <span class="math inline">\(\boldsymbol{\theta}_t\)</span>. We refer to Section 2 in <span class="citation">Hoi et al. (<a href="#ref-hoi2018online">2018</a>)</span> for more details on these extensions.</p>
+<p>An interesting stream of parameter updating is that of the passive-aggressive algorithms (PAAs) formalized in <span class="citation">Crammer et al. (<a href="#ref-crammer2006online">2006</a>)</span>. The base case involves classification tasks, but we stick to the regression setting below (section 5 in <span class="citation">Crammer et al. (<a href="#ref-crammer2006online">2006</a>)</span>). One strong limitation with PAAs is that they rely on the set of parameters where the loss is either zero or negligible: <span class="math inline">\(\boldsymbol{\Theta}^*_\epsilon=\{\boldsymbol{\theta}, L_t(\boldsymbol{\theta})&lt; \epsilon\}\)</span>. For general loss functions and learner <span class="math inline">\(f\)</span>, this set is largely inaccessible. Thus, the algorithms in <span class="citation">Crammer et al. (<a href="#ref-crammer2006online">2006</a>)</span> are restricted to a particular case, namely linear <span class="math inline">\(f\)</span> and <span class="math inline">\(\epsilon\)</span>-insensitive hinge loss:</p>
+<p><span class="math display">\[L_\epsilon(\boldsymbol{\theta})=\left\{ \begin{array}{ll}
+0 &amp; \text{if } \ |\boldsymbol{\theta}&#39;\textbf{x}-y|\le \epsilon \quad (\text{close enough prediction}) \\
+|\boldsymbol{\theta}&#39;\textbf{x}-y|- \epsilon &amp; \text{if } \  |\boldsymbol{\theta}&#39;\textbf{x}-y| &gt;  \epsilon \quad (\text{prediction too far})
+\end{array}\right.,\]</span></p>
+<p>for some parameter <span class="math inline">\(\epsilon&gt;0\)</span>. If the weight <span class="math inline">\(\boldsymbol{\theta}\)</span> is such that the model is close enough to the true value, then the loss is zero, if not, it is equal to the absolute value of the error minus <span class="math inline">\(\epsilon\)</span>. In PAA, the update of the parameter is given by
+<span class="math display">\[\boldsymbol{\theta}_{t+1}= \underset{\boldsymbol{\theta}}{\text{argmin}} ||\boldsymbol{\theta}-\boldsymbol{\theta}_t||_2^2, \quad \text{subject to} \quad L_\epsilon(\boldsymbol{\theta})=0,\]</span>
+hence the new parameter values are chosen such that two conditions are satisfied:<br />
+- the loss is zero (by the definition of the loss, this means that the model is close enough to the true value);<br />
+- and, the parameter is as close a possible to the previous parameter values.</p>
+<p>Hence, if the model is good enough, the model does not move (passive phase), but if not, it is rapidly shifted towards values that yield satisfactory results (aggressive phase).</p>
+<p>We end this section with a historical note. Some of the ideas from online learning stem from the financial literature and from the concept of universal portfolios from <span class="citation">Cover (<a href="#ref-cover1991universal">1991</a>)</span> in particular. The setting is the following. The function <span class="math inline">\(f\)</span> is assumed to be linear <span class="math inline">\(f(\textbf{x}_t)=\boldsymbol{\theta}&#39;\textbf{x}_t\)</span> and the data <span class="math inline">\(\textbf{x}_t\)</span> consists of asset returns, thus, the values are portfolio returns as long as <span class="math inline">\(\boldsymbol{\theta}&#39;\textbf{1}_N=1\)</span> (the budget constraint). The loss functions <span class="math inline">\(L_t\)</span> correspond to concave utility functions and the regret is reversed:
+<span class="math display">\[R_T=\underset{\boldsymbol{\theta}^*\in \boldsymbol{\Theta}}{\sup} \ \sum_{t=1}^TL_t(\textbf{r}_t&#39;\boldsymbol{\theta}^*)-\sum_{t=1}^TL_t(\textbf{r}_t&#39;\boldsymbol{\theta}_t),\]</span>
+where <span class="math inline">\(\textbf{r}_t&#39;\)</span> are the returns. Thus, the program is transformed to maximize a concave function. Several articles (often from the Computer Science or ML communities) have proposed solutions to this type of problems: <span class="citation">Blum and Kalai (<a href="#ref-blum1999universal">1999</a>)</span>, <span class="citation">Agarwal et al. (<a href="#ref-agarwal2006algorithms">2006</a>)</span> and <span class="citation">Hazan, Agarwal, and Kale (<a href="#ref-hazan2007logarithmic">2007</a>)</span>.</p>
+</div>
+<div id="homogeneous-transfer-learning" class="section level3">
+<h3><span class="header-section-number">15.2.3</span> Homogeneous transfer learning</h3>
+<p>The next two subsections are mostly conceptual and will not be illustrated by coded applications. The ideas behind transfer learning and active learning can be valuable in that they can foster novel ideas.</p>
+<p>Transfer learning has been surveyed numerous times. One classical reference is <span class="citation">Pan and Yang (<a href="#ref-pan2009survey">2009</a>)</span>, but <span class="citation">Weiss, Khoshgoftaar, and Wang (<a href="#ref-weiss2016survey">2016</a>)</span> is more recent and more exhaustive. Suppose we are given two datasets <span class="math inline">\(D_S\)</span> (source) and <span class="math inline">\(D_T\)</span> (target). Each dataset has its own features <span class="math inline">\(\textbf{X}^S\)</span> and <span class="math inline">\(\textbf{X}^T\)</span> and labels <span class="math inline">\(\textbf{y}^S\)</span> and <span class="math inline">\(\textbf{y}^T\)</span>. In classical supervised learning, the patterns of the target set are learned only through <span class="math inline">\(\textbf{X}^T\)</span> and <span class="math inline">\(\textbf{y}^T\)</span>. Transfer learning proposes to improve the function <span class="math inline">\(f^T\)</span> (obtained by minimizing the fit <span class="math inline">\(y_i^T=f^T(\textbf{x}_i^T)+\epsilon^T_i\)</span> on the target data) via the function <span class="math inline">\(f^S\)</span> (from <span class="math inline">\(y_i^S=f^S(\textbf{x}_i^S)+\varepsilon^S_i\)</span> on the source data). Homogeneous transfer learning is when the feature space does not change, which is the case in our setting. In asset management, this may not always be the case if for instance new predictors are included (e.g., based on alternative data like sentiment, satelitte imagery, credit card logs, etc.).</p>
+<p>There are many subcategories in transfer learning depending on what changes between the source <span class="math inline">\(S\)</span> and the target <span class="math inline">\(T\)</span>: is it the feature space, the distribution of the labels, and/or the relationship between the two? This latter case is of interest in finance because the link with non-stationarity is evident: it is when the model <span class="math inline">\(f\)</span> in <span class="math inline">\(\textbf{y}=f(\textbf{X})\)</span> changes through time. In transfer learning jargon, it is written as <span class="math inline">\(P[\textbf{y}^S|\textbf{X}^S]\neq P[\textbf{y}^T|\textbf{X}^T]\)</span>: the conditional law of the label knowing the features is not the same when switching from the source to the target. Often, the term ‘domain adaptation’ is used as synonym to transfert learning. Because of a data shift, we must adapt the model to increase is accuracy. These topics are reviewed in a series of chapters in the collection by <span class="citation">Quionero-Candela et al. (<a href="#ref-quionero2009dataset">2009</a>)</span>.</p>
+<p>An important and elegant result in the theory was proven by <span class="citation">Ben-David et al. (<a href="#ref-ben2010theory">2010</a>)</span> in the case of binary classification. We state it below. We consider <span class="math inline">\(f\)</span> and <span class="math inline">\(h\)</span> two classifiers with values in <span class="math inline">\(\{0,1 \}\)</span>. The average error between the two over the domain <span class="math inline">\(S\)</span> is defined by
+<span class="math display">\[\epsilon_S(f,h)=\mathbb{E}_S[|f(\textbf{x})-h(\textbf{x})|].\]</span>
+Then,
+<span class="math display">\[\epsilon_T(f_T,h)\le \epsilon_S(f_S,h)+\underbrace{2 \sup_B|P_S(B)-P_T(B)|}_{\text{ difference between domains }} + \underbrace{ \min\left(\mathbb{E}_S[|f_S(\textbf{x})-f_T(\textbf{x})|],\mathbb{E}_T[|f_S(\textbf{x})-f_T(\textbf{x})|]\right)}_{\text{difference between the two learning tasks}}.\]</span></p>
+<p>The above inequality is a bound on the generalization performance of <span class="math inline">\(h\)</span>. If we take <span class="math inline">\(f_S\)</span> to be the best possible classifier for <span class="math inline">\(S\)</span> and <span class="math inline">\(f_T\)</span> the best for <span class="math inline">\(T\)</span>, then the error generated by <span class="math inline">\(h\)</span> in <span class="math inline">\(T\)</span> is smaller than the sum of three components:<br />
+- the error in the <span class="math inline">\(S\)</span> space;<br />
+- the distance between the two domains (by how much the data space has shifted);<br />
+- the ditance between the two best models (generators).</p>
+<p>One solution that is often mentioned in transfer learning is instance weighting. We present it here in a general setting. In machine learning, we seek to minimize
+<span class="math display">\[\begin{align*}
+\epsilon_T(f)=\mathbb{E}_T\left[L(\text{y},f(\textbf{X})) \right],
+\end{align*}\]</span>
+where <span class="math inline">\(L\)</span> is some loss function that depends on the taks (regression versus classification). This can be arranged
+<span class="math display">\[\begin{align*}
+\epsilon_T(f)&amp;=\mathbb{E}_T \left[\frac{P_S(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})} L(\text{y},f(\textbf{X})) \right]  \\
+&amp;=\sum_{\textbf{y},\textbf{X}}P_T(\textbf{y},\textbf{X})\frac{P_S(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})} L(\text{y},f(\textbf{X})) \\
+&amp;=\mathbb{E}_S \left[\frac{P_T(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})} L(\text{y},f(\textbf{X})) \right]
+\end{align*}\]</span></p>
+<p>The key quantity is thus the transition ratio <span class="math inline">\(\frac{P_T(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})}\)</span> (Radon–Nikodym derivative under some assumptions). Of course this ratio is largely inaccessible in practice, but it is possible to find a weighting scheme (over the instances) that yields improvements over the error in the target space. The weighting scheme, just as in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2019</a>)</span> can be binary, thereby simply excluding some observations in the computation of the error.</p>
+<p>More generally, the above expression can be viewed as a theoretical invitation for user-specified instance weighting (as in <a href="trees.html#instweight">7.4.7</a>). In the asset allocation parlance, this can be viewed as introducing views so as to which observations are the most interesting, e.g., value stocks can be allowed to have a larger weight in the computation of the loss. Naturally, it remains to minimize this loss.</p>
+</div>
+<div id="active-learning" class="section level3">
+<h3><span class="header-section-number">15.2.4</span> Active learning</h3>
+<p>We end this section with the notion of active learning. To the best of our knowledge, it is not widely used in quantitative investment, but the underlying concept is enlightening, hence we dedicate a few paragraphs to this notion for the sake of completeness.<a href="#fn20" class="footnote-ref" id="fnref20"><sup>20</sup></a></p>
+<p>In general supervised learning, there is sometimes an asymmetry in the ability to gather features versus labels. For instance, it is free to have access to images, but the labelling of the content of the image (e.g., “a dog”, “a truck”, “a pizza”, etc.) is costly because it requires human annotation. In formal terms, <span class="math inline">\(\textbf{X}\)</span> is cheap but the corresponding <span class="math inline">\(\textbf{y}\)</span> is expensive.</p>
+<p>As is often the case when facing cost constraints, a evident solution is greed. Ahead of the usual learning process, a filter (often called <em>query</em>) is used to decide which data to label and train on (possibly in relationship with the ML algorithm). The labelling is performed by a so-called <em>oracle</em> (which/who knows the truth) - usually human. This technique that focuses on the most informative instances is referred to as <strong>active learning</strong>. We refer to the surveys <span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span> and <span class="citation">Settles (<a href="#ref-settles2012active">2012</a>)</span> for a detailed account of this field (which we briefly summarize below). The term <strong>active</strong> comes from the fact that the learner does not passively accept data samples but actively participates to the choices of items it learns from.</p>
+<p>One major dichotomy in active learning pertains to the data source <span class="math inline">\(\textbf{X}\)</span> on which the query is based. One obvious case is when the original sample <span class="math inline">\(\textbf{X}\)</span> is very large and not labelled and the learner asks for particular instances within this sample to be labelled. The second case is when the learner has the ability to simulate/generate its own values <span class="math inline">\(\textbf{x}_i\)</span>. This can sometimes be problematic if the oracle does not recognize the data that is generated by the machine. For instance, if the purpose is to label images of characters and numbers, the learner mat generate shapes that do not correspond to any letter or digit: the oracle cannot label it.</p>
+<p>In active learning, one key question is: how does the learner choose the instances to be labelled? Heuristically, the answer is: by picking those obsrevations that maximize learning efficiency. In binary classification, a simple criterion is the probability of belonging to one particular class. If this probability is far from 0.5, then the algorithm will have no difficulty of picking one class (even though it can be wrong). The interesting case is when the probability is close to 0.5: the machine may hesitate. Thus, having the oracle label is useful in this case because it helps the learner in a configuration it which it is undecided.</p>
+<p>Other methods seek to estimate the fit that can be obtained when including particular (new) instances in the training set - and then to optimize this fit. Recalling Section 3.1 in <span class="citation">Geman, Bienenstock, and Doursat (<a href="#ref-geman1992neural">1992</a>)</span> on the variance-bias tradeoff, we have, for a training dataset <span class="math inline">\(D\)</span> and one instance <span class="math inline">\(x\)</span> (we omit bold font for simplicity),
+<span class="math display">\[\mathbb{E}\left[\left.(y-\hat{f}(x;D))^2\right|\{D,x\}\right]=\mathbb{E}\left[\left.\underbrace{(y-\mathbb{E}[y|x])^2}_{\text{indep. from }D\text{ and }\hat{f}} \right|\{D,x\} \right]+(\hat{f}(x;D)-\mathbb{E}[y|x])^2,\]</span>
+where the notation <span class="math inline">\(f(x;D)\)</span> is used to highlight the dependence between the model <span class="math inline">\(\hat{f}\)</span> and the dataset <span class="math inline">\(D\)</span>: the model has been trained on <span class="math inline">\(D\)</span>. The first term is irreducible, as it does not depend on <span class="math inline">\(\hat{f}\)</span>. Thus, only the second term is of interest. If we take the average of this quantity, taken over all possible values of <span class="math inline">\(D\)</span>:
+<span class="math display">\[\mathbb{E}_D\left[(\hat{f}(x;D)-\mathbb{E}[y|x])^2  \right]=\underbrace{\left(\mathbb{E}_D\left[\hat{f}(x;D)-\mathbb{E}[y|x]\right]\right)^2}_{\text{squared bias}} \ + \ \underbrace{\mathbb{E}_D\left[(\hat{f}(x,D)-\mathbb{E}_D[\hat{f}(x;D)])^2\right]}_{\text{variance}}\]</span>
+If this expression is not too complicated to compute, the learner can query the <span class="math inline">\(x\)</span> that minimizes the tradeoff. Thus, on average, this new instance will be the one that yields the best learning angle (as measured by the <span class="math inline">\(L^2\)</span> error). Beyond this approach (which is limited because it requires the oracle to label a possibly irrelevant instance), many other criteria exist for querying and we refer to Section 3 from <span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span> for an exhaustive list.</p>
+<p>One final question: is active learning applicable to factor investing? One straightfoward answer is that data cannot be annotated by human intervention. Thus, the learner cannot simulate its own instances and ask for corresponding labels. One possible option is to provide the learner with <span class="math inline">\(\textbf{X}\)</span> but not <span class="math inline">\(\textbf{y}\)</span> and keep only a queried subset of observations with the corresponding labels. In spirit, this is close to what is done in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2019</a>)</span> except that the query is not performed by a machine but by the human user. Indeed, it is shown in this paper that not all observations carry the same amount of signal. Instances with ‘average’ label values seem less informative compared to those with extreme label values.</p>
+
+</div>
+</div>
+</div>
+<h3><span class="header-section-number">C</span> References</h3>
+<div id="refs" class="references">
+<div id="ref-barberis2015x">
+<p>Barberis, Nicholas, Robin Greenwood, Lawrence Jin, and Andrei Shleifer. 2015. “X-Capm: An Extrapolative Capital Asset Pricing Model.” <em>Journal of Financial Economics</em> 115 (1): 1–24.</p>
+</div>
+<div id="ref-coqueret2018economic">
+<p>Coqueret, Guillaume. 2018. “The Economic Value of Firm-Specific News Sentiment.” <em>SSRN Working Paper</em> 3248925.</p>
+</div>
+<div id="ref-pearl2009causality">
+<p>Pearl, Judea. 2009. <em>Causality: Models, Reasoning and Inference. Second Edition</em>. Vol. 29. Cambridge University Press.</p>
+</div>
+<div id="ref-peters2017elements">
+<p>Peters, Jonas, Dominik Janzing, and Bernhard Schölkopf. 2017. <em>Elements of Causal Inference: Foundations and Learning Algorithms</em>. MIT press.</p>
+</div>
+<div id="ref-heinze2018invariant">
+<p>Heinze-Deml, Christina, Jonas Peters, and Nicolai Meinshausen. 2018. “Invariant Causal Prediction for Nonlinear Models.” <em>Journal of Causal Inference</em> 6 (2).</p>
+</div>
+<div id="ref-arjovsky2019invariant">
+<p>Arjovsky, Martin, Léon Bottou, Ishaan Gulrajani, and David Lopez-Paz. 2019. “Invariant Risk Minimization.” <em>arXiv Preprint</em>, no. 1907.02893.</p>
+</div>
+<div id="ref-beery2018recognition">
+<p>Beery, Sara, Grant Van Horn, and Pietro Perona. 2018. “Recognition in Terra Incognita.” In <em>Proceedings of the European Conference on Computer Vision (Eccv)</em>, 456–73.</p>
+</div>
+<div id="ref-granger1969investigating">
+<p>Granger, Clive WJ. 1969. “Investigating Causal Relations by Econometric Models and Cross-Spectral Methods.” <em>Econometrica</em>, 424–38.</p>
+</div>
+<div id="ref-hiemstra1994testing">
+<p>Hiemstra, Craig, and Jonathan D Jones. 1994. “Testing for Linear and Nonlinear Granger Causality in the Stock Price-Volume Relation.” <em>Journal of Finance</em> 49 (5): 1639–64.</p>
+</div>
+<div id="ref-maathuis2018handbook">
+<p>Maathuis, Marloes, Mathias Drton, Steffen Lauritzen, and Martin Wainwright. 2018. <em>Handbook of Graphical Models</em>. CRC Press.</p>
+</div>
+<div id="ref-buhlmann2014cam">
+<p>Bühlmann, Peter, Jonas Peters, Jan Ernest, and others. 2014. “CAM: Causal Additive Models, High-Dimensional Order Search and Penalized Regression.” <em>Annals of Statistics</em> 42 (6): 2526–56.</p>
+</div>
+<div id="ref-cornuejols2011apprentissage">
+<p>Cornuejols, Antoine, Laurent Miclet, and Vincent Barra. 2018. <em>Apprentissage Artificiel: Deep Learning, Concepts et Algorithmes</em>. Eyrolles.</p>
+</div>
+<div id="ref-engle1982autoregressive">
+<p>Engle, Robert F. 1982. “Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation.” <em>Econometrica</em>, 987–1007.</p>
+</div>
+<div id="ref-cont2007volatility">
+<p>Cont, Rama. 2007. “Volatility Clustering in Financial Markets: Empirical Facts and Agent-Based Models.” In <em>Long Memory in Economics</em>, 289–309. Springer.</p>
+</div>
+<div id="ref-regenstein2018reproducible">
+<p>Regenstein Jr, Jonathan K. 2018. <em>Reproducible Finance with R: Code Flows and Shiny Apps for Portfolio Analysis</em>. Chapman; Hall/CRC.</p>
+</div>
+<div id="ref-basak2004online">
+<p>Basak, Jayanta. 2004. “Online Adaptive Decision Trees.” <em>Neural Computation</em> 16 (9): 1959–81.</p>
+</div>
+<div id="ref-hoi2018online">
+<p>Hoi, Steven CH, Doyen Sahoo, Jing Lu, and Peilin Zhao. 2018. “Online Learning: A Comprehensive Survey.” <em>arXiv Preprint</em>, no. 1802.02871.</p>
+</div>
+<div id="ref-hazan2016introduction">
+<p>Hazan, Elad, and others. 2016. “Introduction to Online Convex Optimization.” <em>Foundations and Trends in Optimization</em> 2 (3-4). Now Publishers, Inc.: 157–325.</p>
+</div>
+<div id="ref-hazan2007logarithmic">
+<p>Hazan, Elad, Amit Agarwal, and Satyen Kale. 2007. “Logarithmic Regret Algorithms for Online Convex Optimization.” <em>Machine Learning</em> 69 (2-3): 169–92.</p>
+</div>
+<div id="ref-crammer2006online">
+<p>Crammer, Koby, Ofer Dekel, Joseph Keshet, Shai Shalev-Shwartz, and Yoram Singer. 2006. “Online Passive-Aggressive Algorithms.” <em>Journal of Machine Learning Research</em> 7 (Mar): 551–85.</p>
+</div>
+<div id="ref-cover1991universal">
+<p>Cover, Thomas M. 1991. “Universal Portfolios.” <em>Mathematical Finance</em> 1 (1): 1–29.</p>
+</div>
+<div id="ref-blum1999universal">
+<p>Blum, Avrim, and Adam Kalai. 1999. “Universal Portfolios with and Without Transaction Costs.” <em>Machine Learning</em> 35 (3): 193–205.</p>
+</div>
+<div id="ref-agarwal2006algorithms">
+<p>Agarwal, Amit, Elad Hazan, Satyen Kale, and Robert E Schapire. 2006. “Algorithms for Portfolio Management Based on the Newton Method.” In <em>Proceedings of the 23rd International Conference on Machine Learning</em>, 9–16. ACM.</p>
+</div>
+<div id="ref-pan2009survey">
+<p>Pan, Sinno Jialin, and Qiang Yang. 2009. “A Survey on Transfer Learning.” <em>IEEE Transactions on Knowledge and Data Engineering</em> 22 (10): 1345–59.</p>
+</div>
+<div id="ref-weiss2016survey">
+<p>Weiss, Karl, Taghi M Khoshgoftaar, and DingDing Wang. 2016. “A Survey of Transfer Learning.” <em>Journal of Big Data</em> 3 (1): 9.</p>
+</div>
+<div id="ref-quionero2009dataset">
+<p>Quionero-Candela, Joaquin, Masashi Sugiyama, Anton Schwaighofer, and Neil D Lawrence. 2009. <em>Dataset Shift in Machine Learning</em>. The MIT Press.</p>
+</div>
+<div id="ref-ben2010theory">
+<p>Ben-David, Shai, John Blitzer, Koby Crammer, Alex Kulesza, Fernando Pereira, and Jennifer Wortman Vaughan. 2010. “A Theory of Learning from Different Domains.” <em>Machine Learning</em> 79 (1-2): 151–75.</p>
+</div>
+<div id="ref-coqueret2019training">
+<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
+</div>
+<div id="ref-settles2009active">
+<p>Settles, Burr. 2009. “Active Learning Literature Survey.” University of Wisconsin-Madison Department of Computer Sciences.</p>
+</div>
+<div id="ref-settles2012active">
+<p>Settles, Burr. 2012. “Active Learning.” <em>Synthesis Lectures on Artificial Intelligence and Machine Learning</em> 6 (1): 1–114.</p>
+</div>
+<div id="ref-geman1992neural">
+<p>Geman, Stuart, Elie Bienenstock, and René Doursat. 1992. “Neural Networks and the Bias/Variance Dilemma.” <em>Neural Computation</em> 4 (1): 1–58.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="19">
+<li id="fn19"><p>See for instance the papers on herding in factor investing: <span class="citation">Krkoska and Schenk-Hoppé (<a href="#ref-krkoska2019herding">2019</a>)</span> and <span class="citation">Santi and Zwinkels (<a href="#ref-santi2018exploring">2018</a>)</span><a href="causality.html#fnref19" class="footnote-back">↩</a></p></li>
+<li id="fn20"><p>As a matter of fact, active learning is not known to be particularly useful for learning from non-stationary environments.<a href="causality.html#fnref20" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="interp.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="unsup.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["ML_factor.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

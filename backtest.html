@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Machine Learning for Factor Investing</title>
+  <meta name="description" content="Machine Learning for Factor Investing">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  
+  
+  
+
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="ensemble.html">
+<link rel="next" href="interp.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="preface.html"><a href="preface.html#foreword"><i class="fa fa-check"></i><b>1.1</b> Foreword</a></li>
+<li class="chapter" data-level="1.2" data-path="preface.html"><a href="preface.html#what-this-book-is-not-about"><i class="fa fa-check"></i><b>1.2</b> What this book is not about</a></li>
+<li class="chapter" data-level="1.3" data-path="preface.html"><a href="preface.html#the-targeted-audience"><i class="fa fa-check"></i><b>1.3</b> The targeted audience</a></li>
+<li class="chapter" data-level="1.4" data-path="preface.html"><a href="preface.html#how-this-book-is-structured"><i class="fa fa-check"></i><b>1.4</b> How this book is structured</a></li>
+<li class="chapter" data-level="1.5" data-path="preface.html"><a href="preface.html#companion-website"><i class="fa fa-check"></i><b>1.5</b> Companion website</a></li>
+<li class="chapter" data-level="1.6" data-path="preface.html"><a href="preface.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="preface.html"><a href="preface.html#coding-instructions"><i class="fa fa-check"></i><b>1.7</b> Coding instructions</a></li>
+<li class="chapter" data-level="1.8" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i><b>1.8</b> Acknowledgements</a></li>
+<li class="chapter" data-level="1.9" data-path="preface.html"><a href="preface.html#future-developments"><i class="fa fa-check"></i><b>1.9</b> Future developments</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="notdata.html"><a href="notdata.html"><i class="fa fa-check"></i><b>2</b> Notations and data</a><ul>
+<li class="chapter" data-level="2.1" data-path="notdata.html"><a href="notdata.html#notations"><i class="fa fa-check"></i><b>2.1</b> Notations</a></li>
+<li class="chapter" data-level="2.2" data-path="notdata.html"><a href="notdata.html#dataset"><i class="fa fa-check"></i><b>2.2</b> Dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>3</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1" data-path="intro.html"><a href="intro.html#context"><i class="fa fa-check"></i><b>3.1</b> Context</a></li>
+<li class="chapter" data-level="3.2" data-path="intro.html"><a href="intro.html#portfolio-construction-the-workflow"><i class="fa fa-check"></i><b>3.2</b> Portfolio construction: the workflow</a></li>
+<li class="chapter" data-level="3.3" data-path="intro.html"><a href="intro.html#machine-learning-is-no-magic-wand"><i class="fa fa-check"></i><b>3.3</b> Machine Learning is no Magic Wand</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="factor.html"><a href="factor.html"><i class="fa fa-check"></i><b>4</b> Factor investing and asset pricing anomalies</a><ul>
+<li class="chapter" data-level="4.1" data-path="factor.html"><a href="factor.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="factor.html"><a href="factor.html#detecting-anomalies"><i class="fa fa-check"></i><b>4.2</b> Detecting anomalies</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>4.2.1</b> Simple portfolio sorts</a></li>
+<li class="chapter" data-level="4.2.2" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>4.2.2</b> Factors</a></li>
+<li class="chapter" data-level="4.2.3" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>4.2.3</b> Predictive regressions, sorts, and p-value issues</a></li>
+<li class="chapter" data-level="4.2.4" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>4.2.4</b> Fama-Macbeth regressions</a></li>
+<li class="chapter" data-level="4.2.5" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>4.2.5</b> Factor competition</a></li>
+<li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.4</b> The link with machine learning</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.4.1</b> A short list of recent references</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.4.2</b> Explicit connexions with asset pricing models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>4.5</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="Data.html"><a href="Data.html"><i class="fa fa-check"></i><b>5</b> Data preprocessing</a><ul>
+<li class="chapter" data-level="5.1" data-path="Data.html"><a href="Data.html#know-your-data"><i class="fa fa-check"></i><b>5.1</b> Know your data</a></li>
+<li class="chapter" data-level="5.2" data-path="Data.html"><a href="Data.html#missing-data"><i class="fa fa-check"></i><b>5.2</b> Missing data</a></li>
+<li class="chapter" data-level="5.3" data-path="Data.html"><a href="Data.html#outlier-detection"><i class="fa fa-check"></i><b>5.3</b> Outlier detection</a></li>
+<li class="chapter" data-level="5.4" data-path="Data.html"><a href="Data.html#feateng"><i class="fa fa-check"></i><b>5.4</b> Feature engineering</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="Data.html"><a href="Data.html#feature-selection"><i class="fa fa-check"></i><b>5.4.1</b> Feature selection</a></li>
+<li class="chapter" data-level="5.4.2" data-path="Data.html"><a href="Data.html#scaling"><i class="fa fa-check"></i><b>5.4.2</b> Scaling the predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="Data.html"><a href="Data.html#labelling"><i class="fa fa-check"></i><b>5.5</b> Labelling</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="Data.html"><a href="Data.html#simple-labels"><i class="fa fa-check"></i><b>5.5.1</b> Simple labels</a></li>
+<li class="chapter" data-level="5.5.2" data-path="Data.html"><a href="Data.html#categorical-labels"><i class="fa fa-check"></i><b>5.5.2</b> Categorical labels</a></li>
+<li class="chapter" data-level="5.5.3" data-path="Data.html"><a href="Data.html#the-triple-barrier-method"><i class="fa fa-check"></i><b>5.5.3</b> The triple barrier method</a></li>
+<li class="chapter" data-level="5.5.4" data-path="Data.html"><a href="Data.html#filtering-the-sample"><i class="fa fa-check"></i><b>5.5.4</b> Filtering the sample</a></li>
+<li class="chapter" data-level="5.5.5" data-path="Data.html"><a href="Data.html#horizons"><i class="fa fa-check"></i><b>5.5.5</b> Return horizons</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Discussion on persistence</a></li>
+<li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macro-economic-variables"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#code-and-results"><i class="fa fa-check"></i><b>5.8</b> Code and results</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
+<li class="chapter" data-level="5.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>5.8.2</b> Impact of rescaling: toy example</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#simple-regressions"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
+<li class="chapter" data-level="6.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>6.1.2</b> Forms of penalizations</a></li>
+<li class="chapter" data-level="6.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>6.1.3</b> Illustrations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="lasso.html"><a href="lasso.html#sparse-hedging-for-minimum-variance-portfolios"><i class="fa fa-check"></i><b>6.2</b> Sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="lasso.html"><a href="lasso.html#presentation-and-derivations"><i class="fa fa-check"></i><b>6.2.1</b> Presentation and derivations</a></li>
+<li class="chapter" data-level="6.2.2" data-path="lasso.html"><a href="lasso.html#sparseex"><i class="fa fa-check"></i><b>6.2.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="lasso.html"><a href="lasso.html#predictive-regressions"><i class="fa fa-check"></i><b>6.3</b> Predictive regressions</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="lasso.html"><a href="lasso.html#literature-review-and-principle"><i class="fa fa-check"></i><b>6.3.1</b> Literature review and principle</a></li>
+<li class="chapter" data-level="6.3.2" data-path="lasso.html"><a href="lasso.html#code-and-results-1"><i class="fa fa-check"></i><b>6.3.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="lasso.html"><a href="lasso.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>7</b> Tree-based methods</a><ul>
+<li class="chapter" data-level="7.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>7.1</b> Simple trees</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>7.1.1</b> Principle</a></li>
+<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#further-details-on-classification"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
+<li class="chapter" data-level="7.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>7.1.3</b> Pruning criteria</a></li>
+<li class="chapter" data-level="7.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>7.1.4</b> Code and interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>7.2</b> Random forests</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
+<li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-2"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#boosted-trees-adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
+<li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="trees.html"><a href="trees.html#boosted-trees-extreme-gradient-boosting"><i class="fa fa-check"></i><b>7.4</b> Boosted trees: extreme gradient boosting</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="trees.html"><a href="trees.html#managing-loss"><i class="fa fa-check"></i><b>7.4.1</b> Managing Loss</a></li>
+<li class="chapter" data-level="7.4.2" data-path="trees.html"><a href="trees.html#penalisation"><i class="fa fa-check"></i><b>7.4.2</b> Penalisation</a></li>
+<li class="chapter" data-level="7.4.3" data-path="trees.html"><a href="trees.html#aggregation"><i class="fa fa-check"></i><b>7.4.3</b> Aggregation</a></li>
+<li class="chapter" data-level="7.4.4" data-path="trees.html"><a href="trees.html#tree-structure"><i class="fa fa-check"></i><b>7.4.4</b> Tree structure</a></li>
+<li class="chapter" data-level="7.4.5" data-path="trees.html"><a href="trees.html#boostext"><i class="fa fa-check"></i><b>7.4.5</b> Extensions</a></li>
+<li class="chapter" data-level="7.4.6" data-path="trees.html"><a href="trees.html#boostcode"><i class="fa fa-check"></i><b>7.4.6</b> Code and results</a></li>
+<li class="chapter" data-level="7.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>7.4.7</b> Instance weighting</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>7.5</b> Discussion</a></li>
+<li class="chapter" data-level="7.6" data-path="trees.html"><a href="trees.html#coding-exercises-3"><i class="fa fa-check"></i><b>7.6</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>8</b> Neural networks</a><ul>
+<li class="chapter" data-level="8.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>8.1</b> The original perceptron</a></li>
+<li class="chapter" data-level="8.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron"><i class="fa fa-check"></i><b>8.2</b> Multilayer perceptron</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
+<li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
+<li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
+<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification-1"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>8.3</b> How deep should we go? And other practical issues</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>8.3.1</b> Architectural choices</a></li>
+<li class="chapter" data-level="8.3.2" data-path="NN.html"><a href="NN.html#frequency-of-weight-updates-and-learning-duration"><i class="fa fa-check"></i><b>8.3.2</b> Frequency of weight updates and learning duration</a></li>
+<li class="chapter" data-level="8.3.3" data-path="NN.html"><a href="NN.html#penalizations-and-dropout"><i class="fa fa-check"></i><b>8.3.3</b> Penalizations and dropout</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
+<li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
+<li class="chapter" data-level="8.5.2" data-path="NN.html"><a href="NN.html#code-and-results-3"><i class="fa fa-check"></i><b>8.5.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>8.6</b> Other common architectures</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>8.6.1</b> Generative adversarial networks</a></li>
+<li class="chapter" data-level="8.6.2" data-path="NN.html"><a href="NN.html#autoencoders"><i class="fa fa-check"></i><b>8.6.2</b> Auto-encoders</a></li>
+<li class="chapter" data-level="8.6.3" data-path="NN.html"><a href="NN.html#a-word-on-convolutional-networks"><i class="fa fa-check"></i><b>8.6.3</b> A word on convolutional networks</a></li>
+<li class="chapter" data-level="8.6.4" data-path="NN.html"><a href="NN.html#advanced-architectures"><i class="fa fa-check"></i><b>8.6.4</b> Advanced architectures</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="NN.html"><a href="NN.html#coding-exercises-4"><i class="fa fa-check"></i><b>8.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>9</b> Support vector machines</a><ul>
+<li class="chapter" data-level="9.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>9.1</b> SVM for classification</a></li>
+<li class="chapter" data-level="9.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>9.2</b> SVM for regression</a></li>
+<li class="chapter" data-level="9.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>9.3</b> Practice</a></li>
+<li class="chapter" data-level="9.4" data-path="svm.html"><a href="svm.html#coding-exercises-5"><i class="fa fa-check"></i><b>9.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>10</b> Bayesian methods</a><ul>
+<li class="chapter" data-level="10.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>10.1</b> The Bayesian framework</a></li>
+<li class="chapter" data-level="10.2" data-path="bayes.html"><a href="bayes.html#bayesian-sampling"><i class="fa fa-check"></i><b>10.2</b> Bayesian sampling</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="bayes.html"><a href="bayes.html#gibbs-sampling"><i class="fa fa-check"></i><b>10.2.1</b> Gibbs sampling</a></li>
+<li class="chapter" data-level="10.2.2" data-path="bayes.html"><a href="bayes.html#metropolis-hastings-sampling"><i class="fa fa-check"></i><b>10.2.2</b> Metropolis-Hastings sampling</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="bayes.html"><a href="bayes.html#bayesian-linear-regression"><i class="fa fa-check"></i><b>10.3</b> Bayesian linear regression</a></li>
+<li class="chapter" data-level="10.4" data-path="bayes.html"><a href="bayes.html#naive-bayes-classifier"><i class="fa fa-check"></i><b>10.4</b> Naive Bayes classifier</a></li>
+<li class="chapter" data-level="10.5" data-path="bayes.html"><a href="bayes.html#BART"><i class="fa fa-check"></i><b>10.5</b> Bayesian additive trees</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="bayes.html"><a href="bayes.html#general-formulation"><i class="fa fa-check"></i><b>10.5.1</b> General formulation</a></li>
+<li class="chapter" data-level="10.5.2" data-path="bayes.html"><a href="bayes.html#priors"><i class="fa fa-check"></i><b>10.5.2</b> Priors</a></li>
+<li class="chapter" data-level="10.5.3" data-path="bayes.html"><a href="bayes.html#sampling-and-predictions"><i class="fa fa-check"></i><b>10.5.3</b> Sampling and predictions</a></li>
+<li class="chapter" data-level="10.5.4" data-path="bayes.html"><a href="bayes.html#code"><i class="fa fa-check"></i><b>10.5.4</b> Code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="valtune.html"><a href="valtune.html"><i class="fa fa-check"></i><b>11</b> Validating and tuning</a><ul>
+<li class="chapter" data-level="11.1" data-path="valtune.html"><a href="valtune.html#mlmetrics"><i class="fa fa-check"></i><b>11.1</b> Learning metrics</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="valtune.html"><a href="valtune.html#regression-analysis"><i class="fa fa-check"></i><b>11.1.1</b> Regression analysis</a></li>
+<li class="chapter" data-level="11.1.2" data-path="valtune.html"><a href="valtune.html#classification-analysis"><i class="fa fa-check"></i><b>11.1.2</b> Classification analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="valtune.html"><a href="valtune.html#validation"><i class="fa fa-check"></i><b>11.2</b> Validation</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-theory"><i class="fa fa-check"></i><b>11.2.1</b> The variance-bias tradeoff: theory</a></li>
+<li class="chapter" data-level="11.2.2" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-illustration"><i class="fa fa-check"></i><b>11.2.2</b> The variance-bias tradeoff: illustration</a></li>
+<li class="chapter" data-level="11.2.3" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-principle"><i class="fa fa-check"></i><b>11.2.3</b> The risk of overfitting: principle</a></li>
+<li class="chapter" data-level="11.2.4" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-some-solutions"><i class="fa fa-check"></i><b>11.2.4</b> The risk of overfitting: some solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="valtune.html"><a href="valtune.html#the-search-for-good-hyperparameters"><i class="fa fa-check"></i><b>11.3</b> The search for good hyperparameters</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="valtune.html"><a href="valtune.html#methods"><i class="fa fa-check"></i><b>11.3.1</b> Methods</a></li>
+<li class="chapter" data-level="11.3.2" data-path="valtune.html"><a href="valtune.html#example-grid-search"><i class="fa fa-check"></i><b>11.3.2</b> Example: grid search</a></li>
+<li class="chapter" data-level="11.3.3" data-path="valtune.html"><a href="valtune.html#example-bayesian-optimization"><i class="fa fa-check"></i><b>11.3.3</b> Example: Bayesian optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="valtune.html"><a href="valtune.html#short-discussion-on-validation-in-backtests"><i class="fa fa-check"></i><b>11.4</b> Short discussion on validation in backtests</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ensemble.html"><a href="ensemble.html"><i class="fa fa-check"></i><b>12</b> Ensemble models</a><ul>
+<li class="chapter" data-level="12.1" data-path="ensemble.html"><a href="ensemble.html#linear-ensembles"><i class="fa fa-check"></i><b>12.1</b> Linear ensembles</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="ensemble.html"><a href="ensemble.html#principles"><i class="fa fa-check"></i><b>12.1.1</b> Principles</a></li>
+<li class="chapter" data-level="12.1.2" data-path="ensemble.html"><a href="ensemble.html#example"><i class="fa fa-check"></i><b>12.1.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>12.2</b> Stacked ensembles</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>12.2.1</b> Two stage training</a></li>
+<li class="chapter" data-level="12.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-4"><i class="fa fa-check"></i><b>12.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>12.3</b> Extensions</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>12.3.1</b> Exogenous variables</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>12.3.2</b> Shrinking inter-model correlations</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ensemble.html"><a href="ensemble.html#exercise"><i class="fa fa-check"></i><b>12.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="backtest.html"><a href="backtest.html"><i class="fa fa-check"></i><b>13</b> Portfolio backtesting</a><ul>
+<li class="chapter" data-level="13.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>13.1</b> Setting the protocol</a></li>
+<li class="chapter" data-level="13.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>13.2</b> Turning signals into portfolio weights</a></li>
+<li class="chapter" data-level="13.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>13.3</b> Performance metrics</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>13.3.1</b> Discussion</a></li>
+<li class="chapter" data-level="13.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>13.3.2</b> Pure performance and risk indicators</a></li>
+<li class="chapter" data-level="13.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>13.3.3</b> Factor-based evaluation</a></li>
+<li class="chapter" data-level="13.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>13.3.4</b> Risk-adjusted measures</a></li>
+<li class="chapter" data-level="13.3.5" data-path="backtest.html"><a href="backtest.html#transaction-costs-and-turnover"><i class="fa fa-check"></i><b>13.3.5</b> Transaction costs and turnover</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="backtest.html"><a href="backtest.html#common-errors-and-issues"><i class="fa fa-check"></i><b>13.4</b> Common errors and issues</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="backtest.html"><a href="backtest.html#forward-looking-data"><i class="fa fa-check"></i><b>13.4.1</b> Forward looking data</a></li>
+<li class="chapter" data-level="13.4.2" data-path="backtest.html"><a href="backtest.html#backtest-overfitting"><i class="fa fa-check"></i><b>13.4.2</b> Backtest overfitting</a></li>
+<li class="chapter" data-level="13.4.3" data-path="backtest.html"><a href="backtest.html#simple-saveguards"><i class="fa fa-check"></i><b>13.4.3</b> Simple saveguards</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="backtest.html"><a href="backtest.html#implication-of-non-stationarity-forecasting-is-hard"><i class="fa fa-check"></i><b>13.5</b> Implication of non-stationarity: forecasting is hard</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="backtest.html"><a href="backtest.html#general-comments"><i class="fa fa-check"></i><b>13.5.1</b> General comments</a></li>
+<li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-6"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
+<li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
+<li class="chapter" data-level="14.2.2" data-path="interp.html"><a href="interp.html#shapley-values"><i class="fa fa-check"></i><b>14.2.2</b> Shapley values</a></li>
+<li class="chapter" data-level="14.2.3" data-path="interp.html"><a href="interp.html#breakdown"><i class="fa fa-check"></i><b>14.2.3</b> Breakdown</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>15</b> Two key concepts: causality and non-stationarity</a><ul>
+<li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
+<li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
+<li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
+<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
+<li class="chapter" data-level="16.1" data-path="unsup.html"><a href="unsup.html#corpred"><i class="fa fa-check"></i><b>16.1</b> The problem with correlated predictors</a></li>
+<li class="chapter" data-level="16.2" data-path="unsup.html"><a href="unsup.html#principal-component-analysis-and-autoencoders"><i class="fa fa-check"></i><b>16.2</b> Principal component analysis and autoencoders</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="unsup.html"><a href="unsup.html#a-bit-of-algebra"><i class="fa fa-check"></i><b>16.2.1</b> A bit of algebra</a></li>
+<li class="chapter" data-level="16.2.2" data-path="unsup.html"><a href="unsup.html#pca"><i class="fa fa-check"></i><b>16.2.2</b> PCA</a></li>
+<li class="chapter" data-level="16.2.3" data-path="unsup.html"><a href="unsup.html#ae"><i class="fa fa-check"></i><b>16.2.3</b> Autoencoders</a></li>
+<li class="chapter" data-level="16.2.4" data-path="unsup.html"><a href="unsup.html#application"><i class="fa fa-check"></i><b>16.2.4</b> Application</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>16.3</b> Clustering via k-means</a></li>
+<li class="chapter" data-level="16.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>16.4</b> Nearest neighbors</a></li>
+<li class="chapter" data-level="16.5" data-path="unsup.html"><a href="unsup.html#coding-exercise"><i class="fa fa-check"></i><b>16.5</b> Coding exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>17</b> Reinforcement learning</a><ul>
+<li class="chapter" data-level="17.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>17.1</b> Theoretical layout</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="RL.html"><a href="RL.html#general-framework"><i class="fa fa-check"></i><b>17.1.1</b> General framework</a></li>
+<li class="chapter" data-level="17.1.2" data-path="RL.html"><a href="RL.html#q-learning"><i class="fa fa-check"></i><b>17.1.2</b> Q-learning</a></li>
+<li class="chapter" data-level="17.1.3" data-path="RL.html"><a href="RL.html#sarsa"><i class="fa fa-check"></i><b>17.1.3</b> SARSA</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="RL.html"><a href="RL.html#issues-and-potential-solutions"><i class="fa fa-check"></i><b>17.2</b> Issues and potential solutions</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>17.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="17.2.2" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>17.2.2</b> Policy gradient</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>17.3</b> Simple examples</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>17.3.1</b> Q-learning with simulations</a></li>
+<li class="chapter" data-level="17.3.2" data-path="RL.html"><a href="RL.html#q-learning-with-market-data"><i class="fa fa-check"></i><b>17.3.2</b> Q-learning with market data</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>17.4</b> Concluding remarks</a></li>
+<li class="chapter" data-level="17.5" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>17.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="NLP.html"><a href="NLP.html"><i class="fa fa-check"></i><b>18</b> Natural Language Processing</a></li>
+<li class="chapter" data-level="19" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>19</b> Conclusion</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="data-description.html"><a href="data-description.html"><i class="fa fa-check"></i><b>A</b> Data Description</a></li>
+<li class="chapter" data-level="B" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html"><i class="fa fa-check"></i><b>B</b> Solution to exercises</a><ul>
+<li class="chapter" data-level="B.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-4"><i class="fa fa-check"></i><b>B.1</b> Chapter 4</a></li>
+<li class="chapter" data-level="B.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-5"><i class="fa fa-check"></i><b>B.2</b> Chapter 5</a></li>
+<li class="chapter" data-level="B.3" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-6"><i class="fa fa-check"></i><b>B.3</b> Chapter 6</a></li>
+<li class="chapter" data-level="B.4" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-7"><i class="fa fa-check"></i><b>B.4</b> Chapter 7</a></li>
+<li class="chapter" data-level="B.5" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-8"><i class="fa fa-check"></i><b>B.5</b> Chapter 8</a></li>
+<li class="chapter" data-level="B.6" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-9"><i class="fa fa-check"></i><b>B.6</b> Chapter 9</a></li>
+<li class="chapter" data-level="B.7" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-12"><i class="fa fa-check"></i><b>B.7</b> Chapter 12</a></li>
+<li class="chapter" data-level="B.8" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-13"><i class="fa fa-check"></i><b>B.8</b> Chapter 13</a><ul>
+<li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.1</b> Functional programming in the backtest</a></li>
+<li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.2</b> Advanced weighting function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning for Factor Investing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="backtest" class="section level1">
+<h1><span class="header-section-number">Chapter 13</span> Portfolio backtesting</h1>
+<p>In this section, we introduce the notations and framework that will be used when analysing and comparing investment strategies. Portfolio backtesting is often conceived and perceived as a quest to find the best strategy - or at least a solidly profitable one. When carried out thoroughly, this possibly long endeavour may entice the layman to confuse a fluke for a robust policy. Two papers published back-to-back warn against the perils of data snooping.</p>
+<p><span class="citation">Fabozzi and Prado (<a href="#ref-fabozzi2018being">2018</a>)</span> acknowledge that only strategies that work make it to the public, while thousands (at least) have been tested. Picking the pleasing outlier (the only strategy that seemed to work) is likely to generate disappointment when switching to real life trading. In a similar vein, <span class="citation">Arnott, Harvey, and Markowitz (<a href="#ref-arnott2019backtesting">2019</a>)</span> provide a list of principles and safeguards that any analyst should follow to avoid any type of error when backtesting strategy. The worst type is arguably false positives whereby strategies are found (often by cherrypicking) to outperform in one very particular setting, but will likely fail in live trading.</p>
+<p>In addition to these recommendations on portfolio constructions, <span class="citation">Arnott et al. (<a href="#ref-arnott2019alice">2019</a>)</span> also warn against the perils of blindly investing in smart beta products related to academic factors. Plainly, expectations should not be set too high or face the risk of being disappointed. Another takeaway from their article is that economic cycles have a strong impact on factor returns: correlations change quickly and drawdowns can be magnified in times of major downturns.</p>
+<p>Backtesting is more complicated than it seems and it is easy to make small mistakes that lead to <em>apparently</em> good portfolio policies. This chapter lays out a rigorous approach to this exercise, discusses a few caveats, and proposes a lengthy example.</p>
+<div id="protocol" class="section level2">
+<h2><span class="header-section-number">13.1</span> Setting the protocol</h2>
+<p>We consider a dataset with three dimensions: time <span class="math inline">\(t=1,\dots,T\)</span>, assets <span class="math inline">\(n=1,\dots,N\)</span> and characteristics <span class="math inline">\(k=1,\dots,K\)</span>. One of these attributes must be the price of asset <span class="math inline">\(n\)</span> at time <span class="math inline">\(t\)</span>, which we will denote <span class="math inline">\(p_{t,n}\)</span>. From that, the computation of the arithmetic return is straightforward (<span class="math inline">\(r_{t,n}=p_{t,n}/p_{t-1,n}-1\)</span>) and so is any heuristic measure of profitability. For simplicity, we assume that time points are equidistant or uniform, i.e., that <span class="math inline">\(t\)</span> is the index of a trading day or of a month for example. If each point in time <span class="math inline">\(t\)</span> has data available for all assets, then this makes a dataset with <span class="math inline">\(I=T\times N\)</span> rows.</p>
+<p>The dataset is first split in two: the out-of-sample period and the initial buffer period. The buffer period is required to train the models for the first portfolio composition. This period is determined by the size of the training sample. There are two options for this size: fixed (usually equal to 2 to 5 years) and expanding. In the first case, the training sample will roll over time, taking into account only the most recent data. In the second case, models are built on all of the available data. This last option can create problems because the first dates of the backtest are based on much smaller amounts of information compared to the last dates. Moreover, there is an ongoing debate on whether including the full history of returns and characteristics is advantageous or not. Proponents argue that this allows models to see many different market conditions. Opponents make the case that old data is by definition outdated and thus useless and possibly misleading.</p>
+<p>Henceforth, we choose the rolling period option for the training sample, as depicted in Figure <a href="backtest.html#fig:backtestoos">13.1</a>.</p>
+<div class="figure" style="text-align: center"><span id="fig:backtestoos"></span>
+<img src="images/backtestoos" alt="Backtesting with rolling windows. The training set of the first period is simply the buffer period." width="360px" />
+<p class="caption">
+FIGURE 13.1: Backtesting with rolling windows. The training set of the first period is simply the buffer period.
+</p>
+</div>
+<p>Two crucial design choices are the <strong>rebalancing frequency</strong> and the <strong>horizon</strong> at which the label is computed. It is not obvious that they should be equal but their choice should make sense. It can seem right to train on a 12 month forward label (which capture longer trends) and invest monthly or quarterly. However, it seems odd to do the opposite and train on short term movements (monthly) and invest at a long horizon.</p>
+<p>These choices have a direct impact on how the backtest is carried out. If we note:</p>
+<ul>
+<li><span class="math inline">\(\Delta_h\)</span> for the holding period between 2 rebalancing dates (in days or months);</li>
+<li><span class="math inline">\(\Delta_s\)</span> for the size of the desired training sample (in days or months - not taking the number of assets into consideration);</li>
+<li><span class="math inline">\(\Delta_l\)</span> for the horizon at which the label is computed (in days or months),</li>
+</ul>
+<p>then the total length of the training sample should be <span class="math inline">\(\Delta_s+\Delta_l\)</span>. Indeed, at any moment <span class="math inline">\(t\)</span>, the training sample should stop at <span class="math inline">\(t-\Delta_l\)</span> so that the last point corresponds to a label that is calculated until time <span class="math inline">\(t\)</span>. This is highlighted in Figure <a href="backtest.html#fig:backtestoos2">13.2</a> in the form of the red danger zone. We call it the red zone because any feature which has a time index <span class="math inline">\(s\)</span> inside the interval <span class="math inline">\((t-\Delta_l,t]\)</span> will engender a forward looking bias. Indeed if a feature is indexed by <span class="math inline">\(s \in (t-\Delta_l,t]\)</span>, then by definition, the label covers the period <span class="math inline">\([s,s+\Delta_l]\)</span> with <span class="math inline">\(s+\Delta_l&gt;t\)</span>. At time <span class="math inline">\(t\)</span>, this requires knowledge of the future and is naturally not realistic.</p>
+<div class="figure" style="text-align: center"><span id="fig:backtestoos2"></span>
+<img src="images/backtestoos2" alt="The tricks in rolling training samples." width="360px" />
+<p class="caption">
+FIGURE 13.2: The tricks in rolling training samples.
+</p>
+</div>
+</div>
+<div id="turning-signals-into-portfolio-weights" class="section level2">
+<h2><span class="header-section-number">13.2</span> Turning signals into portfolio weights</h2>
+<p>The predictive tools outlined in Chapters <a href="lasso.html#lasso">6</a> to XXX are only meant to provide a signal that is expected to provide some information on the future profitability of assets. There are many ways that this signal can be integrated in an investment decision.</p>
+<p>First and foremost, there are at least two steps in the portfolio construction process and the signal can be used at any of these stages. Relying on the signal for both steps puts a lot of emphasis on the predictions and should only be considered when the level of confidence in the forecasts is high.</p>
+<p>The first step is <strong>selection</strong>. While a forecasting exercise can be carried out on a large number of assets, it is not compulsory to invest in all of these assets. In fact, it would make sense to take advantage of the signal to exclude those assets that are presumably likely to underperform in the future. Often, portfolio policies have fixed sizes that impose a constant number of assets. One heuristic way to exploit the signal is to select the assets that have the most favorable predictions and to discard the others. This naive idea is often used in the asset pricing literature: portfolios are formed according to underlying characteristics and this characteristic is deemed interesting if the portfolios exhibit very different profitabilities.</p>
+<p>This is for instance an efficient way to test the relevance of the signal. If <span class="math inline">\(Q\)</span> portfolios <span class="math inline">\(q=1,\dots,Q\)</span> are formed according to the rankings of the assets with respect to the signal, then one would expect that the out-of-sample performance of the portfolios be monotonic with <span class="math inline">\(q\)</span>. While a rigorous test of monotonicity would require to account for all portfolios (see, e.g., <span class="citation">Romano and Wolf (<a href="#ref-romano2013testing">2013</a>)</span>), it is often only assumed that the extreme portfolios suffice. If the difference between portfolio number 1 and portfolio number <span class="math inline">\(Q\)</span> is substantial, then the signal is valuable. Whenever the investor is able to short assets, this amounts to a dollar neutral strategy.</p>
+<p>The second step is <strong>weighting</strong>. If the selection process relied on the signal, then a simple weighting scheme is often a good idea. Equally-weighted portfolios are known to be hard to beat (see <span class="citation">DeMiguel, Garlappi, and Uppal (<a href="#ref-demiguel2007optimal">2007</a>)</span>), especially compared to their cap-weighted alternative, as is shown in <span class="citation">Plyakha, Uppal, and Vilkov (<a href="#ref-plyakha2014equal">2014</a>)</span>. More advanced schemes include equal risk contributions (<span class="citation">Maillard, Roncalli, and Teiletche (<a href="#ref-maillard2010properties">2010</a>)</span>) and constrained minimum variance (<span class="citation">Coqueret (<a href="#ref-coqueret2015diversified">2015</a>)</span>). Both only rely on the covariance matrix of the assets and not on any proxy for the vector of expected returns.</p>
+<p>For the sake of completeness, we explicit a generalization of <span class="citation">Coqueret (<a href="#ref-coqueret2015diversified">2015</a>)</span> which is a generic constrained quadratic program:
+<span class="math display">\[\begin{equation}
+\underset{\textbf{w}}{\text{min}} \ \frac{\lambda}{2} \textbf{w}&#39;\boldsymbol{\Sigma}\textbf{w}-\textbf{w}&#39;\boldsymbol{\mu} , \quad \text{s.t.} \quad \begin{array}{ll} \textbf{w}&#39;\textbf{1}=1, \\ (\textbf{w}-\textbf{w}_-)&#39;\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-) \le \delta_R,\\
+\textbf{w}&#39;\textbf{w} \le \delta_D,
+\end{array}
+\label{eq:coq}
+\end{equation}\]</span></p>
+<p>where it is easy to recognize the usual mean-variance optimization in the left-hand side. We impose three constraints on the right-hand side. The first one is the budget constraint (weights sum to one). The second one penalizes variations in weights (compared to the current allocation) via a diagonal matrix <span class="math inline">\(\boldsymbol{\Lambda}\)</span>. This is a crucial point. Portfolios are rarely constructed from scratch and are most of the time adjustments from existing positions. In order to reduce the orders and the corresponding transaction costs, it is possible to penalize large variations from the existing portfolio. In the above program, the current weights are written <span class="math inline">\(\textbf{w}_-\)</span> and the desired ones <span class="math inline">\(\textbf{w}\)</span> so that <span class="math inline">\(\textbf{w}-\textbf{w}_-\)</span> is the vector of deviations from the current positions. The term <span class="math inline">\((\textbf{w}-\textbf{w}_-)\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-)\)</span> is an expression that characterizes the sum of squared deviations, weighted by the diagonal coefficients <span class="math inline">\(\Lambda_{n,n}\)</span>. This can be helpful because some assets may be more costly to trade due to liquidity (large cap stocks are more liquid and their trading costs are lower). When <span class="math inline">\(\delta_R\)</span> decreases, the rotation is reduce because weights are not allowed to deviate to much from <span class="math inline">\(\textbf{w}_-\)</span>. The last constraint enforces diversification via the Herfindhal index of the portfolio: the smaller <span class="math inline">\(\delta_D\)</span>, the more diversified the portfolio.</p>
+<p>Recalling that there are <span class="math inline">\(N\)</span> assets in the universe, the Lagrange form of <a href="#eq:coq">(<strong>??</strong>)</a> is:</p>
+<p><span class="math display">\[\begin{equation}
+L(\textbf{w})= \frac{\lambda}{2} \textbf{w}&#39;\boldsymbol{\Sigma}\textbf{w}-\textbf{w}&#39;\boldsymbol{\mu}-\eta (\textbf{w}&#39;\textbf{1}_N-1)+\kappa_R ( (\textbf{w}-\textbf{w}_-)\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-) - \delta_R)+\kappa_D(\textbf{w}&#39;\textbf{w}-\delta_D),
+\label{eq:lagrangew}
+\end{equation}\]</span></p>
+<p>and the first order condition
+<span class="math display">\[\frac{\partial}{\partial \textbf{w}}L(\textbf{w})= \lambda \boldsymbol{\Sigma}\textbf{w}-\boldsymbol{\mu}-\eta\textbf{1}_N+2\kappa_R \boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-)+2\kappa_D\textbf{w}=0,\]</span>
+yields
+<span class="math display">\[\begin{equation}
+\textbf{w}^*_\kappa=  (\lambda \boldsymbol{\Sigma}+2\kappa_R \boldsymbol{\Lambda} +2\kappa_D\textbf{I}_N)^{-1} \left(\boldsymbol{\mu} + \eta_{\lambda,\kappa_R,\kappa_D} \textbf{1}_N+2\kappa_R \boldsymbol{\Lambda}\textbf{w}_-\right),
+\label{eq:coqw}
+\end{equation}\]</span>
+with
+<span class="math display">\[\eta_{\lambda,\kappa_R,\kappa_D}=\frac{1- \textbf{1}_N&#39;(\lambda\boldsymbol{\Sigma}+2\kappa_R \boldsymbol{\Lambda}+2\kappa_D\textbf{I}_N)^{-1}(\boldsymbol{\mu}+2\kappa_R\boldsymbol{\Lambda}\textbf{w}_-)}{\textbf{1}&#39;_N(\lambda \boldsymbol{\Sigma}+2\kappa_R \boldsymbol{\Lambda}+2\kappa_D\textbf{I}_N)^{-1}\textbf{1}_N}.\]</span></p>
+<p>This parameter ensures that the budget constraint is satisfied. The optimal weights in <a href="#eq:coqw">(<strong>??</strong>)</a> depend on three tuning parameters: <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span>.
+- When <span class="math inline">\(\lambda\)</span> is large, the focus is set more on risk reduction than one profit maximization (which is often a good idea given that risk is easier to predict);<br />
+- When <span class="math inline">\(\kappa_R\)</span> is large, the importance of transaction costs in <a href="#eq:lagrangew">(<strong>??</strong>)</a> is high and thus, in the limit when <span class="math inline">\(\kappa_R \rightarrow \infty\)</span>, the optimal weights are equal to the old ones <span class="math inline">\(\textbf{w}_-\)</span> (for finite values of the other parameters).<br />
+- When <span class="math inline">\(\kappa_D\)</span> is large, the portfolio is more diversified and (all other things equal) when <span class="math inline">\(\kappa_D \rightarrow \infty\)</span>, the weights are all equal (to <span class="math inline">\(1/N\)</span>).<br />
+- When <span class="math inline">\(\kappa_R=\kappa_D=0\)</span>, we recover the classical mean-variance weights that are proportional to <span class="math inline">\((\boldsymbol{\Sigma})^{-1} \boldsymbol{\mu}\)</span>.</p>
+<p>This seemingly complex formula is in fact very flexible and tractable. It requires some tests and adjustments before finding realistic values for <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span>.</p>
+</div>
+<div id="perfmet" class="section level2">
+<h2><span class="header-section-number">13.3</span> Performance metrics</h2>
+<p>The evaluation of performance is a key stage in a backtest. This section, while not exhaustive, is intended to cover the most important facets of portfolio assessment.</p>
+<div id="discussion-1" class="section level3">
+<h3><span class="header-section-number">13.3.1</span> Discussion</h3>
+<p>While the evaluation of the accuracy of ML tools (See Section <a href="valtune.html#mlmetrics">11.1</a>) is of course valuable, the portfolio returns are the ultimate yardstick during a backtest. One essential element in such an exercise is a <strong>benchmark</strong> because raw and absolute metrics don’t mean much one their own.</p>
+<p>This is not only true at the portfolio level, but also at the ML engine level. In most of the trials of the previous chapters, the MSE of the models on the testing set revolves around 0.037. An interesting figure is the variance of one month returns on this set, which corresponds to the error made by a constant prediction of 0 all the time. This figure is equal to 0.037, which means that the sophisticated algorithm don’t really improve on a naive heuristic. This benchmark is the one used in the out-of-sample <span class="math inline">\(R^2\)</span> of <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span>.</p>
+<p>In portfolio choice, the most elementary allocation is the uniform one, whereby each asset receive the same weight. This seemingly simplistic solution is in fact an incredible benchmark, one that is hard to beat consistently (see <span class="citation">DeMiguel, Garlappi, and Uppal (<a href="#ref-demiguel2007optimal">2007</a>)</span> and <span class="citation">Plyakha, Uppal, and Vilkov (<a href="#ref-plyakha2014equal">2014</a>)</span>). Below, we will pick this equally-weighted portfolio as the benchmark.</p>
+</div>
+<div id="pure-performance-and-risk-indicators" class="section level3">
+<h3><span class="header-section-number">13.3.2</span> Pure performance and risk indicators</h3>
+<p>We then turn to the definition of the usual metrics used both by practitioners and academics alike. Henceforth, we write <span class="math inline">\(r^P=(r_t^P)_{1\le t\le T}\)</span> and <span class="math inline">\(r^B=(r_t^B)_{1\le t\le T}\)</span> for the returns of the portfolio and those of the benchmark, respectively. When refering to some generic returns, we simply write <span class="math inline">\(r_t\)</span>. There are many ways to analyze them and most of them rely on their distribution.</p>
+<p>The simplest indicator is the average return:
+<span class="math display">\[\mu_P=\mathbb{E}[r^P]\approx \frac{1}{T}\sum_{t=1}^T r_t^P, \quad \mu_B=\mathbb{E}[r^B]\approx \frac{1}{T}\sum_{t=1}^T r_t^B,\]</span></p>
+<p>where, obviously, the portfolio is noteworthy if <span class="math inline">\(\mathbb{E}[r^P]&gt;\mathbb{E}[r^B]\)</span>. Note that we use the arithmetic average above but the geometric one is also an option, in which case:
+<span class="math display">\[\tilde{\mu}_P\approx \left(\prod_{t=1}^T(1+r^P_t) \right)^{1/T}-1 , \quad \tilde{\mu}_B=\approx  \left(\prod_{t=1}^T(1+r^B_t) \right)^{1/T}-1.\]</span>
+The benefit of this second definition is that it takes the compounding of returns into account and hence compensates for volatility pumping. To see this, consider a very simple two period model with returns <span class="math inline">\(-r\)</span> and <span class="math inline">\(+r\)</span>. The arithmetic average is zero, but the geometric one <span class="math inline">\(\sqrt(1-r^2)-1&lt;0\)</span> is negative.</p>
+<p>Hit ratios are often referred to when the portfolio is built on a <em>good guess</em>. This can be evaluated at the asset level (the proportion of positions in the correct direction<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a>) or a the portfolio level. In all cases, the computation can be performed on raw returns or on relative returns (e.g., compared to a benchmark). A meaningful hit ratio is the proportion of times that a strategy beats its benchmark. This is of course not sufficient, as many small wins can be offset by a few large losses.</p>
+<p>Pure performance measures are almost always accompanied by risk measures. The second moment of returns is usually used to quantify the magnitude of fluctuations of the portfolio. A large variance implies sizable movements in returns, and hence in portfolio values. This is why the standard deviation is called the volatility of the portfolio.
+<span class="math display">\[\sigma^2_P=\mathbb{V}[r^P]\approx \frac{1}{T-1}\sum_{t=1}^T (r_t^P-\mu_P)^2, \quad \sigma^2_B=\mathbb{V}[r^B]\approx \frac{1}{T-1}\sum_{t=1}^T (r_t^B-\mu_B)^2.\]</span></p>
+<p>In this case, the portfolio can be preferred if it is less risky compared to the benchmark, i.e., when <span class="math inline">\(\sigma_P^2&lt;\sigma_B^2\)</span>.</p>
+<p>Higher order moments of returns are sometimes used (skewness and kurtosis), but they are far less common. We refer for instance to <span class="citation">Harvey et al. (<a href="#ref-harvey2010portfolio">2010</a>)</span> for one method that takes them into account in the portfolio construction process.</p>
+<p>For some people, the volatility is an incomplete measure of risk. It can be argued that it should be decomposed into ‘good’ volatility (when prices go up) versus ‘bad’ volatility when they go down. The downward semi-variance is computed as the variance taken over the negative returns:
+<span class="math display">\[\sigma^2_-=\mathbb{V}[r]\approx \frac{1}{T-1}\sum_{t=1}^T (r_t-\mu_P)^21_{\{r_t&lt;0\}}.\]</span></p>
+<p>The average return and the volatility are the typical moment-based metrics used by practitioners. Other indicators rely on different aspects of the distribution of returns with a focus on tails and extreme events. The Value-at-Risk (VaR) is one such example. If <span class="math inline">\(F_r\)</span> is the empirical cdf of returns, the VaR at a level of confidence <span class="math inline">\(\alpha\)</span> (often taken to be 95%) is
+<span class="math display">\[\text{VaR}_\alpha(\textbf{r}_t)=F_r(1-\alpha).\]</span></p>
+<p>It is equal to the worst case scenario if we omit the worst <span class="math inline">\(1-\alpha\)</span>% returns. An even more conservative measure is the so-called Conditional Value at Risk (CVaR), also known as expected shortfall, which computes the average loss in the worst <span class="math inline">\(\alpha\)</span>% scenarios. Its empirical evaluation is
+<span class="math display">\[\frac{1}{\text{Card}(r_t &lt; \text{VaR}_\alpha(\text{r}_t))}\sum_{r_t &lt; \text{VaR}_\alpha(\text{r}_t)}r_t.\]</span></p>
+<p>Going crescendo in the severity of risk measures, the ultimate evaluation of loss is the maximum drawdown. It is equal to the maximum loss suffered from the peak value of the strategy If we write <span class="math inline">\(P_t\)</span> for the time-<span class="math inline">\(t\)</span> value of a portfolio, the drawdown is
+<span class="math display">\[D_T^P=\underset{0 \le t \le T}{\text{max}} P_t-P_T ,\]</span>
+and the maximum drawdown is
+<span class="math display">\[MD_T^P=\underset{0 \le s \le T}{\text{max}} \left(\underset{0 \le t \le s}{\text{max}} P_t-P_s, 0\right) .\]</span></p>
+<p>This quantity evaluates the greatest loss over the time frame <span class="math inline">\([0,T]\)</span> and is thus the most conservative risk measure of all.</p>
+</div>
+<div id="factor-based-evaluation" class="section level3">
+<h3><span class="header-section-number">13.3.3</span> Factor-based evaluation</h3>
+<p>In the spirit of factor models, performance can also be assessed through the lens of exposures. If we recall the original formulation from Equation <a href="factor.html#eq:apt">(4.1)</a>:
+<span class="math display">\[r_{t,n}= \alpha_n+\sum_{k=1}^K\beta_{t,k,n}f_{t,k}+\epsilon_{t,n}, \]</span></p>
+<p>then the estimated <span class="math inline">\(\hat{\alpha}_n\)</span> is the performance that cannot be explained by the other factors. When returns are <em>excess</em> returns (over the risk-free rate) and when there is only one factor, the market factor, then this quantity is called Jensen’s alpha (<span class="citation">Jensen (<a href="#ref-jensen1968performance">1968</a>)</span>). Often, it is simply referred to as <em>alpha</em>. The other estimate, <span class="math inline">\(\hat{\beta}_{t,M,n}\)</span> (<span class="math inline">\(M\)</span> for market), is the market beta.</p>
+<p>Because of the rise of factor investing, it has become customary to also report the alpha of more exhaustive regressions. Adding the size and value premium (as in <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>) and even momentum
+(<span class="citation">Carhart (<a href="#ref-carhart1997persistence">1997</a>)</span>) helps understand if a strategy generates value beyond that that can be obtained through the usual factors.</p>
+</div>
+<div id="risk-adjusted-measures" class="section level3">
+<h3><span class="header-section-number">13.3.4</span> Risk-adjusted measures</h3>
+<p>Now, the tradeoff between the average return and the volatility is a cornerstone in modern finance, since <span class="citation">Markowitz (<a href="#ref-markowitz1952portfolio">1952</a>)</span>. The simplest way to synthesize both metrics is via the <strong>information ratio</strong>:
+<span class="math display">\[IR(P,B)=\frac{\mu_{P-B}}{\sigma_{P-B}},\]</span>
+where the index <span class="math inline">\(P-B\)</span> implies that the mean and standard deviations are computed on the long-short portfolio with returns <span class="math inline">\(r_t^P-r_t^B\)</span>. The denominator <span class="math inline">\(\sigma_{P-B}\)</span> is sometimes called the <strong>tracking error</strong>.</p>
+<p>The most widespread information ratio is the Sharpe ratio (<span class="citation">Sharpe (<a href="#ref-sharpe1966mutual">1966</a>)</span>) for which the benchmark is some riskless asset. Instead of directly computing the information ratio between two portfolios or strategies, it is often customary to compare their Sharpe ratios. Simple comparisons can benefit from statistical tests (see e.g., <span class="citation">Ledoit and Wolf (<a href="#ref-ledoit2008robust">2008</a>)</span>).</p>
+<p>More extreme risk measures can serve as denominator in risk-adjusted indicators. The Managed Account Report ratio (MAR ratio) is for example computed as
+<span class="math display">\[MAR^P = \frac{\tilde{\mu}_P}{MD^P},\]</span>
+while the Treynor ratio is equal to
+<span class="math display">\[\text{Treynor}=\frac{\mu_P}{\hat{\beta}_M},\]</span>
+i.e., the (excess) return divided by the market beta (see <span class="citation">Treynor (<a href="#ref-treynor1965rate">1965</a>)</span>). This definition was generalized to multifactor expositions by <span class="citation">Hübner (<a href="#ref-hubner2005generalized">2005</a>)</span> into the generalized Treynor ratio:
+<span class="math display">\[\text{GT}=\mu_P\frac{\sum_{k=1}^K\bar{f}_k}{\sum_{k=1}^K\hat{\beta}_k\bar{f}_k},\]</span>
+where the <span class="math inline">\(\bar{f}_k\)</span> are the sample average of the factors <span class="math inline">\(f_{t,k}\)</span>. We refer to the original article for a detailed account of the analytical properties of this ratio.</p>
+</div>
+<div id="transaction-costs-and-turnover" class="section level3">
+<h3><span class="header-section-number">13.3.5</span> Transaction costs and turnover</h3>
+<p>Updating portfolio composition is not free. In all generality, the total cost of one rebalancing at time <span class="math inline">\(t\)</span> is proportional to <span class="math inline">\(C_t=\sum_{n=1}^N | \Delta w_{t,n}|c_{t,n}\)</span>, where <span class="math inline">\(\Delta w_{t,n}\)</span> is the change in position for asset <span class="math inline">\(n\)</span> and <span class="math inline">\(c_{t,n}\)</span> the corresponding fee. This last quantity is often hard to predict, thus it is customary to use a proxy that depends for instance on market capitalization (large stocks have more liquid shares and thus require smaller fees) or bid-ask spreads (smaller spreads mean smaller fees).</p>
+<p>As a first order approximation, it is often useful to compute the average turnover:
+<span class="math display">\[\text{Turnover}=\frac{1}{T-1}\sum_{t=2}^T\sum_{n=1}^N|w_{t,n}-w_{t-,n}|,\]</span>
+where <span class="math inline">\(w_{t,n}\)</span> are the desired <span class="math inline">\(t\)</span>-time weights in the portfolio and <span class="math inline">\(w_{t-,n}\)</span> are the weights just before the rebalancing. The positions of the first period (lauching weights) are exluded from the computation by convention. Transaction costs can then be proxied as a multiple of turnover (times some average or median cost in the cross-section of firms). This is a first order estimate of realized costs that does not take into consideration the evolution of the scale of the portfolio. Nonetheless, a rough figure is much better than none at all.</p>
+<p>Once transaction costs (TC) have been annualized, they can be deducted from average returns to yield a more realistic picture of profitability. In the same vein, the transaction cost-adjusted Sharpe ratio of a portfolio <span class="math inline">\(P\)</span> is given by
+<span class="math display">\[\begin{equation}
+SR_{TC}=\frac{\mu_P-TC}{\sigma_P}.
+\label{eq:SRTC}
+\end{equation}\]</span></p>
+<p>Transaction costs are often overlooked in academic articles but can have a sizable impact in real life trading (see e.g., <span class="citation">Novy-Marx and Velikov (<a href="#ref-novy2015taxonomy">2015</a>)</span>). <span class="citation">Martin Utrera et al. (<a href="#ref-martin2018transaction">2018</a>)</span> show how to use factor investing (and exposures) to combine and offset positions and reduce overall fees.</p>
+</div>
+</div>
+<div id="common-errors-and-issues" class="section level2">
+<h2><span class="header-section-number">13.4</span> Common errors and issues</h2>
+<div id="forward-looking-data" class="section level3">
+<h3><span class="header-section-number">13.4.1</span> Forward looking data</h3>
+<p>One of the most common mistakes in portfolio backtesting is to use forward looking data. It is for instance easy to fall in the trap of the danger zone depicted in Figure <a href="backtest.html#fig:backtestoos2">13.2</a>. In this case, the labels used at time <span class="math inline">\(t\)</span> are computed with knowledge of what happens at times <span class="math inline">\(t+1\)</span>, <span class="math inline">\(t+2\)</span>, etc. It is worth triple checking every step in the code to make sure that strategies are not built on prescient data.</p>
+</div>
+<div id="backtest-overfitting" class="section level3">
+<h3><span class="header-section-number">13.4.2</span> Backtest overfitting</h3>
+<p>The second major problem is backtest overfitting. The analogy with training set overfitting is easy to grasp. It is a well known issue and was formalized for instance in <span class="citation">White (<a href="#ref-white2000reality">2000</a>)</span> and <span class="citation">Romano and Wolf (<a href="#ref-romano2005stepwise">2005</a>)</span>. In portfolio choice, we refer to <span class="citation">Bajgrowicz and Scaillet (<a href="#ref-bajgrowicz2012technical">2012</a>)</span> and <span class="citation">Bailey and Prado (<a href="#ref-bailey2014deflated">2014</a>)</span> and the references therein.</p>
+<p>At any given moment, a backtest depends on one particular dataset. Often, the result of the first backtest will not be satisfactory - for many possible reasons. Hence, it is tempting to have another try, when altering some parameters that were probably not optimal. This second test may be better, but not quite good enough - yet. Thus, a in a third trial, a new weighting scheme can be tested, along with a new forecasting engine (more sophisticated). Iteratively, the backtester can only end up with a strategy that performs well enough, it is just a matter of time and trials.</p>
+One consequence of backtest overfitting is that it is illusory to hope for the same Sharpe ratios in live trading as those obtained in the backtest. Reasonable professionals divide the Sharpe ratio by two at least (<span class="citation">Harvey and Liu (<a href="#ref-harvey2015backtesting">2015</a>)</span>, <span class="citation">Suhonen, Lennkh, and Perez (<a href="#ref-suhonen2017quantifying">2017</a>)</span>). In <span class="citation">Bailey and Prado (<a href="#ref-bailey2014deflated">2014</a>)</span>, the authors even propose a statistical test for Sharpe ratios, provided that all metrics of all tested strategies are stored in memory. The formula is:
+<span class="math display">\[\begin{equation}
+t = \phi\left((SR-SR^*)\sqrt{\frac{T-1}{1-\gamma_3SR+\frac{\gamma_4-1}{4}SR^2}} \right),
+\label{eq:tSR}
+\end{equation}\]</span>
+where <span class="math inline">\(SR\)</span> is the Sharpe Ratio obtained by the best strategy, and
+<span class="math display">\[SR^*=\mathbb{E}[SR]+\sqrt{\mathbb{V}[SR]}\left((1-\gamma)\phi^{-1}\left(1-\frac{1}{N}\right)+\gamma \phi^{-1}\left(1-\frac{1}{Ne}\right)  \right),\]</span>
+is the theoretical average maximum SR. Moreover,
+
+<p>If <span class="math inline">\(t\)</span> defined above is below a certain threshold (e.g., 0.95), then the <span class="math inline">\(SR\)</span> cannot be deemed significant: . Most of the time, sadly, that is the case. In Equation <a href="#eq:tSR">(<strong>??</strong>)</a>, the realized SR must be above the theoretical maximum <span class="math inline">\(SR^*\)</span> and the scaling factor must be sufficiently large to push the argument inside <span class="math inline">\(\phi\)</span> close enough to two.</p>
+<p>In the scientific community, test overfitting is also known as <em>p</em>-hacking. It is rather common in financial economics and the reading of <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> is strongly advised to grasp the magnitude of the phenomenon. <em>p</em>-hacking is also present in most fields that use statistical tests (see, e.g., <span class="citation">Head et al. (<a href="#ref-head2015extent">2015</a>)</span> to cite but one reference). There are several ways to cope with <em>p</em>-hacking:</p>
+<ol style="list-style-type: decimal">
+<li>don’t rely on <em>p</em>-values (<span class="citation">Amrhein, Greenland, and McShane (<a href="#ref-amrhein2019scientists">2019</a>)</span>);<br />
+</li>
+<li>use detection tools (<span class="citation">Elliott, Kudrin, and Wuthrich (<a href="#ref-elliott2019detecting">2019</a>)</span>);<br />
+</li>
+<li>or, finally, use advanced methods that process arrays of statistics (e.g., the Bayesianized versions of <em>p</em>-values to include some prior assessment from <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span>, or other tests such as those proposed in <span class="citation">Romano and Wolf (<a href="#ref-romano2005stepwise">2005</a>)</span> and <span class="citation">Simonsohn, Nelson, and Simmons (<a href="#ref-simonsohn2014p">2014</a>)</span>).</li>
+</ol>
+<p>The first option is wise, but the drawback is that the decision process is then left to another arbitrary yardstick.</p>
+</div>
+<div id="simple-saveguards" class="section level3">
+<h3><span class="header-section-number">13.4.3</span> Simple saveguards</h3>
+<p>As is mentioned at the beginning of the chapter, two common sense references for backtesting are <span class="citation">Fabozzi and Prado (<a href="#ref-fabozzi2018being">2018</a>)</span> and <span class="citation">Arnott, Harvey, and Markowitz (<a href="#ref-arnott2019backtesting">2019</a>)</span>. The pieces of advice provide in these two articles are often judicious and thoughtful.</p>
+<p>One additional comment pertains to the output of the backtest. One simple, intuitive and widespread metric is the transaction cost-adjusted Sharpe ratio defined in Equation <a href="#eq:SRTC">(<strong>??</strong>)</a>. In the backtest, let us call <span class="math inline">\(SR_{TC}^B\)</span> the corresponding value for the benchmark, which we like to define as the equally-weighted portfolio of all assets in the trading universe (in our dataset, roughly one thousand US equities). If the <span class="math inline">\(SR_{TC}^P\)</span> of the best strategy is above <span class="math inline">\(2\times SR_{TC}^B\)</span>, then there is probably a glitch somewhere in the backtest.</p>
+<p>This criterion holds under two assumptions: 1) a sufficiently long enough out-of-sample period and 2) long-only portfolios. It is unlikely that any realistic strategy can outperform a solid benchmark by a very wide margin over the long term. Being able to improve the benchmark’s annualized return by 150 basis points (with comparable volatility) is already a great achievement. Backtests that deliver returns 5% above those of the benchmark are dubious.</p>
+</div>
+</div>
+<div id="implication-of-non-stationarity-forecasting-is-hard" class="section level2">
+<h2><span class="header-section-number">13.5</span> Implication of non-stationarity: forecasting is hard</h2>
+<p>This subsection is split into two parts: in the first, we discuss the reason that make forecasting such a difficult task and in the second we present an important theoretical result originally developed towards machine learning but that sheds light on any discipline confronted with out-of-sample tests.</p>
+<div id="general-comments" class="section level3">
+<h3><span class="header-section-number">13.5.1</span> General comments</h3>
+<p>The careful reader must have noticed that throughout Chapters <a href="lasso.html#lasso">6</a> to <a href="ensemble.html#ensemble">12</a>, the performance of ML engines is underwhelming. These disappointing results are there on purpose and highlight the crucial truth that machine learning is no panacea, no magic wand, no philosopher’s stone that can transform data into golden predictions. Most ML-based forecasts fail. This is in fact not only true for very enhanced and sophisticated techniques, but also for simpler econometric approaches (<span class="citation">Dichtl et al. (<a href="#ref-dichtl2019data">2019</a>)</span>), which again underlines the need to replicate results to challenge their validity.</p>
+<p>One reason for that is that datasets are full of noise and extracting the slightest amount of signal is a tough challenge (we recommend a careful reading of the introduction of <span class="citation">Timmermann (<a href="#ref-timmermann2018forecasting">2018</a>)</span> for more details on this topic). One rationale for that is the ever time-varying nature of factor analysis in the equity space. Some factors can perform very well during one year and then poorly the next year and these reversals can be costly in the context of fully automated data-based allocation processes.</p>
+<p>In fact, this is one major difference with many fields for which ML has made huge advances. In image recognition, numbers will always have the same shape, and so will cats, buses, etc. Likewise, a verb will always be a verb and syntaxes in languages do not change. This invariance, though sometimes hard to grasp<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> is nonetheless key to the great improvement both in computer vision and natural language processing.</p>
+<p>In factor investing, there does not seem to be such invariance. There is no factor and no (possibly nonlinear) combination of factors that can explain and accurately forecast returns over decades long periods.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> The academic literature has yet to find such a model; but even if it did, a simple arbitrage reasoning would invalidate its conclusions in future datasets.</p>
+<p>One key ingredient in the backtest of a dynamic strategy is the depth of the sample size, i.e., how far back in time do each training sets go. There should be some coherence between:
+- the trading horizon determined by the rebalancing frequency;<br />
+- the training sample depth (number of years or months in the training set);<br />
+- the time window on which the label is computed.</p>
+<p>There is probably no perfect combination, but there are some odd choices. Short-term labels and long trading horizons will plausibly not match very well.</p>
+<p>Online learning &amp; Active learning XXXXXXXXXXX
+<span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span></p>
+</div>
+<div id="the-no-free-lunch-theorem" class="section level3">
+<h3><span class="header-section-number">13.5.2</span> The no free lunch theorem</h3>
+</div>
+</div>
+<div id="example-1" class="section level2">
+<h2><span class="header-section-number">13.6</span> Example</h2>
+<p>We finally propose a full detailed example of one implementation of a ML-based strategy run on a careful backtest.
+What follows is a generalization of the content of Section <a href="lasso.html#sparseex">6.2.2</a>. In the same spirit, we split the backtest in four parts:</p>
+<ol style="list-style-type: decimal">
+<li>the creation/initialization of variables;<br />
+</li>
+<li>the definition of the strategies in one main functions;</li>
+<li>the backtesting loop itself;<br />
+</li>
+<li>the performance indicators.</li>
+</ol>
+<p>Accordingly, we start with initializations.</p>
+
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb158-1" data-line-number="1">sep_oos &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2007-01-01&quot;</span>)                            <span class="co"># Starting point for backtest</span></a>
+<a class="sourceLine" id="cb158-2" data-line-number="2">ticks &lt;-<span class="st"> </span>data_ml<span class="op">$</span>stock_id <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># List of all asset ids</span></a>
+<a class="sourceLine" id="cb158-3" data-line-number="3"><span class="st">    </span><span class="kw">as.factor</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb158-4" data-line-number="4"><span class="st">    </span><span class="kw">levels</span>()</a>
+<a class="sourceLine" id="cb158-5" data-line-number="5">N &lt;-<span class="st"> </span><span class="kw">length</span>(ticks)                                          <span class="co"># Max number of assets</span></a>
+<a class="sourceLine" id="cb158-6" data-line-number="6">t_oos &lt;-<span class="st"> </span>returns<span class="op">$</span>date[returns<span class="op">$</span>date <span class="op">&gt;</span><span class="st"> </span>sep_oos] <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Out-of-sample dates </span></a>
+<a class="sourceLine" id="cb158-7" data-line-number="7"><span class="st">    </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st">                                            </span><span class="co"># Remove duplicates</span></a>
+<a class="sourceLine" id="cb158-8" data-line-number="8"><span class="st">    </span><span class="kw">as.Date</span>(<span class="dt">origin =</span> <span class="st">&quot;1970-01-01&quot;</span>)                          <span class="co"># Transform in date format</span></a>
+<a class="sourceLine" id="cb158-9" data-line-number="9">Tt &lt;-<span class="st"> </span><span class="kw">length</span>(t_oos)                                         <span class="co"># Nb of dates, avoid T = TRUE</span></a>
+<a class="sourceLine" id="cb158-10" data-line-number="10">nb_port &lt;-<span class="st"> </span><span class="dv">2</span>                                                <span class="co"># Nb of portfolios/stragegies</span></a>
+<a class="sourceLine" id="cb158-11" data-line-number="11">portf_weights &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim =</span> <span class="kw">c</span>(Tt, nb_port, N))          <span class="co"># Initialize portfolio weights</span></a>
+<a class="sourceLine" id="cb158-12" data-line-number="12">portf_returns &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> Tt, <span class="dt">ncol =</span> nb_port)       <span class="co"># Initialize portfolio returns </span></a></code></pre></div>
+<p></p>
+<p>This first step is crucial, it lays the groundwork for the core of the backtest. We consider only two strategies: one ML-based and the EW (1/N) benchmark. The main (weighting) function will consist of these two components, but we define the sophisticated one in a dedicated wrapper. The ML-based weights are derived from XGBoost predictions with 80 trees, a learning rate of 0.3 and a maximum tree depth of 4. This makes the model complex but not exceedingly so. Once the predictions are obtained, the weighting scheme is simple: it is an EW portfolio over the best half of the stocks (those with above median prediction).</p>
+<p>In the function below, all parameters (e.g., the learning rate) are hard-coded. They can easily be passed in arguments next to the data inputs. One very important detail is that in contrast to the rest of the book, the label is the 12 month future return. The main reason for this is rooted in the discussion from Section <a href="Data.html#pers">5.6</a>.</p>
+
+<div class="sourceCode" id="cb159"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb159-1" data-line-number="1">weights_xgb &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features){ </a>
+<a class="sourceLine" id="cb159-2" data-line-number="2">    train_features &lt;-<span class="st"> </span>train_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()         <span class="co"># Indep. variable</span></a>
+<a class="sourceLine" id="cb159-3" data-line-number="3">    train_label &lt;-<span class="st"> </span>train_data<span class="op">$</span>R12M_Usd <span class="op">/</span><span class="st"> </span><span class="kw">exp</span>(train_data<span class="op">$</span>Vol1Y_Usd)            <span class="co"># Dependent variable</span></a>
+<a class="sourceLine" id="cb159-4" data-line-number="4">    train_matrix &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features, <span class="dt">label =</span> train_label)   <span class="co"># XGB format</span></a>
+<a class="sourceLine" id="cb159-5" data-line-number="5">    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-6" data-line-number="6"><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></a>
+<a class="sourceLine" id="cb159-7" data-line-number="7">                  <span class="dt">eta =</span> <span class="fl">0.3</span>,                      <span class="co"># Learning rate</span></a>
+<a class="sourceLine" id="cb159-8" data-line-number="8">                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Number of random trees</span></a>
+<a class="sourceLine" id="cb159-9" data-line-number="9">                  <span class="dt">max_depth =</span> <span class="dv">4</span>,                  <span class="co"># Maximum depth of trees</span></a>
+<a class="sourceLine" id="cb159-10" data-line-number="10">                  <span class="dt">nrounds =</span> <span class="dv">80</span>                    <span class="co"># Number of trees used</span></a>
+<a class="sourceLine" id="cb159-11" data-line-number="11">        )</a>
+<a class="sourceLine" id="cb159-12" data-line-number="12">    xgb_test &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Test sample =&gt; XGB format</span></a>
+<a class="sourceLine" id="cb159-13" data-line-number="13"><span class="st">        </span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb159-14" data-line-number="14"><span class="st">        </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb159-15" data-line-number="15"><span class="st">        </span><span class="kw">xgb.DMatrix</span>()</a>
+<a class="sourceLine" id="cb159-16" data-line-number="16">    </a>
+<a class="sourceLine" id="cb159-17" data-line-number="17">    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, xgb_test)                <span class="co"># Single prediction</span></a>
+<a class="sourceLine" id="cb159-18" data-line-number="18">    w &lt;-<span class="st"> </span>pred <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(pred)                      <span class="co"># Keep only the 50% best predictions</span></a>
+<a class="sourceLine" id="cb159-19" data-line-number="19">    w<span class="op">$</span>weights &lt;-<span class="st"> </span>w <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w)</a>
+<a class="sourceLine" id="cb159-20" data-line-number="20">    w<span class="op">$</span>names &lt;-<span class="st"> </span><span class="kw">unique</span>(test_data<span class="op">$</span>stock_id)</a>
+<a class="sourceLine" id="cb159-21" data-line-number="21">    <span class="kw">return</span>(w)                                     <span class="co"># Best predictions, equally-weighted</span></a>
+<a class="sourceLine" id="cb159-22" data-line-number="22">}</a></code></pre></div>
+<p></p>
+<p>Compared to the structure proposed in Section <a href="trees.html#boostcode">7.4.6</a>, the differences are that the label is not only based on <em>long-term</em> returns, but it also relies on a volatility component. Even though the denominator in the label is the exponential a quantile of the volatility, it seems fair to say that it is inspired by the Sharpe ratio and that the model seeks to explain and forecast a risk-adjusted return instead of a <em>raw</em> return. A stock with very low volatility will have its return unchanged in the label, while a stock with very high volatility will see its return divided by a factor close to three (exp(1)=2.718).</p>
+<p>This function is then embedded in the global weighting function which only wraps two schemes: the EW benchmark and the ML-based policy.</p>
+
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb160-1" data-line-number="1">portf_compo &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features, j){ </a>
+<a class="sourceLine" id="cb160-2" data-line-number="2">    <span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){                                 <span class="co"># This is the benchmark</span></a>
+<a class="sourceLine" id="cb160-3" data-line-number="3">        N &lt;-<span class="st"> </span>test_data<span class="op">$</span>stock_id <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Test data dictates allocation</span></a>
+<a class="sourceLine" id="cb160-4" data-line-number="4"><span class="st">            </span><span class="kw">factor</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nlevels</span>()</a>
+<a class="sourceLine" id="cb160-5" data-line-number="5">        w &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>N                                <span class="co"># EW portfolio</span></a>
+<a class="sourceLine" id="cb160-6" data-line-number="6">        w<span class="op">$</span>weights &lt;-<span class="st"> </span><span class="kw">rep</span>(w,N)</a>
+<a class="sourceLine" id="cb160-7" data-line-number="7">        w<span class="op">$</span>names &lt;-<span class="st"> </span><span class="kw">unique</span>(test_data<span class="op">$</span>stock_id)   <span class="co"># Asset names</span></a>
+<a class="sourceLine" id="cb160-8" data-line-number="8">        <span class="kw">return</span>(w)</a>
+<a class="sourceLine" id="cb160-9" data-line-number="9">    }</a>
+<a class="sourceLine" id="cb160-10" data-line-number="10">    <span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">2</span>){                                 <span class="co"># This is the ML strategy.</span></a>
+<a class="sourceLine" id="cb160-11" data-line-number="11">        <span class="kw">return</span>(<span class="kw">weights_xgb</span>(train_data, test_data, features))</a>
+<a class="sourceLine" id="cb160-12" data-line-number="12">    }</a>
+<a class="sourceLine" id="cb160-13" data-line-number="13">}</a></code></pre></div>
+<p></p>
+<p>Equipped with this function, we can turn to the main backtesting loop. Given the fact that we use a large scale model, the computation time for the loop is large (possibly a few hours on a slow machine).</p>
+
+<div class="sourceCode" id="cb161"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb161-1" data-line-number="1">m_offset &lt;-<span class="st"> </span><span class="dv">12</span>                                          <span class="co"># Offset in months for buffer period</span></a>
+<a class="sourceLine" id="cb161-2" data-line-number="2">train_size &lt;-<span class="st"> </span><span class="dv">5</span>                                         <span class="co"># Size of training set in years</span></a>
+<a class="sourceLine" id="cb161-3" data-line-number="3"><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>)){                          <span class="co"># Stop before the last date: no fwd return!</span></a>
+<a class="sourceLine" id="cb161-4" data-line-number="4">    <span class="cf">if</span>(t<span class="op">%%</span><span class="dv">12</span><span class="op">==</span><span class="dv">0</span>){<span class="kw">print</span>(t_oos[t])}                       <span class="co"># Just checking the date status</span></a>
+<a class="sourceLine" id="cb161-5" data-line-number="5">    train_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">&lt;</span><span class="st"> </span>t_oos[t] <span class="op">-</span><span class="st"> </span>m_offset <span class="op">*</span><span class="st"> </span><span class="dv">30</span>,   <span class="co"># Rolling window with buffer</span></a>
+<a class="sourceLine" id="cb161-6" data-line-number="6">                                    date <span class="op">&gt;</span><span class="st"> </span>t_oos[t] <span class="op">-</span><span class="st"> </span>m_offset <span class="op">*</span><span class="st"> </span><span class="dv">30</span> <span class="op">-</span><span class="st"> </span><span class="dv">365</span> <span class="op">*</span><span class="st"> </span>train_size)    </a>
+<a class="sourceLine" id="cb161-7" data-line-number="7">    test_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t],                   <span class="co"># Current values</span></a>
+<a class="sourceLine" id="cb161-8" data-line-number="8">                                    stock_id <span class="op">%in%</span><span class="st"> </span>train_data<span class="op">$</span>stock_id)  <span class="co"># Common with past info!  </span></a>
+<a class="sourceLine" id="cb161-9" data-line-number="9">    realized_returns &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># Computing returns via:</span></a>
+<a class="sourceLine" id="cb161-10" data-line-number="10"><span class="st">        </span><span class="kw">select</span>(R1M_Usd)                                 <span class="co"># 1M holding holding period!</span></a>
+<a class="sourceLine" id="cb161-11" data-line-number="11">    realized_names &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Names of assets with holding period returns</span></a>
+<a class="sourceLine" id="cb161-12" data-line-number="12"><span class="st">        </span><span class="kw">select</span>(stock_id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb161-13" data-line-number="13"><span class="st">        </span><span class="kw">as.matrix</span>() </a>
+<a class="sourceLine" id="cb161-14" data-line-number="14">    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nb_port){    </a>
+<a class="sourceLine" id="cb161-15" data-line-number="15">        temp_weights &lt;-<span class="st"> </span><span class="kw">portf_compo</span>(train_data, test_data, features, j) <span class="co"># Hard-coded params, beware!</span></a>
+<a class="sourceLine" id="cb161-16" data-line-number="16">        ind1 &lt;-<span class="st"> </span><span class="kw">match</span>(temp_weights<span class="op">$</span>names, realized_names) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>() <span class="co"># Index between train &amp; test </span></a>
+<a class="sourceLine" id="cb161-17" data-line-number="17">        ind2 &lt;-<span class="st"> </span><span class="kw">match</span>(ticks, realized_names) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>()              <span class="co"># Index between all &amp; test</span></a>
+<a class="sourceLine" id="cb161-18" data-line-number="18">        portf_weights[t,j,ind2] &lt;-<span class="st"> </span>temp_weights<span class="op">$</span>weights[ind1]           <span class="co"># Locating the weights correctly</span></a>
+<a class="sourceLine" id="cb161-19" data-line-number="19">        portf_returns[t,j] &lt;-<span class="st"> </span><span class="kw">sum</span>(temp_weights<span class="op">$</span>weights[ind1] <span class="op">*</span><span class="st"> </span>realized_returns) <span class="co"># Compute returns</span></a>
+<a class="sourceLine" id="cb161-20" data-line-number="20">    }</a>
+<a class="sourceLine" id="cb161-21" data-line-number="21">}</a></code></pre></div>
+<pre><code>## [1] &quot;2007-12-31&quot;
+## [1] &quot;2008-12-31&quot;
+## [1] &quot;2009-12-31&quot;
+## [1] &quot;2010-12-31&quot;
+## [1] &quot;2011-12-31&quot;
+## [1] &quot;2012-12-31&quot;
+## [1] &quot;2013-12-31&quot;
+## [1] &quot;2014-12-31&quot;
+## [1] &quot;2015-12-31&quot;
+## [1] &quot;2016-12-31&quot;
+## [1] &quot;2017-12-31&quot;</code></pre>
+<p></p>
+<p>There are two important comments to be made on the above code. The first comment pertains to the two parameters that are defined in the first lines. They refer to the size of the training sample (5 years) and the length of the buffer period shown in Figure <a href="backtest.html#fig:backtestoos2">13.2</a>. This <strong>buffer period is imperative</strong> because the label is based on a long-term (12 month) return. This lag is compulsory to avoid any forward looking bias in the backtest.</p>
+<p>Below, we create a function that compute the turnover (variation in weights). It requires both the weight values as well as the returns of all assets because the weights just before a rebalancing depend on the weights assigned in the previous period as well as on the returns of the assets that have altered these original weights.</p>
+
+<div class="sourceCode" id="cb163"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb163-1" data-line-number="1">turnover &lt;-<span class="st"> </span><span class="cf">function</span>(weights, asset_returns, t_oos){ </a>
+<a class="sourceLine" id="cb163-2" data-line-number="2">    turn &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb163-3" data-line-number="3">    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(t_oos)){</a>
+<a class="sourceLine" id="cb163-4" data-line-number="4">        realised_returns &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t]) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>date)</a>
+<a class="sourceLine" id="cb163-5" data-line-number="5">        prior_weights &lt;-<span class="st"> </span>weights[t<span class="dv">-1</span>,] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>realised_returns) <span class="co"># Before rebalancing</span></a>
+<a class="sourceLine" id="cb163-6" data-line-number="6">        turn &lt;-<span class="st"> </span>turn <span class="op">+</span><span class="st"> </span><span class="kw">apply</span>(<span class="kw">abs</span>(weights[t,] <span class="op">-</span><span class="st"> </span>prior_weights<span class="op">/</span><span class="kw">sum</span>(prior_weights)),<span class="dv">1</span>,sum)</a>
+<a class="sourceLine" id="cb163-7" data-line-number="7">    }</a>
+<a class="sourceLine" id="cb163-8" data-line-number="8">    <span class="kw">return</span>(turn<span class="op">/</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb163-9" data-line-number="9">}</a></code></pre></div>
+<p></p>
+<p>Once turnover is defined, we embed it into a function that computes several key indicators.</p>
+
+<div class="sourceCode" id="cb164"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb164-1" data-line-number="1">perf_met &lt;-<span class="st"> </span><span class="cf">function</span>(portf_returns, weights, asset_returns, t_oos){ </a>
+<a class="sourceLine" id="cb164-2" data-line-number="2">    avg_ret &lt;-<span class="st"> </span><span class="kw">mean</span>(portf_returns, <span class="dt">na.rm =</span> T)                     <span class="co"># Arithmetic mean </span></a>
+<a class="sourceLine" id="cb164-3" data-line-number="3">    vol &lt;-<span class="st"> </span><span class="kw">sd</span>(portf_returns, <span class="dt">na.rm =</span> T)                           <span class="co"># Volatility</span></a>
+<a class="sourceLine" id="cb164-4" data-line-number="4">    Sharpe_ratio &lt;-<span class="st"> </span>avg_ret <span class="op">/</span><span class="st"> </span>vol                                 <span class="co"># Sharpe ratio</span></a>
+<a class="sourceLine" id="cb164-5" data-line-number="5">    VaR_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">quantile</span>(portf_returns, <span class="fl">0.05</span>)                        <span class="co"># Value-at-risk</span></a>
+<a class="sourceLine" id="cb164-6" data-line-number="6">    turn &lt;-<span class="st"> </span><span class="dv">0</span>                                                     <span class="co"># Initialisation of turnover</span></a>
+<a class="sourceLine" id="cb164-7" data-line-number="7">    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(weights)[<span class="dv">1</span>]){</a>
+<a class="sourceLine" id="cb164-8" data-line-number="8">        realized_returns &lt;-<span class="st"> </span>asset_returns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t]) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(<span class="op">-</span>date)</a>
+<a class="sourceLine" id="cb164-9" data-line-number="9">        prior_weights &lt;-<span class="st"> </span>weights[t<span class="dv">-1</span>,] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>realized_returns)</a>
+<a class="sourceLine" id="cb164-10" data-line-number="10">        turn &lt;-<span class="st"> </span>turn <span class="op">+</span><span class="st"> </span><span class="kw">apply</span>(<span class="kw">abs</span>(weights[t,] <span class="op">-</span><span class="st"> </span>prior_weights<span class="op">/</span><span class="kw">sum</span>(prior_weights)),<span class="dv">1</span>,sum)</a>
+<a class="sourceLine" id="cb164-11" data-line-number="11">    }</a>
+<a class="sourceLine" id="cb164-12" data-line-number="12">    turn &lt;-<span class="st"> </span>turn<span class="op">/</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>)                                <span class="co"># Average over time</span></a>
+<a class="sourceLine" id="cb164-13" data-line-number="13">    met &lt;-<span class="st"> </span><span class="kw">data.frame</span>(avg_ret, vol, Sharpe_ratio, VaR_<span class="dv">5</span>, turn)    <span class="co"># Aggregation of all of this</span></a>
+<a class="sourceLine" id="cb164-14" data-line-number="14">    <span class="kw">rownames</span>(met) &lt;-<span class="st"> &quot;metrics&quot;</span></a>
+<a class="sourceLine" id="cb164-15" data-line-number="15">    <span class="kw">return</span>(met)</a>
+<a class="sourceLine" id="cb164-16" data-line-number="16">}</a></code></pre></div>
+<p></p>
+<p>Lastly, we build a function that loops on the various strategies.</p>
+
+<div class="sourceCode" id="cb165"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb165-1" data-line-number="1">perf_met_multi &lt;-<span class="st"> </span><span class="cf">function</span>(portf_returns, weights, asset_returns, t_oos, strat_name){</a>
+<a class="sourceLine" id="cb165-2" data-line-number="2">    J &lt;-<span class="st"> </span><span class="kw">dim</span>(weights)[<span class="dv">2</span>]              <span class="co"># Number of strategies </span></a>
+<a class="sourceLine" id="cb165-3" data-line-number="3">    met &lt;-<span class="st"> </span><span class="kw">c</span>()                        <span class="co"># Initialization of metrics</span></a>
+<a class="sourceLine" id="cb165-4" data-line-number="4">    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){                    <span class="co"># One very ugly loop</span></a>
+<a class="sourceLine" id="cb165-5" data-line-number="5">        temp_met &lt;-<span class="st"> </span><span class="kw">perf_met</span>(portf_returns[, j], weights[, j, ], asset_returns, t_oos)</a>
+<a class="sourceLine" id="cb165-6" data-line-number="6">        met &lt;-<span class="st"> </span><span class="kw">rbind</span>(met, temp_met)</a>
+<a class="sourceLine" id="cb165-7" data-line-number="7">    }</a>
+<a class="sourceLine" id="cb165-8" data-line-number="8">    <span class="kw">row.names</span>(met) &lt;-<span class="st"> </span>strat_name      <span class="co"># Stores the name of the strat</span></a>
+<a class="sourceLine" id="cb165-9" data-line-number="9">    <span class="kw">return</span>(met)</a>
+<a class="sourceLine" id="cb165-10" data-line-number="10">}</a></code></pre></div>
+<p></p>
+<p>Given the weights and returns of the portfolios, it remains to compute the returns of the assets to plug them in the aggregate metrics function.</p>
+
+<div class="sourceCode" id="cb166"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb166-1" data-line-number="1">asset_returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Compute return matrix: start from original data</span></a>
+<a class="sourceLine" id="cb166-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(date, stock_id, R1M_Usd) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># Keep 3 attributes </span></a>
+<a class="sourceLine" id="cb166-3" data-line-number="3"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)           <span class="co"># Shape in matrix format</span></a>
+<a class="sourceLine" id="cb166-4" data-line-number="4">asset_returns[<span class="kw">is.na</span>(asset_returns)] &lt;-<span class="st"> </span><span class="dv">0</span>              <span class="co"># Zero returns for missing points</span></a>
+<a class="sourceLine" id="cb166-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb166-6" data-line-number="6">met &lt;-<span class="st"> </span><span class="kw">perf_met_multi</span>(<span class="dt">portf_returns =</span> portf_returns,  <span class="co"># Computes performance metrics</span></a>
+<a class="sourceLine" id="cb166-7" data-line-number="7">                      <span class="dt">weights =</span> portf_weights, </a>
+<a class="sourceLine" id="cb166-8" data-line-number="8">                      <span class="dt">asset_returns =</span> asset_returns,</a>
+<a class="sourceLine" id="cb166-9" data-line-number="9">                      <span class="dt">t_oos =</span> t_oos,</a>
+<a class="sourceLine" id="cb166-10" data-line-number="10">                      <span class="dt">strat_name =</span> <span class="kw">c</span>(<span class="st">&quot;EW&quot;</span>, <span class="st">&quot;XGB_SR&quot;</span>))</a>
+<a class="sourceLine" id="cb166-11" data-line-number="11">met                                                   <span class="co"># Displays perf metrics</span></a></code></pre></div>
+<pre><code>##            avg_ret        vol Sharpe_ratio       VaR_5      turn
+## EW     0.009699314 0.05643112    0.1718788 -0.07712509 0.0711028
+## XGB_SR 0.012271508 0.06232806    0.1968858 -0.08236267 0.6589811</code></pre>
+<p></p>
+<p>The ML-based strategy performs finally well! The gain is mostly obtained by the average return, while the volatility is higher than that of the benchmark. The net effect is that the Sharpe ratio is improved compared to the benchmark. The augmentation is not breathtaking, but (hence?) it seems reasonable. It is noteworthy to underline that turnover is substantially higher for the sophisticated strategy. Removing costs in the numerator (say, 0.005 times the turnover as in <span class="citation">Goto and Xu (<a href="#ref-goto2015improving">2015</a>)</span>) only mildly reduces the superiority in Sharpe ratio of the ML-based strategy.</p>
+<p>Finally, it is always tempting to plot the corresponding portfolio values.</p>
+
+<div class="sourceCode" id="cb168"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb168-1" data-line-number="1"><span class="kw">library</span>(lubridate) <span class="co"># Date management</span></a>
+<a class="sourceLine" id="cb168-2" data-line-number="2"><span class="kw">library</span>(cowplot)   <span class="co"># Plot grid management</span></a>
+<a class="sourceLine" id="cb168-3" data-line-number="3">g1 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">date =</span> t_oos,  </a>
+<a class="sourceLine" id="cb168-4" data-line-number="4">      <span class="dt">benchmark =</span> <span class="kw">cumprod</span>(<span class="dv">1</span><span class="op">+</span>portf_returns[,<span class="dv">1</span>]),</a>
+<a class="sourceLine" id="cb168-5" data-line-number="5">      <span class="dt">ml_based =</span> <span class="kw">cumprod</span>(<span class="dv">1</span><span class="op">+</span>portf_returns[,<span class="dv">2</span>])) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-6" data-line-number="6"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> strat, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-7" data-line-number="7"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> strat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="kw">theme_grey</span>()</a>
+<a class="sourceLine" id="cb168-8" data-line-number="8">g2 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(t_oos),  </a>
+<a class="sourceLine" id="cb168-9" data-line-number="9">             <span class="dt">benchmark =</span> portf_returns[,<span class="dv">1</span>],</a>
+<a class="sourceLine" id="cb168-10" data-line-number="10">             <span class="dt">ml_based =</span> portf_returns[,<span class="dv">2</span>]) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-11" data-line-number="11"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> strat, <span class="dt">value =</span> value, <span class="op">-</span>year) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-12" data-line-number="12"><span class="st">    </span><span class="kw">group_by</span>(year, strat) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-13" data-line-number="13"><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">avg_return =</span> <span class="kw">mean</span>(value)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb168-14" data-line-number="14"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_return, <span class="dt">fill =</span> strat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a>
+<a class="sourceLine" id="cb168-15" data-line-number="15"><span class="kw">plot_grid</span>(g1,g2, <span class="dt">nrow =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="ML_factor_files/figure-html/backtest6-1.png" width="350px" style="display: block; margin: auto;" /></p>
+<p></p>
+<p>Out of the 12 years of the backtest, the advanced strategy outperforms the benchmark during 10 years. It is less hurtful in all three years of aggregate losses (2008, 2015 and 2018). This is a satisfactory improvement because the EW benchmark is tough to beat!</p>
+</div>
+<div id="coding-exercises-6" class="section level2">
+<h2><span class="header-section-number">13.7</span> Coding exercises</h2>
+<ol style="list-style-type: decimal">
+<li>Code the advanced weighting function defined in Equation <a href="#eq:coqw">(<strong>??</strong>)</a>.</li>
+<li>Test it in a small backtest and check its sensitivity to the parameters.</li>
+<li>Using the functional programming package <em>purrr</em>,</li>
+</ol>
+
+</div>
+</div>
+<h3><span class="header-section-number">C</span> References</h3>
+<div id="refs" class="references">
+<div id="ref-fabozzi2018being">
+<p>Fabozzi, Frank J, and Marcos López de Prado. 2018. “Being Honest in Backtest Reporting: A Template for Disclosing Multiple Tests.” <em>Journal of Portfolio Management</em> 45 (1): 141–47.</p>
+</div>
+<div id="ref-arnott2019backtesting">
+<p>Arnott, Rob, Campbell R Harvey, and Harry Markowitz. 2019. “A Backtesting Protocol in the Era of Machine Learning.” <em>Journal of Financial Data Science</em> 1 (1): 64–74.</p>
+</div>
+<div id="ref-arnott2019alice">
+<p>Arnott, Rob, Campbell R Harvey, Vitali Kalesnik, and Juhani Linnainmaa. 2019. “Alice’s Adventures in Factorland: Three Blunders That Plague Factor Investing.” <em>The Journal of Portfolio Management</em> 45 (4): 18–36.</p>
+</div>
+<div id="ref-romano2013testing">
+<p>Romano, Joseph P, and Michael Wolf. 2013. “Testing for Monotonicity in Expected Asset Returns.” <em>Journal of Empirical Finance</em> 23: 93–116.</p>
+</div>
+<div id="ref-demiguel2007optimal">
+<p>DeMiguel, Victor, Lorenzo Garlappi, and Raman Uppal. 2007. “Optimal Versus Naive Diversification: How Inefficient Is the 1/N Portfolio Strategy?” <em>Review of Financial Studies</em> 22 (5): 1915–53.</p>
+</div>
+<div id="ref-plyakha2014equal">
+<p>Plyakha, Yuliya, Raman Uppal, and Grigory Vilkov. 2014. “Equal or Value Weighting? Implications for Asset-Pricing Tests.” <em>SSRN Working Paper</em> 1787045.</p>
+</div>
+<div id="ref-maillard2010properties">
+<p>Maillard, Sébastien, Thierry Roncalli, and Jérôme Teiletche. 2010. “The Properties of Equally Weighted Risk Contribution Portfolios.” <em>Journal of Portfolio Management</em> 36 (4): 60–70.</p>
+</div>
+<div id="ref-coqueret2015diversified">
+<p>Coqueret, Guillaume. 2015. “Diversified Minimum-Variance Portfolios.” <em>Annals of Finance</em> 11 (2): 221–41.</p>
+</div>
+<div id="ref-gu2018empirical">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
+</div>
+<div id="ref-harvey2010portfolio">
+<p>Harvey, Campbell R, John C Liechty, Merrill W Liechty, and Peter Müller. 2010. “Portfolio Selection with Higher Moments.” <em>Quantitative Finance</em> 10 (5): 469–85.</p>
+</div>
+<div id="ref-jensen1968performance">
+<p>Jensen, Michael C. 1968. “The Performance of Mutual Funds in the Period 1945–1964.” <em>Journal of Finance</em> 23 (2): 389–416.</p>
+</div>
+<div id="ref-fama1993common">
+<p>Fama, Eugene F, and Kenneth R French. 1993. “Common Risk Factors in the Returns on Stocks and Bonds.” <em>Journal of Financial Economics</em> 33 (1): 3–56.</p>
+</div>
+<div id="ref-carhart1997persistence">
+<p>Carhart, Mark M. 1997. “On Persistence in Mutual Fund Performance.” <em>Journal of Finance</em> 52 (1): 57–82.</p>
+</div>
+<div id="ref-markowitz1952portfolio">
+<p>Markowitz, Harry. 1952. “Portfolio Selection.” <em>Journal of Finance</em> 7 (1): 77–91.</p>
+</div>
+<div id="ref-sharpe1966mutual">
+<p>Sharpe, William F. 1966. “Mutual Fund Performance.” <em>Journal of Business</em> 39 (1): 119–38.</p>
+</div>
+<div id="ref-ledoit2008robust">
+<p>Ledoit, Oliver, and Michael Wolf. 2008. “Robust Performance Hypothesis Testing with the Sharpe Ratio.” <em>Journal of Empirical Finance</em> 15 (5): 850–59.</p>
+</div>
+<div id="ref-treynor1965rate">
+<p>Treynor, Jack L. 1965. “How to Rate Management of Investment Funds.” <em>Harvard Business Review</em> 43 (1): 63–75.</p>
+</div>
+<div id="ref-hubner2005generalized">
+<p>Hübner, Georges. 2005. “The Generalized Treynor Ratio.” <em>Review of Finance</em> 9 (3): 415–35.</p>
+</div>
+<div id="ref-novy2015taxonomy">
+<p>Novy-Marx, Robert, and Mihail Velikov. 2015. “A Taxonomy of Anomalies and Their Trading Costs.” <em>Review of Financial Studies</em> 29 (1): 104–47.</p>
+</div>
+<div id="ref-martin2018transaction">
+<p>Martin Utrera, Alberto, Victor DeMiguel, Raman Uppal, and Francisco J Nogales. 2018. “A Transaction-Cost Perspective on the Multitude of Firm Characteristics.” <em>SSRN Working Paper</em> 2912819.</p>
+</div>
+<div id="ref-white2000reality">
+<p>White, Halbert. 2000. “A Reality Check for Data Snooping.” <em>Econometrica</em> 68 (5): 1097–1126.</p>
+</div>
+<div id="ref-romano2005stepwise">
+<p>Romano, Joseph P, and Michael Wolf. 2005. “Stepwise Multiple Testing as Formalized Data Snooping.” <em>Econometrica</em> 73 (4): 1237–82.</p>
+</div>
+<div id="ref-bajgrowicz2012technical">
+<p>Bajgrowicz, Pierre, and Olivier Scaillet. 2012. “Technical Trading Revisited: False Discoveries, Persistence Tests, and Transaction Costs.” <em>Journal of Financial Economics</em> 106 (3): 473–91.</p>
+</div>
+<div id="ref-bailey2014deflated">
+<p>Bailey, David H, and Marcos López de Prado. 2014. “The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting, and Non-Normality.” <em>Journal of Portfolio Management</em> 40 (5): 39–59.</p>
+</div>
+<div id="ref-harvey2015backtesting">
+<p>Harvey, Campbell R, and Yan Liu. 2015. “Backtesting.” <em>Journal of Portfolio Management</em> 42 (1): 13–28.</p>
+</div>
+<div id="ref-suhonen2017quantifying">
+<p>Suhonen, Antti, Matthias Lennkh, and Fabrice Perez. 2017. “Quantifying Backtest Overfitting in Alternative Beta Strategies.” <em>Journal of Portfolio Management</em> 43 (2): 90–104.</p>
+</div>
+<div id="ref-harvey2017presidential">
+<p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
+</div>
+<div id="ref-head2015extent">
+<p>Head, Megan L, Luke Holman, Rob Lanfear, Andrew T Kahn, and Michael D Jennions. 2015. “The Extent and Consequences of P-Hacking in Science.” <em>PLoS Biology</em> 13 (3): e1002106.</p>
+</div>
+<div id="ref-amrhein2019scientists">
+<p>Amrhein, Valentin, Sander Greenland, and Blake McShane. 2019. “Scientists Rise up Against Statistical Significance.” <em>Nature</em> 567: 305–7.</p>
+</div>
+<div id="ref-elliott2019detecting">
+<p>Elliott, Graham, Nikolay Kudrin, and Kaspar Wuthrich. 2019. “Detecting P-Hacking.” <em>arXiv Preprint</em>, no. 1906.06711.</p>
+</div>
+<div id="ref-simonsohn2014p">
+<p>Simonsohn, Uri, Leif D Nelson, and Joseph P Simmons. 2014. “P-Curve: A Key to the File-Drawer.” <em>Journal of Experimental Psychology: General</em> 143 (2): 534.</p>
+</div>
+<div id="ref-dichtl2019data">
+<p>Dichtl, Hubert, Wolfgang Drobetz, Andreas Neuhierl, and Viktoria-Sophie Wendt. 2019. “Data Snooping in Equity Premium Prediction.” <em>SSRN Working Paper</em> 2972011.</p>
+</div>
+<div id="ref-timmermann2018forecasting">
+<p>Timmermann, Allan. 2018. “Forecasting Methods in Finance.” <em>Annual Review of Financial Economics</em> 10: 449–79.</p>
+</div>
+<div id="ref-settles2009active">
+<p>Settles, Burr. 2009. “Active Learning Literature Survey.” University of Wisconsin-Madison Department of Computer Sciences.</p>
+</div>
+<div id="ref-goto2015improving">
+<p>Goto, Shingo, and Yan Xu. 2015. “Improving Mean Variance Optimization Through Sparse Hedging Restrictions.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1415–41.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="15">
+<li id="fn15"><p>A long position in an asset with positive return or a short position in an asset with negative return.<a href="backtest.html#fnref15" class="footnote-back">↩</a></p></li>
+<li id="fn16"><p>We invite the reader to have a look at the thoughtful albeit theoretical paper by <span class="citation">Arjovsky et al. (<a href="#ref-arjovsky2019invariant">2019</a>)</span>.<a href="backtest.html#fnref16" class="footnote-back">↩</a></p></li>
+<li id="fn17"><p>In the thread <a href="https://twitter.com/fchollet/status/1177633367472259072" class="uri">https://twitter.com/fchollet/status/1177633367472259072</a>, François Chollet, the creator of Keras argues that ML predictions based on price data cannot be profitable on the long term. Given the wide access to financial data, it is likely that the statement holds for predictions stemming from factor-related data as well.<a href="backtest.html#fnref17" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="ensemble.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="interp.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["ML_factor.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

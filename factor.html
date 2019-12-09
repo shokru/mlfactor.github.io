@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Machine Learning for Factor Investing</title>
+  <meta name="description" content="Machine Learning for Factor Investing">
+  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+
+  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  
+  
+  
+
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="intro.html">
+<link rel="next" href="Data.html">
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="preface.html"><a href="preface.html#foreword"><i class="fa fa-check"></i><b>1.1</b> Foreword</a></li>
+<li class="chapter" data-level="1.2" data-path="preface.html"><a href="preface.html#what-this-book-is-not-about"><i class="fa fa-check"></i><b>1.2</b> What this book is not about</a></li>
+<li class="chapter" data-level="1.3" data-path="preface.html"><a href="preface.html#the-targeted-audience"><i class="fa fa-check"></i><b>1.3</b> The targeted audience</a></li>
+<li class="chapter" data-level="1.4" data-path="preface.html"><a href="preface.html#how-this-book-is-structured"><i class="fa fa-check"></i><b>1.4</b> How this book is structured</a></li>
+<li class="chapter" data-level="1.5" data-path="preface.html"><a href="preface.html#companion-website"><i class="fa fa-check"></i><b>1.5</b> Companion website</a></li>
+<li class="chapter" data-level="1.6" data-path="preface.html"><a href="preface.html#why-r"><i class="fa fa-check"></i><b>1.6</b> Why R?</a></li>
+<li class="chapter" data-level="1.7" data-path="preface.html"><a href="preface.html#coding-instructions"><i class="fa fa-check"></i><b>1.7</b> Coding instructions</a></li>
+<li class="chapter" data-level="1.8" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i><b>1.8</b> Acknowledgements</a></li>
+<li class="chapter" data-level="1.9" data-path="preface.html"><a href="preface.html#future-developments"><i class="fa fa-check"></i><b>1.9</b> Future developments</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="notdata.html"><a href="notdata.html"><i class="fa fa-check"></i><b>2</b> Notations and data</a><ul>
+<li class="chapter" data-level="2.1" data-path="notdata.html"><a href="notdata.html#notations"><i class="fa fa-check"></i><b>2.1</b> Notations</a></li>
+<li class="chapter" data-level="2.2" data-path="notdata.html"><a href="notdata.html#dataset"><i class="fa fa-check"></i><b>2.2</b> Dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>3</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1" data-path="intro.html"><a href="intro.html#context"><i class="fa fa-check"></i><b>3.1</b> Context</a></li>
+<li class="chapter" data-level="3.2" data-path="intro.html"><a href="intro.html#portfolio-construction-the-workflow"><i class="fa fa-check"></i><b>3.2</b> Portfolio construction: the workflow</a></li>
+<li class="chapter" data-level="3.3" data-path="intro.html"><a href="intro.html#machine-learning-is-no-magic-wand"><i class="fa fa-check"></i><b>3.3</b> Machine Learning is no Magic Wand</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="factor.html"><a href="factor.html"><i class="fa fa-check"></i><b>4</b> Factor investing and asset pricing anomalies</a><ul>
+<li class="chapter" data-level="4.1" data-path="factor.html"><a href="factor.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="factor.html"><a href="factor.html#detecting-anomalies"><i class="fa fa-check"></i><b>4.2</b> Detecting anomalies</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>4.2.1</b> Simple portfolio sorts</a></li>
+<li class="chapter" data-level="4.2.2" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>4.2.2</b> Factors</a></li>
+<li class="chapter" data-level="4.2.3" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>4.2.3</b> Predictive regressions, sorts, and p-value issues</a></li>
+<li class="chapter" data-level="4.2.4" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>4.2.4</b> Fama-Macbeth regressions</a></li>
+<li class="chapter" data-level="4.2.5" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>4.2.5</b> Factor competition</a></li>
+<li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.4</b> The link with machine learning</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.4.1</b> A short list of recent references</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.4.2</b> Explicit connexions with asset pricing models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>4.5</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="Data.html"><a href="Data.html"><i class="fa fa-check"></i><b>5</b> Data preprocessing</a><ul>
+<li class="chapter" data-level="5.1" data-path="Data.html"><a href="Data.html#know-your-data"><i class="fa fa-check"></i><b>5.1</b> Know your data</a></li>
+<li class="chapter" data-level="5.2" data-path="Data.html"><a href="Data.html#missing-data"><i class="fa fa-check"></i><b>5.2</b> Missing data</a></li>
+<li class="chapter" data-level="5.3" data-path="Data.html"><a href="Data.html#outlier-detection"><i class="fa fa-check"></i><b>5.3</b> Outlier detection</a></li>
+<li class="chapter" data-level="5.4" data-path="Data.html"><a href="Data.html#feateng"><i class="fa fa-check"></i><b>5.4</b> Feature engineering</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="Data.html"><a href="Data.html#feature-selection"><i class="fa fa-check"></i><b>5.4.1</b> Feature selection</a></li>
+<li class="chapter" data-level="5.4.2" data-path="Data.html"><a href="Data.html#scaling"><i class="fa fa-check"></i><b>5.4.2</b> Scaling the predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="Data.html"><a href="Data.html#labelling"><i class="fa fa-check"></i><b>5.5</b> Labelling</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="Data.html"><a href="Data.html#simple-labels"><i class="fa fa-check"></i><b>5.5.1</b> Simple labels</a></li>
+<li class="chapter" data-level="5.5.2" data-path="Data.html"><a href="Data.html#categorical-labels"><i class="fa fa-check"></i><b>5.5.2</b> Categorical labels</a></li>
+<li class="chapter" data-level="5.5.3" data-path="Data.html"><a href="Data.html#the-triple-barrier-method"><i class="fa fa-check"></i><b>5.5.3</b> The triple barrier method</a></li>
+<li class="chapter" data-level="5.5.4" data-path="Data.html"><a href="Data.html#filtering-the-sample"><i class="fa fa-check"></i><b>5.5.4</b> Filtering the sample</a></li>
+<li class="chapter" data-level="5.5.5" data-path="Data.html"><a href="Data.html#horizons"><i class="fa fa-check"></i><b>5.5.5</b> Return horizons</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Discussion on persistence</a></li>
+<li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macro-economic-variables"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#code-and-results"><i class="fa fa-check"></i><b>5.8</b> Code and results</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
+<li class="chapter" data-level="5.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>5.8.2</b> Impact of rescaling: toy example</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#simple-regressions"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
+<li class="chapter" data-level="6.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>6.1.2</b> Forms of penalizations</a></li>
+<li class="chapter" data-level="6.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>6.1.3</b> Illustrations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="lasso.html"><a href="lasso.html#sparse-hedging-for-minimum-variance-portfolios"><i class="fa fa-check"></i><b>6.2</b> Sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="lasso.html"><a href="lasso.html#presentation-and-derivations"><i class="fa fa-check"></i><b>6.2.1</b> Presentation and derivations</a></li>
+<li class="chapter" data-level="6.2.2" data-path="lasso.html"><a href="lasso.html#sparseex"><i class="fa fa-check"></i><b>6.2.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="lasso.html"><a href="lasso.html#predictive-regressions"><i class="fa fa-check"></i><b>6.3</b> Predictive regressions</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="lasso.html"><a href="lasso.html#literature-review-and-principle"><i class="fa fa-check"></i><b>6.3.1</b> Literature review and principle</a></li>
+<li class="chapter" data-level="6.3.2" data-path="lasso.html"><a href="lasso.html#code-and-results-1"><i class="fa fa-check"></i><b>6.3.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="lasso.html"><a href="lasso.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>7</b> Tree-based methods</a><ul>
+<li class="chapter" data-level="7.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>7.1</b> Simple trees</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>7.1.1</b> Principle</a></li>
+<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#further-details-on-classification"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
+<li class="chapter" data-level="7.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>7.1.3</b> Pruning criteria</a></li>
+<li class="chapter" data-level="7.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>7.1.4</b> Code and interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>7.2</b> Random forests</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
+<li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-2"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#boosted-trees-adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
+<li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="trees.html"><a href="trees.html#boosted-trees-extreme-gradient-boosting"><i class="fa fa-check"></i><b>7.4</b> Boosted trees: extreme gradient boosting</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="trees.html"><a href="trees.html#managing-loss"><i class="fa fa-check"></i><b>7.4.1</b> Managing Loss</a></li>
+<li class="chapter" data-level="7.4.2" data-path="trees.html"><a href="trees.html#penalisation"><i class="fa fa-check"></i><b>7.4.2</b> Penalisation</a></li>
+<li class="chapter" data-level="7.4.3" data-path="trees.html"><a href="trees.html#aggregation"><i class="fa fa-check"></i><b>7.4.3</b> Aggregation</a></li>
+<li class="chapter" data-level="7.4.4" data-path="trees.html"><a href="trees.html#tree-structure"><i class="fa fa-check"></i><b>7.4.4</b> Tree structure</a></li>
+<li class="chapter" data-level="7.4.5" data-path="trees.html"><a href="trees.html#boostext"><i class="fa fa-check"></i><b>7.4.5</b> Extensions</a></li>
+<li class="chapter" data-level="7.4.6" data-path="trees.html"><a href="trees.html#boostcode"><i class="fa fa-check"></i><b>7.4.6</b> Code and results</a></li>
+<li class="chapter" data-level="7.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>7.4.7</b> Instance weighting</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>7.5</b> Discussion</a></li>
+<li class="chapter" data-level="7.6" data-path="trees.html"><a href="trees.html#coding-exercises-3"><i class="fa fa-check"></i><b>7.6</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>8</b> Neural networks</a><ul>
+<li class="chapter" data-level="8.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>8.1</b> The original perceptron</a></li>
+<li class="chapter" data-level="8.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron"><i class="fa fa-check"></i><b>8.2</b> Multilayer perceptron</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
+<li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
+<li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
+<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification-1"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>8.3</b> How deep should we go? And other practical issues</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>8.3.1</b> Architectural choices</a></li>
+<li class="chapter" data-level="8.3.2" data-path="NN.html"><a href="NN.html#frequency-of-weight-updates-and-learning-duration"><i class="fa fa-check"></i><b>8.3.2</b> Frequency of weight updates and learning duration</a></li>
+<li class="chapter" data-level="8.3.3" data-path="NN.html"><a href="NN.html#penalizations-and-dropout"><i class="fa fa-check"></i><b>8.3.3</b> Penalizations and dropout</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
+<li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
+<li class="chapter" data-level="8.5.2" data-path="NN.html"><a href="NN.html#code-and-results-3"><i class="fa fa-check"></i><b>8.5.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>8.6</b> Other common architectures</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>8.6.1</b> Generative adversarial networks</a></li>
+<li class="chapter" data-level="8.6.2" data-path="NN.html"><a href="NN.html#autoencoders"><i class="fa fa-check"></i><b>8.6.2</b> Auto-encoders</a></li>
+<li class="chapter" data-level="8.6.3" data-path="NN.html"><a href="NN.html#a-word-on-convolutional-networks"><i class="fa fa-check"></i><b>8.6.3</b> A word on convolutional networks</a></li>
+<li class="chapter" data-level="8.6.4" data-path="NN.html"><a href="NN.html#advanced-architectures"><i class="fa fa-check"></i><b>8.6.4</b> Advanced architectures</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="NN.html"><a href="NN.html#coding-exercises-4"><i class="fa fa-check"></i><b>8.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>9</b> Support vector machines</a><ul>
+<li class="chapter" data-level="9.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>9.1</b> SVM for classification</a></li>
+<li class="chapter" data-level="9.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>9.2</b> SVM for regression</a></li>
+<li class="chapter" data-level="9.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>9.3</b> Practice</a></li>
+<li class="chapter" data-level="9.4" data-path="svm.html"><a href="svm.html#coding-exercises-5"><i class="fa fa-check"></i><b>9.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>10</b> Bayesian methods</a><ul>
+<li class="chapter" data-level="10.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>10.1</b> The Bayesian framework</a></li>
+<li class="chapter" data-level="10.2" data-path="bayes.html"><a href="bayes.html#bayesian-sampling"><i class="fa fa-check"></i><b>10.2</b> Bayesian sampling</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="bayes.html"><a href="bayes.html#gibbs-sampling"><i class="fa fa-check"></i><b>10.2.1</b> Gibbs sampling</a></li>
+<li class="chapter" data-level="10.2.2" data-path="bayes.html"><a href="bayes.html#metropolis-hastings-sampling"><i class="fa fa-check"></i><b>10.2.2</b> Metropolis-Hastings sampling</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="bayes.html"><a href="bayes.html#bayesian-linear-regression"><i class="fa fa-check"></i><b>10.3</b> Bayesian linear regression</a></li>
+<li class="chapter" data-level="10.4" data-path="bayes.html"><a href="bayes.html#naive-bayes-classifier"><i class="fa fa-check"></i><b>10.4</b> Naive Bayes classifier</a></li>
+<li class="chapter" data-level="10.5" data-path="bayes.html"><a href="bayes.html#BART"><i class="fa fa-check"></i><b>10.5</b> Bayesian additive trees</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="bayes.html"><a href="bayes.html#general-formulation"><i class="fa fa-check"></i><b>10.5.1</b> General formulation</a></li>
+<li class="chapter" data-level="10.5.2" data-path="bayes.html"><a href="bayes.html#priors"><i class="fa fa-check"></i><b>10.5.2</b> Priors</a></li>
+<li class="chapter" data-level="10.5.3" data-path="bayes.html"><a href="bayes.html#sampling-and-predictions"><i class="fa fa-check"></i><b>10.5.3</b> Sampling and predictions</a></li>
+<li class="chapter" data-level="10.5.4" data-path="bayes.html"><a href="bayes.html#code"><i class="fa fa-check"></i><b>10.5.4</b> Code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="valtune.html"><a href="valtune.html"><i class="fa fa-check"></i><b>11</b> Validating and tuning</a><ul>
+<li class="chapter" data-level="11.1" data-path="valtune.html"><a href="valtune.html#mlmetrics"><i class="fa fa-check"></i><b>11.1</b> Learning metrics</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="valtune.html"><a href="valtune.html#regression-analysis"><i class="fa fa-check"></i><b>11.1.1</b> Regression analysis</a></li>
+<li class="chapter" data-level="11.1.2" data-path="valtune.html"><a href="valtune.html#classification-analysis"><i class="fa fa-check"></i><b>11.1.2</b> Classification analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="valtune.html"><a href="valtune.html#validation"><i class="fa fa-check"></i><b>11.2</b> Validation</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-theory"><i class="fa fa-check"></i><b>11.2.1</b> The variance-bias tradeoff: theory</a></li>
+<li class="chapter" data-level="11.2.2" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-illustration"><i class="fa fa-check"></i><b>11.2.2</b> The variance-bias tradeoff: illustration</a></li>
+<li class="chapter" data-level="11.2.3" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-principle"><i class="fa fa-check"></i><b>11.2.3</b> The risk of overfitting: principle</a></li>
+<li class="chapter" data-level="11.2.4" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-some-solutions"><i class="fa fa-check"></i><b>11.2.4</b> The risk of overfitting: some solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="valtune.html"><a href="valtune.html#the-search-for-good-hyperparameters"><i class="fa fa-check"></i><b>11.3</b> The search for good hyperparameters</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="valtune.html"><a href="valtune.html#methods"><i class="fa fa-check"></i><b>11.3.1</b> Methods</a></li>
+<li class="chapter" data-level="11.3.2" data-path="valtune.html"><a href="valtune.html#example-grid-search"><i class="fa fa-check"></i><b>11.3.2</b> Example: grid search</a></li>
+<li class="chapter" data-level="11.3.3" data-path="valtune.html"><a href="valtune.html#example-bayesian-optimization"><i class="fa fa-check"></i><b>11.3.3</b> Example: Bayesian optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="valtune.html"><a href="valtune.html#short-discussion-on-validation-in-backtests"><i class="fa fa-check"></i><b>11.4</b> Short discussion on validation in backtests</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ensemble.html"><a href="ensemble.html"><i class="fa fa-check"></i><b>12</b> Ensemble models</a><ul>
+<li class="chapter" data-level="12.1" data-path="ensemble.html"><a href="ensemble.html#linear-ensembles"><i class="fa fa-check"></i><b>12.1</b> Linear ensembles</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="ensemble.html"><a href="ensemble.html#principles"><i class="fa fa-check"></i><b>12.1.1</b> Principles</a></li>
+<li class="chapter" data-level="12.1.2" data-path="ensemble.html"><a href="ensemble.html#example"><i class="fa fa-check"></i><b>12.1.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>12.2</b> Stacked ensembles</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>12.2.1</b> Two stage training</a></li>
+<li class="chapter" data-level="12.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-4"><i class="fa fa-check"></i><b>12.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>12.3</b> Extensions</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>12.3.1</b> Exogenous variables</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>12.3.2</b> Shrinking inter-model correlations</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ensemble.html"><a href="ensemble.html#exercise"><i class="fa fa-check"></i><b>12.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="backtest.html"><a href="backtest.html"><i class="fa fa-check"></i><b>13</b> Portfolio backtesting</a><ul>
+<li class="chapter" data-level="13.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>13.1</b> Setting the protocol</a></li>
+<li class="chapter" data-level="13.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>13.2</b> Turning signals into portfolio weights</a></li>
+<li class="chapter" data-level="13.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>13.3</b> Performance metrics</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>13.3.1</b> Discussion</a></li>
+<li class="chapter" data-level="13.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>13.3.2</b> Pure performance and risk indicators</a></li>
+<li class="chapter" data-level="13.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>13.3.3</b> Factor-based evaluation</a></li>
+<li class="chapter" data-level="13.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>13.3.4</b> Risk-adjusted measures</a></li>
+<li class="chapter" data-level="13.3.5" data-path="backtest.html"><a href="backtest.html#transaction-costs-and-turnover"><i class="fa fa-check"></i><b>13.3.5</b> Transaction costs and turnover</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="backtest.html"><a href="backtest.html#common-errors-and-issues"><i class="fa fa-check"></i><b>13.4</b> Common errors and issues</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="backtest.html"><a href="backtest.html#forward-looking-data"><i class="fa fa-check"></i><b>13.4.1</b> Forward looking data</a></li>
+<li class="chapter" data-level="13.4.2" data-path="backtest.html"><a href="backtest.html#backtest-overfitting"><i class="fa fa-check"></i><b>13.4.2</b> Backtest overfitting</a></li>
+<li class="chapter" data-level="13.4.3" data-path="backtest.html"><a href="backtest.html#simple-saveguards"><i class="fa fa-check"></i><b>13.4.3</b> Simple saveguards</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="backtest.html"><a href="backtest.html#implication-of-non-stationarity-forecasting-is-hard"><i class="fa fa-check"></i><b>13.5</b> Implication of non-stationarity: forecasting is hard</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="backtest.html"><a href="backtest.html#general-comments"><i class="fa fa-check"></i><b>13.5.1</b> General comments</a></li>
+<li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-6"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
+<li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
+<li class="chapter" data-level="14.2.2" data-path="interp.html"><a href="interp.html#shapley-values"><i class="fa fa-check"></i><b>14.2.2</b> Shapley values</a></li>
+<li class="chapter" data-level="14.2.3" data-path="interp.html"><a href="interp.html#breakdown"><i class="fa fa-check"></i><b>14.2.3</b> Breakdown</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>15</b> Two key concepts: causality and non-stationarity</a><ul>
+<li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
+<li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
+<li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
+<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
+<li class="chapter" data-level="16.1" data-path="unsup.html"><a href="unsup.html#corpred"><i class="fa fa-check"></i><b>16.1</b> The problem with correlated predictors</a></li>
+<li class="chapter" data-level="16.2" data-path="unsup.html"><a href="unsup.html#principal-component-analysis-and-autoencoders"><i class="fa fa-check"></i><b>16.2</b> Principal component analysis and autoencoders</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="unsup.html"><a href="unsup.html#a-bit-of-algebra"><i class="fa fa-check"></i><b>16.2.1</b> A bit of algebra</a></li>
+<li class="chapter" data-level="16.2.2" data-path="unsup.html"><a href="unsup.html#pca"><i class="fa fa-check"></i><b>16.2.2</b> PCA</a></li>
+<li class="chapter" data-level="16.2.3" data-path="unsup.html"><a href="unsup.html#ae"><i class="fa fa-check"></i><b>16.2.3</b> Autoencoders</a></li>
+<li class="chapter" data-level="16.2.4" data-path="unsup.html"><a href="unsup.html#application"><i class="fa fa-check"></i><b>16.2.4</b> Application</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>16.3</b> Clustering via k-means</a></li>
+<li class="chapter" data-level="16.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>16.4</b> Nearest neighbors</a></li>
+<li class="chapter" data-level="16.5" data-path="unsup.html"><a href="unsup.html#coding-exercise"><i class="fa fa-check"></i><b>16.5</b> Coding exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>17</b> Reinforcement learning</a><ul>
+<li class="chapter" data-level="17.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>17.1</b> Theoretical layout</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="RL.html"><a href="RL.html#general-framework"><i class="fa fa-check"></i><b>17.1.1</b> General framework</a></li>
+<li class="chapter" data-level="17.1.2" data-path="RL.html"><a href="RL.html#q-learning"><i class="fa fa-check"></i><b>17.1.2</b> Q-learning</a></li>
+<li class="chapter" data-level="17.1.3" data-path="RL.html"><a href="RL.html#sarsa"><i class="fa fa-check"></i><b>17.1.3</b> SARSA</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="RL.html"><a href="RL.html#issues-and-potential-solutions"><i class="fa fa-check"></i><b>17.2</b> Issues and potential solutions</a><ul>
+<li class="chapter" data-level="17.2.1" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>17.2.1</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="17.2.2" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>17.2.2</b> Policy gradient</a></li>
+</ul></li>
+<li class="chapter" data-level="17.3" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>17.3</b> Simple examples</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>17.3.1</b> Q-learning with simulations</a></li>
+<li class="chapter" data-level="17.3.2" data-path="RL.html"><a href="RL.html#q-learning-with-market-data"><i class="fa fa-check"></i><b>17.3.2</b> Q-learning with market data</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>17.4</b> Concluding remarks</a></li>
+<li class="chapter" data-level="17.5" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>17.5</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="NLP.html"><a href="NLP.html"><i class="fa fa-check"></i><b>18</b> Natural Language Processing</a></li>
+<li class="chapter" data-level="19" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>19</b> Conclusion</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="data-description.html"><a href="data-description.html"><i class="fa fa-check"></i><b>A</b> Data Description</a></li>
+<li class="chapter" data-level="B" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html"><i class="fa fa-check"></i><b>B</b> Solution to exercises</a><ul>
+<li class="chapter" data-level="B.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-4"><i class="fa fa-check"></i><b>B.1</b> Chapter 4</a></li>
+<li class="chapter" data-level="B.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-5"><i class="fa fa-check"></i><b>B.2</b> Chapter 5</a></li>
+<li class="chapter" data-level="B.3" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-6"><i class="fa fa-check"></i><b>B.3</b> Chapter 6</a></li>
+<li class="chapter" data-level="B.4" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-7"><i class="fa fa-check"></i><b>B.4</b> Chapter 7</a></li>
+<li class="chapter" data-level="B.5" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-8"><i class="fa fa-check"></i><b>B.5</b> Chapter 8</a></li>
+<li class="chapter" data-level="B.6" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-9"><i class="fa fa-check"></i><b>B.6</b> Chapter 9</a></li>
+<li class="chapter" data-level="B.7" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-12"><i class="fa fa-check"></i><b>B.7</b> Chapter 12</a></li>
+<li class="chapter" data-level="B.8" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-13"><i class="fa fa-check"></i><b>B.8</b> Chapter 13</a><ul>
+<li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.1</b> Functional programming in the backtest</a></li>
+<li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.2</b> Advanced weighting function</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning for Factor Investing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="factor" class="section level1">
+<h1><span class="header-section-number">Chapter 4</span> Factor investing and asset pricing anomalies</h1>
+<p>Asset pricing anomalies are the foundations of factor investing. In this chapter the aim is twofold:</p>
+<ul>
+<li>present simple ideas and concepts: basic factor models, common empirical facts (time-varying nature of returns and risk premia);<br />
+</li>
+<li>provide the reader with articles that go much deeper.</li>
+</ul>
+<p>The purpose of this chapter is not to provide a full treatment of the many topics related to factor investing. Rather, it is intended to give a broad overview and cover the essential themes so that the reader is guided towards the relevant references. As such, it can serve as a short, non-exhaustive, review of the literature. The subject of factor modelling in finance is incredibly vast and the number of papers dedicated to it is substantial and still rapidly increasing.</p>
+<p>Several monographs are already dedicated to the topic of style allocation (a synonym of factor investing) To cite but a few, we mention:</p>
+<ul>
+<li><span class="citation">Ilmanen (<a href="#ref-ilmanen2011expected">2011</a>)</span>: an exhaustive excursion into risk premia, across many asset classes, with a large spectrum of descriptive statistics (across factors and periods),<br />
+</li>
+<li><span class="citation">Ang (<a href="#ref-ang2014asset">2014</a>)</span>: covers factor investing with a strong focus on the money management industry,<br />
+</li>
+<li><span class="citation">Bali, Engle, and Murray (<a href="#ref-bali2016empirical">2016</a>)</span>, very complete book on the cross-section of signals with statistical analyses (univariate metrics, correlations, persistence, etc.),<br />
+</li>
+<li><span class="citation">Jurczenko (<a href="#ref-jurczenko2017factor">2017</a>)</span>: a tour on various topics given by field experts (factor purity, predictability, selection vs weighting, factor timing, etc.).</li>
+</ul>
+<p>Finally, we mention a few wide-scope papers on this topic: <span class="citation">Goyal (<a href="#ref-goyal2012empirical">2012</a>)</span>, <span class="citation">Cazalet and Roncalli (<a href="#ref-cazalet2014facts">2014</a>)</span> and <span class="citation">Baz et al. (<a href="#ref-baz2015dissecting">2015</a>)</span>.</p>
+<div id="introduction" class="section level2">
+<h2><span class="header-section-number">4.1</span> Introduction</h2>
+<p>The topic of factor investing, though a decades-old academic theme, has gained traction concurrently with the rise of Equity Traded Funds (ETFs) as vectors of investment. Both have gathered momentum in the 2010 decade. Not so surprisingly, the feedback loop between practical financial engineering and academic research has stimulated both sides in a mutually beneficial manner. Practitioners rely on key scholarly findings (e.g., asset pricing anomalies) while researchers dig deeper into pragmatic topics (e.g., factor exposure or transaction costs).</p>
+<p>The core aim of factor models is to understand the <strong>drivers of asset prices</strong>. Broadly speaking, the rationale behind factor investing is that the financial performance of firms depend on factors, whether they be latent and inobservable, or related to intrinsic characteristics (like accounting ratios for instance). As such, factor models can be viewed as special cases of the arbitrage pricing theory (APT) of <span class="citation">Ross (<a href="#ref-ross1976arbitrage">1976</a>)</span>, which assumes that the return on an asset <span class="math inline">\(n\)</span> can be modelled as a linear combination of underlying factors <span class="math inline">\(f_k\)</span>:
+<span class="math display" id="eq:apt">\[\begin{equation}
+r_{t,n}= \alpha_n+\sum_{k=1}^K\beta_{n,k}f_{t,k}+\epsilon_{t,n}, \tag{4.1}
+\end{equation}\]</span></p>
+<p>where the usual econometric constraints on linear models hold: <span class="math inline">\(\mathbb{E}[\epsilon_{t,n}]=0\)</span>, <span class="math inline">\(\text{cov}(\epsilon_{t,n},\epsilon_{t,m})=0\)</span> for <span class="math inline">\(n\neq m\)</span> and <span class="math inline">\(\text{cov}(f_n,\epsilon_n)=0\)</span>. If such factors do exist, then they are in contradiction with the cornerstone model in asset pricing: the capital asset pricing model (CAPM) of <span class="citation">Sharpe (<a href="#ref-sharpe1964capital">1964</a>)</span>, <span class="citation">Lintner (<a href="#ref-lintner1965valuation">1965</a>)</span> and <span class="citation">Mossin (<a href="#ref-mossin1966equilibrium">1966</a>)</span>. Indeed, according to the CAPM, the only driver of returns is the market portfolio. This explains why factors are also called ‘anomalies’.</p>
+<p>Empirical evidence of asset pricing anomalies has accumulated since the dual publication of <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span> and <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>. This seminal work has paved the way for a blossoming stream of literature that has its meta-studies (e.g., <span class="citation">Green, Hand, and Zhang (<a href="#ref-green2013supraview">2013</a>)</span>, <span class="citation">Harvey, Liu, and Zhu (<a href="#ref-harvey2016and">2016</a>)</span> and <span class="citation">McLean and Pontiff (<a href="#ref-mclean2016does">2016</a>)</span>). The regression <a href="factor.html#eq:apt">(4.1)</a> can be evaluated once (unconditionally) or sequentially over different time frames. In the latter case, the parameters (coefficient estimates) change and the models are thus called <em>conditional</em> (we refer to <span class="citation">Ang and Kristensen (<a href="#ref-ang2012testing">2012</a>)</span> and to <span class="citation">Cooper and Maio (<a href="#ref-cooper2018new">2019</a>)</span> for recent results on this topic as well as for a detailed review on the related research). Conditional models are more flexible because they acknowledge that the drivers of asset prices may not be constant, which seems like a reasonable postulate.</p>
+</div>
+<div id="detecting-anomalies" class="section level2">
+<h2><span class="header-section-number">4.2</span> Detecting anomalies</h2>
+<p>Obviously, a crucial step is to be able to identify an anomaly and the complexity of this task should not be underestimated. Given the publication bias towards positive results (see, e.g., <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> in Finance), researchers are often tempted to report partial results that are sometimes invalidated by further studies. The need for replication is therefore high and many findings have no tomorrow (<span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history">2018</a>)</span>). Some researcher document fading effects because of publication: once the anomaly becomes public, agents invest in it, which pushes prices up and the anomaly disappears. <span class="citation">McLean and Pontiff (<a href="#ref-mclean2016does">2016</a>)</span> document this effect in the US but <span class="citation">Jacobs and Müller (<a href="#ref-jacobs2019anomalies">2019</a>)</span> find that all other countries experience sustained post-publication factor returns. With a different methodology, <span class="citation">A. Y. Chen and Zimmermann (<a href="#ref-chen2019publication">2019</a>)</span> introduce a publication bias adjustment for returns and the authors note that this (negative) adjustment is in fact rather small. <span class="citation">Penasse (<a href="#ref-penasse2018understanding">2018</a>)</span> recommends the notion of <span class="math inline">\(alpha decay\)</span> to study the persistence or attenuation of anomalies.</p>
+<p>The destruction of factor premia may due to herding (<span class="citation">Krkoska and Schenk-Hoppé (<a href="#ref-krkoska2019herding">2019</a>)</span>) and could be accelerated by the democritization of so-called smart-beta products (Equity Traded Funds (ETFs) notably) that allow investors to directly invest in particular styles (value, low volatility, etc.).</p>
+<p>This subsection was inspired from <span class="citation">Baker, Luo, and Taliaferro (<a href="#ref-baker2017detecting">2017</a>)</span> and <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span>.</p>
+<div id="simple-portfolio-sorts" class="section level3">
+<h3><span class="header-section-number">4.2.1</span> Simple portfolio sorts</h3>
+<p>This is the most common procedure and the one used in <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span>. The idea is simple. On one date,</p>
+<ol style="list-style-type: decimal">
+<li>rank firms according to a particular criterion (e.g., size, book-to-market ratio);<br />
+</li>
+<li>form <span class="math inline">\(J\ge 2\)</span> portfolios (i.e. homogeneous groups) consisting of the same number of stocks according to the ranking (usually, <span class="math inline">\(J=2\)</span>, <span class="math inline">\(J=3\)</span>, <span class="math inline">\(J=5\)</span> or <span class="math inline">\(J=10\)</span> portfolios are built, based on the median, terciles, quintiles or deciles of the criterion);<br />
+</li>
+<li>the weight of stocks inside the portfolio is either uniform (equal weights), or proportional to market capitalisation;</li>
+<li>at a future date (usually one month), report the returns of the portfolios.<br />
+Then, iterate the procedure until the chronological end of the sample is reached.</li>
+</ol>
+<p>The outcome is a time-series of portfolio returns <span class="math inline">\(r_t^j\)</span> for each grouping <span class="math inline">\(j\)</span>. An anomaly is identified if the <span class="math inline">\(t\)</span>-test between the first (<span class="math inline">\(j=1\)</span>) and the last group (<span class="math inline">\(j=J\)</span>) unveils a significant difference in average returns. A strong limitation of this approach is that the sorting criterion could have a non monotonous impact on returns and the simple <span class="math inline">\(t\)</span>-statistic would not detect it. Several articles address this concern: <span class="citation">Patton and Timmermann (<a href="#ref-patton2010monotonicity">2010</a>)</span> and <span class="citation">Romano and Wolf (<a href="#ref-romano2013testing">2013</a>)</span> for instance. Finally, we refer to <span class="citation">Ledoit, Wolf, and Zhao (<a href="#ref-ledoit2018efficient">2018</a>)</span> for refinements that take into account the covariance structure of asset returns.</p>
+<p>In the code and Figure <a href="factor.html#fig:factportsort">4.1</a> below, we compute size portfolios (equally weighted: above versus below the median capitalization). According to the size anomaly, the firms with below median market cap should earn higher returns on average. This is verified whenever the red bar in the plot is above the green one (it happens most of the time).</p>
+
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">large =</span> Mkt_Cap_12M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Mkt_Cap_12M_Usd)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Creates the cap sort</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st">                                                 </span><span class="co"># Ungroup</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">                      </span><span class="co"># Creates a year variable</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="st">    </span><span class="kw">group_by</span>(year, large) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Analyze by year &amp; cap</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">avg_return =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_return, <span class="dt">fill =</span> large)) <span class="op">+</span><span class="st">         </span><span class="co"># Plot!</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="st">    </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st">                                </span><span class="co"># Bars side-to-side</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.8</span>, <span class="fl">0.2</span>)) <span class="op">+</span><span class="st">                        </span><span class="co"># Legend location</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="st">    </span><span class="kw">coord_fixed</span>(<span class="dv">124</span>) <span class="op">+</span><span class="st">                                            </span><span class="co"># x/y aspect ratio</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="st">    </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>))             <span class="co"># Colors</span></a></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:factportsort"></span>
+<img src="ML_factor_files/figure-html/factportsort-1.png" alt="The size factor: average returns of small (=FALSE) versus large (=TRUE) firms." width="672" />
+<p class="caption">
+FIGURE 4.1: The size factor: average returns of small (=FALSE) versus large (=TRUE) firms.
+</p>
+</div>
+<p></p>
+</div>
+<div id="factors" class="section level3">
+<h3><span class="header-section-number">4.2.2</span> Factors</h3>
+<p>The construction of so-called factors follows the same lines as above. Portfolios are based on one characteristic and the factor is a long-short ensemble of one extreme portfolio minus the opposite extreme (small minus large for the size factor or high book-to-market ratio minus low book-to-market ratio for the value factor). Sometimes, subtleties include forming bivariate sorts and aggregating several portfolios together, as in the original contribution of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>. The most common factors are listed below, along with a few references. We refer to the books listed at the beginning of the chapter for a more exhaustive treatment of factor idiosyncrasies. For most anomalies, theoretical justifications have been brought forward, whether risk-based or behavioural. We list the most frequently cited factors below:</p>
+<ul>
+<li>size (<strong>SMB</strong> = small firms minus large firms): <span class="citation">Banz (<a href="#ref-banz1981relationship">1981</a>)</span>, <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span>, <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>, <span class="citation">Van Dijk (<a href="#ref-van2011size">2011</a>)</span>, <span class="citation">Asness et al. (<a href="#ref-asness2018size">2018</a>)</span> and <span class="citation">Astakhov, Havranek, and Novak (<a href="#ref-astakhov2019firm">2019</a>)</span>.<br />
+</li>
+<li>value (<strong>HM</strong> = high minus low: undervalued minus `growth’ firms): <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span>, <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>, <span class="citation">Asness, Moskowitz, and Pedersen (<a href="#ref-asness2013value">2013</a>)</span>.<br />
+</li>
+<li>momentum (<strong>WML</strong> = winners minus looser): <span class="citation">Jegadeesh and Titman (<a href="#ref-jegadeesh1993returns">1993</a>)</span>, <span class="citation">Asness, Moskowitz, and Pedersen (<a href="#ref-asness2013value">2013</a>)</span>. The winners are the assets that have experienced the highest returns over the last year (sometimes the computation of the return is truncated to omit the last month). Cross-sectional momentum is linked, but not equivalent, to time-series momentum (trend following), see e.g., <span class="citation">Moskowitz, Ooi, and Pedersen (<a href="#ref-moskowitz2012time">2012</a>)</span> and <span class="citation">Lempérière et al. (<a href="#ref-lemperiere2014two">2014</a>)</span>.<br />
+</li>
+<li>profitability (<strong>RMW</strong> = robust minus weak profits): <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>, <span class="citation">Bouchaud et al. (<a href="#ref-bouchaud2019sticky">2019</a>)</span>. In the former reference, profitability is measured as (revenues - (cost and expenses))/equity.<br />
+</li>
+<li>investment (<strong>CMA</strong> = conservative minus aggressive): <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>, <span class="citation">Hou, Xue, and Zhang (<a href="#ref-hou2015digesting">2015</a>)</span>. Investment is measures via the growth of total assets (divided by total assets). Aggressive firms are those that experience the largest growth in assets.<br />
+</li>
+<li>low `risk’ (sometimes: <strong>BAB</strong> = betting against beta): <span class="citation">Ang et al. (<a href="#ref-ang2006cross">2006</a>)</span>, <span class="citation">Baker, Bradley, and Wurgler (<a href="#ref-baker2011benchmarks">2011</a>)</span>, <span class="citation">Frazzini and Pedersen (<a href="#ref-frazzini2014betting">2014</a>)</span>, <span class="citation">Boloorforoosh et al. (<a href="#ref-boloorforoosh2019beta">2019</a>)</span>. In this case, the computation of risk changes from one article to the other (simple volatility, market beta, idiosyncratic volatility, etc.)</li>
+</ul>
+<p>With the notable exception of the low risk premium, the most mainstream anomalies are kept and updated in the data library of Kenneth French (<a href="https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html" class="uri">https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html</a>). Of course, the computation of the factors follows a particular set of rules, but they are generally accepted in the academic sphere. Another source of data is the AQR repository: <a href="https://www.aqr.com/Insights/Datasets" class="uri">https://www.aqr.com/Insights/Datasets</a>.</p>
+<p>Below, we import data from Ken French’s data library. We will use it later on in the chapter.</p>
+
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">library</span>(quantmod)                         <span class="co"># Package for data extraction</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">library</span>(xtable)                           <span class="co"># Package for LaTeX exports </span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">min_date &lt;-<span class="st"> &quot;1963-07-31&quot;</span>                  <span class="co"># Start date</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">max_date &lt;-<span class="st"> &quot;2019-11-28&quot;</span>                  <span class="co"># Stop date</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">temp &lt;-<span class="st"> </span><span class="kw">tempfile</span>()</a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">KF_website &lt;-<span class="st"> &quot;http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/&quot;</span></a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">KF_file &lt;-<span class="st"> &quot;ftp/F-F_Research_Data_5_Factors_2x3_CSV.zip&quot;</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8">link &lt;-<span class="st"> </span><span class="kw">paste0</span>(KF_website,KF_file)        <span class="co"># Link of the file</span></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9"><span class="kw">download.file</span>(link, temp, <span class="dt">quiet =</span> <span class="ot">TRUE</span>)   <span class="co"># Download!</span></a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">FF_factors &lt;-<span class="st"> </span><span class="kw">read_csv</span>(<span class="kw">unz</span>(temp, <span class="st">&quot;F-F_Research_Data_5_Factors_2x3.CSV&quot;</span>), </a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">                       <span class="dt">skip =</span> <span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st">          </span><span class="co"># Check the number of lines to skip!</span></a>
+<a class="sourceLine" id="cb7-12" data-line-number="12"><span class="st">    </span><span class="kw">rename</span>(<span class="dt">date =</span> X1, <span class="dt">MKT_RF =</span> <span class="st">`</span><span class="dt">Mkt-RF</span><span class="st">`</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Change the name of the first column</span></a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"><span class="st">    </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(<span class="op">-</span>date), as.numeric) <span class="op">%&gt;%</span><span class="st">                 </span><span class="co"># Convert values to number</span></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">ymd</span>(<span class="kw">parse_date_time</span>(date, <span class="st">&quot;%Y%m&quot;</span>))) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Date in right format</span></a>
+<a class="sourceLine" id="cb7-15" data-line-number="15"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">rollback</span>(date <span class="op">+</span><span class="st"> </span><span class="kw">months</span>(<span class="dv">1</span>)))              <span class="co"># End of month date</span></a>
+<a class="sourceLine" id="cb7-16" data-line-number="16">FF_factors &lt;-<span class="st"> </span>FF_factors <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">MKT_RF =</span> MKT_RF <span class="op">/</span><span class="st"> </span><span class="dv">100</span>, <span class="co"># Scale returns</span></a>
+<a class="sourceLine" id="cb7-17" data-line-number="17">                                    <span class="dt">SMB =</span> SMB <span class="op">/</span><span class="st"> </span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb7-18" data-line-number="18">                                    <span class="dt">HML =</span> HML <span class="op">/</span><span class="st"> </span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb7-19" data-line-number="19">                                    <span class="dt">RMW =</span> RMW <span class="op">/</span><span class="st"> </span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb7-20" data-line-number="20">                                    <span class="dt">CMA =</span> CMA <span class="op">/</span><span class="st"> </span><span class="dv">100</span>,</a>
+<a class="sourceLine" id="cb7-21" data-line-number="21">                                    <span class="dt">RF =</span> RF<span class="op">/</span><span class="dv">100</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-22" data-line-number="22"><span class="st">    </span><span class="kw">filter</span>(date <span class="op">&gt;=</span><span class="st"> </span>min_date, date <span class="op">&lt;=</span><span class="st"> </span>max_date)             <span class="co"># Finally, keep only recent points</span></a>
+<a class="sourceLine" id="cb7-23" data-line-number="23">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(FF_factors),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb7-24" data-line-number="24">             <span class="dt">caption =</span> <span class="st">&quot;Sample of monthly factor values.&quot;</span>) <span class="co"># A look at the data (see table)                   </span></a></code></pre></div>
+<table>
+<caption><span id="tab:factorImport">TABLE 4.1: </span>Sample of monthly factor values.</caption>
+<thead>
+<tr class="header">
+<th align="left">date</th>
+<th align="right">MKT_RF</th>
+<th align="right">SMB</th>
+<th align="right">HML</th>
+<th align="right">RMW</th>
+<th align="right">CMA</th>
+<th align="right">RF</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1963-07-31</td>
+<td align="right">-0.0039</td>
+<td align="right">-0.0047</td>
+<td align="right">-0.0083</td>
+<td align="right">0.0066</td>
+<td align="right">-0.0115</td>
+<td align="right">0.0027</td>
+</tr>
+<tr class="even">
+<td align="left">1963-08-31</td>
+<td align="right">0.0507</td>
+<td align="right">-0.0079</td>
+<td align="right">0.0167</td>
+<td align="right">0.0039</td>
+<td align="right">-0.0040</td>
+<td align="right">0.0025</td>
+</tr>
+<tr class="odd">
+<td align="left">1963-09-30</td>
+<td align="right">-0.0157</td>
+<td align="right">-0.0048</td>
+<td align="right">0.0018</td>
+<td align="right">-0.0076</td>
+<td align="right">0.0024</td>
+<td align="right">0.0027</td>
+</tr>
+<tr class="even">
+<td align="left">1963-10-31</td>
+<td align="right">0.0253</td>
+<td align="right">-0.0129</td>
+<td align="right">-0.0010</td>
+<td align="right">0.0275</td>
+<td align="right">-0.0224</td>
+<td align="right">0.0029</td>
+</tr>
+<tr class="odd">
+<td align="left">1963-11-30</td>
+<td align="right">-0.0085</td>
+<td align="right">-0.0084</td>
+<td align="right">0.0171</td>
+<td align="right">-0.0045</td>
+<td align="right">0.0222</td>
+<td align="right">0.0027</td>
+</tr>
+<tr class="even">
+<td align="left">1963-12-31</td>
+<td align="right">0.0183</td>
+<td align="right">-0.0189</td>
+<td align="right">-0.0012</td>
+<td align="right">0.0008</td>
+<td align="right">-0.0030</td>
+<td align="right">0.0029</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Posterior to the discovery of these stylised facts, some contributions have aimed at building theoretical models that capture these properties. We cite a handful below:</p>
+<ul>
+<li>size and value: <span class="citation">Berk, Green, and Naik (<a href="#ref-berk1999optimal">1999</a>)</span>, <span class="citation">K. D. Daniel, Hirshleifer, and Subrahmanyam (<a href="#ref-daniel2001overconfidence">2001</a>)</span>, <span class="citation">Barberis and Shleifer (<a href="#ref-barberis2003style">2003</a>)</span>, <span class="citation">Gomes, Kogan, and Zhang (<a href="#ref-gomes2003equilibrium">2003</a>)</span>, <span class="citation">Carlson, Fisher, and Giammarino (<a href="#ref-carlson2004corporate">2004</a>)</span>, arnott2014can;</li>
+<li>momentum: <span class="citation">Johnson (<a href="#ref-johnson2002rational">2002</a>)</span>, <span class="citation">Grinblatt and Han (<a href="#ref-grinblatt2005prospect">2005</a>)</span>, <span class="citation">Vayanos and Woolley (<a href="#ref-vayanos2013institutional">2013</a>)</span>, <span class="citation">Choi and Kim (<a href="#ref-choi2014momentum">2014</a>)</span>.</li>
+</ul>
+<p>In addition, recent bridges have been built between risk-based factor representations and behavioural theories. We refer essentially to <span class="citation">Barberis, Mukherjee, and Wang (<a href="#ref-barberis2016prospect">2016</a>)</span> and <span class="citation">Daniel, Hirshleifer, and Sun (<a href="#ref-daniel2019short">2019</a>)</span> and the references therein.</p>
+<p>While these factors (i.e., long/short portfolios) exhibit time-varying risk-premia, it is well-documented (and accepted) that they deliver positive returns over long horizons. We refer to <span class="citation">Gagliardini, Ossola, and Scaillet (<a href="#ref-gagliardini2016time">2016</a>)</span> and to the survey <span class="citation">Gagliardini, Ossola, and Scaillet (<a href="#ref-gagliardini2019estimation">2019</a>)</span>, as well as to the related bibliography for technical details on estimation procedures of risk premia and the corresponding empirical results. A large sample study that documents regime changes in factor premia was also carried out by <span class="citation">Ilmanen et al. (<a href="#ref-ilmanen2019factor">2019</a>)</span>.</p>
+<p>In Figure <a href="factor.html#fig:riskpremiaFF">4.2</a>, we plot the average monthly return aggregated over each calendar year for five common factors. The risk free rate (which is not a factor per se) is the most stable while the market factor (aggregate market returns minus the risk-free rate) is the most volatile. This makes sense because it is the only long equity factor among the five series.</p>
+
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">FF_factors <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">date =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># Turn date into year</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> factor, <span class="dt">value =</span> value, <span class="op">-</span><span class="st"> </span>date) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Put in tidy shape</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, factor) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Group by year and factor</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">value =</span> <span class="kw">mean</span>(value)) <span class="op">%&gt;%</span><span class="st">                  </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> factor)) <span class="op">+</span><span class="st">  </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb8-7" data-line-number="7"><span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dv">500</span>)                      <span class="co"># Fix x/y ratio</span></a></code></pre></div>
+<div class="figure"><span id="fig:riskpremiaFF"></span>
+<img src="ML_factor_files/figure-html/riskpremiaFF-1.png" alt="Average returns of common anomalies (1963-2020). Source: Ken French library." width="672" />
+<p class="caption">
+FIGURE 4.2: Average returns of common anomalies (1963-2020). Source: Ken French library.
+</p>
+</div>
+<p></p>
+<p>The individual attributes of investor who allocate towards particular factors is a blossoming topic. We list a few references below, even though, they somewhat lie out of the scope of this book. <span class="citation">Betermier, Calvet, and Sodini (<a href="#ref-betermier2017value">2017</a>)</span> show that value investors are older, wealthier and face lower income risk compared to growth investors: they are those in the best position to take financial risks. The study <span class="citation">Cronqvist, Siegel, and Yu (<a href="#ref-cronqvist2015value">2015</a>)</span> leads to different conclusions: it finds that the propensity to invest in value versus growth assets has roots in genetics and in life events (the latter effect being confirmed in <span class="citation">Cocco, Gomes, and Lopes (<a href="#ref-cocco2019evidence">2019</a>)</span> and the former being further detailed in a more general context in <span class="citation">Cronqvist et al. (<a href="#ref-cronqvist2015fetal">2015</a>)</span>). Psychological traits can also explain some factors: when agents extrapolates, they are likely to fuel momentum (this topic is thoroughly reviewed in <span class="citation">Barberis (<a href="#ref-barberis2018psychology">2018</a>)</span>). Micro- and macro-economic consequences of these preferences are detailed in <span class="citation">Bhamra and Uppal (<a href="#ref-bhamra2019does">2019</a>)</span>. To conclude this paragraph, we mention that theoretical models have also been proposed that link agents’ preferences and beliefs to market anomalies (see for instance <span class="citation">Barberis, Jin, and Wang (<a href="#ref-barberis2019prospect">2019</a>)</span>).</p>
+<p>Finally, we highlight the need of replicability of factor premia. As is shown by <span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history">2018</a>)</span> and <span class="citation">Hou, Xue, and Zhang (<a href="#ref-hou2019replicating">2019</a>)</span>, many proclaimed factors are in fact very much data-dependent and often fail to deliver sustained profitability when the investment universe is altered.</p>
+<p>Campbell Harvey, in a series of papers, tried to synthesize the research on factors: <span class="citation">Harvey, Liu, and Zhu (<a href="#ref-harvey2016and">2016</a>)</span>, <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span>, <span class="citation">Harvey and Liu (<a href="#ref-harvey2019census">2019</a>)</span>. His work underlines the need to set high bars for an anomaly to be called a ‘true’ factor. Increasing thresholds for <span class="math inline">\(p\)</span>-values is only a partial answer as it is always possible to resort to data snooping in order to find an optimized strategy that will fail out-of-sample but that will deliver a <span class="math inline">\(t\)</span>-statistic larger than three (or even four). <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> recommends to resort to a Bayesian approach which blends data-based significance with a prior into a so-called Bayesanised <em>p</em>-value (see subsection below).</p>
+<p>Following this work, researchers have continued to explore the richness of this zoo. <span class="citation">Bryzgalova, Huang, and Julliard (<a href="#ref-bryzgalova2019bayesian">2019</a>)</span> propose a tractable Bayesian estimation of large-dimensional factor models and evaluate all possible combinations of more than 50 factors, yielding an incredibly large number of coefficients. This combined with a Bayesianized <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk">1973</a>)</span> procedure allows to distinguish between pervasive and superfluous factors.</p>
+</div>
+<div id="predictive-regressions-sorts-and-p-value-issues" class="section level3">
+<h3><span class="header-section-number">4.2.3</span> Predictive regressions, sorts, and p-value issues</h3>
+<p>For simplicity, assume a simple form:
+<span class="math display">\[\begin{equation}
+\textbf{r} = a+b\textbf{x}+\textbf{e},
+\label{eq:factsimple}
+\end{equation}\]</span>
+where the vector <span class="math inline">\(\textbf{r}\)</span> stacks all returns of all stocks and <span class="math inline">\(\textbf{x}\)</span> is a lagged variable so that the regression is indeed predictive. If the estimate <span class="math inline">\(\hat{b}\)</span> is significant given a specified threshold, then it can be tempting to conclude that <span class="math inline">\(\textbf{x}\)</span> does a good job at predicting returns. Hence, long-short portfolios related to extreme values of <span class="math inline">\(\textbf{x}\)</span> (mind the sign of <span class="math inline">\(\hat{b}\)</span>) are expected to generate profits. This is unfortunately often false because <span class="math inline">\(\hat{b}\)</span> gives information on the <em>past</em> ability of <span class="math inline">\(\textbf{x}\)</span> to forecast returns. What happens in the future may be another story.</p>
+<p>Statistical tests are also used for portfolio sorts. Assume two extreme portfolios are expected to yield very different average returns (like very small cap versus very large cap, or strong winners versus bad losers). The portfolio returns are written <span class="math inline">\(r_t^+\)</span> and <span class="math inline">\(r_t^-\)</span>. The simplest test for the mean is <span class="math inline">\(t=\sqrt{T}\frac{m_{r_+}-m_{r_-}}{\sigma_{r_+-r_-}}\)</span>, where <span class="math inline">\(T\)</span> is the number of points and <span class="math inline">\(m_{r_\pm}\)</span> denote the means of returns and <span class="math inline">\(\sigma_{r_+-r_-}\)</span> is the standard deviation of the difference between the two series, i.e., the volatility of the long/short portfolio. In short, the statistic can be viewed as a scaled Sharpe ratio (though usually these ratios are computed for long-only portfolios) and can in turn be used to compute <span class="math inline">\(p\)</span>-values to assess the robustness of an anomaly. As is shown in <span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history">2018</a>)</span> and <span class="citation">Hou, Xue, and Zhang (<a href="#ref-hou2019replicating">2019</a>)</span>, many factors discovered by reasearchers fail to survive in out-of-sample tests.</p>
+<p>One reason why people are overly optimistic about anomalies they detect is the widespread reverse interpretation of the <em>p</em>-value. Often, it is thought of as the probability of one hypothesis (e.g., my anomaly exists) given the data. In fact, it’s the opposite: it’s the likelihood of your data sample, knowing that the anomaly holds.
+<span class="math display">\[\begin{align*}
+p-\text{value} &amp;= P[D|H] \\
+\text{target prob.}&amp; = P[H|D]=\frac{P[D|H]}{P[D]}\times P[H],
+\end{align*}\]</span>
+where <span class="math inline">\(H\)</span> stands for hypothesis and <span class="math inline">\(D\)</span> for data. The equality in the second row is a plain application of Bayes’ identity: the interesting probability is in fact a transform of the <span class="math inline">\(p\)</span>-value.</p>
+<p>Two articles (at least) discuss this idea. <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> introduces <strong>Bayesianized</strong> <span class="math inline">\(p\)</span>-<strong>values</strong>:
+<span class="math display">\[\begin{equation}
+\text{Bayesianized } p-\text{value}=\text{Bpv}= e^{-t^2/2}\times\frac{\text{prior}}{1+e^{-t^2/2}\times \text{prior}} ,
+\label{eq:Bpv}
+\end{equation}\]</span>
+where <span class="math inline">\(t\)</span> is the <span class="math inline">\(t\)</span>-statistic obtained from the regression (i.e., the one that defines the <em>p</em>-value) and prior is the analyst’s estimation of the odds that the hypothesis (anomaly) is true. The prior is coded as follows. Suppose there is a p% chance that the null holds (i.e (1-p)% for the anomaly). The odds are coded as <span class="math inline">\(p/(1-p)\)</span>.
+Thus, if the <em>t</em>-statistic is equal to 2 (corresponding to a <em>p</em>-value of 5% roughly) and the prior odds are equal to 6, then the Bpv is equal to <span class="math inline">\(e^{-2}\times 6 \times(1+e^{-2}\times 6)^{-1}\approx 0.448\)</span> and there is a 44.8% chance that the null is true. This interpretation stands in sharp contrast with the original <span class="math inline">\(p\)</span>-value which cannot be viewed as a probability that the null holds. Of course, one drawback is that the level of the prior is crucial and solely user-specified.</p>
+<p>The work of <span class="citation">Chinco, Neuhierl, and Weber (<a href="#ref-chinco2019estimating">2019</a>)</span> is very different but shares some key concepts, like the introduction of Bayesian priors in regression outputs. They show that introducing an <span class="math inline">\(L^2\)</span> constraint on the predictive regression (see the ridge regression in Chapter <a href="lasso.html#lasso">6</a>) amounts to introduce views on what the true distribution of <span class="math inline">\(b\)</span> is. The stronger the constraint, the more the estimate <span class="math inline">\(\hat{b}\)</span> will the shrunk towards zero. One key idea in their work is the introduction of a distribution of the true <span class="math inline">\(b\)</span> across many anomalies. It is assumed to be Gaussian and centered. The interesting parameter is the standard deviation: the larger it is, the more significant anomalies are discovered. Notably, the authors show that this parameter changes through time and we refer to the original paper for more details on this subject.</p>
+</div>
+<div id="fama-macbeth-regressions" class="section level3">
+<h3><span class="header-section-number">4.2.4</span> Fama-Macbeth regressions</h3>
+<p>Another detection method was proposed by <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk">1973</a>)</span> through a two-stage regression analysis of risk premia. The first stage is a simple estimation of the relationship (): the regressions are run on a stock-by-stock basis over the corresponding time-series. The resulting estimates <span class="math inline">\(\hat{\beta}_{i,k}\)</span> are then plugged into a second series of regressions:
+<span class="math display">\[\begin{equation}
+r_{t,n}= \gamma_{t,0} + \sum_{k=1}^K\gamma_{t,k}\hat{\beta}_{n,k} + \varepsilon_{t,n},
+\end{equation}\]</span>
+which are ran date-by-date on the cross-section of assets.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> Theoretically, the betas would be known and the regression would be run on the <span class="math inline">\(\beta_{n,k}\)</span> instead of their estimated values.
+The <span class="math inline">\(\hat{\gamma}_{t,k}\)</span> estimate the premia of factor <span class="math inline">\(k\)</span> at time <span class="math inline">\(t\)</span>. Under suitable distributional assumptions over the <span class="math inline">\(\varepsilon_{t,n}\)</span>, statistical tests can be perform to determine whether these premia are significant or not. Typically, the statistic on the time-aggregated (average) premia <span class="math inline">\(\hat{\gamma}_k=\frac{1}{T}\sum_{t=1}^T\hat{\gamma}_{t,k}\)</span>:
+<span class="math display">\[t_k=\frac{\hat{\gamma}_k}{\hat{\sigma_k}/\sqrt{T}}\]</span>
+is often used in pure Gaussian contexts to assess whether or not the factor is significant (<span class="math inline">\(\hat{\sigma}_k\)</span> is the standard deviation of the <span class="math inline">\(\hat{\gamma}_{t,k}\)</span>).</p>
+<p>We refer to <span class="citation">Jagannathan and Wang (<a href="#ref-jagannathan1998asymptotic">1998</a>)</span> and <span class="citation">Petersen (<a href="#ref-petersen2009estimating">2009</a>)</span> for technical discussions on the biases and losses in accuracy that can be induced by standard OLS estimations. Moreover, as the <span class="math inline">\(\hat{\beta}_{i,k}\)</span> in the second-pass regression are <em>estimates</em>, a second level of errors can arise (the so-called errors in variables). The interested reader will find some extensions and solutions in <span class="citation">Shanken (<a href="#ref-shanken1992estimation">1992</a>)</span>, <span class="citation">Ang, Liu, and Schwarz (<a href="#ref-ang2018using">2018</a>)</span> and <span class="citation">Jegadeesh et al. (<a href="#ref-jegadeesh2019empirical">2019</a>)</span>.</p>
+<p>Below, we perform <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk">1973</a>)</span> regressions on our sample. We start by thr first pass: individual estimation of betas. We build a dedicated function below and use some functional programming to automate the process.</p>
+
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">nb_factors &lt;-<span class="st"> </span><span class="dv">5</span>                                                   <span class="co"># Number of factors</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">data_FM &lt;-<span class="st"> </span><span class="kw">left_join</span>(data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Join the 2 datasets</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">                         </span><span class="kw">select</span>(date, stock_id, R1M_Usd) <span class="op">%&gt;%</span><span class="st">      </span><span class="co"># (with returns...</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="st">                         </span><span class="kw">filter</span>(stock_id <span class="op">%in%</span><span class="st"> </span>stock_ids_short),   <span class="co"># ... over some stocks)</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">                     FF_factors, </a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">                     <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">R1M_Usd =</span> <span class="kw">lag</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Lag returns</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="st">    </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span><span class="st">                                                 </span><span class="co"># Remove missing points</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)</a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste0</span>(<span class="st">&quot;`&quot;</span>, stock_ids_short, </a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">                        <span class="st">&#39;` ~  MKT_RF + SMB + HML + RMW + CMA&#39;</span>),           <span class="co"># Model spec</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12">                 <span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> data_FM,           <span class="co"># Call lm(.)</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13">                                 <span class="dt">na.action=</span><span class="st">&quot;na.exclude&quot;</span>) <span class="op">%&gt;%</span><span class="st">       </span></a>
+<a class="sourceLine" id="cb9-14" data-line-number="14"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Gather the output</span></a>
+<a class="sourceLine" id="cb9-15" data-line-number="15"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Keep only coefs</span></a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Convert to dataframe</span></a>
+<a class="sourceLine" id="cb9-17" data-line-number="17"><span class="st">                         </span><span class="kw">select</span>(Estimate)}                                <span class="co"># Keep the estimates</span></a>
+<a class="sourceLine" id="cb9-18" data-line-number="18">                 )</a>
+<a class="sourceLine" id="cb9-19" data-line-number="19">betas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> nb_factors <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Extract the betas</span></a>
+<a class="sourceLine" id="cb9-20" data-line-number="20"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> stock_ids_short)                               <span class="co"># Format: row names</span></a>
+<a class="sourceLine" id="cb9-21" data-line-number="21"><span class="kw">colnames</span>(betas) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Constant&quot;</span>, <span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)    <span class="co"># Format: col names</span></a>
+<a class="sourceLine" id="cb9-22" data-line-number="22">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(betas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb9-23" data-line-number="23">             <span class="dt">caption =</span> <span class="st">&quot;Sample of beta values (row numbers are stock IDs).&quot;</span>) <span class="co"># The betas (see table) </span></a></code></pre></div>
+<table>
+<caption><span id="tab:FMreg">TABLE 4.2: </span>Sample of beta values (row numbers are stock IDs).</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Constant</th>
+<th align="right">MKT_RF</th>
+<th align="right">SMB</th>
+<th align="right">HML</th>
+<th align="right">RMW</th>
+<th align="right">CMA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td align="right">0.008</td>
+<td align="right">1.438</td>
+<td align="right">0.525</td>
+<td align="right">0.567</td>
+<td align="right">1.006</td>
+<td align="right">-0.301</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td align="right">-0.002</td>
+<td align="right">0.791</td>
+<td align="right">1.085</td>
+<td align="right">0.854</td>
+<td align="right">0.220</td>
+<td align="right">-0.423</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td align="right">0.005</td>
+<td align="right">0.364</td>
+<td align="right">0.305</td>
+<td align="right">-0.072</td>
+<td align="right">0.589</td>
+<td align="right">0.267</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td align="right">0.006</td>
+<td align="right">0.414</td>
+<td align="right">0.682</td>
+<td align="right">0.284</td>
+<td align="right">0.294</td>
+<td align="right">0.119</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td align="right">0.005</td>
+<td align="right">0.811</td>
+<td align="right">0.683</td>
+<td align="right">1.046</td>
+<td align="right">0.009</td>
+<td align="right">0.148</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td align="right">0.000</td>
+<td align="right">0.937</td>
+<td align="right">0.120</td>
+<td align="right">0.494</td>
+<td align="right">-0.246</td>
+<td align="right">0.086</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>We then reformat these betas to prepare the second pass. Each line corresponds to one asset: the first 5 columns are the estimated factor loadings and the remaining ones are the asset returns (date by date).</p>
+
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">loadings &lt;-<span class="st"> </span>betas <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Start from loadings (betas)</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>Constant) <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Remove constant</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">    </span><span class="kw">data.frame</span>()                                 <span class="co"># Convert to dataframe             </span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">ret &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Start from returns</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Keep the returns only</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> returns<span class="op">$</span>date) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Set row names</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="st">    </span><span class="kw">t</span>()                                          <span class="co"># Transpose</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8">FM_data &lt;-<span class="st"> </span><span class="kw">cbind</span>(loadings, ret)                  <span class="co"># Aggregate both</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(FM_data[,<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,    <span class="co"># The betas (see table)</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10">             <span class="dt">caption =</span> <span class="st">&quot;Sample of reformatted beta values (ready for regression).&quot;</span>)  </a></code></pre></div>
+<table>
+<caption><span id="tab:betaformat">TABLE 4.3: </span>Sample of reformatted beta values (ready for regression).</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">MKT_RF</th>
+<th align="right">SMB</th>
+<th align="right">HML</th>
+<th align="right">RMW</th>
+<th align="right">CMA</th>
+<th align="right">2000-01-31</th>
+<th align="right">2000-02-29</th>
+<th align="right">2000-03-31</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td align="right">1.438</td>
+<td align="right">0.525</td>
+<td align="right">0.567</td>
+<td align="right">1.006</td>
+<td align="right">-0.301</td>
+<td align="right">-0.036</td>
+<td align="right">0.263</td>
+<td align="right">0.031</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td align="right">0.791</td>
+<td align="right">1.085</td>
+<td align="right">0.854</td>
+<td align="right">0.220</td>
+<td align="right">-0.423</td>
+<td align="right">0.077</td>
+<td align="right">-0.024</td>
+<td align="right">0.018</td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td align="right">0.364</td>
+<td align="right">0.305</td>
+<td align="right">-0.072</td>
+<td align="right">0.589</td>
+<td align="right">0.267</td>
+<td align="right">-0.016</td>
+<td align="right">0.000</td>
+<td align="right">0.153</td>
+</tr>
+<tr class="even">
+<td>7</td>
+<td align="right">0.414</td>
+<td align="right">0.682</td>
+<td align="right">0.284</td>
+<td align="right">0.294</td>
+<td align="right">0.119</td>
+<td align="right">-0.009</td>
+<td align="right">0.027</td>
+<td align="right">0.000</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td align="right">0.811</td>
+<td align="right">0.683</td>
+<td align="right">1.046</td>
+<td align="right">0.009</td>
+<td align="right">0.148</td>
+<td align="right">0.032</td>
+<td align="right">0.076</td>
+<td align="right">-0.025</td>
+</tr>
+<tr class="even">
+<td>11</td>
+<td align="right">0.937</td>
+<td align="right">0.120</td>
+<td align="right">0.494</td>
+<td align="right">-0.246</td>
+<td align="right">0.086</td>
+<td align="right">0.144</td>
+<td align="right">0.258</td>
+<td align="right">0.049</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>We observe that the values of the first column (market betas) revolve around one, which is what we would expect.
+Finally, we are ready for the second round of regressions.</p>
+
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste</span>(<span class="st">&quot;`&quot;</span>, returns<span class="op">$</span>date, <span class="st">&quot;`&quot;</span>, <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA&#39;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>),</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> FM_data) <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Call lm(.)</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Gather the output</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Keep only the coefs</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Convert to dataframe</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="st">                         </span><span class="kw">select</span>(Estimate)}                                <span class="co"># Keep only estimates</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">                 )</a>
+<a class="sourceLine" id="cb11-8" data-line-number="8">gammas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> nb_factors <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Switch to dataframe</span></a>
+<a class="sourceLine" id="cb11-9" data-line-number="9"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> returns<span class="op">$</span>date)                                  <span class="co"># &amp; set row names</span></a>
+<a class="sourceLine" id="cb11-10" data-line-number="10"><span class="kw">colnames</span>(gammas) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Constant&quot;</span>, <span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)   <span class="co"># Set col names</span></a>
+<a class="sourceLine" id="cb11-11" data-line-number="11">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(gammas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,    <span class="co"># The gammas (see table)</span></a>
+<a class="sourceLine" id="cb11-12" data-line-number="12">             <span class="dt">caption =</span> <span class="st">&quot;Sample of gamma (premia) values.&quot;</span>) </a></code></pre></div>
+<table>
+<caption><span id="tab:FamaMacBeth2b">TABLE 4.4: </span>Sample of gamma (premia) values.</caption>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">Constant</th>
+<th align="right">MKT_RF</th>
+<th align="right">SMB</th>
+<th align="right">HML</th>
+<th align="right">RMW</th>
+<th align="right">CMA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2000-01-31</td>
+<td align="right">-0.031</td>
+<td align="right">0.037</td>
+<td align="right">0.227</td>
+<td align="right">-0.157</td>
+<td align="right">-0.276</td>
+<td align="right">0.044</td>
+</tr>
+<tr class="even">
+<td>2000-02-29</td>
+<td align="right">0.020</td>
+<td align="right">0.081</td>
+<td align="right">-0.134</td>
+<td align="right">0.050</td>
+<td align="right">0.089</td>
+<td align="right">-0.027</td>
+</tr>
+<tr class="odd">
+<td>2000-03-31</td>
+<td align="right">0.007</td>
+<td align="right">-0.011</td>
+<td align="right">-0.016</td>
+<td align="right">0.054</td>
+<td align="right">0.036</td>
+<td align="right">0.039</td>
+</tr>
+<tr class="even">
+<td>2000-04-30</td>
+<td align="right">0.127</td>
+<td align="right">-0.132</td>
+<td align="right">-0.104</td>
+<td align="right">0.088</td>
+<td align="right">0.117</td>
+<td align="right">-0.002</td>
+</tr>
+<tr class="odd">
+<td>2000-05-31</td>
+<td align="right">0.042</td>
+<td align="right">-0.005</td>
+<td align="right">0.075</td>
+<td align="right">-0.113</td>
+<td align="right">-0.080</td>
+<td align="right">-0.045</td>
+</tr>
+<tr class="even">
+<td>2000-06-30</td>
+<td align="right">0.028</td>
+<td align="right">-0.029</td>
+<td align="right">-0.019</td>
+<td align="right">0.054</td>
+<td align="right">0.045</td>
+<td align="right">0.017</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>Visually, the estimated premia are also very volatile. We plot their estimated values for the market, SMB and HML factors.
+</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1">gammas <span class="op">%&gt;%</span><span class="st">                                                          </span><span class="co"># Take gammas:</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(MKT_RF, SMB, HML) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Select 3 factors</span></a>
+<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="st">    </span><span class="kw">bind_cols</span>(<span class="dt">date =</span> data_FM<span class="op">$</span>date) <span class="op">%&gt;%</span><span class="st">                              </span><span class="co"># Add date</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> factor, <span class="dt">value =</span> gamma, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">                  </span><span class="co"># Put in tidy shape</span></a>
+<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> gamma, <span class="dt">color =</span> factor)) <span class="op">+</span><span class="st">              </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>( factor<span class="op">~</span>. ) <span class="op">+</span><span class="st">                          </span><span class="co"># Lines &amp; facets</span></a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="st">    </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>, <span class="st">&quot;#F81F40&quot;</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Colors</span></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="st">    </span><span class="kw">coord_fixed</span>(<span class="dv">980</span>)                                                <span class="co"># Fix x/y ratio</span></a></code></pre></div>
+<div class="figure"><span id="fig:premiaplot"></span>
+<img src="ML_factor_files/figure-html/premiaplot-1.png" alt="Time-series plot of gammas (premia) in Fama-Macbeth regressions" width="672" />
+<p class="caption">
+FIGURE 4.3: Time-series plot of gammas (premia) in Fama-Macbeth regressions
+</p>
+</div>
+<p></p>
+<p>The two spikes at the end of the sample signal potential colinearity issues: two factors seem to compensate in an unclear aggregate effect. This underlines the usefulness of penalized estimates (see Chapter <a href="lasso.html#lasso">6</a>).</p>
+</div>
+<div id="factor-competition" class="section level3">
+<h3><span class="header-section-number">4.2.5</span> Factor competition</h3>
+<p>The core purpose of factors is to explain the cross-section of stock returns. For theoretical and practical reasons, it is preferable if redundancies within factors are avoided. Indeed, redundancies imply collinearity which is known to perturb estimates (<span class="citation">Belsley, Kuh, and Welsch (<a href="#ref-belsley2005regression">2005</a>)</span>). In addition, when asset managers decompose the performance of their returns into factors, overlap between factors yield exposures that are less interpretable often because positive and negative exposures compensate each other spuriously.</p>
+<p>A simple protocol to sort out redundant factors is to run regressions of each factor against all others:
+<span class="math display" id="eq:faccompet">\[\begin{equation}
+f_{t,k} = a_k +\sum_{j\neq k} \delta_{k,j} f_{t,j} + \epsilon_{t,k}. \tag{4.2}
+\end{equation}\]</span>
+The interesting metric is then the test statistic associated to the estimation of <span class="math inline">\(a_k\)</span>. If <span class="math inline">\(a_k\)</span> is significantly different from zero, then the cross-section of (other) factors fails to explain exhaustively the average return of factor <span class="math inline">\(k\)</span>. Otherwise, the return of the factor can be captured be exposures to the other factors and is thus redundant.</p>
+<p>One mainstream application of this technique was performed in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>, in which the authors show that the HML factor is redundant when taking into account four other factors (Market, SMB, RMW and CMA). Below, we reproduce their analysis on an updated sample. We start our analysis directly with the database maintained by Kenneth French.</p>
+<p>We can run the regressions that determine the redundancy of factors via the procedure defined in Equation <a href="factor.html#eq:faccompet">(4.2)</a>.</p>
+
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">factors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste</span>(factors, <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA-&#39;</span>,factors),</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3"> <span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> FF_factors) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># Call lm(.)</span></a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Gather the output</span></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Keep only the coefs</span></a>
+<a class="sourceLine" id="cb13-6" data-line-number="6"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Convert to dataframe</span></a>
+<a class="sourceLine" id="cb13-7" data-line-number="7"><span class="st">                         </span><span class="kw">filter</span>(<span class="kw">rownames</span>(.) <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Keep only the Intercept</span></a>
+<a class="sourceLine" id="cb13-8" data-line-number="8"><span class="st">                         </span><span class="kw">select</span>(Estimate,<span class="st">`</span><span class="dt">Pr...t..</span><span class="st">`</span>)}                <span class="co"># Keep the coef &amp; p-value</span></a>
+<a class="sourceLine" id="cb13-9" data-line-number="9">                 )</a>
+<a class="sourceLine" id="cb13-10" data-line-number="10">alphas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Switch from list to dataframe</span></a>
+<a class="sourceLine" id="cb13-11" data-line-number="11"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> factors)</a>
+<a class="sourceLine" id="cb13-12" data-line-number="12"><span class="co"># alphas # To see the alphas (optional)</span></a></code></pre></div>
+<p></p>
+<p>We obtain the vector of <span class="math inline">\(\alpha\)</span> values from equation (). Below, we format these figures along with <span class="math inline">\(p\)</span>-value thresholds and export them in a summary table. The significance levels of coefficients is coded as follows: <span class="math inline">\(0&lt;(***)&lt;0.001&lt;(**)&lt;0.01&lt;(*)&lt;0.05\)</span>.</p>
+
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1">results &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># Coefs</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">signif  &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># p-values</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(factors)){</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">    form &lt;-<span class="st"> </span><span class="kw">paste</span>(factors[j],</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">                  <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA-&#39;</span>,factors[j])         <span class="co"># Build model</span></a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">    fit &lt;-<span class="st"> </span><span class="kw">lm</span>(form, <span class="dt">data =</span> FF_factors) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summary</span>()                        <span class="co"># Estimate model</span></a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">    coef &lt;-<span class="st"> </span>fit<span class="op">$</span>coefficients[,<span class="dv">1</span>]                                            <span class="co"># Keep coefficients</span></a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">    p_val &lt;-<span class="st"> </span>fit<span class="op">$</span>coefficients[,<span class="dv">4</span>]                                           <span class="co"># Keep p-values</span></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">    results[j,<span class="op">-</span>(j<span class="op">+</span><span class="dv">1</span>)] &lt;-<span class="st"> </span>coef                                               <span class="co"># Fill results matrix</span></a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">    signif[j,<span class="op">-</span>(j<span class="op">+</span><span class="dv">1</span>)] &lt;-<span class="st"> </span>p_val</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">}</a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">signif[<span class="kw">is.na</span>(signif)] &lt;-<span class="st"> </span><span class="dv">1</span>                                                  <span class="co"># Kick out NAs</span></a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">results &lt;-<span class="st"> </span>results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">data.frame</span>()                           <span class="co"># Basic formatting</span></a>
+<a class="sourceLine" id="cb14-14" data-line-number="14">results[signif<span class="op">&lt;</span><span class="fl">0.001</span>] &lt;-<span class="st"> </span><span class="kw">paste</span>(results[signif<span class="op">&lt;</span><span class="fl">0.001</span>],<span class="st">&quot; (***)&quot;</span>)              <span class="co"># 3 star signif</span></a>
+<a class="sourceLine" id="cb14-15" data-line-number="15">results[signif<span class="op">&gt;</span><span class="fl">0.001</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.01</span>] &lt;-<span class="st">                                        </span><span class="co"># 2 star signif</span></a>
+<a class="sourceLine" id="cb14-16" data-line-number="16"><span class="st">    </span><span class="kw">paste</span>(results[signif<span class="op">&gt;</span><span class="fl">0.001</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.01</span>],<span class="st">&quot; (**)&quot;</span>)</a>
+<a class="sourceLine" id="cb14-17" data-line-number="17">results[signif<span class="op">&gt;</span><span class="fl">0.01</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.05</span>] &lt;-<span class="st">                                         </span><span class="co"># 1 star signif</span></a>
+<a class="sourceLine" id="cb14-18" data-line-number="18"><span class="st">    </span><span class="kw">paste</span>(results[signif<span class="op">&gt;</span><span class="fl">0.01</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.05</span>],<span class="st">&quot; (*)&quot;</span>)     </a>
+<a class="sourceLine" id="cb14-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb14-20" data-line-number="20">results &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.character</span>(factors), results)                            <span class="co"># Add dep. variable</span></a>
+<a class="sourceLine" id="cb14-21" data-line-number="21"><span class="kw">colnames</span>(results) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Dep. Variable&quot;</span>,<span class="st">&quot;Intercept&quot;</span>, factors)                <span class="co"># Add column names</span></a>
+<a class="sourceLine" id="cb14-22" data-line-number="22">knitr<span class="op">::</span><span class="kw">kable</span>(results,  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb14-23" data-line-number="23">             <span class="dt">caption =</span> <span class="kw">paste0</span>(<span class="st">&quot;Factor competition among the Fama French 2015 five factors. &quot;</span>,</a>
+<a class="sourceLine" id="cb14-24" data-line-number="24">                              <span class="st">&quot;The sample starts in &quot;</span>,<span class="kw">substr</span>(min_date,<span class="dv">1</span>,<span class="dv">7</span>), </a>
+<a class="sourceLine" id="cb14-25" data-line-number="25">                              <span class="st">&quot; and ends in &quot;</span>, <span class="kw">substr</span>(max_date,<span class="dv">1</span>,<span class="dv">7</span>),</a>
+<a class="sourceLine" id="cb14-26" data-line-number="26">                              <span class="st">&quot;. The regressions are run on monthly returns. &quot;</span></a>
+<a class="sourceLine" id="cb14-27" data-line-number="27">                       )</a>
+<a class="sourceLine" id="cb14-28" data-line-number="28">       ) </a></code></pre></div>
+<table>
+<caption><span id="tab:faccompet2">TABLE 4.5: </span>Factor competition among the Fama French 2015 five factors. The sample starts in 1963-07 and ends in 2019-11. The regressions are run on monthly returns.</caption>
+<thead>
+<tr class="header">
+<th align="left">Dep. Variable</th>
+<th align="left">Intercept</th>
+<th align="left">MKT_RF</th>
+<th align="left">SMB</th>
+<th align="left">HML</th>
+<th align="left">RMW</th>
+<th align="left">CMA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">MKT_RF</td>
+<td align="left">0.008 (***)</td>
+<td align="left">NA</td>
+<td align="left">0.252 (***)</td>
+<td align="left">0.095</td>
+<td align="left">-0.378 (***)</td>
+<td align="left">-0.916 (***)</td>
+</tr>
+<tr class="even">
+<td align="left">SMB</td>
+<td align="left">0.003 (**)</td>
+<td align="left">0.13 (***)</td>
+<td align="left">NA</td>
+<td align="left">0.066</td>
+<td align="left">-0.434 (***)</td>
+<td align="left">-0.128</td>
+</tr>
+<tr class="odd">
+<td align="left">HML</td>
+<td align="left">0</td>
+<td align="left">0.026</td>
+<td align="left">0.035</td>
+<td align="left">NA</td>
+<td align="left">0.143 (***)</td>
+<td align="left">1.011 (***)</td>
+</tr>
+<tr class="even">
+<td align="left">RMW</td>
+<td align="left">0.004 (***)</td>
+<td align="left">-0.099 (***)</td>
+<td align="left">-0.221 (***)</td>
+<td align="left">0.137 (***)</td>
+<td align="left">NA</td>
+<td align="left">-0.291 (***)</td>
+</tr>
+<tr class="odd">
+<td align="left">CMA</td>
+<td align="left">0.002 (***)</td>
+<td align="left">-0.112 (***)</td>
+<td align="left">-0.03</td>
+<td align="left">0.453 (***)</td>
+<td align="left">-0.136 (***)</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+<p></p>
+<p>We confirm that the HML factor remains redundant when the four other are present in the asset pricing model. The figures we obtain are very close to the ones in the original paper (<span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>), which makes sense, since we only add 5 years to their initial sample.</p>
+<p>At a more macro-level, researchers also try to figure out which models (i.e., combinations of factors) are the most likely, given the data empirically observed (and possibly given priors formulated by the econometrician). For instance, this stream of literature seeks to quantify to which extent the 3 factor model of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span> outperforms the 5 factors in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>. In this direction, <span class="citation">De Moor, Dhaene, and Sercu (<a href="#ref-de2015comparing">2015</a>)</span> introduce a novel computation for <em>p</em>-values that compare the relative likelihood that two models pass a zero-alpha test. More generally, the Bayesian method of <span class="citation">Barillas and Shanken (<a href="#ref-barillas2018comparing">2018</a>)</span> was subsequently improve by <span class="citation">Chib, Zeng, and Zhao (<a href="#ref-chib2019comparing">2019</a>)</span>.</p>
+</div>
+<div id="advanced-techniques" class="section level3">
+<h3><span class="header-section-number">4.2.6</span> Advanced techniques</h3>
+<p>The ever increasing number of factors combined to their importance in asset management has led researchers to craft more subtle methods in order to ``organise’’ the so-called <em>factor zoo</em> and more importantly, to detect spurious anomalies. We list a few of them in chronological order.</p>
+<ul>
+<li><span class="citation">Feng, Giglio, and Xiu (<a href="#ref-feng2017taming">2017</a>)</span> combine LASSO selection with Fama-MacBeth regressions;<br />
+</li>
+<li><span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span> use bootstrap on orthogonalised factors;<br />
+</li>
+<li><span class="citation">Fama and French (<a href="#ref-fama2018choosing">2018</a>)</span> compare asset pricing models through squared maximum Sharpe ratios;<br />
+</li>
+<li><span class="citation">Giglio and Xiu (<a href="#ref-giglio2018asset">2018</a>)</span> estimate factor risk premia using a three-pass method based on principal component analysis;<br />
+</li>
+<li><span class="citation">Pukthuanthong, Roll, and Subrahmanyam (<a href="#ref-pukthuanthong2018protocol">2018</a>)</span> disentangle priced and non-priced factors via a combination of principal component analysis and <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk">1973</a>)</span> regressions.<br />
+</li>
+<li><span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span> warn against factor misspecification (when spurious factors are included in the list of regressors). Traded factors (<span class="math inline">\(resp.\)</span> macro-economic factors) seem more likely (<span class="math inline">\(resp.\)</span> less likely) to yield robust identifications.</li>
+</ul>
+<p>There is obviously no infaillible method, but the number of contributions in the field highlights the need for robustness. This is evidently a major concern when crafting investment decisions based on factor intuitions. One major hurdle for short-term strategies is the likely time-varying feature of factors. We refer for instance to <span class="citation">Ang and Kristensen (<a href="#ref-ang2012testing">2012</a>)</span> and <span class="citation">Cooper and Maio (<a href="#ref-cooper2018new">2019</a>)</span> for practical results and to <span class="citation">Gagliardini, Ossola, and Scaillet (<a href="#ref-gagliardini2016time">2016</a>)</span> and <span class="citation">Ma et al. (<a href="#ref-ma2018testing">2018</a>)</span>) for more theoretical treatments (with additional empirical results).</p>
+</div>
+</div>
+<div id="factors-or-characteristics" class="section level2">
+<h2><span class="header-section-number">4.3</span> Factors or characteristics?</h2>
+<p>The decomposition of returns into linear factor models is convenient because of its simple interpretation. There is nonetheless a debate in the academic literature about whether firm returns are indeed explained by exposure to macro-economic factors or simply by the characteristics of firms. In their early study, <span class="citation">Lakonishok, Shleifer, and Vishny (<a href="#ref-lakonishok1994contrarian">1994</a>)</span> argue that one explanation of the value premium comes from incorrect extrapolation of past earning growth rates. Investors are overly optimistic about firms subject to recent profitability. Consequently, future returns are (also) driven by the core (accounting) features of the firm. The question is then to disentangle which effect is the most pronounced when explaining returns: characteristics versus exposures to macro-economic factors?</p>
+<p>In their seminal contribution on this topic, <span class="citation">Daniel and Titman (<a href="#ref-daniel1997evidence">1997</a>)</span> provide evidence in favour of the former (two follow-up papers are <span class="citation">K. Daniel, Titman, and Wei (<a href="#ref-daniel2001explaining">2001</a>)</span> and <span class="citation">Daniel and Titman (<a href="#ref-daniel2012testing">2012</a>)</span>). They show that firms with high book-to-market ratios or small capitalisations display higher average returns, even if they are negatively loaded on the HML or SMB factors. Therefore, it seems that it is indeed the intrinsic characteristics that matter, and not the factor exposure. For further material on characteristics’ role in return explanation or prediction, we refer to the following contributions:</p>
+<ul>
+<li>Section 2.5.2. in <span class="citation">Goyal (<a href="#ref-goyal2012empirical">2012</a>)</span> surveys pre-2010 results on this topic;<br />
+</li>
+<li><span class="citation">Chordia, Goyal, and Shanken (<a href="#ref-chordia2015cross">2015</a>)</span> find that characteristics explain a larger proportion of variation in estimated expected returns than factor loadings;<br />
+</li>
+<li><span class="citation">Kozak, Nagel, and Santosh (<a href="#ref-kozak2018interpreting">2018</a>)</span> reconcile factor-based explanations of premia to a theoretical model in which some agents’ demands are sentiment driven;<br />
+</li>
+<li><span class="citation">Han et al. (<a href="#ref-han2018firm">2019</a>)</span> show with penalised regressions that 20 to 30 characteristics (out of 94) are useful for the prediction of monthly returns of US stocks. Their methodology is interesting: they regress returns against characteristics to build forecasts and then regress the returns on the forecast to assess if the forecasts are reliable. The latter regression uses a LASSO-type penalization (see Chapter <a href="lasso.html#lasso">6</a>) so that useless characteristics are excluded from the model. The penalization is extended to elasticnet in <span class="citation">Rapach and Zhou (<a href="#ref-rapach2019time">2019</a>)</span>.<br />
+</li>
+<li>both <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics">2019</a>)</span> and <span class="citation">Kim, Korajczyk, and Neuhierl (<a href="#ref-kim2019arbitrage">2019</a>)</span> estimate models in which <em>factors</em> are <em>latent</em> but loadings (betas) and possibly alphas depend on characteristics. In contrast, <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018estimating">n.d.</a>)</span> and <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018factors">2018</a>)</span> estimate latent factors without any link to particular characteristics (and provide large sample asymptotic properties of their methods).<br />
+</li>
+<li>in the same vein as <span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span>, <span class="citation">Hoechle, Schmid, and Zimmermann (<a href="#ref-hoechle2018correcting">2018</a>)</span> discuss potential errors that arise when working with portfolio sorts that yield long-short returns. The authors show that in some cases, tests based on this procedure may be deceitful. This happens when the characteristic chosen to perform the sort is correlated with an external (unobservable) factor. They propose a novel regression-based approach aimed at bypassing this problem.</li>
+</ul>
+<p>More recently and in a separate stream of literature, <span class="citation">Ralph S.J. Koijen and Yogo (<a href="#ref-koijen2019demand">2019</a>)</span> have introduced a demand model in which investors for their portfolios according to their preferences towards particular firm characteristics. They show that this allows them to mimic the portfolios of large institutional investors. In their model, aggregate demands (and hence, prices) are directly linked to characteristics, not to factors. In a follow up paper, <span class="citation">Ralph SJ Koijen, Richmond, and Yogo (<a href="#ref-koijen2019investors">2019</a>)</span> show that a few set of characteristics suffice to predict future returns. They also show that, based on institutional holdings from the UK and the US, the largest investors are those who are the most influencial in the formation of prices. In a similar vein, <span class="citation">Betermier, Calvet, and Jo (<a href="#ref-betermier2019supply">2019</a>)</span> derive an elegant (theoretical) general equilibrium model that generates some well documented anomalies (size, book-to-market). Finally, in <span class="citation">Martin and Nagel (<a href="#ref-martin2019market">2019</a>)</span>, characteristics influence returns via the role they play in the predictability of dividend growth. This paper discussed the asymptotic case when the number of assets and the number of characteristics are proportional and both increase to infinity.</p>
+</div>
+<div id="the-link-with-machine-learning" class="section level2">
+<h2><span class="header-section-number">4.4</span> The link with machine learning</h2>
+<p>Given the exponential increase in data availability, the obvious temptation of any asset manager is to try to infer future returns from the abundance of attributes available at the firm level. We allude to classical data like accounting ratios and to alternative data, like sentiment. This task is precisely the aim of Machine Learning. Given a large set of predictor variables (<span class="math inline">\(\mathbf{X}\)</span>), the goal is to predict a proxy for future performance <span class="math inline">\(\mathbf{y}\)</span> through a model of the form <a href="intro.html#eq:ML">(3.1)</a>.</p>
+<p>Some attempts toward this direction have already been made (e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric">2009</a>)</span>, <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics">2016</a>)</span>, <span class="citation">Martin Utrera et al. (<a href="#ref-martin2018transaction">2018</a>)</span>), but not with any ML intent or focus.</p>
+<div id="a-short-list-of-recent-references" class="section level3">
+<h3><span class="header-section-number">4.4.1</span> A short list of recent references</h3>
+<p>Independently of a characteristics-based approach, ML applications in Finance have blossomed, initially working with price data only and later on integrating firm characteristics as predictors. We cite a few references below, grouped by methodological approach:</p>
+<ul>
+<li>penalised quadratic programming: <span class="citation">Goto and Xu (<a href="#ref-goto2015improving">2015</a>)</span>, <span class="citation">Ban, El Karoui, and Lim (<a href="#ref-ban2016machine">2016</a>)</span> and <span class="citation">Perrin and Roncalli (<a href="#ref-perrin2019machine">2019</a>)</span>,</li>
+<li>regularised predictive regressions: <span class="citation">Rapach, Strauss, and Zhou (<a href="#ref-rapach2013international">2013</a>)</span> and <span class="citation">Chinco, Clark-Joseph, and Ye (<a href="#ref-chinco2019sparse">2019</a>)</span>,</li>
+<li>support vector machines: <span class="citation">Cao and Tay (<a href="#ref-cao2003support">2003</a>)</span> (and the references therein),</li>
+<li>model comparison and/or aggregation: <span class="citation">Kim (<a href="#ref-kim2003financial">2003</a>)</span>, <span class="citation">Huang, Nakamori, and Wang (<a href="#ref-huang2005forecasting">2005</a>)</span>, <span class="citation">Matı'as and Reboredo (<a href="#ref-matias2012forecasting">2012</a>)</span>, <span class="citation">Reboredo, Matı'as, and Garcia-Rubio (<a href="#ref-reboredo2012nonlinearity">2012</a>)</span>, <span class="citation">Dunis et al. (<a href="#ref-dunis2013hybrid">2013</a>)</span>, <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span> and <span class="citation">Guida and Coqueret (<a href="#ref-guida2018machine">2018</a><a href="#ref-guida2018machine">b</a>)</span>. The latter two more recent articles work with a large cross-section of characteristics.</li>
+</ul>
+<p>We provide more detailed lists for tree-based methods, neural networks and reinforcement learning techniques in Chapters <a href="trees.html#trees">7</a>, <a href="NN.html#NN">8</a> and <a href="RL.html#RL">17</a>, respectively. Moreover, we refer to <span class="citation">Ballings et al. (<a href="#ref-ballings2015evaluating">2015</a>)</span> for a comparison of classifiers and to <span class="citation">Henrique, Sobreiro, and Kimura (<a href="#ref-henrique2019literature">2019</a>)</span> for a survey on ML-based forecasting techniques.</p>
+</div>
+<div id="explicit-connexions-with-asset-pricing-models" class="section level3">
+<h3><span class="header-section-number">4.4.2</span> Explicit connexions with asset pricing models</h3>
+<p>The first and obvious link between factor investing and asset pricing is (average) return prediction. The main canonical academic reference is <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span>. Let us first write the general equation and then comment on it:
+<span class="math display">\[\begin{equation}
+r_{t+1,n}=g(\textbf{x}_{t,n}) + \epsilon_{t+1}.
+\label{eq:genML}
+\end{equation}\]</span></p>
+<p>The interesting discussion lies in the differences between the above model and that of Equation <a href="factor.html#eq:apt">(4.1)</a>. The first obvious difference is the introduction of the nonlinear function <span class="math inline">\(g\)</span>: indeed, there is no reason (beyond simplicity and interpretability) why we should restrict the model to linear relationships. One early reference for nonlinearities in asset pricing kernels is <span class="citation">Bansal and Viswanathan (<a href="#ref-bansal1993no">1993</a>)</span>.</p>
+<p>More importantly, the second difference between <a href="#eq:genML">(<strong>??</strong>)</a> and <a href="factor.html#eq:apt">(4.1)</a> is the shift in the time index. Indeed, from an investor’s perspective, the interest is to be able to <em>predict</em> some information about the structure of the cross-section of assets. Explaining asset returns with synchronous factors is not useful because the realization of factor values are not known in advance. Hence, if one seeks to extract value from the model, there needs to be a time interval between the observation of the state space (which we call <span class="math inline">\(\textbf{x}_{t,n}\)</span>) and the occurrence of the returns. Once the model <span class="math inline">\(\hat{g}\)</span> is estimated, the time-<span class="math inline">\(t\)</span> (measurable) value <span class="math inline">\(g(\textbf{x}_{t,n})\)</span> will give a forecast for the (average) future returns. These predictions can then serve as signal in the crafting of portfolio weights (see Chapter <a href="backtest.html#backtest">13</a> for more on that topic).</p>
+<p>While most studies do work with returns on the l.h.s. of <a href="#eq:genML">(<strong>??</strong>)</a>, there is no reason why other indicators should not be used. Returns are straightforward and simple to compute, but they could very well be replaced by more sophisticated metrics, like the Sharpe ratio, for instance. The firms’ features would then be used to predict a risk-adjusted performance rather than simple returns.</p>
+<p>Beyond the explicit form of Equation <a href="#eq:genML">(<strong>??</strong>)</a>, several other ML-related tools can also be used to estimate asset pricing models. This can be achieved in several ways, some of which we list below.</p>
+<p>First, one mainstream problems in asset pricing is to characterize the stochastic discount factor (SDF) <span class="math inline">\(M_t\)</span>, which satisfies <span class="math inline">\(\mathbb{E}_t[M_{t+1}(r_{t+1,n}-r_{t+1,f})]=0\)</span> for any asset <span class="math inline">\(n\)</span> (see <span class="citation">Cochrane (<a href="#ref-cochrane2009asset">2009</a>)</span>). This equation is a natural playing field for the generalized method of moment (<span class="citation">Hansen (<a href="#ref-hansen1982large">1982</a>)</span>): <span class="math inline">\(M_t\)</span> must be such that
+<span class="math display">\[\begin{equation}
+\mathbb{E}[M_{t+1}R_{t+1,n}g(V_t)]=0,
+\label{eq:SDFGMM}
+\end{equation}\]</span>
+where the instrumental variables <span class="math inline">\(V_t\)</span> are <span class="math inline">\(\mathcal{F}_t\)</span>-measurable (i.e., are known at time <span class="math inline">\(t\)</span>) and the capital <span class="math inline">\(R_{t+1,n}\)</span> denotes the excess return of asset <span class="math inline">\(n\)</span>. In order to reduce and simplify the estimation problem, it is customary to define the SDF as a portfolio of assets (see Chapter 3 in <span class="citation">Back (<a href="#ref-back2010asset">2010</a>)</span>). In <span class="citation">L. Chen, Pelger, and Zhu (<a href="#ref-chen2019deep">2019</a>)</span>, the authors use a generative adversarial network (GAN, see Section <a href="NN.html#generative-aversarial-networks">8.6.1</a>) to estimate the weights of the portfolios that are the closest to satisfy <a href="#eq:SDFGMM">(<strong>??</strong>)</a> under a strongly penalizing form.</p>
+<p>A second approach is to try to model asset returns as linear combinations of factors, just as in <a href="factor.html#eq:apt">(4.1)</a>. We write in compact notation <span class="math display">\[r_{t,n}=\alpha_n+\boldsymbol{\beta}_{t,n}&#39;\textbf{f}_t+\epsilon_{t,n},\]</span>
+and we allow the loadings <span class="math inline">\(\boldsymbol{\beta}_{t,n}\)</span> to be time-dependent. The trick is then to introduce the firm characteristics in the above equation. Traditionally, the characteristics are present in the definition of factors (as in the seminal definition of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>). The decomposition of the return is made according to the exposition of the firm’s return to these factors constructed according to market size, accounting ratios, past performance etc. Given the exposures, the performance of the stock is attributed to particular style profiles (e.g., small stock, or value stock, etc.).</p>
+<p>Habitually, the factors are heuristic portfolios constructed from simple rules like thresholding. For instance, firms below the 1/3 quantile in book-to-market are growth firms and those above the 2/3 quantile are the value firms. A value factor can then be defined by the long-short portfolio of these two sets, with uniform weights. Note that <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span> use a more complex approach which also take market capitalization into account both in the weighting scheme and also in the composition of the portfolios.</p>
+<p>One of the advances enabled by machine learning is to automate the construction of the factors. It is for instance the approach of <span class="citation">Feng, Polson, and Xu (<a href="#ref-feng2019deep">2019</a>)</span>. Instead of building the factors heuristically, the authors optimize the construction to maximize the fit in the cross-section of returns. The optimization is performed via a relatively deep feed-forward neural network and the feature space is lagged so that the relationship is indeed predictive, as in Equation <a href="#eq:genML">(<strong>??</strong>)</a>. Theoretically, the resulting factors help explain a substantially larger porportion of the in-sample variance in the returns. The prediction ability of the model depends on how well it generalizes out-of-sample.</p>
+<p>A third approach is that of <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics">2019</a>)</span> (though the statistical treatment is not machine learning per se).<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> Their idea is the opposite: factors are latent (unobserved) and it is the betas (loadings) that depend on the characteristics. This allows many degrees of freedom because in <span class="math inline">\(r_{t,n}=\alpha_n+(\boldsymbol{\beta}_{t,n}(\textbf{x}_{t-1,n}))&#39;\textbf{f}_t+\epsilon_{t,n},\)</span>
+only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span> are known and both the factors <span class="math inline">\(\textbf{f}_t\)</span> and the functional forms <span class="math inline">\(\boldsymbol{\beta}_{t,n}(\cdot)\)</span> must be estimated. In their article, <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics">2019</a>)</span> work with a linear form, which is naturally more tractable.</p>
+<p>Lastly, a fourth approach (introduced in <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2019autoencoder">2019</a>)</span>) goes even further and combines two neural network architectures. The first neural network takes characteristics <span class="math inline">\(\textbf{x}_{t-1}\)</span> as inputs and generates factor loadings <span class="math inline">\(\boldsymbol{\beta}_{t-1}(\textbf{x}_{t-1})\)</span>. The second network transforms returns <span class="math inline">\(\textbf{r}_t\)</span> into factor values <span class="math inline">\(\textbf{f}_t(\textbf{r}_t)\)</span> (in <span class="citation">Feng, Polson, and Xu (<a href="#ref-feng2019deep">2019</a>)</span>). The aggregate model can then be written:
+<span class="math display">\[\begin{equation}
+\textbf{r}_t=\boldsymbol{\beta}_{t-1}(\textbf{x}_{t-1})&#39;\textbf{f}_t(\textbf{r}_t)+\boldsymbol{\epsilon}_t.
+\label{eq:AEearly}
+\end{equation}\]</span></p>
+<p>The above specification is quite special because the output (on the left hand side) is also present as input (in the right hand side). In machine learning, autoencoders (see Section <a href="NN.html#autoencoders">8.6.2</a>) share the same property. Their aim, just like in principal component analysis, is to find a parsimonious nonlinear representation form for a dataset (in this case: returns). In Equation <a href="#eq:AEearly">(<strong>??</strong>)</a>, the input is <span class="math inline">\(\textbf{r}_t\)</span> and the output function is <span class="math inline">\(\boldsymbol{\beta}_{t-1}(\textbf{x}_{t-1})&#39;\textbf{f}_t(\textbf{r}_t)\)</span>. The aim is to minimize the difference between the two just as is any regression-like model.</p>
+<p>Autoencoders are neural networks which have outputs as close as possible to the inputs with an objective of dimensional reduction. The innovation in <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2019autoencoder">2019</a>)</span> is that the pure autoencoder part is merged with a vanilla perceptron used to model the loadings. The structure of the neural network is summarized below.</p>
+<p><span class="math display">\[\left. \begin{array}{rl}
+\text{returns } (\textbf{r}_t) &amp; \overset{NN_1}{\longrightarrow} \quad \text{ factors } (\textbf{f}_t=NN_1(\textbf{r}_t)) \\
+\text{characteristics } (\textbf{x}_{t-1}) &amp; \overset{NN_2}{\longrightarrow} \quad \text{ loadings } (\boldsymbol{\beta}_{t-1}=NN_2(\textbf{x}_{t-1}))
+\end{array} \right\} \longrightarrow \text{ returns } (r_t)\]</span></p>
+<p>A simple autoencoder would consist in only the first line of the model.</p>
+<p>As a conclusion of this chapter, it appears undeniable that the intersection between the two fields of asset pricing and machine learning offers a rich variety of applications. The literature is already exhaustive and it is often hard to disentangle the noise from the great ideas in the continuous flow of publications on these topics. Practice and implementation is the only way forward to extricate value from hype.</p>
+</div>
+</div>
+<div id="coding-exercises" class="section level2">
+<h2><span class="header-section-number">4.5</span> Coding exercises</h2>
+<ol style="list-style-type: decimal">
+<li>Compute annual returns of the growth versus value portfolios, that is, the average return of firms with above median price-to-book ratio (Pb variable in the dataset).<br />
+</li>
+<li>Same exercise, but compute the monthly returns and plot the value (through time) of the corresponding portfolios.<br />
+</li>
+<li>Instead of a unique threshold, compute simply sorted portfolios based on quartiles of market capitalization.</li>
+</ol>
+
+</div>
+</div>
+<h3><span class="header-section-number">C</span> References</h3>
+<div id="refs" class="references">
+<div id="ref-ilmanen2011expected">
+<p>Ilmanen, Antti. 2011. <em>Expected Returns: An Investor’s Guide to Harvesting Market Rewards</em>. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-ang2014asset">
+<p>Ang, Andrew. 2014. <em>Asset Management: A Systematic Approach to Factor Investing</em>. Oxford University Press.</p>
+</div>
+<div id="ref-bali2016empirical">
+<p>Bali, Turan G, Robert F Engle, and Scott Murray. 2016. <em>Empirical Asset Pricing: The Cross Section of Stock Returns</em>. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-jurczenko2017factor">
+<p>Jurczenko, Emmanuel. 2017. <em>Factor Investing: From Traditional to Alternative Risk Premia</em>. Elsevier.</p>
+</div>
+<div id="ref-goyal2012empirical">
+<p>Goyal, Amit. 2012. “Empirical Cross-Sectional Asset Pricing: A Survey.” <em>Financial Markets and Portfolio Management</em> 26 (1): 3–38.</p>
+</div>
+<div id="ref-cazalet2014facts">
+<p>Cazalet, Zélia, and Thierry Roncalli. 2014. “Facts and Fantasies About Factor Investing.” <em>SSRN Working Paper</em> 2524547.</p>
+</div>
+<div id="ref-baz2015dissecting">
+<p>Baz, Jamil, Nicolas Granger, Campbell R Harvey, Nicolas Le Roux, and Sandy Rattray. 2015. “Dissecting Investment Strategies in the Cross Section and Time Series.” <em>SSRN Working Paper</em> 2695101.</p>
+</div>
+<div id="ref-ross1976arbitrage">
+<p>Ross, Stephen A. 1976. “The Arbitrage Theory of Capital Asset Pricing.” <em>Journal of Economic Theory</em> 13 (3): 341–60.</p>
+</div>
+<div id="ref-sharpe1964capital">
+<p>Sharpe, William F. 1964. “Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk.” <em>Journal of Finance</em> 19 (3): 425–42.</p>
+</div>
+<div id="ref-lintner1965valuation">
+<p>Lintner, John. 1965. “The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets.” <em>Review of Economics and Statistics</em> 47 (1): 13–37.</p>
+</div>
+<div id="ref-mossin1966equilibrium">
+<p>Mossin, Jan. 1966. “Equilibrium in a Capital Asset Market.” <em>Econometrica: Journal of the Econometric Society</em> 34 (4). JSTOR: 768–83.</p>
+</div>
+<div id="ref-fama1992cross">
+<p>Fama, Eugene F, and Kenneth R French. 1992. “The Cross-Section of Expected Stock Returns.” <em>Journal of Finance</em> 47 (2): 427–65.</p>
+</div>
+<div id="ref-fama1993common">
+<p>Fama, Eugene F, and Kenneth R French. 1993. “Common Risk Factors in the Returns on Stocks and Bonds.” <em>Journal of Financial Economics</em> 33 (1): 3–56.</p>
+</div>
+<div id="ref-green2013supraview">
+<p>Green, Jeremiah, John RM Hand, and X Frank Zhang. 2013. “The Supraview of Return Predictive Signals.” <em>Review of Accounting Studies</em> 18 (3): 692–730.</p>
+</div>
+<div id="ref-harvey2016and">
+<p>Harvey, Campbell R, Yan Liu, and Heqing Zhu. 2016. “… And the Cross-Section of Expected Returns.” <em>Review of Financial Studies</em> 29 (1): 5–68.</p>
+</div>
+<div id="ref-mclean2016does">
+<p>McLean, R David, and Jeffrey Pontiff. 2016. “Does Academic Research Destroy Stock Return Predictability?” <em>Journal of Finance</em> 71 (1). Wiley Online Library: 5–32.</p>
+</div>
+<div id="ref-ang2012testing">
+<p>Ang, Andrew, and Dennis Kristensen. 2012. “Testing Conditional Factor Models.” <em>Journal of Financial Economics</em> 106 (1): 132–56.</p>
+</div>
+<div id="ref-cooper2018new">
+<p>Cooper, Ilan, and Paulo F Maio. 2019. “New Evidence on Conditional Factor Models.” <em>Journal of Financial and Quantitative Analysis</em> 54 (5): 1975–2016.</p>
+</div>
+<div id="ref-harvey2017presidential">
+<p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
+</div>
+<div id="ref-linnainmaa2018history">
+<p>Linnainmaa, Juhani T, and Michael R Roberts. 2018. “The History of the Cross-Section of Stock Returns.” <em>Review of Financial Studies</em> 31 (7): 2606–49.</p>
+</div>
+<div id="ref-jacobs2019anomalies">
+<p>Jacobs, Heiko, and Sebastian Müller. 2019. “Anomalies Across the Globe: Once Public, No Longer Existent?” <em>Journal of Financial Economics</em> XXX (XXX): XXX–XXX.</p>
+</div>
+<div id="ref-chen2019publication">
+<p>Chen, Andrew Y, and Tom Zimmermann. 2019. “Publication Bias and the Cross-Section of Stock Returns.” <em>Review of Asset Pricing Studies</em> Forthcoming.</p>
+</div>
+<div id="ref-penasse2018understanding">
+<p>Penasse, Julien. 2018. “Understanding Alpha Decay.” <em>SSRN Working Paper</em> 2953614.</p>
+</div>
+<div id="ref-krkoska2019herding">
+<p>Krkoska, Eduard, and Klaus Reiner Schenk-Hoppé. 2019. “Herding in Smart-Beta Investment Products.” <em>Journal of Risk and Financial Management</em> 12 (1): 47.</p>
+</div>
+<div id="ref-baker2017detecting">
+<p>Baker, Malcolm, Patrick Luo, and Ryan Taliaferro. 2017. “Detecting Anomalies: The Relevance and Power of Standard Asset Pricing Tests.”</p>
+</div>
+<div id="ref-harvey2017lucky">
+<p>Harvey, Campbell, and Yan Liu. 2017. “Lucky Factors.” <em>SSRN Working Paper</em> 2528780.</p>
+</div>
+<div id="ref-patton2010monotonicity">
+<p>Patton, Andrew J, and Allan Timmermann. 2010. “Monotonicity in Asset Returns: New Tests with Applications to the Term Structure, the CAPM, and Portfolio Sorts.” <em>Journal of Financial Economics</em> 98 (3). Elsevier: 605–25.</p>
+</div>
+<div id="ref-romano2013testing">
+<p>Romano, Joseph P, and Michael Wolf. 2013. “Testing for Monotonicity in Expected Asset Returns.” <em>Journal of Empirical Finance</em> 23: 93–116.</p>
+</div>
+<div id="ref-ledoit2018efficient">
+<p>Ledoit, Olivier, Michael Wolf, and Zhao Zhao. 2018. “Efficient Weighting: A More Powerful Test for Cross-Sectional Anomalies.” <em>SSRN Working Paper</em> 2881417.</p>
+</div>
+<div id="ref-banz1981relationship">
+<p>Banz, Rolf W. 1981. “The Relationship Between Return and Market Value of Common Stocks.” <em>Journal of Financial Economics</em> 9 (1): 3–18.</p>
+</div>
+<div id="ref-van2011size">
+<p>Van Dijk, Mathijs A. 2011. “Is Size Dead? A Review of the Size Effect in Equity Returns.” <em>Journal of Banking &amp; Finance</em> 35 (12): 3263–74.</p>
+</div>
+<div id="ref-asness2018size">
+<p>Asness, Clifford, Andrea Frazzini, Ronen Israel, Tobias J Moskowitz, and Lasse H Pedersen. 2018. “Size Matters, If You Control Your Junk.” <em>Journal of Financial Economics</em> 129 (3): 479–509.</p>
+</div>
+<div id="ref-astakhov2019firm">
+<p>Astakhov, Anton, Tomas Havranek, and Jiri Novak. 2019. “Firm Size and Stock Returns: A Quantitative Survey.” <em>Journal of Economic Surveys</em> XXX: XX–XX.</p>
+</div>
+<div id="ref-asness2013value">
+<p>Asness, Clifford S, Tobias J Moskowitz, and Lasse Heje Pedersen. 2013. “Value and Momentum Everywhere.” <em>Journal of Finance</em> 68 (3): 929–85.</p>
+</div>
+<div id="ref-jegadeesh1993returns">
+<p>Jegadeesh, Narasimhan, and Sheridan Titman. 1993. “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency.” <em>Journal of Finance</em> 48 (1): 65–91.</p>
+</div>
+<div id="ref-moskowitz2012time">
+<p>Moskowitz, Tobias J, Yao Hua Ooi, and Lasse Heje Pedersen. 2012. “Time Series Momentum.” <em>Journal of Financial Economics</em> 104 (2): 228–50.</p>
+</div>
+<div id="ref-lemperiere2014two">
+<p>Lempérière, Yves, Cyril Deremble, Philip Seager, Marc Potters, and Jean-Philippe Bouchaud. 2014. “Two Centuries of Trend Following.” <em>arXiv Preprint</em>, no. 1404.3274.</p>
+</div>
+<div id="ref-fama2015five">
+<p>Fama, Eugene F, and Kenneth R French. 2015. “A Five-Factor Asset Pricing Model.” <em>Journal of Financial Economics</em> 116 (1): 1–22.</p>
+</div>
+<div id="ref-bouchaud2019sticky">
+<p>Bouchaud, Jean-philippe, Philipp Krueger, Augustin Landier, and David Thesmar. 2019. “Sticky Expectations and the Profitability Anomaly.” <em>The Journal of Finance</em> 74 (2): 639–74.</p>
+</div>
+<div id="ref-hou2015digesting">
+<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2015. “Digesting Anomalies: An Investment Approach.” <em>Review of Financial Studies</em> 28 (3): 650–705.</p>
+</div>
+<div id="ref-ang2006cross">
+<p>Ang, Andrew, Robert J Hodrick, Yuhang Xing, and Xiaoyan Zhang. 2006. “The Cross-Section of Volatility and Expected Returns.” <em>Journal of Finance</em> 61 (1): 259–99.</p>
+</div>
+<div id="ref-baker2011benchmarks">
+<p>Baker, Malcolm, Brendan Bradley, and Jeffrey Wurgler. 2011. “Benchmarks as Limits to Arbitrage: Understanding the Low-Volatility Anomaly.” <em>Financial Analysts Journal</em> 67 (1): 40–54.</p>
+</div>
+<div id="ref-frazzini2014betting">
+<p>Frazzini, Andrea, and Lasse Heje Pedersen. 2014. “Betting Against Beta.” <em>Journal of Financial Economics</em> 111 (1): 1–25.</p>
+</div>
+<div id="ref-boloorforoosh2019beta">
+<p>Boloorforoosh, Ali, Peter Christoffersen, Christian Gourieroux, and Mathieu Fournier. 2019. “Beta Risk in the Cross-Section of Equities.” <em>Review of Financial Studies</em> Forthcoming.</p>
+</div>
+<div id="ref-berk1999optimal">
+<p>Berk, Jonathan B, Richard C Green, and Vasant Naik. 1999. “Optimal Investment, Growth Options, and Security Returns.” <em>Journal of Finance</em> 54 (5): 1553–1607.</p>
+</div>
+<div id="ref-daniel2001overconfidence">
+<p>Daniel, Kent D, David Hirshleifer, and Avanidhar Subrahmanyam. 2001. “Overconfidence, Arbitrage, and Equilibrium Asset Pricing.” <em>Journal of Finance</em> 56 (3): 921–65.</p>
+</div>
+<div id="ref-barberis2003style">
+<p>Barberis, Nicholas, and Andrei Shleifer. 2003. “Style Investing.” <em>Journal of Financial Economics</em> 68 (2): 161–99.</p>
+</div>
+<div id="ref-gomes2003equilibrium">
+<p>Gomes, Joao, Leonid Kogan, and Lu Zhang. 2003. “Equilibrium Cross Section of Returns.” <em>Journal of Political Economy</em> 111 (4): 693–732.</p>
+</div>
+<div id="ref-carlson2004corporate">
+<p>Carlson, Murray, Adlai Fisher, and Ron Giammarino. 2004. “Corporate Investment and Asset Price Dynamics: Implications for the Cross-Section of Returns.” <em>Journal of Finance</em> 59 (6): 2577–2603.</p>
+</div>
+<div id="ref-johnson2002rational">
+<p>Johnson, Timothy C. 2002. “Rational Momentum Effects.” <em>Journal of Finance</em> 57 (2). Wiley Online Library: 585–608.</p>
+</div>
+<div id="ref-grinblatt2005prospect">
+<p>Grinblatt, Mark, and Bing Han. 2005. “Prospect Theory, Mental Accounting, and Momentum.” <em>Journal of Financial Economics</em> 78 (2). Elsevier: 311–39.</p>
+</div>
+<div id="ref-vayanos2013institutional">
+<p>Vayanos, Dimitri, and Paul Woolley. 2013. “An Institutional Theory of Momentum and Reversal.” <em>Review of Financial Studies</em> 26 (5): 1087–1145.</p>
+</div>
+<div id="ref-choi2014momentum">
+<p>Choi, Seung Mo, and Hwagyun Kim. 2014. “Momentum Effect as Part of a Market Equilibrium.” <em>Journal of Financial and Quantitative Analysis</em> 49 (1): 107–30.</p>
+</div>
+<div id="ref-barberis2016prospect">
+<p>Barberis, Nicholas, Abhiroop Mukherjee, and Baolian Wang. 2016. “Prospect Theory and Stock Returns: An Empirical Test.” <em>Review of Financial Studies</em> 29 (11): 3068–3107.</p>
+</div>
+<div id="ref-daniel2019short">
+<p>Daniel, Kent, David Hirshleifer, and Lin Sun. 2019. “Short and Long Horizon Behavioral Factors.” <em>Review of Financial Studies</em> XXX (XXX).</p>
+</div>
+<div id="ref-gagliardini2016time">
+<p>Gagliardini, Patrick, Elisa Ossola, and Olivier Scaillet. 2016. “Time-Varying Risk Premium in Large Cross-Sectional Equity Data Sets.” <em>Econometrica</em> 84 (3): 985–1046.</p>
+</div>
+<div id="ref-gagliardini2019estimation">
+<p>Gagliardini, Patrick, Elisa Ossola, and Olivier Scaillet. 2019. “Estimation of Large Dimensional Conditional Factor Models in Finance.” <em>SSRN Working Paper</em> 3443426.</p>
+</div>
+<div id="ref-ilmanen2019factor">
+<p>Ilmanen, Antti, Ronen Israel, Tobias J Moskowitz, Ashwin K Thapar, and Franklin Wang. 2019. “Factor Premia and Factor Timing: A Century of Evidence.” <em>SSRN Working Paper</em> 3400998.</p>
+</div>
+<div id="ref-betermier2017value">
+<p>Betermier, Sebastien, Laurent E Calvet, and Paolo Sodini. 2017. “Who Are the Value and Growth Investors?” <em>Journal of Finance</em> 72 (1): 5–46.</p>
+</div>
+<div id="ref-cronqvist2015value">
+<p>Cronqvist, Henrik, Stephan Siegel, and Frank Yu. 2015. “Value Versus Growth Investing: Why Do Different Investors Have Different Styles?” <em>Journal of Financial Economics</em> 117 (2): 333–49.</p>
+</div>
+<div id="ref-cocco2019evidence">
+<p>Cocco, Joao F, Francisco Gomes, and Paula Lopes. 2019. “Evidence on Expectations of Household Finances.” <em>SSRN Working Paper</em> 3362495.</p>
+</div>
+<div id="ref-cronqvist2015fetal">
+<p>Cronqvist, Henrik, Alessandro Previtero, Stephan Siegel, and Roderick E White. 2015. “The Fetal Origins Hypothesis in Finance: Prenatal Environment, the Gender Gap, and Investor Behavior.” <em>Review of Financial Studies</em> 29 (3): 739–86.</p>
+</div>
+<div id="ref-barberis2018psychology">
+<p>Barberis, Nicholas. 2018. “Psychology-Based Models of Asset Prices and Trading Volume.” In <em>Handbook of Behavioral Economics-Foundations and Applications</em>.</p>
+</div>
+<div id="ref-bhamra2019does">
+<p>Bhamra, Harjoat S, and Raman Uppal. 2019. “Does Household Finance Matter? Small Financial Errors with Large Social Costs.” <em>American Economic Review</em> 109 (3): 1116–54.</p>
+</div>
+<div id="ref-barberis2019prospect">
+<p>Barberis, Nicholas, Lawrence J Jin, and Baolian Wang. 2019. “Prospect Theory and Stock Market Anomalies.” <em>SSRN Working Paper</em> 3477463.</p>
+</div>
+<div id="ref-hou2019replicating">
+<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2019. “Replicating Anomalies.” <em>Review of Financial Studies</em> XX (XX): XXX–XX.</p>
+</div>
+<div id="ref-harvey2019census">
+<p>Harvey, Campbell R, and Yan Liu. 2019. “A Census of the Factor Zoo.” <em>SSRN Working Paper</em> 3341728.</p>
+</div>
+<div id="ref-bryzgalova2019bayesian">
+<p>Bryzgalova, Svetlana, Jiantao Huang, and Christian Julliard. 2019. “Bayesian Solutions for the Factor Zoo: We Just Ran Two Quadrillion Models.” <em>SSRN Working Paper</em> 3481736.</p>
+</div>
+<div id="ref-fama1973risk">
+<p>Fama, Eugene F, and James D MacBeth. 1973. “Risk, Return, and Equilibrium: Empirical Tests.” <em>Journal of Political Economy</em> 81 (3): 607–36.</p>
+</div>
+<div id="ref-chinco2019estimating">
+<p>Chinco, Alexander, Andreas Neuhierl, and Michael Weber. 2019. “Estimating the Anomaly Baserate.” <em>SSRN Working Paper</em> 3344499.</p>
+</div>
+<div id="ref-jagannathan1998asymptotic">
+<p>Jagannathan, Ravi, and Zhenyu Wang. 1998. “An Asymptotic Theory for Estimating Beta-Pricing Models Using Cross-Sectional Regression.” <em>Journal of Finance</em> 53 (4): 1285–1309.</p>
+</div>
+<div id="ref-petersen2009estimating">
+<p>Petersen, Mitchell A. 2009. “Estimating Standard Errors in Finance Panel Data Sets: Comparing Approaches.” <em>Review of Financial Studies</em> 22 (1): 435–80.</p>
+</div>
+<div id="ref-shanken1992estimation">
+<p>Shanken, Jay. 1992. “On the Estimation of Beta-Pricing Models.” <em>Review of Financial Studies</em> 5 (1): 1–33.</p>
+</div>
+<div id="ref-ang2018using">
+<p>Ang, Andrew, Jun Liu, and Krista Schwarz. 2018. “Using Individual Stocks or Portfolios in Tests of Factor Models.” <em>SSRN Working Paper</em> 1106463.</p>
+</div>
+<div id="ref-jegadeesh2019empirical">
+<p>Jegadeesh, Narasimhan, Joonki Noh, Kuntara Pukthuanthong, Richard Roll, and Junbo L Wang. 2019. “Empirical Tests of Asset Pricing Models with Individual Assets: Resolving the Errors-in-Variables Bias in Risk Premium Estimation.” <em>Journal of Financial Economics</em> Forthcoming (XXXX).</p>
+</div>
+<div id="ref-belsley2005regression">
+<p>Belsley, David A, Edwin Kuh, and Roy E Welsch. 2005. <em>Regression Diagnostics: Identifying Influential Data and Sources of Collinearity</em>. Vol. 571. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-de2015comparing">
+<p>De Moor, Lieven, Geert Dhaene, and Piet Sercu. 2015. “On Comparing Zero-Alpha Tests Across Multifactor Asset Pricing Models.” <em>Journal of Banking &amp; Finance</em> 61: S235–S240.</p>
+</div>
+<div id="ref-barillas2018comparing">
+<p>Barillas, Francisco, and Jay Shanken. 2018. “Comparing Asset Pricing Models.” <em>Journal of Finance</em> 73 (2): 715–54.</p>
+</div>
+<div id="ref-chib2019comparing">
+<p>Chib, Siddhartha, Xiaming Zeng, and Lingxiao Zhao. 2019. “On Comparing Asset Pricing Models.” <em>Journal of Finance</em> Forthcoming.</p>
+</div>
+<div id="ref-feng2017taming">
+<p>Feng, Guanhao, Stefano Giglio, and Dacheng Xiu. 2017. “Taming the Factor Zoo.” <em>SSRN Working Paper</em> 2934020.</p>
+</div>
+<div id="ref-fama2018choosing">
+<p>Fama, Eugene F, and Kenneth R French. 2018. “Choosing Factors.” <em>Journal of Financial Economics</em> 128 (2): 234–52.</p>
+</div>
+<div id="ref-giglio2018asset">
+<p>Giglio, Stefano, and Dacheng Xiu. 2018. “Asset Pricing with Omitted Factors.” <em>SSRN Working Paper</em> 2865922.</p>
+</div>
+<div id="ref-pukthuanthong2018protocol">
+<p>Pukthuanthong, Kuntara, Richard Roll, and Avanidhar Subrahmanyam. 2018. “A Protocol for Factor Identification.” <em>Review of Financial Studies</em> 32 (4): 1573–1607.</p>
+</div>
+<div id="ref-gospodinov2019too">
+<p>Gospodinov, Nikolay, Raymond Kan, and Cesare Robotti. 2019. “Too Good to Be True? Fallacies in Evaluating Risk Factor Models.” <em>Journal of Financial Economics</em> 132 (2): 451–71.</p>
+</div>
+<div id="ref-ma2018testing">
+<p>Ma, Shujie, Wei Lan, Liangjun Su, and Chih-Ling Tsai. 2018. “Testing Alphas in Conditional Time-Varying Factor Models with High Dimensional Assets.” <em>Journal of Business &amp; Economic Statistics</em> XXX (XXX). Taylor &amp; Francis: 1–34.</p>
+</div>
+<div id="ref-lakonishok1994contrarian">
+<p>Lakonishok, Josef, Andrei Shleifer, and Robert W Vishny. 1994. “Contrarian Investment, Extrapolation, and Risk.” <em>Journal of Finance</em> 49 (5): 1541–78.</p>
+</div>
+<div id="ref-daniel1997evidence">
+<p>Daniel, Kent, and Sheridan Titman. 1997. “Evidence on the Characteristics of Cross Sectional Variation in Stock Returns.” <em>Journal of Finance</em> 52 (1): 1–33.</p>
+</div>
+<div id="ref-daniel2001explaining">
+<p>Daniel, Kent, Sheridan Titman, and KC John Wei. 2001. “Explaining the Cross-Section of Stock Returns in Japan: Factors or Characteristics?” <em>Journal of Finance</em> 56 (2): 743–66.</p>
+</div>
+<div id="ref-daniel2012testing">
+<p>Daniel, Kent, and Sheridan Titman. 2012. “Testing Factor-Model Explanations of Market Anomalies.” <em>Critical Finance Review</em> 1 (1): 103–39.</p>
+</div>
+<div id="ref-chordia2015cross">
+<p>Chordia, Tarun, Amit Goyal, and Jay Shanken. 2015. “Cross-Sectional Asset Pricing with Individual Stocks: Betas Versus Characteristics.” <em>SSRN Working Paper</em> 2549578.</p>
+</div>
+<div id="ref-kozak2018interpreting">
+<p>Kozak, Serhiy, Stefan Nagel, and Shrihari Santosh. 2018. “Interpreting Factor Models.” <em>Journal of Finance</em> 73 (3): 1183–1223.</p>
+</div>
+<div id="ref-han2018firm">
+<p>Han, Yufeng, Ai He, D Rapach, and Guofu Zhou. 2019. “Firm Characteristics and Expected Stock Returns.” <em>SSRN Working Paper</em> 3185335.</p>
+</div>
+<div id="ref-rapach2019time">
+<p>Rapach, David, and Guofu Zhou. 2019. “Time-Series and Cross-Sectional Stock Return Forecasting: New Machine Learning Methods.” <em>SSRN Working Paper</em> 3428095.</p>
+</div>
+<div id="ref-kelly2019characteristics">
+<p>Kelly, Bryan, Seth Pruitt, and Yinan Su. 2019. “Characteristics Are Covariances: A Unified Model of Risk and Return.” <em>Journal of Financial Economics</em> Forthcoming (XXX): XXX–XXX.</p>
+</div>
+<div id="ref-kim2019arbitrage">
+<p>Kim, Soohun, Robert A Korajczyk, and Andreas Neuhierl. 2019. “Arbitrage Portfolios.” <em>SSRN Working Paper</em> 3263001.</p>
+</div>
+<div id="ref-lettau2018estimating">
+<p>Lettau, Martin, and Markus Pelger. n.d. “Estimating Latent Asset-Pricing Factors.” <em>Journal of Econometrics</em> XXX: XXX–XXX.</p>
+</div>
+<div id="ref-lettau2018factors">
+<p>Lettau, Martin, and Markus Pelger. 2018. “Factors That Fit the Time Series and Cross-Section of Stock Returns.” <em>SSRN Working Paper</em> 3211106.</p>
+</div>
+<div id="ref-hoechle2018correcting">
+<p>Hoechle, Daniel, Markus Schmid, and Heinz Zimmermann. 2018. “Correcting Alpha Misattribution in Portfolio Sorts.” <em>SSRN Working Paper</em> 3190310.</p>
+</div>
+<div id="ref-koijen2019demand">
+<p>Koijen, Ralph S.J., and Motohiro Yogo. 2019. “A Demand System Approach to Asset Pricing.” <em>Journal of Political Economy</em> 127 (4): 1475–1515.</p>
+</div>
+<div id="ref-koijen2019investors">
+<p>Koijen, Ralph SJ, Robert J Richmond, and Motohiro Yogo. 2019. “Which Investors Matter for Global Equity Valuations and Expected Returns?” <em>SSRN Working Paper</em> 3378340.</p>
+</div>
+<div id="ref-betermier2019supply">
+<p>Betermier, Sebastien, Laurent E Calvet, and Evan Jo. 2019. “A Supply and Demand Approach to Equity Pricing.” <em>SSRN Working Paper</em> 3440147.</p>
+</div>
+<div id="ref-martin2019market">
+<p>Martin, Ian, and Stefan Nagel. 2019. “Market Efficiency in the Age of Big Data.” <em>SSRN Working Paper</em> XXXXXXXXXXXXX.</p>
+</div>
+<div id="ref-brandt2009parametric">
+<p>Brandt, Michael W, Pedro Santa-Clara, and Rossen Valkanov. 2009. “Parametric Portfolio Policies: Exploiting Characteristics in the Cross-Section of Equity Returns.” <em>Review of Financial Studies</em> 22 (9): 3411–47.</p>
+</div>
+<div id="ref-ammann2016characteristics">
+<p>Ammann, Manuel, Guillaume Coqueret, and Jan-Philip Schade. 2016. “Characteristics-Based Portfolio Choice with Leverage Constraints.” <em>Journal of Banking &amp; Finance</em> 70: 23–37.</p>
+</div>
+<div id="ref-martin2018transaction">
+<p>Martin Utrera, Alberto, Victor DeMiguel, Raman Uppal, and Francisco J Nogales. 2018. “A Transaction-Cost Perspective on the Multitude of Firm Characteristics.” <em>SSRN Working Paper</em> 2912819.</p>
+</div>
+<div id="ref-goto2015improving">
+<p>Goto, Shingo, and Yan Xu. 2015. “Improving Mean Variance Optimization Through Sparse Hedging Restrictions.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1415–41.</p>
+</div>
+<div id="ref-ban2016machine">
+<p>Ban, Gah-Yi, Noureddine El Karoui, and Andrew EB Lim. 2016. “Machine Learning and Portfolio Optimization.” <em>Management Science</em> 64 (3): 1136–54.</p>
+</div>
+<div id="ref-perrin2019machine">
+<p>Perrin, Sarah, and Thierry Roncalli. 2019. “Machine Learning Optimization Algorithms &amp; Portfolio Allocation.” <em>SSRN Working Paper</em> 3425827.</p>
+</div>
+<div id="ref-rapach2013international">
+<p>Rapach, David E, Jack K Strauss, and Guofu Zhou. 2013. “International Stock Return Predictability: What Is the Role of the United States?” <em>Journal of Finance</em> 68 (4): 1633–62.</p>
+</div>
+<div id="ref-chinco2019sparse">
+<p>Chinco, Alexander, Adam D Clark-Joseph, and Mao Ye. 2019. “Sparse Signals in the Cross-Section of Returns.” <em>Journal of Finance</em> 74 (1): 449–92.</p>
+</div>
+<div id="ref-cao2003support">
+<p>Cao, Li-Juan, and Francis Eng Hock Tay. 2003. “Support Vector Machine with Adaptive Parameters in Financial Time Series Forecasting.” <em>IEEE Transactions on Neural Networks</em> 14 (6): 1506–18.</p>
+</div>
+<div id="ref-kim2003financial">
+<p>Kim, Kyoung-jae. 2003. “Financial Time Series Forecasting Using Support Vector Machines.” <em>Neurocomputing</em> 55 (1-2). Elsevier: 307–19.</p>
+</div>
+<div id="ref-huang2005forecasting">
+<p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>
+</div>
+<div id="ref-matias2012forecasting">
+<p>Matı'as, José M, and Juan C Reboredo. 2012. “Forecasting Performance of Nonlinear Models for Intraday Stock Returns.” <em>Journal of Forecasting</em> 31 (2). Wiley Online Library: 172–88.</p>
+</div>
+<div id="ref-reboredo2012nonlinearity">
+<p>Reboredo, Juan C, José M Matı'as, and Raquel Garcia-Rubio. 2012. “Nonlinearity in Forecasting of High-Frequency Stock Returns.” <em>Computational Economics</em> 40 (3): 245–64.</p>
+</div>
+<div id="ref-dunis2013hybrid">
+<p>Dunis, Christian L, Spiros D Likothanassis, Andreas S Karathanasopoulos, Georgios S Sermpinis, and Konstantinos A Theofilatos. 2013. “A Hybrid Genetic Algorithm–Support Vector Machine Approach in the Task of Forecasting and Trading.” <em>Journal of Asset Management</em> 14 (1): 52–71.</p>
+</div>
+<div id="ref-gu2018empirical">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
+</div>
+<div id="ref-guida2018machine">
+<p>Guida, Tony, and Guillaume Coqueret. 2018b. “Machine Learning in Systematic Equity Allocation: A Model Comparison.” <em>Wilmott</em> 2018 (98): 24–33.</p>
+</div>
+<div id="ref-ballings2015evaluating">
+<p>Ballings, Michel, Dirk Van den Poel, Nathalie Hespeels, and Ruben Gryp. 2015. “Evaluating Multiple Classifiers for Stock Price Direction Prediction.” <em>Expert Systems with Applications</em> 42 (20): 7046–56.</p>
+</div>
+<div id="ref-henrique2019literature">
+<p>Henrique, Bruno Miranda, Vinicius Amorim Sobreiro, and Herbert Kimura. 2019. “Literature Review: Machine Learning Techniques Applied to Financial Market Prediction.” <em>Expert Systems with Applications</em> XXX (XXX).</p>
+</div>
+<div id="ref-bansal1993no">
+<p>Bansal, Ravi, and Salim Viswanathan. 1993. “No Arbitrage and Arbitrage Pricing: A New Approach.” <em>Journal of Finance</em> 48 (4): 1231–62.</p>
+</div>
+<div id="ref-cochrane2009asset">
+<p>Cochrane, John H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton university press.</p>
+</div>
+<div id="ref-hansen1982large">
+<p>Hansen, Lars Peter. 1982. “Large Sample Properties of Generalized Method of Moments Estimators.” <em>Econometrica</em>, 1029–54.</p>
+</div>
+<div id="ref-back2010asset">
+<p>Back, Kerry. 2010. <em>Asset Pricing and Portfolio Choice Theory</em>. Oxford University Press.</p>
+</div>
+<div id="ref-chen2019deep">
+<p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
+</div>
+<div id="ref-feng2019deep">
+<p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3243683.</p>
+</div>
+<div id="ref-gu2019autoencoder">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol start="3">
+<li id="fn3"><p>Originally, <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk">1973</a>)</span> work with the market beta only: <span class="math inline">\(r_{t,n}=\alpha_n+\beta_nr_{t,M}+\epsilon_{t,n}\)</span> and the second pass included nonlinear terms: <span class="math inline">\(r_{t,n}=\gamma_{n,0}+\gamma_{t,1}\hat{\beta}_{n}+\gamma_{t,2}\hat{\beta}^2_n+\gamma_{t,3}\hat{s}_n+\eta_{t,n}\)</span>, where the <span class="math inline">\(\hat{s}_n\)</span> are risk estimates for the assets that are not related to the betas. It is then possible to perform asset pricing tests to infer some properties. For instance, test whether betas have a linear influence on returns or not (<span class="math inline">\(\mathbb{E}[\gamma_{t,2}]=0\)</span>), or test the validity of the CAPM (which implies <span class="math inline">\(\mathbb{E}[\gamma_{t,0}]=0\)</span>).<a href="factor.html#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn4"><p>In the same spirit, see also <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018estimating">n.d.</a>)</span> and <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018factors">2018</a>)</span>.<a href="factor.html#fnref4" class="footnote-back">↩</a></p></li>
+</ol>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="Data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"download": ["ML_factor.pdf"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
