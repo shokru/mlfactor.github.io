@@ -425,7 +425,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="interp" class="section level1">
 <h1><span class="header-section-number">Chapter 14</span> Interpretability</h1>
-<p>This chapter is dedicated to the techniques that help understand the way models process inputs into outputs. A recent book (<span class="citation">Molnar (<a href="#ref-molnar2019interpretable">2019</a>)</span>) is entirely devoted to this topic and we highly recommend to have a look at it. Another more introductory and less technical reference is <span class="citation">Hall and Gill (<a href="#ref-hall2019introduction">2019</a>)</span>.
+<p>This chapter is dedicated to the techniques that help understand the way models process inputs into outputs. A recent book (<span class="citation">Molnar (<a href="#ref-molnar2019interpretable">2019</a>)</span> available at <a href="https://christophm.github.io/interpretable-ml-book/" class="uri">https://christophm.github.io/interpretable-ml-book/</a>) is entirely devoted to this topic and we highly recommend to have a look at it. Another more introductory and less technical reference is <span class="citation">Hall and Gill (<a href="#ref-hall2019introduction">2019</a>)</span>.
 Obviously, in this chapter, we will adopt an tone which is factor-investing orientated and discuss examples related to ML models trained on a financial dataset.</p>
 <p>Quantitative tools that aim for interpretability of ML models are required to satisfy two simple conditions:</p>
 <ol style="list-style-type: decimal">
@@ -526,9 +526,9 @@ Below, we implement this algorithm for the features appearing on Figure <a href=
 <a class="sourceLine" id="cb172-2" data-line-number="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Feature, <span class="dt">y =</span> loss)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
 <a class="sourceLine" id="cb172-3" data-line-number="3"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:VIglobal2"></span>
-<img src="ML_factor_files/figure-html/VIglobal2-1.png" alt="Variable importance for a ridge regression model" width="350px" />
+<img src="ML_factor_files/figure-html/VIglobal2-1.png" alt="Variable importance for a ridge regression model." width="450px" />
 <p class="caption">
-FIGURE 14.2: Variable importance for a ridge regression model
+FIGURE 14.2: Variable importance for a ridge regression model.
 </p>
 </div>
 <p></p>
@@ -558,7 +558,7 @@ where <span class="math inline">\(\textbf{x}_{-k}^{(m)}\)</span> are independent
 <a class="sourceLine" id="cb173-4" data-line-number="4">pdp_PB =<span class="st"> </span>FeatureEffect<span class="op">$</span><span class="kw">new</span>(mod_iml, <span class="dt">feature =</span> <span class="st">&quot;Pb&quot;</span>)  <span class="co"># This line computes the PDP for price-to-book ratio</span></a>
 <a class="sourceLine" id="cb173-5" data-line-number="5"><span class="kw">plot</span>(pdp_PB)                                         <span class="co"># Plot the partial dependence.</span></a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:pdp"></span>
-<img src="ML_factor_files/figure-html/pdp-1.png" alt="Partial dependence plot for the price-to-book ratio on the random forest model" width="300px" />
+<img src="ML_factor_files/figure-html/pdp-1.png" alt="Partial dependence plot for the price-to-book ratio on the random forest model" width="450px" />
 <p class="caption">
 FIGURE 14.3: Partial dependence plot for the price-to-book ratio on the random forest model
 </p>
@@ -628,7 +628,7 @@ FIGURE 14.4: Simplistic explanation of LIME.
 <a class="sourceLine" id="cb175-8" data-line-number="8">                       <span class="dt">n_features =</span> <span class="dv">6</span>                   <span class="co"># Number of features displayed (most importance ones)</span></a>
 <a class="sourceLine" id="cb175-9" data-line-number="9">)</a>
 <a class="sourceLine" id="cb175-10" data-line-number="10"><span class="kw">plot_features</span>(explanation, <span class="dt">ncol =</span> <span class="dv">1</span>)                    <span class="co"># Visual display</span></a></code></pre></div>
-<p><img src="ML_factor_files/figure-html/lime1-1.png" width="672" /></p>
+<p><img src="ML_factor_files/figure-html/lime1-1.png" width="450px" style="display: block; margin: auto;" /></p>
 <p></p>
 <p>In each graph (one graph corresponds to the explanation around one instance), there are two types of information: the sign of the impact and the magnitude of the impact. The sign is revealed with the color (positive in green, negative in red) and the magnitude is shown with the size of the rectangles. For the first occurence, the Ebit_Oa variable is associated with a strong negative effect. In the second example, the Earning per Share has a strong positive effect on the future return.</p>
 <p>The values on the left of the graphs show the ranges of the features with which the local approximations were computed.</p>
@@ -675,9 +675,14 @@ Second, instances are analyzed one at a time.</p>
 <a class="sourceLine" id="cb177-7" data-line-number="7"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">slice</span>(<span class="dv">1</span>))              <span class="co"># On the first instance</span></a>
 <a class="sourceLine" id="cb177-8" data-line-number="8"><span class="kw">plot</span>(shapley) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dv">1500</span>) <span class="op">+</span><span class="st">                      </span><span class="co"># Plot</span></a>
 <a class="sourceLine" id="cb177-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()          </a></code></pre></div>
-<p><img src="ML_factor_files/figure-html/shapley-1.png" width="350px" /></p>
+<div class="figure"><span id="fig:shapley"></span>
+<img src="ML_factor_files/figure-html/shapley-1.png" alt="Illustration of the Shapley method." width="450px" />
+<p class="caption">
+FIGURE 14.5: Illustration of the Shapley method.
+</p>
+</div>
 <p></p>
-<p>In the output, we</p>
+<p>In the output, we XXXXXXX</p>
 </div>
 <div id="breakdown" class="section level3">
 <h3><span class="header-section-number">14.2.3</span> Breakdown</h3>
@@ -707,7 +712,12 @@ Second, instances are analyzed one at a time.</p>
 <a class="sourceLine" id="cb179-3" data-line-number="3">                        data_ml[<span class="dv">6</span>,] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short),</a>
 <a class="sourceLine" id="cb179-4" data-line-number="4">                        <span class="dt">data =</span> data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short))</a>
 <a class="sourceLine" id="cb179-5" data-line-number="5"><span class="kw">plot</span>(explain_break) </a></code></pre></div>
-<p><img src="ML_factor_files/figure-html/breakdown-1.png" width="350px" /></p>
+<div class="figure"><span id="fig:breakdown"></span>
+<img src="ML_factor_files/figure-html/breakdown-1.png" alt="Example of a breakdown output." width="350px" />
+<p class="caption">
+FIGURE 14.6: Example of a breakdown output.
+</p>
+</div>
 <p></p>
 <p>The graphical output is intuitively interpreted. The grey bar is the prediction of the model at the chosen instance. Green bars signal a positive contribution and the yellowish rectangles show the variables with negative impact. The relative sizes indicate the importance of each feature.</p>
 
@@ -776,29 +786,33 @@ Second, instances are analyzed one at a time.</p>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": false,
-"facebook": true,
+"github": true,
+"facebook": false,
 "twitter": true,
 "google": false,
-"linkedin": false,
+"linkedin": true,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapaper": false
 },
 "fontsettings": {
 "theme": "white",
 "family": "sans",
 "size": 2
 },
-"edit": {
-"link": null,
-"text": null
-},
+"edit": null,
 "download": ["ML_factor.pdf"],
 "toc": {
-"collapse": "subsection"
-}
+"collapse": "subsection",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
 });
 });
 </script>

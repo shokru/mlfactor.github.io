@@ -470,7 +470,9 @@ r_{t,n}= \alpha_n+\sum_{k=1}^K\beta_{n,k}f_{t,k}+\epsilon_{t,n}, \tag{4.1}
 <li>at a future date (usually one month), report the returns of the portfolios.<br />
 Then, iterate the procedure until the chronological end of the sample is reached.</li>
 </ol>
-<p>The outcome is a time-series of portfolio returns <span class="math inline">\(r_t^j\)</span> for each grouping <span class="math inline">\(j\)</span>. An anomaly is identified if the <span class="math inline">\(t\)</span>-test between the first (<span class="math inline">\(j=1\)</span>) and the last group (<span class="math inline">\(j=J\)</span>) unveils a significant difference in average returns. A strong limitation of this approach is that the sorting criterion could have a non monotonous impact on returns and the simple <span class="math inline">\(t\)</span>-statistic would not detect it. Several articles address this concern: <span class="citation">Patton and Timmermann (<a href="#ref-patton2010monotonicity">2010</a>)</span> and <span class="citation">Romano and Wolf (<a href="#ref-romano2013testing">2013</a>)</span> for instance. Finally, we refer to <span class="citation">Ledoit, Wolf, and Zhao (<a href="#ref-ledoit2018efficient">2018</a>)</span> for refinements that take into account the covariance structure of asset returns.</p>
+<p>The outcome is a time-series of portfolio returns <span class="math inline">\(r_t^j\)</span> for each grouping <span class="math inline">\(j\)</span>. An anomaly is identified if the <span class="math inline">\(t\)</span>-test between the first (<span class="math inline">\(j=1\)</span>) and the last group (<span class="math inline">\(j=J\)</span>) unveils a significant difference in average returns. A strong limitation of this approach is that the sorting criterion could have a non monotonous impact on returns and the simple <span class="math inline">\(t\)</span>-statistic would not detect it. Several articles address this concern: <span class="citation">Patton and Timmermann (<a href="#ref-patton2010monotonicity">2010</a>)</span> and <span class="citation">Romano and Wolf (<a href="#ref-romano2013testing">2013</a>)</span> for instance.</p>
+<p>Instead of focusing on only one criterion, it is possible to group asset according to more characteristics. The original paper <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span> also combines market capitalization with book-to-market ratios. Each characteristic is divided into 10 buckets, which makes 100 portfolios in total. Beyond data availability, there is no upper bound on the number of features that can be included the sorting process. In fact, some authors investigate more complex sorting algorithms that can manage a potentially large number of characteristics (see e.g., <span class="citation">Feng, Polson, and Xu (<a href="#ref-feng2019deep">2019</a>)</span> and <span class="citation">Bryzgalova, Pelger, and Zhu (<a href="#ref-bryzgalova2019forest">2019</a>)</span>).</p>
+<p>Finally, we refer to <span class="citation">Ledoit, Wolf, and Zhao (<a href="#ref-ledoit2018efficient">2018</a>)</span> for refinements that take into account the covariance structure of asset returns and to <span class="citation">Cattaneo et al. (<a href="#ref-cattaneo2019characteristic">2019</a>)</span> for a theoretical study on the statistical properties of the sorting procedure. Notably, thelatter paper discusses the optimal number of portfolios.</p>
 <p>In the code and Figure <a href="factor.html#fig:factportsort">4.1</a> below, we compute size portfolios (equally weighted: above versus below the median capitalization). According to the size anomaly, the firms with below median market cap should earn higher returns on average. This is verified whenever the red bar in the plot is above the green one (it happens most of the time).</p>
 
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
@@ -1085,15 +1087,15 @@ The interesting metric is then the test statistic associated to the estimation o
 </table>
 <p></p>
 <p>We confirm that the HML factor remains redundant when the four other are present in the asset pricing model. The figures we obtain are very close to the ones in the original paper (<span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>), which makes sense, since we only add 5 years to their initial sample.</p>
-<p>At a more macro-level, researchers also try to figure out which models (i.e., combinations of factors) are the most likely, given the data empirically observed (and possibly given priors formulated by the econometrician). For instance, this stream of literature seeks to quantify to which extent the 3 factor model of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span> outperforms the 5 factors in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>. In this direction, <span class="citation">De Moor, Dhaene, and Sercu (<a href="#ref-de2015comparing">2015</a>)</span> introduce a novel computation for <em>p</em>-values that compare the relative likelihood that two models pass a zero-alpha test. More generally, the Bayesian method of <span class="citation">Barillas and Shanken (<a href="#ref-barillas2018comparing">2018</a>)</span> was subsequently improve by <span class="citation">Chib, Zeng, and Zhao (<a href="#ref-chib2019comparing">2019</a>)</span>.</p>
+<p>At a more macro-level, researchers also try to figure out which models (i.e., combinations of factors) are the most likely, given the data empirically observed (and possibly given priors formulated by the econometrician). For instance, this stream of literature seeks to quantify to which extent the 3 factor model of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span> outperforms the 5 factors in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>. In this direction, <span class="citation">De Moor, Dhaene, and Sercu (<a href="#ref-de2015comparing">2015</a>)</span> introduce a novel computation for <em>p</em>-values that compare the relative likelihood that two models pass a zero-alpha test. More generally, the Bayesian method of <span class="citation">Barillas and Shanken (<a href="#ref-barillas2018comparing">2018</a>)</span> was subsequently improved by <span class="citation">Chib, Zeng, and Zhao (<a href="#ref-chib2019comparing">2019</a>)</span>.</p>
 </div>
 <div id="advanced-techniques" class="section level3">
 <h3><span class="header-section-number">4.2.6</span> Advanced techniques</h3>
-<p>The ever increasing number of factors combined to their importance in asset management has led researchers to craft more subtle methods in order to ``organise’’ the so-called <em>factor zoo</em> and more importantly, to detect spurious anomalies. We list a few of them in chronological order.</p>
+<p>The ever increasing number of factors combined to their importance in asset management has led researchers to craft more subtle methods in order to ``organise’’ the so-called <em>factor zoo</em> and more importantly, to detect spurious anomalies and compare different asset pricing model specifications. We list a few of them below.</p>
 <ul>
-<li><span class="citation">Feng, Giglio, and Xiu (<a href="#ref-feng2017taming">2017</a>)</span> combine LASSO selection with Fama-MacBeth regressions;<br />
+<li><span class="citation">Feng, Giglio, and Xiu (<a href="#ref-feng2019taming">2019</a>)</span> combine LASSO selection with Fama-MacBeth regressions to test if new factor models are worth it. They quantify the gain of adding one new factor to a set of predefined factors and show that many factors reported in paper published in the 2010 decade do not add much incremental value;<br />
 </li>
-<li><span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span> use bootstrap on orthogonalised factors;<br />
+<li><span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span> (in a similar vein) use bootstrap on orthogonalised factors. They make the case that correlations among predictors is a major issue and their method aims at solving this problem. Their lengthy procedure seeks to test if maximal additional contribution of a candidate variable is significant;<br />
 </li>
 <li><span class="citation">Fama and French (<a href="#ref-fama2018choosing">2018</a>)</span> compare asset pricing models through squared maximum Sharpe ratios;<br />
 </li>
@@ -1101,7 +1103,7 @@ The interesting metric is then the test statistic associated to the estimation o
 </li>
 <li><span class="citation">Pukthuanthong, Roll, and Subrahmanyam (<a href="#ref-pukthuanthong2018protocol">2018</a>)</span> disentangle priced and non-priced factors via a combination of principal component analysis and <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk">1973</a>)</span> regressions.<br />
 </li>
-<li><span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span> warn against factor misspecification (when spurious factors are included in the list of regressors). Traded factors (<span class="math inline">\(resp.\)</span> macro-economic factors) seem more likely (<span class="math inline">\(resp.\)</span> less likely) to yield robust identifications.</li>
+<li><span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span> warn against factor misspecification (when spurious factors are included in the list of regressors). Traded factors (<span class="math inline">\(resp.\)</span> macro-economic factors) seem more likely (<span class="math inline">\(resp.\)</span> less likely) to yield robust identifications (see also <span class="citation">Bryzgalova (<a href="#ref-bryzgalova2019spurious">2019</a>)</span>).</li>
 </ul>
 <p>There is obviously no infaillible method, but the number of contributions in the field highlights the need for robustness. This is evidently a major concern when crafting investment decisions based on factor intuitions. One major hurdle for short-term strategies is the likely time-varying feature of factors. We refer for instance to <span class="citation">Ang and Kristensen (<a href="#ref-ang2012testing">2012</a>)</span> and <span class="citation">Cooper and Maio (<a href="#ref-cooper2018new">2019</a>)</span> for practical results and to <span class="citation">Gagliardini, Ossola, and Scaillet (<a href="#ref-gagliardini2016time">2016</a>)</span> and <span class="citation">Ma et al. (<a href="#ref-ma2018testing">2018</a>)</span>) for more theoretical treatments (with additional empirical results).</p>
 </div>
@@ -1121,9 +1123,9 @@ The interesting metric is then the test statistic associated to the estimation o
 </li>
 <li>both <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics">2019</a>)</span> and <span class="citation">Kim, Korajczyk, and Neuhierl (<a href="#ref-kim2019arbitrage">2019</a>)</span> estimate models in which <em>factors</em> are <em>latent</em> but loadings (betas) and possibly alphas depend on characteristics. In contrast, <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018estimating">n.d.</a>)</span> and <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018factors">2018</a>)</span> estimate latent factors without any link to particular characteristics (and provide large sample asymptotic properties of their methods).<br />
 </li>
-<li>in the same vein as <span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span>, <span class="citation">Hoechle, Schmid, and Zimmermann (<a href="#ref-hoechle2018correcting">2018</a>)</span> discuss potential errors that arise when working with portfolio sorts that yield long-short returns. The authors show that in some cases, tests based on this procedure may be deceitful. This happens when the characteristic chosen to perform the sort is correlated with an external (unobservable) factor. They propose a novel regression-based approach aimed at bypassing this problem.</li>
+<li>in the same vein as <span class="citation">Hoechle, Schmid, and Zimmermann (<a href="#ref-hoechle2018correcting">2018</a>)</span>, <span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span> and <span class="citation">Bryzgalova (<a href="#ref-bryzgalova2019spurious">2019</a>)</span> and discuss potential errors that arise when working with portfolio sorts that yield long-short returns. The authors show that in some cases, tests based on this procedure may be deceitful. This happens when the characteristic chosen to perform the sort is correlated with an external (unobservable) factor. They propose a novel regression-based approach aimed at bypassing this problem.</li>
 </ul>
-<p>More recently and in a separate stream of literature, <span class="citation">Ralph S.J. Koijen and Yogo (<a href="#ref-koijen2019demand">2019</a>)</span> have introduced a demand model in which investors for their portfolios according to their preferences towards particular firm characteristics. They show that this allows them to mimic the portfolios of large institutional investors. In their model, aggregate demands (and hence, prices) are directly linked to characteristics, not to factors. In a follow up paper, <span class="citation">Ralph SJ Koijen, Richmond, and Yogo (<a href="#ref-koijen2019investors">2019</a>)</span> show that a few set of characteristics suffice to predict future returns. They also show that, based on institutional holdings from the UK and the US, the largest investors are those who are the most influencial in the formation of prices. In a similar vein, <span class="citation">Betermier, Calvet, and Jo (<a href="#ref-betermier2019supply">2019</a>)</span> derive an elegant (theoretical) general equilibrium model that generates some well documented anomalies (size, book-to-market). Finally, in <span class="citation">Martin and Nagel (<a href="#ref-martin2019market">2019</a>)</span>, characteristics influence returns via the role they play in the predictability of dividend growth. This paper discussed the asymptotic case when the number of assets and the number of characteristics are proportional and both increase to infinity.</p>
+<p>More recently and in a separate stream of literature, <span class="citation">Ralph S.J. Koijen and Yogo (<a href="#ref-koijen2019demand">2019</a>)</span> have introduced a demand model in which investors for their portfolios according to their preferences towards particular firm characteristics. They show that this allows them to mimic the portfolios of large institutional investors. In their model, aggregate demands (and hence, prices) are directly linked to characteristics, not to factors. In a follow-up paper, <span class="citation">Ralph SJ Koijen, Richmond, and Yogo (<a href="#ref-koijen2019investors">2019</a>)</span> show that a few set of characteristics suffice to predict future returns. They also show that, based on institutional holdings from the UK and the US, the largest investors are those who are the most influencial in the formation of prices. In a similar vein, <span class="citation">Betermier, Calvet, and Jo (<a href="#ref-betermier2019supply">2019</a>)</span> derive an elegant (theoretical) general equilibrium model that generates some well documented anomalies (size, book-to-market). Finally, in <span class="citation">Martin and Nagel (<a href="#ref-martin2019market">2019</a>)</span>, characteristics influence returns via the role they play in the predictability of dividend growth. This paper discussed the asymptotic case when the number of assets and the number of characteristics are proportional and both increase to infinity.</p>
 </div>
 <div id="the-link-with-machine-learning" class="section level2">
 <h2><span class="header-section-number">4.4</span> The link with machine learning</h2>
@@ -1276,8 +1278,17 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 <div id="ref-romano2013testing">
 <p>Romano, Joseph P, and Michael Wolf. 2013. “Testing for Monotonicity in Expected Asset Returns.” <em>Journal of Empirical Finance</em> 23: 93–116.</p>
 </div>
+<div id="ref-feng2019deep">
+<p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Characteristics-Sorted Factor Models.” <em>SSRN Working Paper</em> 3243683.</p>
+</div>
+<div id="ref-bryzgalova2019forest">
+<p>Bryzgalova, Svetlana, Markus Pelger, and Jason Zhu. 2019. “Forest Through the Trees: Building Cross-Sections of Stock Returns.” <em>SSRN Working Paper</em> 3493458.</p>
+</div>
 <div id="ref-ledoit2018efficient">
 <p>Ledoit, Olivier, Michael Wolf, and Zhao Zhao. 2018. “Efficient Weighting: A More Powerful Test for Cross-Sectional Anomalies.” <em>SSRN Working Paper</em> 2881417.</p>
+</div>
+<div id="ref-cattaneo2019characteristic">
+<p>Cattaneo, Matias D, Richard K Crump, Max Farrell, and Ernst Schaumburg. 2019. “Characteristic-Sorted Portfolios: Estimation and Inference” Forthcoming. Review of Economics; Statistics.</p>
 </div>
 <div id="ref-banz1981relationship">
 <p>Banz, Rolf W. 1981. “The Relationship Between Return and Market Value of Common Stocks.” <em>Journal of Financial Economics</em> 9 (1): 3–18.</p>
@@ -1429,8 +1440,8 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 <div id="ref-chib2019comparing">
 <p>Chib, Siddhartha, Xiaming Zeng, and Lingxiao Zhao. 2019. “On Comparing Asset Pricing Models.” <em>Journal of Finance</em> Forthcoming.</p>
 </div>
-<div id="ref-feng2017taming">
-<p>Feng, Guanhao, Stefano Giglio, and Dacheng Xiu. 2017. “Taming the Factor Zoo.” <em>SSRN Working Paper</em> 2934020.</p>
+<div id="ref-feng2019taming">
+<p>Feng, Guanhao, Stefano Giglio, and Dacheng Xiu. 2019. “Taming the Factor Zoo: A Test of New Factors.” <em>Journal of Finance</em> Forthcoming.</p>
 </div>
 <div id="ref-fama2018choosing">
 <p>Fama, Eugene F, and Kenneth R French. 2018. “Choosing Factors.” <em>Journal of Financial Economics</em> 128 (2): 234–52.</p>
@@ -1443,6 +1454,9 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 </div>
 <div id="ref-gospodinov2019too">
 <p>Gospodinov, Nikolay, Raymond Kan, and Cesare Robotti. 2019. “Too Good to Be True? Fallacies in Evaluating Risk Factor Models.” <em>Journal of Financial Economics</em> 132 (2): 451–71.</p>
+</div>
+<div id="ref-bryzgalova2019spurious">
+<p>Bryzgalova, Svetlana. 2019. “Spurious Factors in Linear Asset Pricing Models.”</p>
 </div>
 <div id="ref-ma2018testing">
 <p>Ma, Shujie, Wei Lan, Liangjun Su, and Chih-Ling Tsai. 2018. “Testing Alphas in Conditional Time-Varying Factor Models with High Dimensional Assets.” <em>Journal of Business &amp; Economic Statistics</em> XXX (XXX). Taylor &amp; Francis: 1–34.</p>
@@ -1567,9 +1581,6 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 <div id="ref-chen2019deep">
 <p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
 </div>
-<div id="ref-feng2019deep">
-<p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3243683.</p>
-</div>
 <div id="ref-gu2019autoencoder">
 <p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
 </div>
@@ -1601,29 +1612,33 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": false,
-"facebook": true,
+"github": true,
+"facebook": false,
 "twitter": true,
 "google": false,
-"linkedin": false,
+"linkedin": true,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapaper": false
 },
 "fontsettings": {
 "theme": "white",
 "family": "sans",
 "size": 2
 },
-"edit": {
-"link": null,
-"text": null
-},
+"edit": null,
 "download": ["ML_factor.pdf"],
 "toc": {
-"collapse": "subsection"
-}
+"collapse": "subsection",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
 });
 });
 </script>

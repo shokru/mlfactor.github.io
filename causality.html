@@ -590,6 +590,7 @@ FIGURE 15.3: Variations in betas with respect to 6 month market capitalization
 <h3><span class="header-section-number">15.2.2</span> Online learning</h3>
 <p>Online learning refers to a subset of machine learning in which new information arrives progressively and the integration of this flow is performed iteratively (the term ‘<em>online</em>’ is not linked to internet). In order to take the latest data updates into account, it is imperative to update the model (stating the obvious). This is clearly the case in finance and this topic is closely related to the discussion on learning windows in Section <a href="backtest.html#protocol">13.1</a>.</p>
 <p>The problem is that if a 2019 model is trained on data from 2010 to 2019, the (dynamic) 2020 model will have to be re-trained with the whole dataset including the latest points from 2020. This can be heavy and including just the latest points in the learning process would substantially decrease its computational cost. In neural networks, the sequential batch updating of weights can allow a progressive change in the model. Nonetheless, this is typically impossible for decision trees because the splits are decided once and for all. One notable exception is <span class="citation">Basak (<a href="#ref-basak2004online">2004</a>)</span> but in that case, the construction of the trees differs strongly from the original algorithm (and spirit).</p>
+<p>The simplest example of online learning is the <span class="citation">Widrow and Hoff (<a href="#ref-widrow1960adaptive">1960</a>)</span> algorithm.</p>
 <p>An exhaustive review of techniques pertaining to online learning is presented in <span class="citation">Hoi et al. (<a href="#ref-hoi2018online">2018</a>)</span> (section 4.11 is even dedicated to portfolio selection). The book <span class="citation">Hazan and others (<a href="#ref-hazan2016introduction">2016</a>)</span> covers online convex optimization which is a very close domain with a large overlap with online learning. The presentation below is adapted from the second and third parts of the first survey.</p>
 <p>Datasets are indexed by time: we write <span class="math inline">\(\textbf{X}_t\)</span> and <span class="math inline">\(\textbf{y}_t\)</span> for features and labels (the usual column index (<span class="math inline">\(k\)</span>) and row index (<span class="math inline">\(i\)</span>) will not be used in this section). Time has a bounded horizon <span class="math inline">\(T\)</span>. The machine learning model depends on some parameters <span class="math inline">\(\boldsymbol{\theta}\)</span> and we denote it with <span class="math inline">\(f_{\boldsymbol{\theta}}\)</span>. At time <span class="math inline">\(t\)</span> (when dataset (<span class="math inline">\(\textbf{X}_t\)</span>, <span class="math inline">\(\textbf{y}_t\)</span>) is gathered), the loss function <span class="math inline">\(L\)</span> fo the trained model naturally depends on the data (<span class="math inline">\(\textbf{X}_t\)</span>, <span class="math inline">\(\textbf{y}_t\)</span>) and on the model via <span class="math inline">\(\boldsymbol{\theta}_t\)</span> which are the parameter values fitted to the time-<span class="math inline">\(t\)</span> data. For notational simplicity, we henceforth write <span class="math inline">\(L_t(\boldsymbol{\theta}_t)=L(\textbf{X}_t,\textbf{y}_t,\boldsymbol{\theta}_t )\)</span>. The key quantity in online learning is the regret over the whole time sequence:
 <span class="math display">\[\begin{equation}
@@ -718,6 +719,9 @@ If this expression is not too complicated to compute, the learner can query the 
 <div id="ref-basak2004online">
 <p>Basak, Jayanta. 2004. “Online Adaptive Decision Trees.” <em>Neural Computation</em> 16 (9): 1959–81.</p>
 </div>
+<div id="ref-widrow1960adaptive">
+<p>Widrow, Bernard, and Marcian E Hoff. 1960. “Adaptive Switching Circuits.” In <em>IRE Wescon Convention Record</em>, 4:96–104.</p>
+</div>
 <div id="ref-hoi2018online">
 <p>Hoi, Steven CH, Doyen Sahoo, Jing Lu, and Peilin Zhao. 2018. “Online Learning: A Comprehensive Survey.” <em>arXiv Preprint</em>, no. 1802.02871.</p>
 </div>
@@ -791,29 +795,33 @@ If this expression is not too complicated to compute, the learner can query the 
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": false,
-"facebook": true,
+"github": true,
+"facebook": false,
 "twitter": true,
 "google": false,
-"linkedin": false,
+"linkedin": true,
 "weibo": false,
 "instapper": false,
 "vk": false,
-"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
+"instapaper": false
 },
 "fontsettings": {
 "theme": "white",
 "family": "sans",
 "size": 2
 },
-"edit": {
-"link": null,
-"text": null
-},
+"edit": null,
 "download": ["ML_factor.pdf"],
 "toc": {
-"collapse": "subsection"
-}
+"collapse": "subsection",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
 });
 });
 </script>
