@@ -214,7 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
 <li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-2"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#boosted-trees-adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
 <li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
 <li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
 </ul></li>
@@ -433,14 +433,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 When the covariance/correlation <span class="math inline">\(\rho\)</span> increase towards 1, the scaling denominator in <span class="math inline">\(\boldsymbol{\Sigma}\)</span> goes to zero and the formula <span class="math inline">\(\hat{\boldsymbol{\beta}}=\boldsymbol{\Sigma}^{-1}\textbf{X}&#39;\textbf{y}\)</span> implies that one coefficient will be highly positive and one highly negative. The regression creates a spurious arbitrage between the two variables. Of course, this is very inefficient a yields disastrous results out-of-sample.</p>
 <p>We illustrate what happens when many variables are used in the regression below (Table <a href="unsup.html#tab:regbroom">16.1</a>). One elucidation of the aforementioned phenomenon comes from the variables Mkt_Cap_12M_Usd and Mkt_Cap_6M_Usd, which have a correlation of 99.6% in the training sample. Both are singled out as highly significant but their signs are contradictory. Moreover, the magnitude of their coefficients are very close (0.21 versus 0.18) so that their net effect cancels out. Naturally, providing the regression with only one of these two input would have been wiser.</p>
 
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1"><span class="kw">library</span>(broom)                            <span class="co"># Package for clean regression output </span></a>
-<a class="sourceLine" id="cb186-2" data-line-number="2">training_sample <span class="op">%&gt;%</span><span class="st">    </span></a>
-<a class="sourceLine" id="cb186-3" data-line-number="3"><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(features,  <span class="st">&quot;R1M_Usd&quot;</span>)) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># List of variables</span></a>
-<a class="sourceLine" id="cb186-4" data-line-number="4"><span class="st">    </span><span class="kw">lm</span>(R1M_Usd <span class="op">~</span><span class="st"> </span>. , <span class="dt">data =</span> .) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Model: predict R1M_Usd</span></a>
-<a class="sourceLine" id="cb186-5" data-line-number="5"><span class="st">    </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Put output in clean format</span></a>
-<a class="sourceLine" id="cb186-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(<span class="kw">abs</span>(statistic) <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>)  <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Keep highly significant predictors only</span></a>
-<a class="sourceLine" id="cb186-7" data-line-number="7"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb186-8" data-line-number="8">                 <span class="dt">caption =</span> <span class="st">&quot;Significant predictors in the training sample.&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1"><span class="kw">library</span>(broom)                            <span class="co"># Package for clean regression output </span></a>
+<a class="sourceLine" id="cb187-2" data-line-number="2">training_sample <span class="op">%&gt;%</span><span class="st">    </span></a>
+<a class="sourceLine" id="cb187-3" data-line-number="3"><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(features,  <span class="st">&quot;R1M_Usd&quot;</span>)) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># List of variables</span></a>
+<a class="sourceLine" id="cb187-4" data-line-number="4"><span class="st">    </span><span class="kw">lm</span>(R1M_Usd <span class="op">~</span><span class="st"> </span>. , <span class="dt">data =</span> .) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Model: predict R1M_Usd</span></a>
+<a class="sourceLine" id="cb187-5" data-line-number="5"><span class="st">    </span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Put output in clean format</span></a>
+<a class="sourceLine" id="cb187-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(<span class="kw">abs</span>(statistic) <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>)  <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Keep highly significant predictors only</span></a>
+<a class="sourceLine" id="cb187-7" data-line-number="7"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb187-8" data-line-number="8">                 <span class="dt">caption =</span> <span class="st">&quot;Significant predictors in the training sample.&quot;</span>) </a></code></pre></div>
 <table>
 <caption><span id="tab:regbroom">TABLE 16.1: </span>Significant predictors in the training sample.</caption>
 <thead>
@@ -628,10 +628,10 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 <p>The matrix <span class="math inline">\(\textbf{Y}\)</span> is a linear transformation of <span class="math inline">\(\textbf{X}\)</span>, thus, it is expected to carry the same information, even though this information is coded differently. Since the columns are ordered according to their relative importance, it is simple to omit some of them. The new set of features <span class="math inline">\(\tilde{\textbf{X}}\)</span> consists in the first <span class="math inline">\(K&#39;\)</span> (with <span class="math inline">\(K&#39;&lt;K\)</span>) columns of <span class="math inline">\(\textbf{Y}\)</span>.</p>
 <p>Below, we show how to perform PCA and visualize the output with the <em>factoextra</em> package. To ease readability, we use the smaller sample with few predictors.</p>
 
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">pca &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb187-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Smaller number of predictors</span></a>
-<a class="sourceLine" id="cb187-3" data-line-number="3"><span class="st">    </span><span class="kw">prcomp</span>()                      <span class="co"># Performs PCA</span></a>
-<a class="sourceLine" id="cb187-4" data-line-number="4">pca                               <span class="co"># Show the result</span></a></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1">pca &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb188-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Smaller number of predictors</span></a>
+<a class="sourceLine" id="cb188-3" data-line-number="3"><span class="st">    </span><span class="kw">prcomp</span>()                      <span class="co"># Performs PCA</span></a>
+<a class="sourceLine" id="cb188-4" data-line-number="4">pca                               <span class="co"># Show the result</span></a></code></pre></div>
 <pre><code>## Standard deviations (1, .., p=7):
 ## [1] 0.4536601 0.3344080 0.2994393 0.2452000 0.2352087 0.2010782 0.1140988
 ## 
@@ -656,23 +656,23 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 <p>The rotation gives the matrix <span class="math inline">\(\textbf{P}\)</span>: it’s the tool that changes the base. The first row of the output indicates the standard deviation of each new factor (column). Each factor is indicated via a PC index (principal component). Often, the first PC loads positively on all initial columns: a convex weighted average of all features is expected to carry a lot of information. In the above example, it is almost the case, with the exception of volatility, which has a negative coefficient in the first PC.</p>
 <p>Sometimes, it can be useful to visualize the way the principal components are builts. We show one popular representation that is used for two factors (usually the first two).</p>
 
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1"><span class="kw">library</span>(factoextra)                      <span class="co"># Package for PCA visualization</span></a>
-<a class="sourceLine" id="cb189-2" data-line-number="2"><span class="kw">fviz_pca_var</span>(pca,                        <span class="co"># Source of PCA decomposition</span></a>
-<a class="sourceLine" id="cb189-3" data-line-number="3">             <span class="dt">col.var=</span><span class="st">&quot;contrib&quot;</span>,          </a>
-<a class="sourceLine" id="cb189-4" data-line-number="4">             <span class="dt">gradient.cols =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</a>
-<a class="sourceLine" id="cb189-5" data-line-number="5">             <span class="dt">repel =</span> <span class="ot">TRUE</span>                <span class="co"># Avoid text overlapping</span></a>
-<a class="sourceLine" id="cb189-6" data-line-number="6">)</a></code></pre></div>
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="kw">library</span>(factoextra)                      <span class="co"># Package for PCA visualization</span></a>
+<a class="sourceLine" id="cb190-2" data-line-number="2"><span class="kw">fviz_pca_var</span>(pca,                        <span class="co"># Source of PCA decomposition</span></a>
+<a class="sourceLine" id="cb190-3" data-line-number="3">             <span class="dt">col.var=</span><span class="st">&quot;contrib&quot;</span>,          </a>
+<a class="sourceLine" id="cb190-4" data-line-number="4">             <span class="dt">gradient.cols =</span> <span class="kw">c</span>(<span class="st">&quot;#00AFBB&quot;</span>, <span class="st">&quot;#E7B800&quot;</span>, <span class="st">&quot;#FC4E07&quot;</span>),</a>
+<a class="sourceLine" id="cb190-5" data-line-number="5">             <span class="dt">repel =</span> <span class="ot">TRUE</span>                <span class="co"># Avoid text overlapping</span></a>
+<a class="sourceLine" id="cb190-6" data-line-number="6">)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/pca2-1.png" width="330px" height="200px" style="display: block; margin: auto;" /></p>
 <p></p>
 <p>The plot shows that no initial factor has negative signs for the first two principal components. Volatility is negative for the first one and earnings per share and dividend yield are negative for the second. The numbers indicated along the axes are the proportion of explained variance of each PC. Compared to the figures in the first line of the output, the numbers are squared and then divided by the total sum of squares.</p>
 <p>Once the rotation is known, it is possible to select a subsample of the transformed data. From the original 7 features, it is easy to pick just 4.</p>
 
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1">training_sample <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Start from large sample</span></a>
-<a class="sourceLine" id="cb190-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st">                </span><span class="co"># Keep only 7 features</span></a>
-<a class="sourceLine" id="cb190-3" data-line-number="3"><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Transform in matrix</span></a>
-<a class="sourceLine" id="cb190-4" data-line-number="4"><span class="st">    </span><span class="kw">multiply_by_matrix</span>(pca<span class="op">$</span>rotation[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Rotate via PCA (first 4 columns of P)</span></a>
-<a class="sourceLine" id="cb190-5" data-line-number="5"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(<span class="kw">c</span>(<span class="st">&quot;PC1&quot;</span>, <span class="st">&quot;PC2&quot;</span>, <span class="st">&quot;PC3&quot;</span>, <span class="st">&quot;PC4&quot;</span>)) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Change column names</span></a>
-<a class="sourceLine" id="cb190-6" data-line-number="6"><span class="st">    </span><span class="kw">head</span>()                                           <span class="co"># Show first 6 lines</span></a></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1">training_sample <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Start from large sample</span></a>
+<a class="sourceLine" id="cb191-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st">                </span><span class="co"># Keep only 7 features</span></a>
+<a class="sourceLine" id="cb191-3" data-line-number="3"><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Transform in matrix</span></a>
+<a class="sourceLine" id="cb191-4" data-line-number="4"><span class="st">    </span><span class="kw">multiply_by_matrix</span>(pca<span class="op">$</span>rotation[,<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>]) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Rotate via PCA (first 4 columns of P)</span></a>
+<a class="sourceLine" id="cb191-5" data-line-number="5"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(<span class="kw">c</span>(<span class="st">&quot;PC1&quot;</span>, <span class="st">&quot;PC2&quot;</span>, <span class="st">&quot;PC3&quot;</span>, <span class="st">&quot;PC4&quot;</span>)) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Change column names</span></a>
+<a class="sourceLine" id="cb191-6" data-line-number="6"><span class="st">    </span><span class="kw">head</span>()                                           <span class="co"># Show first 6 lines</span></a></code></pre></div>
 <pre><code>##            PC1       PC2         PC3       PC4
 ## [1,] 0.3989674 0.7578132 -0.13915223 0.3132578
 ## [2,] 0.4284697 0.7587274 -0.40164338 0.3745255
@@ -709,36 +709,36 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 <h3><span class="header-section-number">16.2.4</span> Application</h3>
 <p>Auto-encoders are easy to code in Keras. To underline the power of the framework, we resort to another way of coding a NN: the so-called functional API. For simplicity, we work with the small number of predictors (7). The structure of the network consists of two symmetric networks with only one intermediate layer containing 32 units. The activation function is sigmoid: this makes sense since the input have values in the unit interval.</p>
 
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1">input_layer &lt;-<span class="st"> </span><span class="kw">layer_input</span>(<span class="dt">shape =</span> <span class="kw">c</span>(<span class="dv">7</span>))    <span class="co"># features_short has 7 columns </span></a>
-<a class="sourceLine" id="cb192-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb192-3" data-line-number="3">encoder &lt;-<span class="st"> </span>input_layer <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># First, encode</span></a>
-<a class="sourceLine" id="cb192-4" data-line-number="4"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">32</span>, <span class="dt">activation =</span> <span class="st">&quot;sigmoid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb192-5" data-line-number="5"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">4</span>)       <span class="co"># 4 dimensions for the output layer (same as PCA example)</span></a>
-<a class="sourceLine" id="cb192-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb192-7" data-line-number="7">decoder &lt;-<span class="st"> </span>encoder <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Then, from encoder, decode</span></a>
-<a class="sourceLine" id="cb192-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">32</span>, <span class="dt">activation =</span> <span class="st">&quot;sigmoid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb192-9" data-line-number="9"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">7</span>)       <span class="co"># the original sample has 7 features</span></a></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1">input_layer &lt;-<span class="st"> </span><span class="kw">layer_input</span>(<span class="dt">shape =</span> <span class="kw">c</span>(<span class="dv">7</span>))    <span class="co"># features_short has 7 columns </span></a>
+<a class="sourceLine" id="cb193-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb193-3" data-line-number="3">encoder &lt;-<span class="st"> </span>input_layer <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># First, encode</span></a>
+<a class="sourceLine" id="cb193-4" data-line-number="4"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">32</span>, <span class="dt">activation =</span> <span class="st">&quot;sigmoid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb193-5" data-line-number="5"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">4</span>)       <span class="co"># 4 dimensions for the output layer (same as PCA example)</span></a>
+<a class="sourceLine" id="cb193-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb193-7" data-line-number="7">decoder &lt;-<span class="st"> </span>encoder <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Then, from encoder, decode</span></a>
+<a class="sourceLine" id="cb193-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">32</span>, <span class="dt">activation =</span> <span class="st">&quot;sigmoid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb193-9" data-line-number="9"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">7</span>)       <span class="co"># the original sample has 7 features</span></a></code></pre></div>
 <p></p>
 <p>In the training part, we optimize the MSE and use an Adam update of the weights (see Section <a href="NN.html#backprop">8.2.3</a>).</p>
 
-<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb193-1" data-line-number="1">ae_model &lt;-<span class="st"> </span><span class="kw">keras_model</span>(<span class="dt">inputs =</span> input_layer, <span class="dt">outputs =</span> decoder) <span class="co"># Builds the model</span></a>
-<a class="sourceLine" id="cb193-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb193-3" data-line-number="3">ae_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(                <span class="co"># Learning parameters</span></a>
-<a class="sourceLine" id="cb193-4" data-line-number="4">    <span class="dt">loss =</span> <span class="st">&#39;mean_squared_error&#39;</span>,</a>
-<a class="sourceLine" id="cb193-5" data-line-number="5">    <span class="dt">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</a>
-<a class="sourceLine" id="cb193-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)</a>
-<a class="sourceLine" id="cb193-7" data-line-number="7">)</a></code></pre></div>
+<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1">ae_model &lt;-<span class="st"> </span><span class="kw">keras_model</span>(<span class="dt">inputs =</span> input_layer, <span class="dt">outputs =</span> decoder) <span class="co"># Builds the model</span></a>
+<a class="sourceLine" id="cb194-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb194-3" data-line-number="3">ae_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(                <span class="co"># Learning parameters</span></a>
+<a class="sourceLine" id="cb194-4" data-line-number="4">    <span class="dt">loss =</span> <span class="st">&#39;mean_squared_error&#39;</span>,</a>
+<a class="sourceLine" id="cb194-5" data-line-number="5">    <span class="dt">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</a>
+<a class="sourceLine" id="cb194-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)</a>
+<a class="sourceLine" id="cb194-7" data-line-number="7">)</a></code></pre></div>
 <p></p>
 <p>Finally, we are ready to train the data onto itself!</p>
 
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb194-1" data-line-number="1">fit_ae &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb194-2" data-line-number="2"><span class="st">    </span><span class="kw">fit</span>(training_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>(),  <span class="co"># Input</span></a>
-<a class="sourceLine" id="cb194-3" data-line-number="3">        training_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>(),  <span class="co"># Output</span></a>
-<a class="sourceLine" id="cb194-4" data-line-number="4">        <span class="dt">epochs =</span> <span class="dv">15</span>, <span class="dt">batch_size =</span> <span class="dv">512</span>,</a>
-<a class="sourceLine" id="cb194-5" data-line-number="5">        <span class="dt">validation_data =</span> <span class="kw">list</span>(testing_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>(), </a>
-<a class="sourceLine" id="cb194-6" data-line-number="6">                               testing_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>())</a>
-<a class="sourceLine" id="cb194-7" data-line-number="7">    )</a>
-<a class="sourceLine" id="cb194-8" data-line-number="8"><span class="kw">plot</span>(fit_ae) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1">fit_ae &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb195-2" data-line-number="2"><span class="st">    </span><span class="kw">fit</span>(training_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>(),  <span class="co"># Input</span></a>
+<a class="sourceLine" id="cb195-3" data-line-number="3">        training_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>(),  <span class="co"># Output</span></a>
+<a class="sourceLine" id="cb195-4" data-line-number="4">        <span class="dt">epochs =</span> <span class="dv">15</span>, <span class="dt">batch_size =</span> <span class="dv">512</span>,</a>
+<a class="sourceLine" id="cb195-5" data-line-number="5">        <span class="dt">validation_data =</span> <span class="kw">list</span>(testing_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>(), </a>
+<a class="sourceLine" id="cb195-6" data-line-number="6">                               testing_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>())</a>
+<a class="sourceLine" id="cb195-7" data-line-number="7">    )</a>
+<a class="sourceLine" id="cb195-8" data-line-number="8"><span class="kw">plot</span>(fit_ae) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:aekeras3"></span>
 <img src="ML_factor_files/figure-html/aekeras3-1.png" alt="Output from the training of an auto-encoder." width="400px" />
 <p class="caption">
@@ -748,7 +748,7 @@ FIGURE 16.1: Output from the training of an auto-encoder.
 <p></p>
 <p>In order to get the details of all weights and biases, the syntax is the following.</p>
 
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb195-1" data-line-number="1">ae_weights &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">get_weights</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1">ae_weights &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">get_weights</span>()</a></code></pre></div>
 <p></p>
 <p>Retrieving the encoder and processing the data into the compressed format is just a matter of matrix manipulation (see exercise below).</p>
 </div>
@@ -775,16 +775,16 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 </ol>
 <p>Below, we illustrate this process with an example. From all 93 features, we build 10 clusters.</p>
 
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)                               <span class="co"># Setting the random seed (the optimization is random)</span></a>
-<a class="sourceLine" id="cb196-2" data-line-number="2">k_means &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Performs the k-means clustering</span></a>
-<a class="sourceLine" id="cb196-3" data-line-number="3"><span class="st">    </span><span class="kw">select</span>(features) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb196-4" data-line-number="4"><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb196-5" data-line-number="5"><span class="st">    </span><span class="kw">t</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb196-6" data-line-number="6"><span class="st">    </span><span class="kw">kmeans</span>(<span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb196-7" data-line-number="7">clusters &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">factor =</span> <span class="kw">names</span>(k_means<span class="op">$</span>cluster),   <span class="co"># Organize the cluster data</span></a>
-<a class="sourceLine" id="cb196-8" data-line-number="8">                   <span class="dt">cluster =</span> k_means<span class="op">$</span>cluster) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb196-9" data-line-number="9"><span class="st">    </span><span class="kw">arrange</span>(cluster)</a>
-<a class="sourceLine" id="cb196-10" data-line-number="10">clusters <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(cluster <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)                     <span class="co"># Shows one particular group</span></a></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)                               <span class="co"># Setting the random seed (the optimization is random)</span></a>
+<a class="sourceLine" id="cb197-2" data-line-number="2">k_means &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Performs the k-means clustering</span></a>
+<a class="sourceLine" id="cb197-3" data-line-number="3"><span class="st">    </span><span class="kw">select</span>(features) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb197-4" data-line-number="4"><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb197-5" data-line-number="5"><span class="st">    </span><span class="kw">t</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb197-6" data-line-number="6"><span class="st">    </span><span class="kw">kmeans</span>(<span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb197-7" data-line-number="7">clusters &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">factor =</span> <span class="kw">names</span>(k_means<span class="op">$</span>cluster),   <span class="co"># Organize the cluster data</span></a>
+<a class="sourceLine" id="cb197-8" data-line-number="8">                   <span class="dt">cluster =</span> k_means<span class="op">$</span>cluster) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb197-9" data-line-number="9"><span class="st">    </span><span class="kw">arrange</span>(cluster)</a>
+<a class="sourceLine" id="cb197-10" data-line-number="10">clusters <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(cluster <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)                     <span class="co"># Shows one particular group</span></a></code></pre></div>
 <pre><code>## # A tibble: 20 x 2
 ##    factor                         cluster
 ##    &lt;chr&gt;                            &lt;int&gt;
@@ -833,14 +833,14 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 <p>For the choice of optimal <span class="math inline">\(k\)</span>, several complicated techniques and criteria exists (see, e.g., <span class="citation">Ghosh (<a href="#ref-ghosh2006optimum">2006</a>)</span> and <span class="citation">Hall et al. (<a href="#ref-hall2008choice">2008</a>)</span>). Heuristic values often do the job pretty well. A rule of thumb is that <span class="math inline">\(k=\sqrt{I}\)</span> (<span class="math inline">\(I\)</span> being the total number of instances) is not too far from the optimal value, unless <span class="math inline">\(I\)</span> is exceedingly large.</p>
 <p>Below, we illustrate this concept. We pick one date (31th of December 2006) and single out one asset (with stock_id equal to 13). We then seek to find the <span class="math inline">\(k=30\)</span> stocks that are the closest to this asset at this particular date. We resort to the <em>FNN</em> package that propose an efficient computation of Euclidean distances (and their ordering).</p>
 
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="kw">library</span>(FNN)     <span class="co"># Package for Fast Nearest Neighbors detection</span></a>
-<a class="sourceLine" id="cb198-2" data-line-number="2">knn_data &lt;-<span class="st"> </span><span class="kw">filter</span>(data_ml, date <span class="op">==</span><span class="st"> &quot;2006-12-31&quot;</span>)    <span class="co"># Dataset for k-NN exercise</span></a>
-<a class="sourceLine" id="cb198-3" data-line-number="3">knn_target &lt;-<span class="st"> </span><span class="kw">filter</span>(knn_data, stock_id <span class="op">==</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Target observation</span></a>
-<a class="sourceLine" id="cb198-4" data-line-number="4"><span class="st">              </span><span class="kw">select</span>(features)</a>
-<a class="sourceLine" id="cb198-5" data-line-number="5">knn_sample &lt;-<span class="st"> </span><span class="kw">filter</span>(knn_data, stock_id <span class="op">!=</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># All other observations</span></a>
-<a class="sourceLine" id="cb198-6" data-line-number="6"><span class="st">              </span><span class="kw">select</span>(features)</a>
-<a class="sourceLine" id="cb198-7" data-line-number="7">neighbors &lt;-<span class="st"> </span><span class="kw">get.knnx</span>(<span class="dt">data =</span> knn_sample, <span class="dt">query =</span> knn_target, <span class="dt">k =</span> <span class="dv">30</span>) </a>
-<a class="sourceLine" id="cb198-8" data-line-number="8">neighbors<span class="op">$</span>nn.index                                   <span class="co"># Indices of the k nearest neighbors</span></a></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="kw">library</span>(FNN)     <span class="co"># Package for Fast Nearest Neighbors detection</span></a>
+<a class="sourceLine" id="cb199-2" data-line-number="2">knn_data &lt;-<span class="st"> </span><span class="kw">filter</span>(data_ml, date <span class="op">==</span><span class="st"> &quot;2006-12-31&quot;</span>)    <span class="co"># Dataset for k-NN exercise</span></a>
+<a class="sourceLine" id="cb199-3" data-line-number="3">knn_target &lt;-<span class="st"> </span><span class="kw">filter</span>(knn_data, stock_id <span class="op">==</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Target observation</span></a>
+<a class="sourceLine" id="cb199-4" data-line-number="4"><span class="st">              </span><span class="kw">select</span>(features)</a>
+<a class="sourceLine" id="cb199-5" data-line-number="5">knn_sample &lt;-<span class="st"> </span><span class="kw">filter</span>(knn_data, stock_id <span class="op">!=</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># All other observations</span></a>
+<a class="sourceLine" id="cb199-6" data-line-number="6"><span class="st">              </span><span class="kw">select</span>(features)</a>
+<a class="sourceLine" id="cb199-7" data-line-number="7">neighbors &lt;-<span class="st"> </span><span class="kw">get.knnx</span>(<span class="dt">data =</span> knn_sample, <span class="dt">query =</span> knn_target, <span class="dt">k =</span> <span class="dv">30</span>) </a>
+<a class="sourceLine" id="cb199-8" data-line-number="8">neighbors<span class="op">$</span>nn.index                                   <span class="co"># Indices of the k nearest neighbors</span></a></code></pre></div>
 <pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13]
 ## [1,]  905  876  730  548 1036  501  335  117  789    54   618   130   342
 ##      [,14] [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24]
@@ -850,11 +850,11 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 <p></p>
 <p>Once the neighbors and distances are known, we can compute a prediction for the return of the target stock. We use the function <span class="math inline">\(h(z)=e^{-z}\)</span> for the weighting of instances (via the distances).</p>
 
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" data-line-number="1">knn_labels &lt;-<span class="st"> </span>knn_data[neighbors<span class="op">$</span>nn.index,] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(R1M_Usd)           <span class="co"># y values for the neighbors</span></a>
-<a class="sourceLine" id="cb200-2" data-line-number="2"><span class="kw">sum</span>(knn_labels <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist)))  <span class="co"># Prediction for k(z)=exp(-z)</span></a></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1">knn_labels &lt;-<span class="st"> </span>knn_data[neighbors<span class="op">$</span>nn.index,] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(R1M_Usd)           <span class="co"># y values for the neighbors</span></a>
+<a class="sourceLine" id="cb201-2" data-line-number="2"><span class="kw">sum</span>(knn_labels <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist)))  <span class="co"># Prediction for k(z)=exp(-z)</span></a></code></pre></div>
 <pre><code>## [1] 0.003042282</code></pre>
-<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb202-1" data-line-number="1"><span class="kw">filter</span>(knn_data, stock_id <span class="op">==</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># True y (to check the error)</span></a>
-<a class="sourceLine" id="cb202-2" data-line-number="2"><span class="st">              </span><span class="kw">select</span>(R1M_Usd)</a></code></pre></div>
+<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1"><span class="kw">filter</span>(knn_data, stock_id <span class="op">==</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># True y (to check the error)</span></a>
+<a class="sourceLine" id="cb203-2" data-line-number="2"><span class="st">              </span><span class="kw">select</span>(R1M_Usd)</a></code></pre></div>
 <pre><code>## # A tibble: 1 x 1
 ##   R1M_Usd
 ##     &lt;dbl&gt;
@@ -918,9 +918,9 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": true,
+"github": false,
 "facebook": false,
-"twitter": false,
+"twitter": true,
 "google": false,
 "linkedin": true,
 "weibo": false,

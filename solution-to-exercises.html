@@ -214,7 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
 <li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-2"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#boosted-trees-adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
 <li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
 <li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
 </ul></li>
@@ -429,15 +429,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">B.1</span> Chapter 4</h2>
 <p>For annual values:
 </p>
-<div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb212-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
-<a class="sourceLine" id="cb212-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Creates the sort</span></a>
-<a class="sourceLine" id="cb212-4" data-line-number="4"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Ungroup</span></a>
-<a class="sourceLine" id="cb212-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Creates a year variable</span></a>
-<a class="sourceLine" id="cb212-6" data-line-number="6"><span class="st">    </span><span class="kw">group_by</span>(year, growth) <span class="op">%&gt;%</span><span class="st">                      </span><span class="co"># Analyze by year &amp; sort</span></a>
-<a class="sourceLine" id="cb212-7" data-line-number="7"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Compute average return</span></a>
-<a class="sourceLine" id="cb212-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> ret, <span class="dt">fill =</span> growth)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># Plot!</span></a>
-<a class="sourceLine" id="cb212-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb213-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
+<a class="sourceLine" id="cb213-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Creates the sort</span></a>
+<a class="sourceLine" id="cb213-4" data-line-number="4"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Ungroup</span></a>
+<a class="sourceLine" id="cb213-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Creates a year variable</span></a>
+<a class="sourceLine" id="cb213-6" data-line-number="6"><span class="st">    </span><span class="kw">group_by</span>(year, growth) <span class="op">%&gt;%</span><span class="st">                      </span><span class="co"># Analyze by year &amp; sort</span></a>
+<a class="sourceLine" id="cb213-7" data-line-number="7"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb213-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> ret, <span class="dt">fill =</span> growth)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># Plot!</span></a>
+<a class="sourceLine" id="cb213-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex41b"></span>
 <img src="ML_factor_files/figure-html/ex41b-1.png" alt="The value factor: annual returns" width="400px" height="150px" />
 <p class="caption">
@@ -447,20 +447,20 @@ FIGURE B.1: The value factor: annual returns
 <p></p>
 <p>For monthly values:
 </p>
-<div class="sourceCode" id="cb213"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb213-1" data-line-number="1">returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb213-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
-<a class="sourceLine" id="cb213-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Creates the sort</span></a>
-<a class="sourceLine" id="cb213-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, growth) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Analyze by date &amp; sort</span></a>
-<a class="sourceLine" id="cb213-5" data-line-number="5"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Compute average return</span></a>
-<a class="sourceLine" id="cb213-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> growth, <span class="dt">value =</span> ret) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Pivot to wide matrix format</span></a>
-<a class="sourceLine" id="cb213-7" data-line-number="7"><span class="st">    </span><span class="kw">ungroup</span>()</a>
-<a class="sourceLine" id="cb213-8" data-line-number="8"><span class="kw">colnames</span>(returns)[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;growth&quot;</span>)                     <span class="co"># Changing column names</span></a>
-<a class="sourceLine" id="cb213-9" data-line-number="9">returns <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb213-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>value),                             <span class="co"># From returns to portf. values</span></a>
-<a class="sourceLine" id="cb213-11" data-line-number="11">           <span class="dt">growth =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>growth)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb213-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> portfolio, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Back in tidy format</span></a>
-<a class="sourceLine" id="cb213-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> portfolio)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st">     </span><span class="co"># Plot!  </span></a>
-<a class="sourceLine" id="cb213-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb214"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb214-1" data-line-number="1">returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb214-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
+<a class="sourceLine" id="cb214-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Creates the sort</span></a>
+<a class="sourceLine" id="cb214-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, growth) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Analyze by date &amp; sort</span></a>
+<a class="sourceLine" id="cb214-5" data-line-number="5"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb214-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> growth, <span class="dt">value =</span> ret) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Pivot to wide matrix format</span></a>
+<a class="sourceLine" id="cb214-7" data-line-number="7"><span class="st">    </span><span class="kw">ungroup</span>()</a>
+<a class="sourceLine" id="cb214-8" data-line-number="8"><span class="kw">colnames</span>(returns)[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;growth&quot;</span>)                     <span class="co"># Changing column names</span></a>
+<a class="sourceLine" id="cb214-9" data-line-number="9">returns <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb214-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>value),                             <span class="co"># From returns to portf. values</span></a>
+<a class="sourceLine" id="cb214-11" data-line-number="11">           <span class="dt">growth =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>growth)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb214-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> portfolio, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Back in tidy format</span></a>
+<a class="sourceLine" id="cb214-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> portfolio)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st">     </span><span class="co"># Plot!  </span></a>
+<a class="sourceLine" id="cb214-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex41"></span>
 <img src="ML_factor_files/figure-html/ex41-1.png" alt="The value factor: portfolio values." width="400px" height="150px" />
 <p class="caption">
@@ -518,9 +518,9 @@ FIGURE B.2: The value factor: portfolio values.
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": true,
+"github": false,
 "facebook": false,
-"twitter": false,
+"twitter": true,
 "google": false,
 "linkedin": true,
 "weibo": false,

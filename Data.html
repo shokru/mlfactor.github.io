@@ -214,7 +214,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
 <li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-2"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
 </ul></li>
-<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#boosted-trees-adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
 <li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
 <li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
 </ul></li>
@@ -428,21 +428,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two references: Chapter 3 from the general purpose ML book <span class="citation">Boehmke and Greenwell (<a href="#ref-boehmke2019hands">2019</a>)</span> and the monograph on this dedicated subject: <span class="citation">Kuhn and Johnson (<a href="#ref-kuhn2019feature">2019</a>)</span>.</p>
 <div id="know-your-data" class="section level2">
 <h2><span class="header-section-number">5.1</span> Know your data</h2>
-<p>The first step, as in any quantitative study, is obviously to make sure the data is trustworthy, i.e., comes from a reliable provider. The landscape in financial data provision is vast to say the least: some providers are well established (e.g., Bloomberg, Thomson-Reuters, Datastream, CRSP, Morningstar), some are more recent (e.g., Capital IQ, Ravenpack) and some focus on alternative data niches (see <a href="https://alternativedata.org/data-providers/" class="uri">https://alternativedata.org/data-providers/</a> for an exhaustive list). To the best of our knowledge, no study has been published that evaluates a large spectrum of these providers in terms of data reliability.</p>
-<p>The second step is to have a look at <strong>summary statistics</strong>: ranges (minimum and maximum values), and averages and medians. Histograms or plots of time-series carry of course more information but cannot be analyzed properly in high dimensions. They are sometimes useful to track local patterns or errors for a given stock and a particular feature.
+<p>The first step, as in any quantitative study, is obviously to make sure the data is trustworthy, i.e., comes from a reliable provider. The landscape in financial data provision is vast to say the least: some providers are well established (e.g., Bloomberg, Thomson-Reuters, Datastream, CRSP, Morningstar), some are more recent (e.g., Capital IQ, Ravenpack) and some focus on alternative data niches (see <a href="https://alternativedata.org/data-providers/" class="uri">https://alternativedata.org/data-providers/</a> for an exhaustive list). Unfortunately, and to the best of our knowledge, no study has been published that evaluates a large spectrum of these providers in terms of data reliability.</p>
+<p>The second step is to have a look at <strong>summary statistics</strong>: ranges (minimum and maximum values), and averages and medians. Histograms or plots of time-series carry of course more information but cannot be analyzed properly in high dimensions. They are nonetheless sometimes useful to track local patterns or errors for a given stock and a particular feature.
 Beyond first order moments, second order quantities (variances and covariances/correlations) also matter because they help spot colinearities. When two features are highly correlated, problems may arise in some models (e.g., simple regressions, see Section <a href="unsup.html#corpred">16.1</a>).</p>
-<p>Often, the number of predictors is so large that it is unpractical to look at these simple metrics. A minimal verification is nonetheless compulsory. To further ease the analysis:</p>
+<p>Often, the number of predictors is so large that it is unpractical to look at these simple metrics. A minimal verification is recommended. To further ease the analysis:</p>
 <ul>
 <li>focus on a subset of predictors, e.g., the ones linked to the most common factors (market-capitalization, price-to-book or book-to-market, momentum (past returns), profitability, asset growth, volatility);<br />
 </li>
-<li>focus on outliers in the summary statistics (when the maximum/median or median/minimum ratios seem suspicious).</li>
+<li>track outliers in the summary statistics (when the maximum/median or median/minimum ratios seem suspicious).</li>
 </ul>
-<p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the squared error is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>):
+<p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>):
 <span class="math display">\[\begin{equation}
 f(x)=\mathbb{E}[Y|X=x].
 \label{eq:regfun}
 \end{equation}\]</span></p>
-<p>In Figure <a href="Data.html#fig:regfun">5.1</a>, we plot two illustrations of this function when the dependent variable is the one month ahead return. The first one pertains to the average market capitalization over the past year and the second to the volatility over the past year as well. Both predictors have been uniformized (see Section <a href="Data.html#scaling">5.4.2</a> below) so that their values are uniformly distributed in the cross-section of assets for any given time period. Thus, the range of features is <span class="math inline">\([0,1]\)</span> and is shown on the <span class="math inline">\(x\)</span>-axis of the plot.</p>
+<p>In Figure <a href="Data.html#fig:regfun">5.1</a>, we plot two illustrations of this function when the dependent variable is the one month ahead return. The first one pertains to the average market capitalization over the past year and the second to the volatility over the past year as well. Both predictors have been uniformized (see Section <a href="Data.html#scaling">5.4.2</a> below) so that their values are uniformly distributed in the cross-section of assets for any given time period. Thus, the range of features is <span class="math inline">\([0,1]\)</span> and is shown on the <span class="math inline">\(x\)</span>-axis of the plot. The grey corridors around the lines show 95% level confidence interval for the computation of the mean. Essentially, it is narrow when both many data points are available and they are not too dispersed.</p>
 
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st">                                                      </span><span class="co"># From dataset:</span></a>
 <a class="sourceLine" id="cb15-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> R1M_Usd)) <span class="op">+</span><span class="st">                                     </span><span class="co"># Plot</span></a>
@@ -516,7 +516,11 @@ FIGURE 5.1: Conditional expecations: average returns as smooth functions of feat
 </tr>
 </tbody>
 </table>
-<p>In this case, the yield is released quarterly, in March, June, September, etc. But in June, the value is missing. The problem is that we cannot know if it is missing because of a genuine data glitch, or because the firm simply did not pay any dividends in June. Thus, imputation from past value may be erroneous here.</p>
+<p>In this case, the yield is released quarterly, in March, June, September, etc. But in June, the value is missing. The problem is that we cannot know if it is missing because of a genuine data glitch, or because the firm simply did not pay any dividends in June. Thus, imputation from past value may be erroneous here. There is no perfect solution but a decision must nevertheless be taken. For dividend data, three options are:<br />
+1) Keep the previous value.<br />
+2) Extrapolate from previous observations (this is very different from <strong>inter</strong>polation): for instance, evaluate a trend and pursue that trend.
+3) Set the value to zero. This is tempting but may be sub-optimal due to dividend smoothing practices from executives (see for instance <span class="citation">Leary and Michaely (<a href="#ref-leary2011determinants">2011</a>)</span> and <span class="citation">Chen, Da, and Priestley (<a href="#ref-chen2012dividend">2012</a>)</span> for details on the subject). For persistent time-series, the first two options are probably better.</p>
+<p>Tests can be perform to evaluate the relative performance of each option. It is also important to <strong>remember</strong> these design choices. There are so many of them that they are easy to forget. Keeping track of them is obviously compulsory. In the ML pipeline, the scripts pertaining to data preparation are often key because they do not serve only once!</p>
 </div>
 <div id="outlier-detection" class="section level2">
 <h2><span class="header-section-number">5.3</span> Outlier detection</h2>
@@ -959,6 +963,12 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 <div id="ref-garcia2009k">
 <p>Garcı'a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı'bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9). Elsevier: 1483–93.</p>
 </div>
+<div id="ref-leary2011determinants">
+<p>Leary, Mark T, and Roni Michaely. 2011. “Determinants of Dividend Smoothing: Empirical Evidence.” <em>Review of Financial Studies</em> 24 (10): 3197–3249.</p>
+</div>
+<div id="ref-chen2012dividend">
+<p>Chen, Long, Zhi Da, and Richard Priestley. 2012. “Dividend Smoothing and Predictability.” <em>Management Science</em> 58 (10): 1834–53.</p>
+</div>
 <div id="ref-hodge2004survey">
 <p>Hodge, Victoria, and Jim Austin. 2004. “A Survey of Outlier Detection Methodologies.” <em>Artificial Intelligence Review</em> 22 (2): 85–126.</p>
 </div>
@@ -1032,9 +1042,9 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": {
-"github": true,
+"github": false,
 "facebook": false,
-"twitter": false,
+"twitter": true,
 "google": false,
 "linkedin": true,
 "weibo": false,
