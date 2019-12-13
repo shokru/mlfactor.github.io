@@ -538,14 +538,14 @@ FIGURE 14.2: Variable importance for a ridge regression model.
 <h3><span class="header-section-number">14.1.3</span> Partial dependence plot</h3>
 <p>Partial dependence plots (PDPs) aim at showing the relationship between the output of a model and the value of a feature (we refer to section 8.2 of <span class="citation">Friedman (<a href="#ref-friedman2001greedy">2001</a>)</span> for an early treatment of this subject).</p>
 <p>Let us fix a feature <span class="math inline">\(k\)</span>. We want to understand the average impact of <span class="math inline">\(k\)</span> on the predictions of the trained model <span class="math inline">\(\hat{f}\)</span>. In order to do so, we assume that the feature space is random and we split it in two: <span class="math inline">\(k\)</span> versus <span class="math inline">\(-k\)</span>, which stands for all features except for <span class="math inline">\(k\)</span>. The partial dependence plot is defined as</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:pdp">\[\begin{equation}
+\tag{14.1} 
 \bar{f}_k(x_k)=\mathbb{E}[\hat{f}(\textbf{x}_{-k},x_k)]=\int \hat{f}(\textbf{x}_{-k},x_k)d\mathbb{P}_{-k}(\textbf{x}_{-k}),
-\label{eq:pdp}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(d\mathbb{P}_{-k}(\cdot)\)</span> is the (multivariate) distribution of the non-<span class="math inline">\(k\)</span> features <span class="math inline">\(\textbf{x}_{-k}\)</span>. In practice, this average is evaluated using Monte-Carlo simulations:</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:pdpMC">\[\begin{equation}
+\tag{14.2} 
 \bar{f}_k(x_k)\approx \frac{1}{M}\sum_{m=1}^M\hat{f}\left(x_k,\textbf{x}_{-k}^{(m)}\right),
-\label{eq:pdpMC}
 \end{equation}\]</span>
 where <span class="math inline">\(\textbf{x}_{-k}^{(m)}\)</span> are independent samples of the non-<span class="math inline">\(k\)</span> features.</p>
 <p>Theoretically, PDPs could be computed for more than one feature at a time. In practice, this is only possible for two features (yielding a 3D surface) and is more computationally intense.</p>
@@ -642,9 +642,9 @@ Another possible choice would be the Manhattan distance:
 <h3><span class="header-section-number">14.2.2</span> Shapley values</h3>
 <p>The approach of Shapley values is somewhat different compared to LIME and closer in spirit to PDPs. It originates from cooperative game theory (<span class="citation">Shapley (<a href="#ref-shapley1953value">1953</a>)</span>). The rationale is the following. One way to assess the impact (or usefulness) of a variable is to look at what happens if we remove this variable from the dataset. If this is very detrimental to the quality to the model (i.e., to its predictions), then it means that the variable is substantially valuable.</p>
 <p>The simplest way to proceed is to take all variables and remove one to evaluate its predictive ability. Shapley values are computed on a larger scale because they consider all possible combinations of variables to which they add the target predictor. Formally, this gives:</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:shapley">\[\begin{equation}
+\tag{14.3} 
 \phi_k=\sum_{S \subseteq \{x_1,\dots,x_K \} \backslash x_k}\underbrace{\frac{\text{Card}(S)!(K-\text{Card}(S)-1)!}{K!}}_{\text{weight of coalition}}\underbrace{\left(\hat{f}_{S \cup \{x_k\}}(S \cup \{x_k\})-\hat{f}_S(S)\right)}_{\text{gain when adding } x_k}
-\label{eq:shapley}
 \end{equation}\]</span></p>
 <span class="math inline">\(S\)</span> is any subset of the  that doesn’t include feature <span class="math inline">\(k\)</span> and its size is Card(<span class="math inline">\(S\)</span>). \
 In the equation above, the model <span class="math inline">\(f\)</span> must be altered because it’s impossible to evaluate <span class="math inline">\(f\)</span> when features are missing. In this case, several possible options:
@@ -686,7 +686,7 @@ FIGURE 14.5: Illustration of the Shapley method.
 </div>
 <div id="breakdown" class="section level3">
 <h3><span class="header-section-number">14.2.3</span> Breakdown</h3>
-<p>Breakdown (see e.g., <span class="citation">Staniak and Biecek (<a href="#ref-staniak2018explanations">2018</a>)</span>) is a mixture of ideas from PDPs and Shapley values. The core of breakdown is the relaxed model prediction, which is close in spirit to Equation <a href="#eq:pdp">(<strong>??</strong>)</a>. The difference is that we are working at the local level, i.e., on one particular observation, say <span class="math inline">\(x^*\)</span>. We want to measure the impact of a set of predictors on the prediction associated to <span class="math inline">\(x^*\)</span>, hence we fix two sets <span class="math inline">\(\textbf{k}\)</span> (fixed) and <span class="math inline">\(-\textbf{k}\)</span> (free) and evaluate a proxy for the average prediction of the estimated model <span class="math inline">\(\hat{f}\)</span> when the set <span class="math inline">\(\textbf{k}\)</span> of predictors is fixed at the values of <span class="math inline">\(x^*\)</span>:</p>
+<p>Breakdown (see e.g., <span class="citation">Staniak and Biecek (<a href="#ref-staniak2018explanations">2018</a>)</span>) is a mixture of ideas from PDPs and Shapley values. The core of breakdown is the relaxed model prediction, which is close in spirit to Equation <a href="interp.html#eq:pdp">(14.1)</a>. The difference is that we are working at the local level, i.e., on one particular observation, say <span class="math inline">\(x^*\)</span>. We want to measure the impact of a set of predictors on the prediction associated to <span class="math inline">\(x^*\)</span>, hence we fix two sets <span class="math inline">\(\textbf{k}\)</span> (fixed) and <span class="math inline">\(-\textbf{k}\)</span> (free) and evaluate a proxy for the average prediction of the estimated model <span class="math inline">\(\hat{f}\)</span> when the set <span class="math inline">\(\textbf{k}\)</span> of predictors is fixed at the values of <span class="math inline">\(x^*\)</span>:</p>
 <p><span class="math display">\[\tilde{f}_{\textbf{k}}(x^*)=\frac{1}{M}\sum_{m=1}^M \hat{f}\left(x^{(m)}_{-\textbf{k}},x^*_{\textbf{k}} \right).\]</span></p>
 <p>The <span class="math inline">\(x^{(m)}\)</span> in the above expression are either simulated values of instances or simply sampled values from the dataset. The notation implies that the instance has some values replaced by those of <span class="math inline">\(x^*\)</span>, namely those that correspond to the indices <span class="math inline">\(\textbf{k}\)</span>. When <span class="math inline">\(\textbf{k}\)</span> consists of all features, then <span class="math inline">\(\tilde{f}_{\textbf{k}}(x^*)\)</span> is equal to the raw model prediction <span class="math inline">\(\hat{f}(x^*)\)</span> and when <span class="math inline">\(\textbf{k}\)</span> is empty, it is equal to the average sample value of the label (constant prediction).</p>
 <p>The quantity of interest is the so-called contribution of feature <span class="math inline">\(j\notin \textbf{k}\)</span> with respect to data point <span class="math inline">\(x^*\)</span> and set <span class="math inline">\(\textbf{k}\)</span>:</p>

@@ -440,9 +440,9 @@ The second application stems from a lesser known results which originates from <
 &amp;=2\textbf{X}&#39;\textbf{X}\boldsymbol{\beta}  -2\textbf{X}&#39;\textbf{y}
 \end{align*}\]</span>
 so that the first order condition <span class="math inline">\(\nabla_{\boldsymbol{\beta}}=\textbf{0}\)</span> is satisfied if
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:regbeta">\[\begin{equation}
+\tag{6.1}
 \boldsymbol{\beta}^*=(\textbf{X}&#39;\textbf{X})^{-1}\textbf{X}&#39;\textbf{y},
-\label{eq:regbeta}
 \end{equation}\]</span>
 which is known as the standard <strong>ordinary least squares</strong> (OLS) solution of the linear model. If the matrix <span class="math inline">\(\textbf{X}\)</span> has dimensions <span class="math inline">\(I \times K\)</span>, then the <span class="math inline">\(\textbf{X}&#39;\textbf{X}\)</span> can only be inverted if the number of rows <span class="math inline">\(I\)</span> is strictly superior to the number of columns <span class="math inline">\(K\)</span>. In some cases, that may not hold: there are more predictors than instances and there is no unique value of <span class="math inline">\(\boldsymbol{\beta}\)</span> that minimizes the loss. If <span class="math inline">\(\textbf{X}&#39;\textbf{X}\)</span> is nonsingular (or positive definite), then the second order condition ensures that <span class="math inline">\(\boldsymbol{\beta}^*\)</span> yields a global minimum for the loss <span class="math inline">\(L\)</span> (the second order derivative of <span class="math inline">\(L\)</span> with respect to <span class="math inline">\(\boldsymbol{\beta}\)</span> is <span class="math inline">\(\textbf{X}&#39;\textbf{X}\)</span>).</p>
 <p>Up to now, we have made no distributional assumption on any of the above quantities. Standard assumptions are the following:<br />
@@ -456,44 +456,44 @@ which is known as the standard <strong>ordinary least squares</strong> (OLS) sol
 <h3><span class="header-section-number">6.1.2</span> Forms of penalizations</h3>
 <p>Penalised regressions have been popularised since the seminal work of <span class="citation">Tibshirani (<a href="#ref-tibshirani1996regression">1996</a>)</span>. The idea is to impose a constraint on the coefficients of the regression, namely that their total magnitude be restrained. In his original paper, <span class="citation">Tibshirani (<a href="#ref-tibshirani1996regression">1996</a>)</span> proposes to estimate the following model (LASSO):
 <span class="math display" id="eq:lasso1">\[\begin{equation}
+\tag{6.2}
 y_i = \sum_{j=1}^J \beta_jx_{i,j} + \epsilon_i, \quad i =1,\dots,I, \quad \text{s.t.} \quad \sum_{j=1}^J |\beta_j| &lt; \delta, 
-\tag{6.1}
 \end{equation}\]</span>
 for some strictly positive constant <span class="math inline">\(\delta\)</span>. Under least square minimisation, this amounts to solve the Lagrangian formulation:
 <span class="math display" id="eq:lasso2">\[\begin{equation}
+\tag{6.3}
 \underset{\mathbf{\beta}}{\min} \, \left\{ \sum_{i=1}^I\left(y_i - \sum_{j=1}^J \beta_jx_{i,j} \right)^2+\lambda \sum_{j=1}^J |\beta_j| \right\},
-\tag{6.2}
 \end{equation}\]</span>
 for some value <span class="math inline">\(\lambda&gt;0\)</span>. This specification seems close to the ridge regression (<span class="math inline">\(L^2\)</span> regularisation), which is in fact anterior to the Lasso:
 <span class="math display" id="eq:ridge">\[\begin{equation}
+\tag{6.4}
 \underset{\mathbf{\beta}}{\min} \, \left\{ \sum_{i=1}^I\left(y_i - \sum_{j=1}^J\beta_jx_{i,j} \right)^2+\lambda \sum_{j=1}^J \beta_j^2 \right\},
-\tag{6.3}
 \end{equation}\]</span>
 which is equivalent to estimating the following model
 <span class="math display" id="eq:ridge6">\[\begin{equation}
+\tag{6.5}
 y_i = \sum_{j=1}^J \beta_jx_{i,j} + \epsilon_i, \quad i =1,\dots,I, \quad \text{s.t.} \quad \sum_{j=1}^J \beta_j^2 &lt; \delta, 
-\tag{6.4}
 \end{equation}\]</span>
-but the outcome is in fact quite different, which justifies a separate treatment. Mechanically, as <span class="math inline">\(\lambda\)</span> increases (or as <span class="math inline">\(\delta\)</span> in <a href="lasso.html#eq:ridge6">(6.4)</a> <em>decreases</em>), the coefficients of the ridge regression all slowly decrease in magnitude towards zero. In the case of the LASSO, the convergence is somewhat more brutal as some coefficients shrink to zero very quickly. For <span class="math inline">\(\lambda\)</span> sufficiently large, only one coefficient will remain nonzero, while in the ridge regression, the zero value is only reached asymptotically for all coefficients.</p>
+but the outcome is in fact quite different, which justifies a separate treatment. Mechanically, as <span class="math inline">\(\lambda\)</span> increases (or as <span class="math inline">\(\delta\)</span> in <a href="lasso.html#eq:ridge6">(6.5)</a> <em>decreases</em>), the coefficients of the ridge regression all slowly decrease in magnitude towards zero. In the case of the LASSO, the convergence is somewhat more brutal as some coefficients shrink to zero very quickly. For <span class="math inline">\(\lambda\)</span> sufficiently large, only one coefficient will remain nonzero, while in the ridge regression, the zero value is only reached asymptotically for all coefficients.</p>
 <p>To depict the difference between the Lasso and the ridge regression, let us consider the case of <span class="math inline">\(K=2\)</span> predictors which is shown in Figure <a href="lasso.html#fig:lassoridge">6.1</a>. The optimal unconstrained solution <span class="math inline">\(\boldsymbol{\beta}^*\)</span> is pictured in red in the middle of the space. The problem is naturally that it does not satisfy the imposed conditions. These constraints are shown in light grey: they take the shape of a square <span class="math inline">\(|\beta_1|+|\beta_2| \le \delta\)</span> in the case of the Lasso and a circle <span class="math inline">\(\beta_1^2+\beta_2^2 \le \delta\)</span> for the ridge regression. In order to satisfy these constraints, the optimization need to look in the vicinity of <span class="math inline">\(\boldsymbol{\beta}^*\)</span> by allowing for larger error levels. These error levels are shown as orange ellipsoids in the figure. When the requirement on the error is loose enough, one ellipsoid touches the acceptable boundary (in grey) and this is where the constrained solution is located.</p>
 <div class="figure" style="text-align: center"><span id="fig:lassoridge"></span>
-<img src="images/lassoridge.png" alt="Schematic view of Lasso versus ridge regressions." width="12cm" />
+<img src="images/lassoridge.png" alt="Schematic view of Lasso versus ridge regressions." width="800px" />
 <p class="caption">
 FIGURE 6.1: Schematic view of Lasso versus ridge regressions.
 </p>
 </div>
 <p>Both methods work when the number of exogenous variables surpasses that of observations, i.e., in the case where classical regressions are ill-defined. This is easy to see in the case of the ridge regression for which the OLS solution is simply
 <span class="math display">\[\hat{\boldsymbol{\beta}}=(\mathbf{X}&#39;\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}&#39;\mathbf{Y}.\]</span>
-The additional term <span class="math inline">\(\lambda \mathbf{I}_N\)</span> compared to Equation <a href="#eq:regbeta">(<strong>??</strong>)</a> ensures that the inverse matrix is well-defined whenever <span class="math inline">\(\lambda&gt;0\)</span>. As <span class="math inline">\(\lambda\)</span> increases, the magnitudes of the <span class="math inline">\(\hat{\beta}_i\)</span> decrease, which explains why penalizations are sometimes referred to as <strong>shrinkage</strong> methods.</p>
+The additional term <span class="math inline">\(\lambda \mathbf{I}_N\)</span> compared to Equation <a href="lasso.html#eq:regbeta">(6.1)</a> ensures that the inverse matrix is well-defined whenever <span class="math inline">\(\lambda&gt;0\)</span>. As <span class="math inline">\(\lambda\)</span> increases, the magnitudes of the <span class="math inline">\(\hat{\beta}_i\)</span> decrease, which explains why penalizations are sometimes referred to as <strong>shrinkage</strong> methods.</p>
 <p><span class="citation">Zou and Hastie (<a href="#ref-zou2005regularization">2005</a>)</span> propose to benefit from the best of both worlds when combining both penalisations in a convex manner (elasticnet):
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:elasticnet">\[\begin{equation}
+\tag{6.6}
 y_i = \sum_{j=1}^J \beta_jx_{i,j} + \epsilon_i, \quad \text{s.t.} \quad (1-\alpha)\sum_{j=1}^J |\beta_j| +\alpha\sum_{j=1}^J \beta_j^2&lt; \delta, \quad i =1,\dots,N,
-\label{eqn:elasticnet}
 \end{equation}\]</span>
 which is the solved as
 <span class="math display" id="eq:elastic">\[\begin{equation}
+\tag{6.7}
 \underset{\mathbf{\beta}}{\min} \, \left\{ \sum_{i=1}^I\left(y_i - \sum_{j=1}^J\beta_jx_{i,j} \right)^2+\lambda \left(\alpha\sum_{j=1}^J |\beta_j|+ (1-\alpha)\sum_{j=1}^J \beta_j^2\right) \right\},
-\tag{6.5}
 \end{equation}\]</span></p>
 <p>The main advantage of the LASSO compared to the ridge regression is its selection capability. Indeed, given a very large number of variables (or predictors), the LASSO will progressively rule-out those that are the least relevant. The elasticnet preserves this selection ability and <span class="citation">Zou and Hastie (<a href="#ref-zou2005regularization">2005</a>)</span> argue that in some cases, it is even more effective that the LASSO. The parameter <span class="math inline">\(\alpha \in [0,1]\)</span> tunes the smoothness of convergence (of the coefficients) towards zero. The closer <span class="math inline">\(\alpha\)</span> is to zero the smoother the convergence.</p>
 </div>
@@ -554,9 +554,9 @@ FIGURE 6.3: Ridge regression. The dependent variable is the 1 month ahead return
 <p>The idea of constructing sparse portfolios is not new per se (see, e.g., <span class="citation">Brodie et al. (<a href="#ref-brodie2009sparse">2009</a>)</span>, <span class="citation">Fastrich, Paterlini, and Winker (<a href="#ref-fastrich2015constructing">2015</a>)</span>) and the link with the selective property of the LASSO is rather straightforward in classical quadratic programs. Note that the choice of the <span class="math inline">\(L^1\)</span> norm is imperative because when enforcing a simple <span class="math inline">\(L^2\)</span> norm, the diversification of the portfolio increases (see <span class="citation">Coqueret (<a href="#ref-coqueret2015diversified">2015</a>)</span>).</p>
 <p>The idea behind this section stems from <span class="citation">Goto and Xu (<a href="#ref-goto2015improving">2015</a>)</span> but the cornerstone result was first published by <span class="citation">Stevens (<a href="#ref-stevens1998inverse">1998</a>)</span> and we present it below. We provide details because the derivations are not commonplace in the literature.</p>
 <p>In usual mean-variance allocations, one core ingredient is the inverse covariance matrix of assets <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>. For instance, the maximum Sharpe ratio portfolio is given by</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:MSR">\[\begin{equation}
+\tag{6.8}
 \mathbf{w}^{\text{MSR}}=\frac{\mathbf{\Sigma}^{-1}\boldsymbol{\mu}}{\mathbf{1}&#39;\mathbf{\Sigma}^{-1}\boldsymbol{\mu}},
-\label{eq:MSR}
 \end{equation}\]</span>
 where <span class="math inline">\(\mathbf{\mu}\)</span> is the vector of expected (excess) returns. Taking <span class="math inline">\(\mathbf{\mu}=\mathbf{1}\)</span> yields the minimum variance portfolio, which is agnostic in terms of the first moment of expected returns (and, as such, usually more robust than most alternatives).</p>
 <p>If we decompose the matrix <span class="math inline">\(\mathbf{\Sigma}\)</span> into:
@@ -566,25 +566,25 @@ classical partitioning results (e.g., Schur complements) imply
 <span class="math display">\[\small \mathbf{\Sigma}^{-1}= \left[\begin{array}{cc} (\sigma^2 -\mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c})^{-1} &amp; - (\sigma^2 -\mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c})^{-1}\mathbf{c}&#39;\mathbf{C}^{-1} \\
 - (\sigma^2 -\mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c})^{-1}\mathbf{C}^{-1}\mathbf{c}&amp; \mathbf{C}^{-1}+ (\sigma^2 -\mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c})^{-1}\mathbf{C}^{-1}\mathbf{cc}&#39;\mathbf{C}^{-1}\end{array} \right].\]</span>
 We are interested in the first line, which has 2 components: the factor <span class="math inline">\((\sigma^2 -\mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c})^{-1}\)</span> and the line vector <span class="math inline">\(\mathbf{c}&#39;\mathbf{C}^{-1}\)</span>. <span class="math inline">\(\mathbf{C}\)</span> is the covariance matrix of assets <span class="math inline">\(2\)</span> to <span class="math inline">\(N\)</span> and <span class="math inline">\(\mathbf{c}\)</span> is the covariance between the first asset and all other assets. The first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span> is
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:sparse1">\[\begin{equation}
+\tag{6.9}
 (\sigma^2 -\mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c})^{-1} \left[1 \quad  \underbrace{-\mathbf{c}&#39;\mathbf{C}^{-1}}_{N-1 \text{ terms}} \right]. 
-\label{eq:sparse1}
 \end{equation}\]</span></p>
 <p>We now consider an alternative setting. We regress the returns of the first asset on those of all other assets:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:sparseeq">\[\begin{equation}
+\tag{6.10}
 r_{1,t}=a_1+\sum_{n=2}^N\beta_{1|n}r_{n,t}+\epsilon_t, \quad \text{ i.e., } \quad  \mathbf{r}_1=a_1\mathbf{1}_T+\mathbf{R}_{-1}\mathbf{\beta}_1+\epsilon_1,
-\label{eq:sparseeq}
 \end{equation}\]</span>
 where <span class="math inline">\(\mathbf{R}_{-1}\)</span> gathers the returns of all assets except the first one. The OLS estimator for <span class="math inline">\(\mathbf{\beta}_1\)</span> is
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:sparse2">\[\begin{equation}
+\tag{6.11}
 \hat{\mathbf{\beta}}_{1}=\mathbf{C}^{-1}\mathbf{c},
-\label{eq:sparse2}
 \end{equation}\]</span></p>
 <p>and this is the partitioned formed (when a constant is included to the regression) stemming from the Frisch-Waugh-Lovell theorem (see chapter 3 in <span class="citation">Greene (<a href="#ref-greene2018econometric">2018</a>)</span>).</p>
 <p>In addition,
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:sparse3">\[\begin{equation}
+\tag{6.12}
 (1-R^2)\sigma_{\mathbf{r}_1}^2=\sigma_{\mathbf{r}_1}^2- \mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c} =\sigma^2_{\epsilon_1}.
-\label{eq:sparse3}
 \end{equation}\]</span>
 The proof of this last fact is given below.</p>
 <p>With <span class="math inline">\(\mathbf{X}\)</span> being the concatenation of <span class="math inline">\(\mathbf{1}_T\)</span> with returns <span class="math inline">\(\mathbf{R}_{-1}\)</span> and with <span class="math inline">\(\mathbf{y}=\mathbf{r}_1\)</span>, the classical expression of the <span class="math inline">\(R^2\)</span> is <span class="math display">\[R^2=1-\frac{\mathbf{\epsilon}&#39;\mathbf{\epsilon}}{T\sigma_Y^2}=1-\frac{\mathbf{y}&#39;\mathbf{y}-\hat{\mathbf{\beta}&#39;}\mathbf{X}&#39;\mathbf{X}\hat{\mathbf{\beta}}}{T\sigma_Y^2}=1-\frac{\mathbf{y}&#39;\mathbf{y}-\mathbf{y}&#39;\mathbf{X}\hat{\mathbf{\beta}}}{T\sigma_Y^2},\]</span>
@@ -598,12 +598,12 @@ T(1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\mathbf{r}&#39;_1\mathbf{r}_1-\frac{(\mathb
 \end{align*}\]</span>
 where in the fourth equality we have plugged <span class="math inline">\(\hat{a_1}=\frac{\mathbf{1&#39;}_T}{T}(\mathbf{r}_1-\mathbf{R}_{-1}\mathbf{C}^{-1}\mathbf{c})\)</span>. Note: there is probably a simpler proof - see e.g. Section 3.5 in <span class="citation">Greene (<a href="#ref-greene2018econometric">2018</a>)</span>.</p>
 <p>Combining (), () and (), we get that the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span> is equal to
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:sparsehedgeeq2">\[\begin{equation}
+\tag{6.13}
 \frac{1}{\sigma^2_{\epsilon_1}}\times \left[ 1 \quad  -\hat{\boldsymbol{\beta}}_1&#39;\right].
-\label{eq:sparsehedgeeq2}
 \end{equation}\]</span></p>
 <p>Given the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, it suffices to multiply by <span class="math inline">\(\boldsymbol{\mu}\)</span> to get the portfolio weight in the first asset (up to a scaling constant).</p>
-<p>There is a nice economic intuition behind the above results which justifies the term “sparse hedging”. We take the case of the minimum variance portfolio, for which <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>. In Equation <a href="#eq:sparseeq">(<strong>??</strong>)</a>, we try to explain the return of asset 1 with that of all other assets. In the above equation, up to a scaling constant, the portfolio has a unit position in the first asset and <span class="math inline">\(-\hat{\boldsymbol{\beta}}_1\)</span> positions in all other assets. Hence, the purpose of all other assets is clearly to hedge the return of the first one. In fact, these positions are aimed at minimizing the squared errors of the aggregate portfolio for asset one (these errors a exactly <span class="math inline">\(\mathbf{\epsilon}_1\)</span>). Moreover, the scaling factor <span class="math inline">\(\sigma^{-2}_{\epsilon_1}\)</span> is also simple to interpret: the more we trust the regression output (because of a small <span class="math inline">\(\sigma^{2}_{\epsilon_1}\)</span>), the more we invest in the hedging portfolio of the asset.</p>
+<p>There is a nice economic intuition behind the above results which justifies the term “sparse hedging”. We take the case of the minimum variance portfolio, for which <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>. In Equation <a href="lasso.html#eq:sparseeq">(6.10)</a>, we try to explain the return of asset 1 with that of all other assets. In the above equation, up to a scaling constant, the portfolio has a unit position in the first asset and <span class="math inline">\(-\hat{\boldsymbol{\beta}}_1\)</span> positions in all other assets. Hence, the purpose of all other assets is clearly to hedge the return of the first one. In fact, these positions are aimed at minimizing the squared errors of the aggregate portfolio for asset one (these errors a exactly <span class="math inline">\(\mathbf{\epsilon}_1\)</span>). Moreover, the scaling factor <span class="math inline">\(\sigma^{-2}_{\epsilon_1}\)</span> is also simple to interpret: the more we trust the regression output (because of a small <span class="math inline">\(\sigma^{2}_{\epsilon_1}\)</span>), the more we invest in the hedging portfolio of the asset.</p>
 <p>This reasoning is easily generalized for any line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, which can be obtained by regressing the returns of asset <span class="math inline">\(i\)</span> on the returns of all other assets. If the allocation scheme has the form () for given values of <span class="math inline">\(\boldsymbol{\mu}\)</span>, then the pseudo-code for the sparse portfolio strategy is the following.</p>
 At each date (which we omit for notational convenience),
 
@@ -623,7 +623,7 @@ At each date (which we omit for notational convenience),
 <a class="sourceLine" id="cb25-6" data-line-number="6">portf_weights &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim =</span> <span class="kw">c</span>(Tt, nb_port, <span class="kw">ncol</span>(returns) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))   <span class="co"># Initial portf. weights</span></a>
 <a class="sourceLine" id="cb25-7" data-line-number="7">portf_returns &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> Tt, <span class="dt">ncol =</span> nb_port)                <span class="co"># Initial portf. returns </span></a></code></pre></div>
 <p></p>
-<p>Next, because it is the purpose of this section, we isolate the computation of the weights of sparse-hedging portfolios. In the case of minimum variance portfolios, when <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>, the weight in asset 1 will simply be the sum of all terms in Equation <a href="#eq:sparsehedgeeq2">(<strong>??</strong>)</a> and the other weights have similar forms.</p>
+<p>Next, because it is the purpose of this section, we isolate the computation of the weights of sparse-hedging portfolios. In the case of minimum variance portfolios, when <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>, the weight in asset 1 will simply be the sum of all terms in Equation <a href="lasso.html#eq:sparsehedgeeq2">(6.13)</a> and the other weights have similar forms.</p>
 
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">weights_sparsehedge &lt;-<span class="st"> </span><span class="cf">function</span>(returns, alpha, lambda){  <span class="co"># The parameters are defined here</span></a>
 <a class="sourceLine" id="cb26-2" data-line-number="2">    w &lt;-<span class="st"> </span><span class="dv">0</span>                                                <span class="co"># Initiate weights</span></a>
@@ -682,7 +682,7 @@ At each date (which we omit for notational convenience),
 <p>The topic of predictive regressions sits on a collection of very interesting articles. One influential contribution is <span class="citation">Stambaugh (<a href="#ref-stambaugh1999predictive">1999</a>)</span>, where the authors show the perils of regressions in which the independent variables are autocorrelated. In this case, the usual OLS estimate is biased and must therefore be corrected.</p>
 <p>A second important topic pertains to the time-dependence of the coefficients in predictive regressions. One contribution in this direction is <span class="citation">Dangl and Halling (<a href="#ref-dangl2012predictive">2012</a>)</span>, where latent variables and Bayesian selection. More recently <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics">2019</a>)</span> also use latent variables to model the cross-section of stock returns. The time-varying nature of coefficients of predictive regressions is further documented by <span class="citation">Henkel, Martin, and Nardari (<a href="#ref-henkel2011time">2011</a>)</span> for short term returns. Lastly, <span class="citation">Farmer, Schmidt, and Timmermann (<a href="#ref-farmer2019pockets">2019</a>)</span> introduce the concept of pockets of predictability: assets or markets experiences different phases; in some phases they are predictable and in some others, they aren’t. Pockets are measured both by the number of days that a <em>t</em>-statistic is above a particular threshold and by the magnitude of the <span class="math inline">\(R^2\)</span> over the considered period.</p>
 <p>The introduction of penalization within predictive regressions goes back at least to <span class="citation">Rapach, Strauss, and Zhou (<a href="#ref-rapach2013international">2013</a>)</span>, where they are used to assess lead-lag relationships between US markets and other international stock exchanges. More recently, <span class="citation">Chinco, Clark-Joseph, and Ye (<a href="#ref-chinco2019sparse">2019</a>)</span> use LASSO regressions to forecast high frequency returns based on past returns (in the cross-section) at various horizons. They report statistically significant gains. <span class="citation">Han et al. (<a href="#ref-han2018firm">2019</a>)</span> and <span class="citation">Rapach and Zhou (<a href="#ref-rapach2019time">2019</a>)</span> use LASSO and elasticnet regressions (respectively) to improve forecast combinations and single out the characteristics that matter when explaining stock returns.</p>
-<p>These contributions underline the relevant of the overlap between predictive regressions and penalized regressions. In simple machine-learning based asset pricing, we often seek to build models such as that of Equation <a href="#eq:genML">(<strong>??</strong>)</a>. If we stick to a linear relationship and add penalization terms, then the model becomes:
+<p>These contributions underline the relevant of the overlap between predictive regressions and penalized regressions. In simple machine-learning based asset pricing, we often seek to build models such as that of Equation <a href="factor.html#eq:genML">(4.5)</a>. If we stick to a linear relationship and add penalization terms, then the model becomes:
 <span class="math display">\[r_{t+1,n} = \alpha_n + \sum_{k=1}^K\beta_n^kf^k_{t,n}+\epsilon_{t+1,n}, \quad \text{s.t.} \quad (1-\alpha)\sum_{j=1}^J |\beta_j| +\alpha\sum_{j=1}^J \beta_j^2&lt; \theta\]</span>
 where we use <span class="math inline">\(f^k_{t,n}\)</span> or <span class="math inline">\(x_{t,n}^k\)</span> interchangeably and <span class="math inline">\(\theta\)</span> is some penalization intensity. Again, one of the aim of the regularization is to generate more robust estimates. If the patterns extracted hold out of sample, then
 <span class="math display">\[\hat{r}_{t+1,n} = \hat{\alpha}_n + \sum_{k=1}^K\hat{\beta}_n^kf^k_{t,n},\]</span>

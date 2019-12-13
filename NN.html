@@ -517,9 +517,9 @@ where <span class="math inline">\(\phi\)</span> is a (non constant) bounded cont
 <p>The raw results on universal approximation imply that any well behaved function <span class="math inline">\(f\)</span> can be approached sufficiently closely by a simple neural network, as long as the number of units can be arbitrarily large. Now, they do not directly relate to the learning phase, i.e., when the model is optimized with respect to a particular dataset. In a series of papers (<span class="citation">Barron (<a href="#ref-barron1993universal">1993</a>)</span> and <span class="citation">Barron (<a href="#ref-barron1994approximation">1994</a>)</span> notably), Barron gives a much more precise characterization of what neural networks can achieve. In <span class="citation">Barron (<a href="#ref-barron1993universal">1993</a>)</span> it is for instance proved a more precise verion of universal approximation: for particular neural networks (with sigmoid activation), <span class="math inline">\(\mathbb{E}[(f(\textbf{x})-f_n(\textbf{x}))^2]\le c_f/n\)</span>, which gives a speed of convergence related to the size of the network. In the expectation, the random term is <span class="math inline">\(\textbf{x}\)</span>: this corresponds to the case where the data is considered to be a sample of i.i.d. observations of a fixed distribution (this is the most common assumption in machine learning).</p>
 <p>Below, we state one important result that is easy to interpret; it is taken from <span class="citation">Barron (<a href="#ref-barron1994approximation">1994</a>)</span>.</p>
 <p>In the sequel, <span class="math inline">\(f_n\)</span> corresponds to a possibly penalized neural network with only one intermediate layer with <span class="math inline">\(n\)</span> units and sigmoid activation function. Moreover, both the supports of the predictors and the label are assumed to be bounded (which is not a major constraint). The most important metric in a regression exercise is the mean squared error (MSE) and the main result is a bound (in order of magnitude) on this quantity. For <span class="math inline">\(N\)</span> randomly sampled i.i.d. points <span class="math inline">\(y_i=f(x_i)+\epsilon_i\)</span> on which <span class="math inline">\(f_n\)</span> is trained, the best possible empirical MSE behaves like</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:univapprox">\[\begin{equation}
+\tag{8.1}
 \mathbb{E}\left[(f(x)-f_n(x))^2 \right]=\underbrace{O\left(\frac{c_f}{n} \right)}_{\text{size of network}}+\ \underbrace{O\left(\frac{nK \log(N)}{N} \right)}_{\text{size of sample}},
-\label{eq:univapprox}
 \end{equation}\]</span>
 where <span class="math inline">\(K\)</span> is the dimension of the input (number of columns) and <span class="math inline">\(c_f\)</span> is a constant that depends on the generator function <span class="math inline">\(f\)</span>. The above quantity provides a bound on the error that can be achieved by the best possible neural network given a dataset of size <span class="math inline">\(N\)</span>.</p>
 <p>There are clearly two components in the decomposition of this bound. The first one pertains to the complexity of the network. Just as in the original unviversal approximation theorem, the error decreases with the number of units in the network. But this is not enough! Indeed, the sample size is of course a key driver in the quality of learning (of i.i.d. observations). The second component of the bound indicates that the error decreases at a slightly slower pace with respect to the number of observations (<span class="math inline">\(\log(N)/N\)</span>). and is linear in the number of units and the size of the input. This clearly underlines the link (trade-off?) between sample size and model complexity: having a very complex model is useless if the sample is small just like a simple model will not catch the fine relationships in a large dataset.</p>
@@ -531,9 +531,9 @@ where <span class="math inline">\(K\)</span> is the dimension of the input (numb
 <span class="math display">\[O=\sum_{i=1}^I \text{loss}(y_i,\tilde{y}_i)+ \text{penalization},\]</span>
 where <span class="math inline">\(\tilde{y}_i\)</span> are the values obtained by the model and <span class="math inline">\(y_i\)</span> are the <em>true</em> values of the instances. A simple requirement that eases computation is that the loss function be differentiable. The most common choices are the squared error for regression tasks and cross-entropy for classification tasks. We discuss the technicalities of classification in the next subsection.</p>
 <p>The training of a neural network amounts to alter the weights (and biases) of all units in all layers so that <span class="math inline">\(O\)</span> defined above is the smallest possible. To ease the notation and given that the <span class="math inline">\(y_i\)</span> are fixed, let us write <span class="math inline">\(D(\tilde{y}_i(\textbf{W}))=\text{loss}(y_i,\tilde{y}_i)\)</span>, where <span class="math inline">\(\textbf{W}\)</span> denotes the entirety of weights and biases in the network. The updating of the weights will be performed via gradient descent, i.e., via</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:graddesc">\[\begin{equation}
+\tag{8.2}
 \textbf{W} \leftarrow \textbf{W}-\eta  \frac{\partial D(\tilde{y}_i) }{\partial \textbf{W}}.
-\label{eq:graddesc}
 \end{equation}\]</span></p>
 <p>This mechanism is the most classical in the optimization literature and we illustrate it in Figure <a href="NN.html#fig:newton">8.5</a>. We highlight the possible suboptimality of large learning rates. In the diagram, the descent associated with the high <span class="math inline">\(\eta\)</span> will oscillate around the optimal point whereas the one related to the small eta will converge more directly.</p>
 <p>The complicated task in the above equation is to compute the gradient (derivative) which tell in which direction the adjustment should be done. The problem is that the successive nested layers and associated activations require many iterations of the chain rule for differentiation.</p>
@@ -548,9 +548,9 @@ FIGURE 8.5: Outline of gradient descent.
 where <span class="math inline">\(h&gt;0\)</span> is some arbitrarily small number. Inspite of its apparent simplicity, this method is costly computationally because it requires a number of operations of the magnitude of the number of weights.</p>
 <p>Luckily, there is a small trick that can considerably ease and speed up the computation. The idea is to simply follow the chain rule and recycle terms along the way. Let us start by recalling
 <span class="math display">\[\tilde{y}_i =f^{(L+1)} \left((\textbf{o}^{(L)}_i)&#39;\textbf{w}^{(L+1)}+b^{(L+1)}\right)=f^{(L+1)}\left(b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k} \right),\]</span> so that if we differentiate with the most immediate weights and biases, we get:
-<span class="math display">\[\begin{align}
-\frac{\partial D(\tilde{y}_i)}{\partial w_k^{(L+1)}}&amp;=D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left( b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k}  \right)o^{(L)}_{i,k} \\
-&amp;= D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left( v^{(L+1)}_{i,k}  \right)o^{(L)}_{i,k} \label{eq:backprop1} \\
+<span class="math display" id="eq:backprop1">\[\begin{align}
+\frac{\partial D(\tilde{y}_i)}{\partial w_k^{(L+1)}}&amp;=D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left( b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k}  \right)o^{(L)}_{i,k} \\   \tag{8.3}
+&amp;= D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left( v^{(L+1)}_{i,k}  \right)o^{(L)}_{i,k} \\
 \frac{\partial D(\tilde{y}_i)}{\partial b^{(L+1)}}&amp;=D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left( b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k}  \right). 
 \end{align}\]</span></p>
 <p>This is the easiest part. We must now go back one layer and this can only be done via the chain rule. To access layer <span class="math inline">\(L\)</span>, we recall identity <span class="math inline">\(v_{i,k}^{(L)}=(\textbf{o}^{(L-1)}_i)&#39;\textbf{w}^{(L)}_k+b_k^{(L)}=b_k^{(L)}+\sum_{j=1}^{U_L}o^{(L-1)}_{i,j}w^{(L)}_{k,j}\)</span>.
@@ -560,7 +560,7 @@ We can then proceed:</p>
 &amp;=\frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}} \frac{\partial o^{(L)}_{i,k} }{\partial v^{(L)}_{i,k}}  o^{(L-1)}_{i,j} = \frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}}  (f^{(L)})&#39;(v_{i,k}^{(L)})  o^{(lL1)}_{i,j} \\
 &amp;=\underbrace{D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left(v^{(L+1)}_{i,k}  \right)}_{\text{computed above!}} w^{(L+1)}_k (f^{(L)})&#39;(v_{i,k}^{(L)})  o^{(L-1)}_{i,j},
 \end{align}\]</span></p>
-<p>where as we show in the last line, one part of the derivative was already computed in the previous step (Equation <a href="#eq:backprop1">(<strong>??</strong>)</a>). Hence, we can recycle this number and only focus on the right part of the expression.</p>
+<p>where as we show in the last line, one part of the derivative was already computed in the previous step (Equation <a href="NN.html#eq:backprop1">(8.3)</a>). Hence, we can recycle this number and only focus on the right part of the expression.</p>
 <p>The magic of the so-called backpropagation is that this will hold true for each step of the differentiation. When computing the gradient for weights and biases in layer <span class="math inline">\(l\)</span>, there will be two parts: one that can be recycled from previous layers and another, local part, which depends only on the values and activation function of the current layer. A nice illustration of this process is given by the Google developer team: <a href="https://google-developers.appspot.com/machine-learning/crash-course/backprop-scroll/" class="uri">https://google-developers.appspot.com/machine-learning/crash-course/backprop-scroll/</a></p>
 <p>When the data is formatted using tensors, it is possible to resort to vectorization so that the number of calls is limited to an order of the magnitude of the number of nodes (units) in the network.</p>
 <p>The backpropagation algorithm can be summarized as follows. Given a sample of points (possibly just one):</p>
@@ -575,10 +575,10 @@ We can then proceed:</p>
 </ol>
 <p>This operation can be performed any number of times with different sample sizes. We discuss this issue in Section <a href="NN.html#howdeep">8.3</a>.</p>
 <p>The learning rate <span class="math inline">\(\eta\)</span> can be refined. One option to reduce overfitting is to impose that after each epoch, the intensity of the update decreases. One possible parametric form is <span class="math inline">\(\eta=\alpha e^{- \beta t}\)</span>, where <span class="math inline">\(t\)</span> is the epoch and <span class="math inline">\(\alpha,\beta&gt;0\)</span>. One further sophistication is to resort to so-called <em>momentum</em> (which originates from <span class="citation">Polyak (<a href="#ref-polyak1964some">1964</a>)</span>):
-<span class="math display">\[\begin{align}
+<span class="math display" id="eq:gradmom">\[\begin{align}
+\tag{8.4}
 \textbf{W}_{t+1} &amp; \leftarrow  \textbf{W}_{t} - \textbf{m}_t \quad \text{with} \nonumber \\
  \textbf{m}_t &amp; \leftarrow \eta  \frac{\partial D(\tilde{y}_i)}{\partial \textbf{W}_{t}}+\gamma \textbf{m}_{t-1},
-\label{eq:gradmom}
 \end{align}\]</span>
 where <span class="math inline">\(t\)</span> is the index of the weight update. The idea of momentum is to speed up the convergence by including a memory term of the last adjustment (<span class="math inline">\(\textbf{m}_{t-1}\)</span>) and going in the same direction in the current update. The parameter <span class="math inline">\(\gamma\)</span> is often taken to be 0.9.</p>
 <p>More complex and enhanced method have progressively developed:<br />
@@ -589,13 +589,13 @@ where <span class="math inline">\(t\)</span> is the index of the weight update. 
 </div>
 <div id="further-details-on-classification-1" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> Further details on classification</h3>
-<p>In decision trees, the ultimate goal is to create homogeneous clusters, and the process to reach this goal was outlined in the previous chapter. For neural networks, things work differently because the objective is explicitly to minimize the error between the prediction <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> and a target label <span class="math inline">\(\textbf{y}_i\)</span>. Again, here <span class="math inline">\(\textbf{y}_i\)</span> is a vector full of zeros with one <em>one</em> denoting the class of the instance.</p>
+<p>In decision trees, the ultimate goal is to create homogeneous clusters, and the process to reach this goal was outlined in the previous chapter. For neural networks, things work differently because the objective is explicitly to minimize the error between the prediction <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> and a target label <span class="math inline">\(\textbf{y}_i\)</span>. Again, here <span class="math inline">\(\textbf{y}_i\)</span> is a vector full of zeros with only one <em>one</em> denoting the class of the instance.</p>
 <p>Facing a classification problem, the trick is to use an appropriate activation function at the very end of the network. The dimension of the terminal output of the network should be equal to <span class="math inline">\(J\)</span> (number of classes to predict), and if, for simplicity, we write <span class="math inline">\(\textbf{x}_i\)</span> for the values of this output, the most commonly used activation is the so-called <em>softmax</em> function:</p>
 <p><span class="math display">\[\tilde{\textbf{y}}_i=s(\textbf{x})_i=\frac{e^{x_i}}{\sum_{j=1}^Je^{x_j}}.\]</span></p>
 <p>The justification of this choice is straightforward: it can take any value as input (over the real line) and it sums to one over any (finite-valued) output. Similarly as for trees, this yields a ‘probability’ vector over the classes. Often, the chosen loss is a generalization of the entropy used for trees. Given the target label <span class="math inline">\(\textbf{y}_i=(y_{i,1},\dots,y_{i,L})=(0,0,\dots,0,1,0,\dots,0)\)</span> and the predicted output <span class="math inline">\(\tilde{\textbf{y}}_i=(\tilde{y}_{i,1},\dots,\tilde{y}_{i,L})\)</span>, the cross-entropy is defined as</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:crossentropy">\[\begin{equation}
+\tag{8.5}
 \text{CE}(\textbf{y}_i,\tilde{\textbf{y}}_i)=-\sum_{j=1}^J\log(\tilde{y}_{i,j})y_{i,j}.
-\label{eq:crossentropy}
 \end{equation}\]</span></p>
 <p>Basically, it is a proxy of the dissimilarity between its two arguments. One simple interpretation is the following. For the nonzero label value, the loss is <span class="math inline">\(-\log(\tilde{y}_{i,l})\)</span>, while for all others, it is zero. In the log, the loss will be minimal if <span class="math inline">\(\tilde{y}_{i,l}=1\)</span>, which is exactly what we seek (i.e., <span class="math inline">\(y_{i,l}=\tilde{y}_{i,l}\)</span>). In applications, this best case scenario will not happen, and the loss will simply increases when <span class="math inline">\(\tilde{y}_{i,l}\)</span> drifts away downwards from one.</p>
 </div>
@@ -625,10 +625,10 @@ If there is only one intermediate layer, the recommended proxy is the integer pa
 </div>
 <div id="frequency-of-weight-updates-and-learning-duration" class="section level3">
 <h3><span class="header-section-number">8.3.2</span> Frequency of weight updates and learning duration</h3>
-<p>In the expression <a href="#eq:graddesc">(<strong>??</strong>)</a>, it is implicit that the computation is performed for one given instance. If the sample size is very large (hundreds of thousands or millions of instances), updating the weights according to each point is computationally too costly. The updating is then performed on groups of instances which are called batches. The sample is (randomly) split into batches of fixed sizes and each update is performed following the rule:</p>
-<p><span class="math display">\[\begin{equation}
+<p>In the expression <a href="NN.html#eq:graddesc">(8.2)</a>, it is implicit that the computation is performed for one given instance. If the sample size is very large (hundreds of thousands or millions of instances), updating the weights according to each point is computationally too costly. The updating is then performed on groups of instances which are called batches. The sample is (randomly) split into batches of fixed sizes and each update is performed following the rule:</p>
+<p><span class="math display" id="eq:gradbatch">\[\begin{equation}
+\tag{8.6}
 \textbf{W} \leftarrow \textbf{W}-\eta  \frac{\partial \sum_{i \in \text{batch}} D(\tilde{y}_i)/\text{card}(\text{batch}) }{\partial \textbf{W}}.
-\label{eq:gradbatch}
 \end{equation}\]</span></p>
 <p>The change in weights is computed over the average loss computed over all instances in the batch. The terminology for training includes:</p>
 <ul>
@@ -705,7 +705,7 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 ## ___________________________________________________________________________</code></pre>
 <p></p>
 <p>The summary of the model lists the layers in their order from input to output (forward pass). Because we are working with 93 features, the number of parameters for the first layer (16 units) is 93 plus one (for the bias) multiplied by 16, which makes 1504. For the second layer, the number of inputs is equal to the size of the output from the previous layer (16). Hence given the the second layer has 8 units, the total number of parameters is (16+1)*8 = 136.</p>
-<p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>: some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross entropy, see Equation <a href="#eq:crossentropy">(<strong>??</strong>)</a>). The RMS propragation optimizer is the classical mini-batch backpropagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
+<p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>: some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross entropy, see Equation <a href="NN.html#eq:crossentropy">(8.5)</a>). The RMS propragation optimizer is the classical mini-batch backpropagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
 <p>The final stage fits the model to the data and requires some additional training parameters:</p>
 
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1">fit_NN &lt;-<span class="st"> </span>model <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -728,7 +728,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5454079</code></pre>
+<pre><code>## [1] 0.5168214</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -736,7 +736,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <h3><span class="header-section-number">8.4.2</span> Classification example</h3>
 <p>We pursue our exploration of neural networks with a much more detailed example. The aim is to carry out a classification task on the binary label R1M_Usd_C. Before we proceed, we need to format the label properly. To this purpose, we resort to one-hot encoding (see Section <a href="Data.html#categorical-labels">5.5.2</a>).</p>
 
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">library</span>(dummies)                                            <span class="co"># Package for simple one-hot encoding</span></a>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb74-1" data-line-number="1"><span class="kw">library</span>(dummies)                                            <span class="co"># Package for one-hot encoding</span></a>
 <a class="sourceLine" id="cb74-2" data-line-number="2">NN_train_labels_C &lt;-<span class="st"> </span>training_sample<span class="op">$</span>R1M_Usd_C <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">dummy</span>()  <span class="co"># One-hot encoding of the label</span></a>
 <a class="sourceLine" id="cb74-3" data-line-number="3">NN_test_labels_C &lt;-<span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">dummy</span>()    <span class="co"># One-hot encoding of the label</span></a></code></pre></div>
 <p></p>
@@ -789,23 +789,25 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <p>Finally, we proceed with the training of the model.</p>
 
 <div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb78-1" data-line-number="1">fit_NN_C &lt;-<span class="st"> </span>model_C <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb78-2" data-line-number="2"><span class="st">    </span><span class="kw">fit</span>(NN_train_features,                                             <span class="co"># Training features</span></a>
-<a class="sourceLine" id="cb78-3" data-line-number="3">        NN_train_labels_C,                                             <span class="co"># Training labels</span></a>
-<a class="sourceLine" id="cb78-4" data-line-number="4">        <span class="dt">epochs =</span> <span class="dv">20</span>, <span class="dt">batch_size =</span> <span class="dv">512</span>,                                 <span class="co"># Training parameters</span></a>
-<a class="sourceLine" id="cb78-5" data-line-number="5">        <span class="dt">validation_data =</span> <span class="kw">list</span>(NN_test_features, NN_test_labels_C),    <span class="co"># Test data</span></a>
-<a class="sourceLine" id="cb78-6" data-line-number="6">        <span class="dt">verbose =</span> <span class="dv">0</span>,                                                   <span class="co"># No comments from algo</span></a>
-<a class="sourceLine" id="cb78-7" data-line-number="7">        <span class="dt">callbacks =</span> <span class="kw">list</span>(<span class="kw">callback_early_stopping</span>(<span class="dt">monitor =</span> <span class="st">&quot;val_loss&quot;</span>, <span class="co"># Early stopping:</span></a>
-<a class="sourceLine" id="cb78-8" data-line-number="8">                                                 <span class="dt">min_delta =</span> <span class="fl">0.001</span>,    <span class="co"># Improvement threshold</span></a>
-<a class="sourceLine" id="cb78-9" data-line-number="9">                                                 <span class="dt">patience =</span> <span class="dv">3</span>,         <span class="co"># Nb epochs with no improvmt </span></a>
-<a class="sourceLine" id="cb78-10" data-line-number="10">                                                 <span class="dt">verbose =</span> <span class="dv">0</span>           <span class="co"># No warnings</span></a>
-<a class="sourceLine" id="cb78-11" data-line-number="11">                                                 )</a>
-<a class="sourceLine" id="cb78-12" data-line-number="12">        )</a>
-<a class="sourceLine" id="cb78-13" data-line-number="13">    )</a>
-<a class="sourceLine" id="cb78-14" data-line-number="14"><span class="kw">plot</span>(fit_NN_C) </a></code></pre></div>
+<a class="sourceLine" id="cb78-2" data-line-number="2"><span class="st">    </span><span class="kw">fit</span>(NN_train_features,                                   <span class="co"># Training features</span></a>
+<a class="sourceLine" id="cb78-3" data-line-number="3">        NN_train_labels_C,                                   <span class="co"># Training labels</span></a>
+<a class="sourceLine" id="cb78-4" data-line-number="4">        <span class="dt">epochs =</span> <span class="dv">20</span>, <span class="dt">batch_size =</span> <span class="dv">512</span>,                       <span class="co"># Training parameters</span></a>
+<a class="sourceLine" id="cb78-5" data-line-number="5">        <span class="dt">validation_data =</span> <span class="kw">list</span>(NN_test_features, </a>
+<a class="sourceLine" id="cb78-6" data-line-number="6">                               NN_test_labels_C),            <span class="co"># Test data</span></a>
+<a class="sourceLine" id="cb78-7" data-line-number="7">        <span class="dt">verbose =</span> <span class="dv">0</span>,                                         <span class="co"># No comments from algo</span></a>
+<a class="sourceLine" id="cb78-8" data-line-number="8">        <span class="dt">callbacks =</span> <span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb78-9" data-line-number="9">            <span class="kw">callback_early_stopping</span>(<span class="dt">monitor =</span> <span class="st">&quot;val_loss&quot;</span>,    <span class="co"># Early stopping:</span></a>
+<a class="sourceLine" id="cb78-10" data-line-number="10">                                    <span class="dt">min_delta =</span> <span class="fl">0.001</span>,       <span class="co"># Improvement threshold</span></a>
+<a class="sourceLine" id="cb78-11" data-line-number="11">                                    <span class="dt">patience =</span> <span class="dv">3</span>,            <span class="co"># Nb epochs with no improvmt </span></a>
+<a class="sourceLine" id="cb78-12" data-line-number="12">                                    <span class="dt">verbose =</span> <span class="dv">0</span>              <span class="co"># No warnings</span></a>
+<a class="sourceLine" id="cb78-13" data-line-number="13">                                    )</a>
+<a class="sourceLine" id="cb78-14" data-line-number="14">        )</a>
+<a class="sourceLine" id="cb78-15" data-line-number="15">    )</a>
+<a class="sourceLine" id="cb78-16" data-line-number="16"><span class="kw">plot</span>(fit_NN_C) </a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:NN3C"></span>
-<img src="ML_factor_files/figure-html/NN3C-1.png" alt="Output from a trained neural network (classification task)" width="400px" />
+<img src="ML_factor_files/figure-html/NN3C-1.png" alt="Output from a trained neural network (classification task) with early stopping" width="400px" />
 <p class="caption">
-FIGURE 8.7: Output from a trained neural network (classification task)
+FIGURE 8.7: Output from a trained neural network (classification task) with early stopping
 </p>
 </div>
 <p></p>
@@ -928,10 +930,10 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 <p>Finally, once the new model is ready - and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.</p>
 
 <div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb84-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
-<a class="sourceLine" id="cb84-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span><span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 1</code></pre>
+<a class="sourceLine" id="cb84-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
+<pre><code>## [1] 0.4966181</code></pre>
 <p></p>
-<p>The hit ratio is barely above 50%, hence the model does hardly better than coin tossing.</p>
+<p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
 </div>
 <div id="other-common-architectures" class="section level2">
@@ -943,9 +945,9 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 <p>GANs consist in two neural networks: the first one tries to learn and the second one tries to fool the first (induce it into error). Just like in the example above, there are also two sets of data: one (<span class="math inline">\(\textbf{x}\)</span>) is true (or correct), stemming from a classical training sample and the other one (<span class="math inline">\(\textbf{z}\)</span>) is fake and generated by the counterfeiter network.</p>
 <p>In the GAN nomenclature the networks that learns is <span class="math inline">\(D\)</span> because it’s suppose to discriminate while the forger is <span class="math inline">\(G\)</span> because it generates false data. In their original formulation, GANs are aimed at classifying. To ease the presentation, we keep this scope. The discriminant network has a simple (scalar) output: the probability that its input comes from true data (versus fake data). The input of <span class="math inline">\(G\)</span> is some arbitrary noise and its output has the same shape/form as the input of <span class="math inline">\(D\)</span>.</p>
 <p>We state the theoretical formula of a GAN directly and comment on it below. <span class="math inline">\(D\)</span> and <span class="math inline">\(G\)</span> play the following minimax game:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:GAN">\[\begin{equation}
+\tag{8.7}
 \underset{G}{\min} \ \underset{D}{\max} \ \left\{ \mathbb{E}[\log(D(\textbf{x}))]+\mathbb{E}[\log(1-D(G(\textbf{z})))] \right\}.
-\label{eq:GAN}
 \end{equation}\]</span></p>
 <p>First, let us decompose this expression in its two parts (the optimizers). The first part (i.e. the first max) is the classical one: the algorithm seeks to maximize the probability of assigning the correct label to all examples it seeks to classify. As is done in economics and finance, the program does not maximize <span class="math inline">\(D(\textbf{x})\)</span> itself on average, but rather a functional form (like a utility function).</p>
 <p>On the left side, since the expectation is driven by <span class="math inline">\(\textbf{x}\)</span>, the objective must be increasing in the output. On the right side, where the expectation is taken over the fake instances, the right classification is the opposite, i.e., <span class="math inline">\(1-D(G(\textbf{z})\)</span>.</p>
@@ -953,15 +955,15 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 
 <p>In ML-based asset pricing, the most notable application of GANs was introduced in <span class="citation">Luyang Chen, Pelger, and Zhu (<a href="#ref-chen2019deep">2019</a>)</span>. Their aim is to make use of the method of moment expression
 <span class="math display">\[\mathbb{E}[M_{t+1}r_{t+1,n}g(I_t,I_{t,n})]=0,\]</span>
-which is an application of Equation <a href="#eq:SDFGMM">(<strong>??</strong>)</a> where the instrumental variables <span class="math inline">\(I_{t,n}\)</span> are firm-dependent (e.g., characteristics and attributes) while the <span class="math inline">\(I_t\)</span> are macro-economic variables (aggregate dividend yield, volatility level, credit spread, term spread, etc.). The trick is to model the SDF as an unknown combination of assets <span class="math inline">\(M_{t+1}=1-\sum_{n=1}^Nw(I_t,I_{t,n})r_{t+1,n}\)</span>. The primary discriminatory network (<span class="math inline">\(D\)</span>) is the one that approximates the SDF via the weights <span class="math inline">\(w(I_t,I_{t,n})\)</span>. The secondary generative network is the one that creates the moment condition through <span class="math inline">\(g(I_t,I_{t,n})\)</span> in the above equation.</p>
+which is an application of Equation <a href="factor.html#eq:SDFGMM">(4.6)</a> where the instrumental variables <span class="math inline">\(I_{t,n}\)</span> are firm-dependent (e.g., characteristics and attributes) while the <span class="math inline">\(I_t\)</span> are macro-economic variables (aggregate dividend yield, volatility level, credit spread, term spread, etc.). The trick is to model the SDF as an unknown combination of assets <span class="math inline">\(M_{t+1}=1-\sum_{n=1}^Nw(I_t,I_{t,n})r_{t+1,n}\)</span>. The primary discriminatory network (<span class="math inline">\(D\)</span>) is the one that approximates the SDF via the weights <span class="math inline">\(w(I_t,I_{t,n})\)</span>. The secondary generative network is the one that creates the moment condition through <span class="math inline">\(g(I_t,I_{t,n})\)</span> in the above equation.</p>
 <p>The full specification of the network is given by the program:
 <span class="math display">\[\underset{w}{\text{min}} \ \underset{g}{\text{max}} \ \sum_{j=1}^N \left\| \mathbb{E} \left[\left(1-\sum_{n=1}^Nw(I_t,I_{t,n})r_{t+1,n} \right)r_{t+1,j}g(I_t,I_{t,j})\right] \right\|^2\]</span></p>
 <p>The asset pricing equations (moments) are not treated as equalities but as a relationship that is approximated. The network defined by <span class="math inline">\(\textbf{w}\)</span> is the asset pricing modeler and tries to determine the best possible model while the network defined by <span class="math inline">\(\textbf{g}\)</span> seeks to find the worst possible conditions so that the model performs badly. We refer to the original article for the full specification of both networks. In their empirical section, <span class="citation">Luyang Chen, Pelger, and Zhu (<a href="#ref-chen2019deep">2019</a>)</span> report that adopting a strong structure driven by asset pricing imperatives add values compared to a pure predictive ‘vanilla’ approach such as the one detailed in <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span>. The out-of-sample behavior of decile sorted portfolios (based on the model’s prediction) display a monotonous patter with respect to the order of the deciles.</p>
 </div>
 <div id="autoencoders" class="section level3">
 <h3><span class="header-section-number">8.6.2</span> Auto-encoders</h3>
-<p>While auto-encoders are used in <span class="citation">Huck (<a href="#ref-huck2019large">2019</a>)</span>, we present here the approach of <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2019autoencoder">2019</a>)</span>.</p>
-<p>Autoencoders are a strange family of neural networks because they are classified among non-supervised algorithms. In the supervised jargon, their label is equal to the input. Like GANS, autoencoders consist of two networks, though the structure is very different: the first network encodes the input into some intermediary output (usually called the code) and the second network decodes the code into a modified version of the input.</p>
+<p>In the recent literature auto-encoders are used in <span class="citation">Huck (<a href="#ref-huck2019large">2019</a>)</span> (portfolio management), and <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2019autoencoder">2019</a>)</span> (asset pricing).<br />
+Autoencoders are a strange family of neural networks because they are classified among non-supervised algorithms. In the supervised jargon, their label is equal to the input. Like GANS, autoencoders consist of two networks, though the structure is very different: the first network encodes the input into some intermediary output (usually called the code) and the second network decodes the code into a modified version of the input.</p>
 <p><span class="math display">\[\begin{array}{ccccccccc}
 \textbf{x} &amp; &amp;\overset{E}{\longrightarrow} &amp;&amp; \textbf{z} &amp;&amp; \overset{D}{\longrightarrow} &amp;&amp; \textbf{x}&#39; \\
 \text{input} &amp;&amp; \text{encoder} &amp;&amp; \text{code} &amp;&amp; \text{decoder} &amp;&amp; \text{modified input}

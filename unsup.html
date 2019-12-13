@@ -597,16 +597,16 @@ iii) the resulting factors are orthogonal.</p>
 <h3><span class="header-section-number">16.2.1</span> A bit of algebra</h3>
 <p>In this short subsection, we define some key concepts that are required to fully understand the derivation of PCA. Henceforth, we work with matrices (in bold fonts). An <span class="math inline">\(I \times K\)</span> matrix <span class="math inline">\(\textbf{X}\)</span> is orthonormal if <span class="math inline">\(I&gt; K\)</span> and <span class="math inline">\(\textbf{X}&#39;\textbf{X}=\textbf{I}_K\)</span>. When <span class="math inline">\(I=K\)</span>, the (square) matrix is called orthogonal and <span class="math inline">\(\textbf{X}&#39;\textbf{X}=\textbf{X}\textbf{X}&#39;=\textbf{I}_K\)</span>, i.e., <span class="math inline">\(\textbf{X}^{-1}=\textbf{X}&#39;\)</span>.</p>
 <p>One foundational result in matrix theory is the Singular Value Decomposition (SVD, see, e.g., Chapter 5 in <span class="citation">Meyer (<a href="#ref-meyer2000matrix">2000</a>)</span>). The SVD is formulated as follows: any <span class="math inline">\(I \times K\)</span> matrix <span class="math inline">\(\textbf{X}\)</span> can be decomposed into
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:svd">\[\begin{equation}
+\tag{16.1}
 \textbf{X}=\textbf{U} \boldsymbol{\Delta} \textbf{V}&#39;,
-\label{eq:svd}
 \end{equation}\]</span>
 where <span class="math inline">\(\textbf{U}\)</span> (<span class="math inline">\(I\times I\)</span>) and <span class="math inline">\(\textbf{V}\)</span> (<span class="math inline">\(K \times K\)</span>) are orthogonal and <span class="math inline">\(\boldsymbol{\Delta}\)</span> (<span class="math inline">\(I\times K\)</span>) is diagonal, i.e. <span class="math inline">\(\Delta{i,k}=0\)</span> whenever <span class="math inline">\(i\neq k\)</span>. In addition, <span class="math inline">\(\Delta{i,i}\ge 0\)</span>: the diagonal terms of <span class="math inline">\(\boldsymbol{\Delta}\)</span> are nonnegative.</p>
 <p>For simplicity, we assume below that <span class="math inline">\(\textbf{1}_I&#39;\textbf{X}=\textbf{0}_K&#39;\)</span>, i.e., that all columns have zero sum (and hence zero mean).<a href="#fn21" class="footnote-ref" id="fnref21"><sup>21</sup></a> This allows to write that the covariance matrix is equal to its sample estimate <span class="math inline">\(\boldsymbol{\Sigma}_X= \frac{1}{I-1}\textbf{X}&#39;\textbf{X}\)</span>.</p>
 <p>One crucial feature of covariance matrices is their symmetry. Indeed, real-valued symmetric (square) matrices enjoy a SVD which is much more powerful: when <span class="math inline">\(\textbf{X}\)</span> is symmetric, there exist an orthogonal matrix <span class="math inline">\(\textbf{Q}\)</span> and a diagonal matrix <span class="math inline">\(\textbf{D}\)</span> such that
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:diagonaliz">\[\begin{equation}
+\tag{16.2} 
 \textbf{X}=\textbf{Q}\textbf{DQ}&#39;.
-\label{eq:diagonaliz}
 \end{equation}\]</span>
 This process is called diagonalization (see Chapter 7 in <span class="citation">Meyer (<a href="#ref-meyer2000matrix">2000</a>)</span>) and conveniently applies to covariance matrices.</p>
 </div>
@@ -618,11 +618,11 @@ where <span class="math inline">\(P\)</span> is a <span class="math inline">\(K 
 - the first condition imposes that the covariance matrix be diagonal;<br />
 - the second condition imposes that the diagonal elements, when ranked in decreasing magnitude, see their value decline (sharply if possible).</p>
 <p>The covariance matrix of <span class="math inline">\(\textbf{Y}\)</span> is
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:covy">\[\begin{equation}
+\tag{16.3} 
 \boldsymbol{\Sigma}_Y=\frac{1}{I-1}\textbf{Y}&#39;\textbf{Y}=\frac{1}{I-1}\textbf{P}&#39;\textbf{X}&#39;\textbf{XP}=\frac{1}{I-1}\textbf{P}&#39;\boldsymbol{\Sigma}_X\textbf{P}
-\label{eq:covy}
 \end{equation}\]</span></p>
-<p>In this expression, we plug the decomposition <a href="#eq:diagonaliz">(<strong>??</strong>)</a> of <span class="math inline">\(\boldsymbol{\Sigma}_X\)</span>:
+<p>In this expression, we plug the decomposition <a href="unsup.html#eq:diagonaliz">(16.2)</a> of <span class="math inline">\(\boldsymbol{\Sigma}_X\)</span>:
 <span class="math display">\[\boldsymbol{\Sigma}_Y=\frac{1}{I-1}\textbf{P}&#39;\textbf{Q}\textbf{DQ}&#39;\textbf{P},\]</span>
 thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get <span class="math inline">\(\boldsymbol{\Sigma}_Y=\frac{1}{I-1}\textbf{D}\)</span>, that is, a diagonal covariance matrix for <span class="math inline">\(\textbf{Y}\)</span>. The columns of <span class="math inline">\(\textbf{Y}\)</span> can then be re-shuffled in decreasing order of variance so that the diagonal elements of <span class="math inline">\(\boldsymbol{\Sigma}_Y\)</span> progressively shrink. This is useful because it helps locate the factors with most informational content (the first factors). In the limit, a constant vector (with zero variance) carries no signal.</p>
 <p>The matrix <span class="math inline">\(\textbf{Y}\)</span> is a linear transformation of <span class="math inline">\(\textbf{X}\)</span>, thus, it is expected to carry the same information, even though this information is coded differently. Since the columns are ordered according to their relative importance, it is simple to omit some of them. The new set of features <span class="math inline">\(\tilde{\textbf{X}}\)</span> consists in the first <span class="math inline">\(K&#39;\)</span> (with <span class="math inline">\(K&#39;&lt;K\)</span>) columns of <span class="math inline">\(\textbf{Y}\)</span>.</p>
@@ -688,20 +688,20 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 <p>In a PCA, the coding from <span class="math inline">\(\textbf{X}\)</span> to <span class="math inline">\(\textbf{Y}\)</span> is straightfoward, linear and works both ways:
 <span class="math display">\[\textbf{Y}=\textbf{X}\textbf{P} \quad \text{and} \quad \textbf{X}=\textbf{YP}&#39;,\]</span>
 so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span class="math inline">\(\textbf{Y}\)</span>. This can be writen differently:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:pcascheme">\[\begin{equation}
+\tag{16.4}
 \textbf{X} \quad \overset{\text{encode via }\textbf{P}}{\longrightarrow} \quad \textbf{Y} \quad \overset{\text{decode via } \textbf{P}&#39;}{\longrightarrow} \quad \textbf{X}
-\label{eq:pcascheme}
 \end{equation}\]</span></p>
 <p>If we take the truncated version and seek a smaller output (with only <span class="math inline">\(K&#39;\)</span> columns), this gives:</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:pcaschem2">\[\begin{equation}
+\tag{16.5}
 \textbf{X}, \ (I\times K) \quad \overset{\text{encode via }\textbf{P}_{K&#39;}}{\longrightarrow} \quad \tilde{\textbf{X}}, \ (I \times K&#39;) \quad \overset{\text{decode via } \textbf{P}&#39;_{K&#39;}}{\longrightarrow} \quad \breve{\textbf{X}},\ (I \times K),
-\label{eq:pcascheme2}
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\textbf{P}_{K&#39;}\)</span> is the restriction of <span class="math inline">\(\textbf{P}\)</span> to the <span class="math inline">\(K&#39;\)</span> columns that correspond to the factors with the largest variances. The dimensions of matrices are indicated inside the brackets. In this case, the recoding cannot recover <span class="math inline">\(\textbf{P}\)</span> exactly but only an approximation, which we write <span class="math inline">\(\breve{\textbf{X}}\)</span>. This approximation is coded with less information, hence this new data <span class="math inline">\(\breve{\textbf{X}}\)</span> is compressed and provides a parcimonious representation of the original sample <span class="math inline">\(\textbf{X}\)</span>.</p>
 <p>An autoencodeur generalizes this concept to nonlinear coding functions. Simple linear autoencoders are linked to latent factor models (see Proposition 1 in  for the case of single layer autoencoders.) The scheme is the following
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:aescheme2">\[\begin{equation}
+\tag{16.6}
 \textbf{X},\ (I\times K) \quad \overset{\text{encode via } N} {\longrightarrow} \quad \tilde{\textbf{X}}=N(\textbf{X}), \ (I \times K&#39;) \quad \overset{\text{decode via } N&#39;}{\longrightarrow} \quad \breve{\textbf{X}}=N&#39;(\tilde{\textbf{X}}), \ (I \times K),
-\label{eq:aescheme2}
 \end{equation}\]</span></p>
 <p>where the encoding and decoding functions <span class="math inline">\(N\)</span> and <span class="math inline">\(N&#39;\)</span> are often taken to be neural networks. The term <strong>auto-encoder</strong> comes from the fact that the target output, which we often write <span class="math inline">\(\textbf{Y}\)</span> is the original sample <span class="math inline">\(\textbf{X}\)</span>. Thus, the algorithm seek to determine the function <span class="math inline">\(N\)</span> that minimizes the distance (to be defined) between <span class="math inline">\(\textbf{X}\)</span> and the output value <span class="math inline">\(\breve{\textbf{X}}\)</span>. The encoder generates an alternative representation of <span class="math inline">\(\textbf{X}\)</span> while the decoder tries to recode it back to its original values. Naturally, the intermediate (coded) version <span class="math inline">\(\tilde{\textbf{X}}\)</span> is targeted to have a smaller dimension compared to <span class="math inline">\(\textbf{X}\)</span>.</p>
 </div>
@@ -757,9 +757,9 @@ FIGURE 16.1: Output from the training of an auto-encoder.
 <h2><span class="header-section-number">16.3</span> Clustering via k-means</h2>
 <p>The second family of unsupervised tools pertains to clustering. Features are grouped into homogeneous families of predictors. It is then possible to single out one among the group (or to create a synthetic average of all of them). Mechanically, the number of predictors is reduced.</p>
 <p>The principle is simple: among a group of variables (the reasoning would be the same for observations in the other dimension) <span class="math inline">\(\textbf{x}_{\{1 \le j \le J\}}\)</span>, find the combination of <span class="math inline">\(k&lt;J\)</span> groups that minimize
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:kmeans">\[\begin{equation}
+\tag{16.7}
 \sum_{i=1}^k\sum_{\textbf{x}\in S_i}||\textbf{x}-\textbf{m}_i||^2,
-\label{eq:kmeans}
 \end{equation}\]</span>
 where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usually taken to be the Euclidean <span class="math inline">\(l^2\)</span>-norm. The <span class="math inline">\(S_i\)</span> are the groups and the minimization is run on the whole set of groups <span class="math inline">\(\textbf{S}\)</span>. The <span class="math inline">\(\textbf{m}_i\)</span> are the group means (also called centroids or barycenters): <span class="math inline">\(\textbf{m}_i=(\text{card}(S_i))^{-1}\sum_{\textbf{x}\in S_i}\textbf{x}\)</span>.</p>
 <p>In order to ensure optimality, all possible arrangements must be tested, which is prohibitively long when <span class="math inline">\(k\)</span> and <span class="math inline">\(J\)</span> are large. Therefore, the problem is usually solved with greedy algorithms that seek (and find) solutions that are not optimal but ‘good enough’.</p>
@@ -767,7 +767,7 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 <ol start="0" style="list-style-type: decimal">
 <li>Start with a (possibly random) partition of <span class="math inline">\(k\)</span> clusters.<br />
 </li>
-<li>For each cluster, compute the optimal mean values <span class="math inline">\(\textbf{m}_i^*\)</span> that minimizes expression <a href="#eq:kmeans">(<strong>??</strong>)</a>. This is a simple quadratic program.<br />
+<li>For each cluster, compute the optimal mean values <span class="math inline">\(\textbf{m}_i^*\)</span> that minimizes expression <a href="unsup.html#eq:kmeans">(16.7)</a>. This is a simple quadratic program.<br />
 </li>
 <li>Given the optimal centers <span class="math inline">\(\textbf{m}_i^*\)</span>, reassign the points <span class="math inline">\(\textbf{x}_i\)</span> so that they are all the closest to their center.<br />
 </li>
@@ -816,11 +816,11 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 <p>To the best of our knowledge, nearest neighbors are not used in large scale portfolio choice applications. The reason is simple: computational cost. Nonetheless, the concept of neighbors is widespread in unsupervised learning and can be used locally in complement to interpretability tools.</p>
 <p>In what follows, we seek to find neighbors of one particular instance <span class="math inline">\(\textbf{x}_i\)</span> (a <span class="math inline">\(K\)</span>-dimensional row vector). Note that there is a major difference with the previous section: the clustering is intended at the observation level (row) and not at the predictor level (column).</p>
 <p>Given a dataset with the same (corresponding) columns <span class="math inline">\(\textbf{X}_{i,k}\)</span>, the neighbors are defined via a similarity measure (or distance)
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:D">\[\begin{equation}
+\tag{16.8}
 D(\textbf{x}_j,\textbf{x}_i)=\sum_{k=1}^Kc_k d_k(x_{j,k},x_{i,k}),
-\label{eq:D}
 \end{equation}\]</span>
-where the distances functions <span class="math inline">\(d_k\)</span> can operate on various data types (numerical, categorical, etc.). For numerical values, <span class="math inline">\(d_k(x_{j,k},x_{i,k})=(x_{j,k}-x_{i,k})^2\)</span> or <span class="math inline">\(d_k(x_{j,k},x_{i,k})=|x_{j,k}-x_{i,k}|\)</span>. For categorical values, we refer to the exhaustive survey by <span class="citation">Boriah, Chandola, and Kumar (<a href="#ref-boriah2008similarity">2008</a>)</span> which lists 14 possible measures. Finally the <span class="math inline">\(c_k\)</span> in Equation <a href="#eq:D">(<strong>??</strong>)</a> allow some flexbility by weighting features. This is useful because both raw values (<span class="math inline">\(x_{i,k}\)</span> versus <span class="math inline">\(x_{i,k&#39;}\)</span>) or measure outputs (<span class="math inline">\(d_k\)</span> versus <span class="math inline">\(d_{k&#39;}\)</span>) can have different scales.</p>
+where the distances functions <span class="math inline">\(d_k\)</span> can operate on various data types (numerical, categorical, etc.). For numerical values, <span class="math inline">\(d_k(x_{j,k},x_{i,k})=(x_{j,k}-x_{i,k})^2\)</span> or <span class="math inline">\(d_k(x_{j,k},x_{i,k})=|x_{j,k}-x_{i,k}|\)</span>. For categorical values, we refer to the exhaustive survey by <span class="citation">Boriah, Chandola, and Kumar (<a href="#ref-boriah2008similarity">2008</a>)</span> which lists 14 possible measures. Finally the <span class="math inline">\(c_k\)</span> in Equation <a href="unsup.html#eq:D">(16.8)</a> allow some flexbility by weighting features. This is useful because both raw values (<span class="math inline">\(x_{i,k}\)</span> versus <span class="math inline">\(x_{i,k&#39;}\)</span>) or measure outputs (<span class="math inline">\(d_k\)</span> versus <span class="math inline">\(d_{k&#39;}\)</span>) can have different scales.</p>
 <p>Once the distances are computed over the whole sample, they are ranked using indices <span class="math inline">\(l_1^i, \dots, l_I^i\)</span>:
 <span class="math display">\[D\left(\textbf{x}_{l_1^i},\textbf{x}_i\right) \le D\left(\textbf{x}_{l_2^i},\textbf{x}_i\right) \le \dots, \le D\left(\textbf{x}_{l_I^i},\textbf{x}_i\right)\]</span></p>
 <p>The nearest neighbors are those indexed by <span class="math inline">\(l_m^i\)</span> for <span class="math inline">\(m=1,\dots,k\)</span>. We leave out the case when there are problematic equalities of the type <span class="math inline">\(D\left(\textbf{x}_{l_m^i},\textbf{x}_i\right)=D\left(\textbf{x}_{l_{m+1}^i},\textbf{x}_i\right)\)</span> for the sake of simplicity and because they rarely occur in practice as long as there are sufficiently many numerical predictors.</p>

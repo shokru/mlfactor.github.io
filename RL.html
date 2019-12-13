@@ -443,33 +443,33 @@ FIGURE 17.1: Scheme of Markov Decision Process. R, S and A stand for reward, sta
 </div>
 <p>Given initialized values for the state of the environement (<span class="math inline">\(S_0\)</span>) and reward (usually <span class="math inline">\(R_0=0\)</span>), the agent performs an action (e.g., invests in some assets). This generates future rewards <span class="math inline">\(R_1\)</span> (e.g., returns, profits, Sharpe ratio) and also a future state of the environment (<span class="math inline">\(S_1\)</span>). Based on that, the agent performs and new action and the sequence continues. When the sets of states, actions and rewards are finite, the MDP is logically called <em>finite</em>. In a financial framework, this is somewhat unrealistic and we discuss this issue later on. It nevertheless is not hard to think of simplified and discretized financial problems. For instance, the reward can be binary: win money versus lose money. In the case of only one asset, the action can also be dual: investing versus not investing. When the number of assets is sufficiently small, it is possible to set fixed proportions that lead to a reasonable number of combinations of portfolio choices, etc.</p>
 <p>We pursue our exposé with finite MDPs (they are the most common in the literature and their formal treatment is simpler). As is often the case with markovian objects, the key notion is that of transition probability:</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:transprob">\[\begin{equation}
+\tag{17.1}
 p(s&#39;,r|s,a)=\mathbb{P}\left[S_t=s&#39;,R_t=r | S_{t-1}=s,A_{t-1}=a \right],
-\label{eq:transprob}
 \end{equation}\]</span></p>
 <p>which is the probability of reaching state <span class="math inline">\(s&#39;\)</span> and reward <span class="math inline">\(r\)</span> at time <span class="math inline">\(t\)</span>, conditionally on being in state <span class="math inline">\(s\)</span> and performing action <span class="math inline">\(a\)</span> at time <span class="math inline">\(t-1\)</span>. The finite sets of states and actions will be denoted with <span class="math inline">\(\mathcal{S}\)</span> and <span class="math inline">\(\mathcal{A}\)</span> henceforth.
 Sometimes, this probability is averaged over the set of rewards which gives the following decomposition:
-<span class="math display">\[\begin{align}
-\sum_r rp(s&#39;,r|s,a)&amp;=\mathcal{P}_{ss&#39;}^a \mathcal{R}_{ss&#39;}^a, \quad \text{ where } \label{eq:transprob2} \\
+<span class="math display" id="eq:transprob2\tag{17.2}}  (#eq:transprob2)
+\sum_r rp(s&#39;,r|s,a)&amp;=\mathcal{P}_{ss&#39;}^a \mathcal{R}_{ss&#39;}^a, \quad \text{ where } \\
 \mathcal{P}_{ss&#39;}^a &amp;=\mathbb{P}\left[S_t=s&#39; | S_{t-1}=s,A_{t-1}=a \right],  \quad \text{ and } \nonumber \\
  \mathcal{R}_{ss&#39;}^a &amp;= \mathbb{E}\left[R_t | S_{t-1}=s,S_t=s&#39;, A_{t-1}=a \right]. \nonumber
 \end{align}\]</span></p>
 <p>The goal of the agent is to maximize some function of the stream of rewards. This gain is usually defined as
-<span class="math display">\[\begin{align}
-G_t&amp;=\sum_{k=0}^T\gamma^kR_{t+k+1} \nonumber \\
-&amp;=R_{t+1} +\gamma G_{t+1}, \label{eq:gain6}
+<span class="math display" id="eq:gain6">\[\begin{align}
+G_t&amp;=\sum_{k=0}^T\gamma^kR_{t+k+1} \nonumber \\   \tag{17.3}
+&amp;=R_{t+1} +\gamma G_{t+1},
 \end{align}\]</span></p>
 <p>i.e., it is a discounted version of the reward, where the discount factor is <span class="math inline">\(\gamma \in (0,1]\)</span>. The horizon <span class="math inline">\(T\)</span> may be infinite, which is why <span class="math inline">\(\gamma\)</span> was originally introduced. Assuming the rewards are bounded, the infinite sum diverges for <span class="math inline">\(\gamma=1\)</span>, but may converge when <span class="math inline">\(\gamma &lt;1\)</span>. When <span class="math inline">\(T\)</span> is finite, the task is called <em>episodic</em> and otherwise, it is said to be <em>continuous</em>.</p>
 <p>In RL, the focal unknown is the <em>policy</em> <span class="math inline">\(\pi\)</span>, which drives the actions of the agent. More precisely, <span class="math inline">\(\pi(a,s)=\mathbb{P}[A_t=a|S_t=s]\)</span>, that is, <span class="math inline">\(\pi\)</span> equals the probability of taking action <span class="math inline">\(a\)</span> if the state of the environment is <span class="math inline">\(s\)</span>. This means that actions are subject to randomness, just like for mixed strategies in game theory. While this may seem disappointing because an investor would want to be sure to take <em>the</em> best action, but it is also a good reminder that the best way to face random outcomes may well be to randomize actions as well.</p>
 <p>Finally, in order to try to determine the <em>best</em> policy, one key indicator is the so-called value function:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:RLvalue">\[\begin{equation}
+\tag{17.4}
 v_\pi(s)=\mathbb{E}_\pi\left[ G_t | S_t=s \right],
-\label{eq:RL_value}
 \end{equation}\]</span></p>
 <p>where the time index <span class="math inline">\(t\)</span> is not very relevant and omitted in the notation of the function. The index <span class="math inline">\(\pi\)</span> under the expectation operator <span class="math inline">\(\mathbb{E}[\cdot]\)</span> simply indicates that the average is taken when the policy <span class="math inline">\(\pi\)</span> is enforced. The value function is simply equal to the average gain conditionally on the state being equal to <span class="math inline">\(s\)</span>. In financial terms, this is equivalent to the average profit if the agents takes action <span class="math inline">\(a\)</span> when the market environment is <span class="math inline">\(s\)</span>. More generally, it is also possible to condition not only on the state, but also on the action taken. We thus introduce the <span class="math inline">\(q_\pi\)</span> action-value function:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:RLQ">\[\begin{equation}
+\tag{17.5}
 q_\pi(s,a)=\mathbb{E}_\pi\left[ G_t | S_t=s, \ A_t=a \right].
-\label{eq:RL_Q}
 \end{equation}\]</span></p>
 <p>The <span class="math inline">\(q_\pi\)</span> function is highly important because it gives the average gain when the state and action are fixed. Hence, if the current state is known, then one obvious choice is to select the action for which <span class="math inline">\(q_\pi(s,\cdot)\)</span> is the highest. Of course, this is the best solution if the optimal value of <span class="math inline">\(q_\pi\)</span> is known, which is not always the case in practice. The value function can easily be accessed via <span class="math inline">\(q_\pi\)</span>: <span class="math inline">\(v_\pi(s)=\sum_a \pi(a,s)q_\pi(s,a)\)</span>.</p>
 <p>The optimal <span class="math inline">\(v_\pi\)</span> and <span class="math inline">\(q_\pi\)</span> are straightforwardly defined as
@@ -485,40 +485,40 @@ Thus, this iterative search for a good policy can take long. For more details on
 q_\pi(s,a) &amp;= \mathbb{E}_\pi[G_t|S_t=s,A_t=a] \\
 &amp;= \mathbb{E}_\pi[R_{t+1}+ \gamma G_{t+1}|S_t=s,A_t=a],
 \end{align*}\]</span>
-where the second equality stems from <a href="#eq:gain6">(<strong>??</strong>)</a>. The expression <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]\)</span> can be further decomposed. Since the expectation runs over <span class="math inline">\(\pi\)</span>, we need to sum over all possible actions <span class="math inline">\(a&#39;\)</span> and states <span class="math inline">\(s&#39;\)</span> and resort to <span class="math inline">\(\pi(a&#39;,s&#39;)\)</span>. In addition, the sum on the <span class="math inline">\(s&#39;\)</span> and <span class="math inline">\(r\)</span> arguments of the probability <span class="math inline">\(p(s&#39;,r|s,a)=\mathbb{P}\left[S_{t+1}=s&#39;,R_{t+1}=r | S_t=s,A_t=a \right]\)</span> gives access to the distribution of the random couple <span class="math inline">\((S_{t+1},R_{t+1})\)</span> so that in the end <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]=\sum_{a&#39;, r,s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) r\)</span>. A similar reasoning applies to the second portion of <span class="math inline">\(q_\pi\)</span> and:
+where the second equality stems from <a href="RL.html#eq:gain6">(17.3)</a>. The expression <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]\)</span> can be further decomposed. Since the expectation runs over <span class="math inline">\(\pi\)</span>, we need to sum over all possible actions <span class="math inline">\(a&#39;\)</span> and states <span class="math inline">\(s&#39;\)</span> and resort to <span class="math inline">\(\pi(a&#39;,s&#39;)\)</span>. In addition, the sum on the <span class="math inline">\(s&#39;\)</span> and <span class="math inline">\(r\)</span> arguments of the probability <span class="math inline">\(p(s&#39;,r|s,a)=\mathbb{P}\left[S_{t+1}=s&#39;,R_{t+1}=r | S_t=s,A_t=a \right]\)</span> gives access to the distribution of the random couple <span class="math inline">\((S_{t+1},R_{t+1})\)</span> so that in the end <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]=\sum_{a&#39;, r,s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) r\)</span>. A similar reasoning applies to the second portion of <span class="math inline">\(q_\pi\)</span> and:
 <span class="math display">\[\begin{align}
-q_\pi(s,a) &amp;=\sum_{a&#39;,r, s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) \left[ r+\gamma \mathbb{E}_\pi[ G_{t+1}|S_t=s&#39;,A_t=a&#39;]\right] \nonumber \\
-&amp;=\sum_{a&#39;,r,s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) \left[ r+\gamma q_\pi(s&#39;,a&#39;)\right]. \label{eq:bellman}
+q_\pi(s,a) &amp;=\sum_{a&#39;,r, s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) \left[ r+\gamma \mathbb{E}_\pi[ G_{t+1}|S_t=s&#39;,A_t=a&#39;]\right] \nonumber \\  \label{eq:bellman}
+&amp;=\sum_{a&#39;,r,s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) \left[ r+\gamma q_\pi(s&#39;,a&#39;)\right].
 \end{align}\]</span></p>
 <p>This equation links <span class="math inline">\(q_\pi(s,a)\)</span> to the future <span class="math inline">\(q_\pi(s&#39;,a&#39;)\)</span> from the states and actions <span class="math inline">\((s&#39;,a&#39;)\)</span> that are accessible from <span class="math inline">\((s,a)\)</span>.</p>
 <p>Notably, Equation <a href="#eq:bellman">(<strong>??</strong>)</a> is also true for the optimal action-value function <span class="math inline">\(q_*=\underset{\pi}{\max} \, q_\pi(s,a)\)</span>:</p>
 <p><span class="math display">\[\begin{align}
-q_*(s,a) &amp;=\underset{a&#39;}{\max} \sum_{r,s&#39;}p(s&#39;,r|s,a) \left[ r+\gamma q_*(s&#39;,a&#39;)\right], \nonumber \\
-&amp;= \mathbb{E}_{\pi^*}[r|s,a]+ \gamma \, \sum_{r,s&#39;}p(s&#39;,r|s,a)\left(  \underset{a&#39;}{\max} q_*(s&#39;,a&#39;) \right) \label{eq:bellmanq}
+q_*(s,a) &amp;=\underset{a&#39;}{\max} \sum_{r,s&#39;}p(s&#39;,r|s,a) \left[ r+\gamma q_*(s&#39;,a&#39;)\right], \nonumber \\ \label{eq:bellmanq}
+&amp;= \mathbb{E}_{\pi^*}[r|s,a]+ \gamma \, \sum_{r,s&#39;}p(s&#39;,r|s,a)\left(  \underset{a&#39;}{\max} q_*(s&#39;,a&#39;) \right) 
 \end{align}\]</span></p>
 <p>because one optimal policy is one that maximizes <span class="math inline">\(q_\pi(s,a)\)</span>, for a given state <span class="math inline">\(s\)</span> and over all possible actions <span class="math inline">\(a\)</span>. This expression is central to a cornerstone algorithm in reinforcement learning called <span class="math inline">\(Q\)</span>-learning (the formal proof of convergence is outlined in <span class="citation">Watkins and Dayan (<a href="#ref-watkins1992q">1992</a>)</span>). In <span class="math inline">\(Q\)</span>-learning, the state-action function does no longer depend on policy and is written with capital <span class="math inline">\(Q\)</span>. The process is the following:</p>
 Initialize values <span class="math inline">\(Q(s,a)\)</span> for all states <span class="math inline">\(s\)</span> and actions <span class="math inline">\(a\)</span>. For each episode:<br />
 
 
 <p><span class="math display">\[\begin{equation}
-Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(\underbrace{r_{i+1}+\gamma \, \underset{a}{\max} \, Q_i(s_{i+1},a)}_{\text{echo of } (\ref{eq:bellmanq})}-Q_i(s_i,a_i) \right)
 \label{eq:QLupdate}
+Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(\underbrace{r_{i+1}+\gamma \, \underset{a}{\max} \, Q_i(s_{i+1},a)}_{\text{echo of } (\ref{eq:bellmanq})}-Q_i(s_i,a_i) \right)
 \end{equation}\]</span></p>
 <p>The underlying reason why this update rule works can be linked to fixed point theorems of contraction mappings. If a function <span class="math inline">\(f\)</span> satisfies <span class="math inline">\(|f(x)-f(y)|&lt; \delta |x-y|\)</span> (Lipshitz continuity), then a fixed point <span class="math inline">\(z\)</span> satisfying <span class="math inline">\(f(z)=z\)</span> can be iteratively obtained via <span class="math inline">\(z \leftarrow f(z)\)</span>. This updating rule converges to the fixed point. Equation <a href="#eq:bellmanq">(<strong>??</strong>)</a> can be solved using a similar principle, except that a learning rate <span class="math inline">\(\eta\)</span> slows the learning process (but also technically ensures convergence under technical assumptions).</p>
 <p>More generally, <a href="#eq:QLupdate">(<strong>??</strong>)</a> has a form that is widespread in reinforcement learning that is summarized in Equation (2.4) of <span class="citation">Sutton and Barto (<a href="#ref-sutton2018reinforcement">2018</a>)</span>:
 <span class="math display">\[\begin{equation}
-\text{New estimate} \leftarrow \text{Old estimate + Step size (}i.e., \text{ learning rate)} \times (\text{Target - Old estimate}),
 \label{eq:RLeq}
+\text{New estimate} \leftarrow \text{Old estimate + Step size (}i.e., \text{ learning rate)} \times (\text{Target - Old estimate}),
 \end{equation}\]</span></p>
 <p>where the last part can be viewed as an error term. Starting from the old estimate, the new estimate therefore goes in the ‘right’ (or sought) direction, modulo a discount term that makes sure that the magnitude of this direction is not too large. The update rule in <a href="#eq:QLupdate">(<strong>??</strong>)</a> is often referred to as ‘<em>temporal difference</em>’ learning because it is driven by the improvement yielded by estimates that are known at time <span class="math inline">\(t+1\)</span> (target) versus those known at time <span class="math inline">\(t\)</span>.</p>
 <p>One important step of the <em>Q</em>-learning sequence is the second one where the action <span class="math inline">\(a_i\)</span> is picked. In RL, the best algorithms combine two features: exploitation and exploration. Exploitation is when the machine uses the currrent information at its disposal to choose the next action. In this case, for a given state <span class="math inline">\(s_i\)</span>, it chooses the action <span class="math inline">\(a_i\)</span> that maximizes the expected reward <span class="math inline">\(Q_i(s_i,a_i)\)</span>. While obvious, this choice is not optimal if the current function <span class="math inline">\(Q_i\)</span> is relatively far from the <em>true</em> <span class="math inline">\(Q\)</span>. Indeed: decisions (actions) are bound to be suboptimal and repeated many times.</p>
 <p>In order to gather new information stemming from actions that have not been tested much (but that can potentially generate higher rewards), exploration is needed. This is when an action <span class="math inline">\(a_i\)</span> is chosen randomly. The most common way to combine these two concepts is called <span class="math inline">\(\epsilon\)</span>-greedy exploration. The action <span class="math inline">\(a_i\)</span> is assigned according to:</p>
 <p><span class="math display">\[\begin{equation}
+\label{eq:egreedy}
 a_i=\left\{ \begin{array}{c l}
 \underset{a}{\text{argmax}} \ Q_i(s_i,a) &amp; \text{ with probability } 1-\epsilon \\
 \text{randomly (uniformly) over } \mathcal{A} &amp; \text{ with probability } \epsilon
 \end{array}\right. .
-\label{eq:egreedy}
 \end{equation}\]</span></p>
 <p>Thus, with probability <span class="math inline">\(\epsilon\)</span>, the algorithm explores and with probability <span class="math inline">\(1-\epsilon\)</span>, it exploits the current knowledge of the expected reward and picks the best action. Because all actions have a non-zero probability of being chosen, the policy is called “soft”. Indeed, then best action has a probability of selection equal to <span class="math inline">\(1-\epsilon(1-\text{card}(\mathcal{A})^{-1})\)</span> while all other actions are picked with probability <span class="math inline">\(\epsilon/\text{card}(\mathcal{A})\)</span>.</p>
 </div>
@@ -527,14 +527,14 @@ a_i=\left\{ \begin{array}{c l}
 <p>In <span class="math inline">\(Q\)</span>-learning, the algorithm seeks to find the action-value function of the optimal policy. Thus, the policy that is followed to pick actions is different from the one that is learned (via <span class="math inline">\(Q\)</span>). Such algorithms are called <em>off-policy</em>. <em>On-policy</em> algorithms seek to improve the estmation of the action-value function <span class="math inline">\(q_\pi\)</span> by continuously acting according to the policy <span class="math inline">\(\pi\)</span>. One canonical example of on-policy learning is the SARSA method which requires two consecutive states and actions <strong>SA</strong>R<strong>SA</strong>. The way the quintuple <span class="math inline">\((S_t,A_t,R_{t+1}, S_{t+1}, A_{t+1})\)</span> is processed is presented below.</p>
 <p>The main difference between <span class="math inline">\(Q\)</span> learning and SARSA is the update rule. In SARSA, it is given by
 <span class="math display">\[\begin{equation}
-Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, Q_i(s_{i+1},a_{i+1})-Q_i(s_i,a_i) \right)
 \label{eq:SARSAupdate}
+Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, Q_i(s_{i+1},a_{i+1})-Q_i(s_i,a_i) \right)
 \end{equation}\]</span></p>
 <p>The improvement comes only from the local point <span class="math inline">\(Q_i(s_{i+1},a_{i+1})\)</span> that is based on the new states and actions (<span class="math inline">\(s_{i+1},a_{i+1}\)</span>), whereas in <span class="math inline">\(Q\)</span>-learning, it comes from all possible actions of which only the best is retained <span class="math inline">\(\underset{a}{\max} \, Q_i(s_{i+1},a)\)</span>.</p>
 <p>A more robust (but computationally demanding) version of SARSA is <em>expected</em> SARSA in which the target <span class="math inline">\(Q\)</span> function is averaged over all actions:
 <span class="math display">\[\begin{equation}
-Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, \sum_a \pi(a,s_{i+1}) Q_i(s_{i+1},a) -Q_i(s_i,a_i) \right)
 \label{eq:exSARSAupdate}
+Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, \sum_a \pi(a,s_{i+1}) Q_i(s_{i+1},a) -Q_i(s_i,a_i) \right)
 \end{equation}\]</span></p>
 <p>Expected SARSA is less volatile than SARSA because the latter is strongly impacted by the random choice of <span class="math inline">\(a_{i+1}\)</span>. In expected SARSA, the average smoothes the learning process.</p>
 </div>
@@ -546,8 +546,8 @@ Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, \su
 <p>Reinforcement learning is a framework and not a particular algorithm. In fact, different tools can very well co-exist in a RL task (AlphaGo combined both tree methods and neural networks, see <span class="citation">Silver et al. (<a href="#ref-silver2016mastering">2016</a>)</span>). Nonetheless, any RL attempt will always rely on the three key concepts that are: the states, the actions and the rewards. In factor investing, they fairly easy to identify, though there is always room for interpretation. Actions are evidently defined by portfolio compositions. The states can be viewed as the current values that describe the economy: as a first order approximation, it can be assumed that the feature levels fulfill this role (possibly conditioned or complemented with macro-economic data). The rewards are even more straightforward. Returns or any relevant performance metric (e.g., Sharpe ratio which is for instance used in <span class="citation">Moody et al. (<a href="#ref-moody1998performance">1998</a>)</span>, <span class="citation">Bertoluzzo and Corazza (<a href="#ref-bertoluzzo2012testing">2012</a>)</span> and <span class="citation">Aboussalah and Lee (<a href="#ref-aboussalah2020continuous">2020</a>)</span> or drawdown-based ratios, as in <span class="citation">Almahdi and Yang (<a href="#ref-almahdi2017adaptive">2017</a>)</span>) can account for rewards.</p>
 <p>A major problem lies in the dimensionality of both states and actions. Assuming an absence of leverage (no negative weights), the actions take values on the simplex
 <span class="math display">\[\begin{equation}
-\mathbb{S}_N=\left\{ \mathbf{x} \in \mathbb{R}^N\left|\sum_{n=1}^Nx_n=1, \ x_n\ge 0, \ \forall n=1,\dots,N \right.\right\}
 \label{eq:simplex}
+\mathbb{S}_N=\left\{ \mathbf{x} \in \mathbb{R}^N\left|\sum_{n=1}^Nx_n=1, \ x_n\ge 0, \ \forall n=1,\dots,N \right.\right\}
 \end{equation}\]</span>
 and assuming that all features have been uniformized, their space is <span class="math inline">\([0,1]^{NK}\)</span>. Needless to say, the dimensions of both spaces are numerically impractical.</p>
 <p>A simple solution to this problem is discretization: each space is divided into a small number of categories. Some authors do take this route. In <span class="citation">Yang, Yu, and Almahdi (<a href="#ref-yang2018investor">2018</a>)</span>, the state space is discretized into three values depending on volatility, and actions are also split into three categories. <span class="citation">Bertoluzzo and Corazza (<a href="#ref-bertoluzzo2012testing">2012</a>)</span> and <span class="citation">Xiong et al. (<a href="#ref-xiong2018practical">2018</a>)</span> also choose three possible actions (buy, hold, sell). In <span class="citation">Almahdi and Yang (<a href="#ref-almahdi2019constrained">2019</a>)</span>, the learner is expected to yield binary signals for buying or shorting. <span class="citation">Garcı'a-Galicia, Carsteanu, and Clempner (<a href="#ref-garcia2019continuous">2019</a>)</span> consider a larger state space (8 elements) but restrict the action set to 3 options.<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> In terms of the state space, all articles assume that the state of the economy is determined by prices (or returns).</p>
@@ -559,26 +559,26 @@ and assuming that all features have been uniformized, their space is <span class
 <h3><span class="header-section-number">17.2.2</span> Policy gradient</h3>
 <p>Beyond the discretization of action and state spaces, a powerful trick is <strong>parametrization</strong>. When <span class="math inline">\(a\)</span> and <span class="math inline">\(s\)</span> can take discrete values, action-value functions must be computed for all pairs <span class="math inline">\((a,s)\)</span>, which can be prohibitively cumbersome. An elegant way to circumvent this problem is to assume that the policy is driven by a relatively modest number of parameters. The learning process is then focused on optimizing this set of parameters <span class="math inline">\(\boldsymbol{\theta}\)</span>. We then write <span class="math inline">\(\pi_{\boldsymbol{\theta}}(a,s)\)</span> for the probability of choosing action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span>. One intuitive way to define <span class="math inline">\(\pi_{\boldsymbol{\theta}}(a,s)\)</span> is to resort to a soft-max form:
 <span class="math display">\[\begin{equation}
-\pi_{\boldsymbol{\theta}}(a,s) = \frac{e^{\boldsymbol{\theta}&#39;\textbf{h}(a,s)}}{\sum_{b}e^{\boldsymbol{\theta}&#39;\textbf{h}(b,s)}},
 \label{eq:policyex}
+\pi_{\boldsymbol{\theta}}(a,s) = \frac{e^{\boldsymbol{\theta}&#39;\textbf{h}(a,s)}}{\sum_{b}e^{\boldsymbol{\theta}&#39;\textbf{h}(b,s)}},
 \end{equation}\]</span>
 where the output of function <span class="math inline">\(\textbf{h}(a,s)\)</span>, which has the same dimension as <span class="math inline">\(\boldsymbol{\theta}\)</span> is called a feature vector representing the pair <span class="math inline">\((a,s)\)</span>. Typically, <span class="math inline">\(\textbf{h}\)</span> can very well be a simple neural network with two input units and an output dimension equal to the length of <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
-<p>One desired property for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is that it be differentiable with respect to <span class="math inline">\(\boldsymbol{\theta}\)</span> so that <span class="math inline">\(\boldsymbol{\theta}\)</span> can be improved via some gradient method. The most simple and intuitive results about policy gradients are known in the case of episodic tasks (finite horizon) for which it is sought to maximize the average gain <span class="math inline">\(\mathbb{E}_{\boldsymbol{\theta}}[G_t]\)</span> where the gain is defined in Equation <a href="#eq:gain6">(<strong>??</strong>)</a>. The expectation is computed according to a particular policy that depends on <span class="math inline">\(\boldsymbol{\theta}\)</span>, this is why we use a simple subscript. One central result is the so-called policy gradient theorem which states that</p>
+<p>One desired property for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is that it be differentiable with respect to <span class="math inline">\(\boldsymbol{\theta}\)</span> so that <span class="math inline">\(\boldsymbol{\theta}\)</span> can be improved via some gradient method. The most simple and intuitive results about policy gradients are known in the case of episodic tasks (finite horizon) for which it is sought to maximize the average gain <span class="math inline">\(\mathbb{E}_{\boldsymbol{\theta}}[G_t]\)</span> where the gain is defined in Equation <a href="RL.html#eq:gain6">(17.3)</a>. The expectation is computed according to a particular policy that depends on <span class="math inline">\(\boldsymbol{\theta}\)</span>, this is why we use a simple subscript. One central result is the so-called policy gradient theorem which states that</p>
 <p><span class="math display">\[\begin{equation}
-\nabla \mathbb{E}_{\boldsymbol{\theta}}[G_t]=\mathbb{E}_{\boldsymbol{\theta}} \left[G_t\frac{\nabla \pi_{\boldsymbol{\theta}}}{\pi_{\boldsymbol{\theta}}} \right].
 \label{eq:PGT}
+\nabla \mathbb{E}_{\boldsymbol{\theta}}[G_t]=\mathbb{E}_{\boldsymbol{\theta}} \left[G_t\frac{\nabla \pi_{\boldsymbol{\theta}}}{\pi_{\boldsymbol{\theta}}} \right].
 \end{equation}\]</span></p>
 <p>This result can then be used for gradient ascent: when seeking to maximize a quantity, the parameter change must go in the upward direction:</p>
 <p><span class="math display">\[\begin{equation}
-\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \eta \nabla \mathbb{E}_{\boldsymbol{\theta}}[G_t].
 \label{eq:ascent}
+\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \eta \nabla \mathbb{E}_{\boldsymbol{\theta}}[G_t].
 \end{equation}\]</span></p>
 <p>This simple update rule is known as the REINFORCE algorithm. Many extensions of this simple idea exist (adding baseline, actor-critic methods, etc) and we refer to Chapter 13 of <span class="citation">Sutton and Barto (<a href="#ref-sutton2018reinforcement">2018</a>)</span> for a detailed account on this topic.</p>
 <p>One interesting application of parametric policies is outlined in <span class="citation">Aboussalah and Lee (<a href="#ref-aboussalah2020continuous">2020</a>)</span>. In their article, the authors define a trading policy that is based on a recurrent neural network. Thus, the parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> in this case encompasses all weights and biases in the network.</p>
-<p>Another favorable feature of parametric policies is that they are compatible with continuous sets of actions. Beyond the form <a href="#eq:policyex">(<strong>??</strong>)</a>, there are other ways to shape <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span>. If <span class="math inline">\(\mathcal{A}\)</span> is a subset of <span class="math inline">\(\mathbb{R}\)</span>, and <span class="math inline">\(f_{\boldsymbol{\Omega}}\)</span> is a density function with parameters <span class="math inline">\(\boldsymbol{\Omega}\)</span>, then a candidate form for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is
-<span class="math display">\[\begin{equation}
+<p>Another favorable feature of parametric policies is that they are compatible with continuous sets of actions. Beyond the form <a href="#eq:policyex">(<strong>??</strong>)</a>, there are other ways to shape <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span>. If <span class="math inline">\(\mathcal{A}\)</span> is a subset of <span class="math inline">\(\mathbb{R}\)</span>, and <span class="math inline">\(f_{\boldsymbol{\Omega}}\)</span> is a density function with parameters <span class="math inline">\(\boldsymbol{\Omega}\)</span>, then a candidate form for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is</p>
+<p><span class="math display" id="eq:parpol">\[\begin{equation}
+\tag{17.6}
 \pi_{\boldsymbol{\theta}} = f_{\boldsymbol{\Omega}(s,\boldsymbol{\theta})}(a),
-\label{eq:parpol}
 \end{equation}\]</span>
 in which the parameters <span class="math inline">\(\boldsymbol{\Omega}\)</span> are in turn functions of the states and of the underlying (second order) parameters <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
 <p>While the Gaussian distribution (see Section 13.7 in <span class="citation">Sutton and Barto (<a href="#ref-sutton2018reinforcement">2018</a>)</span>) are often a preferred choice, they would require some processing to lie inside the unit interval. One easy way to obtain such values is to apply the normal cumulative distribution function to the output. In <span class="citation">H. Wang and Zhou (<a href="#ref-wang2019continuous">2019</a>)</span>, the multivariate Gaussian policy is theoretically explored, but it assumes no constraint on weights.</p>

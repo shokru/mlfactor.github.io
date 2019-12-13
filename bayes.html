@@ -435,22 +435,22 @@ that is, the probability of the intersection between the two sets divided by the
 <span class="math display">\[P(B)=\sum_{i=1}^nP(B \cap A_i)= \sum_{i=1}^nP(B|A_i)P(A_i).\]</span></p>
 <p>Given this expression, we can formulate a general version of Bayes’ theorem:
 <span class="math display">\[\begin{equation}
-P(A_i|B)=\frac{P(A_i)P(B|A_i)}{P(B)}= \frac{P(A_i)P(B|A_i)}{\sum_{i=1}^nP(B|A_i)P(A_i)}.
 \label{eq:bayes}
+P(A_i|B)=\frac{P(A_i)P(B|A_i)}{P(B)}= \frac{P(A_i)P(B|A_i)}{\sum_{i=1}^nP(B|A_i)P(A_i)}.
 \end{equation}\]</span></p>
 <p>Endowed with this result, we can move forward to the core topic of this section, which is the estimation of some parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> (possibly a vector) given a dataset, which we denote with <span class="math inline">\(\textbf{y})\)</span> (following the conventions from <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span>).</p>
 <p>In Bayesian analysis, one sophistication (compared to a frequentist approach) comes from the fact that the data is not almighty. The distribution of the parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> will be a mix between some prior distribution set by the statistician (the user, the analyst) and the empirical distribution from the data. More precisely, a simple application of Bayes’ formula yields
 <span class="math display">\[\begin{equation}
-p(\boldsymbol{\theta}| \textbf{y})=\frac{p(\boldsymbol{\theta})p(\textbf{y} |\boldsymbol{\theta})}{p(\textbf{y})} \propto p(\boldsymbol{\theta})p(\textbf{y} |\boldsymbol{\theta}).
 \label{eq:bayes2}
+p(\boldsymbol{\theta}| \textbf{y})=\frac{p(\boldsymbol{\theta})p(\textbf{y} |\boldsymbol{\theta})}{p(\textbf{y})} \propto p(\boldsymbol{\theta})p(\textbf{y} |\boldsymbol{\theta}).
 \end{equation}\]</span></p>
 <p>The interpretation is immediate: the distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> knowing the data <span class="math inline">\(\textbf{y}\)</span> is proportional to the distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> times the distribution of <span class="math inline">\(\textbf{y}\)</span> knowing <span class="math inline">\(\boldsymbol{\theta}\)</span>. The term <span class="math inline">\(p(\textbf{y})\)</span> is often omitted because it is simply a scaling number that ensures that the density sums or integrates to one.</p>
 <p>We use a slightly different notation between Equation <a href="#eq:bayes">(<strong>??</strong>)</a> and Equation <a href="#eq:bayes2">(<strong>??</strong>)</a>. In the former, <span class="math inline">\(P\)</span> denotes a true probability, i.e., it is a number. In the latter, <span class="math inline">\(p\)</span> stands for the whole probability density function of <span class="math inline">\(\boldsymbol{\theta}\)</span> or <span class="math inline">\(\textbf{y}\)</span>.</p>
 <p>The whole purpose of Bayesian analysis is to compute the so-called <em>posterior</em> distribution <span class="math inline">\(p(\boldsymbol{\theta}| \textbf{y})\)</span> via the <em>prior</em> distribution <span class="math inline">\(p(\boldsymbol{\theta})\)</span> and the <em>likelihood function</em> <span class="math inline">\(p(\textbf{y} |\boldsymbol{\theta})\)</span>. Priors are sometimes qualified as informative, weakly informative or uninformative, depending on the degree to which the user is confident on the relevance and robustness of the prior. The simplest way to define a non-informative prior is to set a constant (uniform) distribution over some realistic intervals.</p>
 <p>The most challenging part is usually the likelihood function. The easiest way to solve the problem is to resort to a specific distribution (possibly a parametric family) for the distribution of the data and then consider that obsevations are i.i.d., just as in a simple maximum likelihood inference. If we assume that new parameters for the distributions are gathered into <span class="math inline">\(\boldsymbol{\lambda}\)</span>, then the likelihood can be written as
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:likelihood">\[\begin{equation}
+\tag{10.1}
 p(\textbf{y} |\boldsymbol{\theta}, \boldsymbol{\lambda})=\prod_{i=1}^I f_{\boldsymbol{\lambda}}(y_i; \boldsymbol{\beta}), 
-\label{eq:likelihood}
 \end{equation}\]</span>
 but in this case the problem because slightly more complex because adding new parameters change the posterior distribution to <span class="math inline">\(p(\boldsymbol{\theta}, \boldsymbol{\lambda}|\textbf{y})\)</span>. The user must find out the joint distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> and <span class="math inline">\(\boldsymbol{\lambda}\)</span> - given <span class="math inline">\(\textbf{y})\)</span>.</p>
 </div>
@@ -487,32 +487,32 @@ x_J^{m+1}&amp;= p(X_J|X_1=x_1^{m+1}, X_2=x_2^{m+1}, \dots, X_{J-1}=x_{J-1}^{m+1}
 </div>
 <div id="bayesian-linear-regression" class="section level2">
 <h2><span class="header-section-number">10.3</span> Bayesian linear regression</h2>
-<p>Because Bayesian concepts are rather abstract, it is useful to illustrate the theoretical notions with a simple example. In a linear model, <span class="math inline">\(y_i=\textbf{x}_i\textbf{b}+\epsilon_i\)</span> and it is often statistically assumed that the <span class="math inline">\(\epsilon_i\)</span> are i.i.d. and normally distributed with zero mean and variance <span class="math inline">\(\sigma^2\)</span>. Hence, Equation <a href="#eq:likelihood">(<strong>??</strong>)</a> translates into
+<p>Because Bayesian concepts are rather abstract, it is useful to illustrate the theoretical notions with a simple example. In a linear model, <span class="math inline">\(y_i=\textbf{x}_i\textbf{b}+\epsilon_i\)</span> and it is often statistically assumed that the <span class="math inline">\(\epsilon_i\)</span> are i.i.d. and normally distributed with zero mean and variance <span class="math inline">\(\sigma^2\)</span>. Hence, Equation <a href="bayes.html#eq:likelihood">(10.1)</a> translates into
 <span class="math display">\[p(\boldsymbol{\epsilon}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\epsilon_i^2}{2\sigma^2}}.\]</span></p>
 <p>In a regression analysis, the data is given both by <span class="math inline">\(\textbf{y}\)</span> and by <span class="math inline">\(\textbf{X}\)</span>, hence both are reported in the notations. Simply acknowledging that <span class="math inline">\(\boldsymbol{\epsilon}=\textbf{y}-\textbf{Xb}\)</span>, we get
-<span class="math display">\[\begin{align}
-p(\textbf{y},\textbf{X}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\left(y_i-\textbf{x}_i&#39;\textbf{b}\right)^2}{2\sigma^2}}=(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\textbf{b}\right)&#39; \left(\textbf{y}-\textbf{X}\textbf{b}\right)}{2\sigma^2}} \nonumber \\
+<span class="math display" id="eq:linlike">\[\begin{align}
+p(\textbf{y},\textbf{X}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\left(y_i-\textbf{x}_i&#39;\textbf{b}\right)^2}{2\sigma^2}}=(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\textbf{b}\right)&#39; \left(\textbf{y}-\textbf{X}\textbf{b}\right)}{2\sigma^2}} \nonumber \\ \tag{10.2}
 =\underbrace{(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}}_{\text{depends on } \sigma, \text{ not } \textbf{b}}\times \underbrace{e^{-\frac{(\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}}_{\text{ depends on both } \sigma, \text{ and } \textbf{b} },
-\label{eq:linlike}
 \end{align}\]</span>
 where the last line is very convenient because it expresses the law as a function of the difference <span class="math inline">\(\textbf{b}-\hat{\textbf{b}}\)</span>, where <span class="math inline">\(\hat{\textbf{b}}=(\textbf{X}&#39;\textbf{X})^{-1}\textbf{X}&#39;\textbf{y}\)</span> seems like a natural choice for the mean of <span class="math inline">\(\textbf{b}\)</span> - though in the end this vector is chosen for the simple form it produces.</p>
 <p>The above expression is the frequentist (data-based) block of the posterior. If we want to obtain a tractable expression for the posterior, we need to find a prior that has a form that will combine well with the likelihood. These forms are called <em>conjugate priors</em>. A natural candidate for the right part (that depends on both <strong>b</strong> and <span class="math inline">\(\sigma\)</span>) is the multivariate Gaussian density:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:linprior">\[\begin{equation}
+\tag{10.3}
 p[\textbf{b}|\sigma]=\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)}{2\sigma^2}},
-\label{eq:linprior}
 \end{equation}\]</span>
 where we are obliged to condition with respect to <span class="math inline">\(\sigma\)</span>. The density has prior mean <span class="math inline">\(\textbf{b}_0\)</span> and prior covariance matrix <span class="math inline">\(\boldsymbol{\Lambda}_0^{-1}\)</span>. This prior gets us one step closer to the posterior because
-<span class="math display">\[\begin{align}
+<span class="math display" id="eq:cascade">\[\begin{align}
 p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto p[\textbf{y},\textbf{X}|\textbf{b},\sigma]p[\textbf{b},\sigma] \nonumber \\
-&amp;\propto p[\textbf{y},\textbf{X}|\textbf{b},\sigma]p[\textbf{b}|\sigma]p[\sigma]. \label{eq:cascade}
+\tag{10.4}
+&amp;\propto p[\textbf{y},\textbf{X}|\textbf{b},\sigma]p[\textbf{b}|\sigma]p[\sigma]. 
 \end{align}\]</span></p>
 <p>In order to fully specify the cascade of probability, we need to take care of <span class="math inline">\(\sigma\)</span> and set a density of the form
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:linsig">\[\begin{equation}
+\tag{10.5}
 p[\sigma^2]\propto (\sigma^2)^{-1-a_0}e^{-\frac{b_0}{2\sigma^2}},
-\label{eq:linsig}
 \end{equation}\]</span>
-which is close to that of the left part of <a href="#eq:linlike">(<strong>??</strong>)</a>. This corresponds to an inverse gamma distribution for the variance with prior parameters <span class="math inline">\(a_0\)</span> and <span class="math inline">\(b_0\)</span> (this scalar notation is not optimal because it can be confused with the prior mean <span class="math inline">\(\textbf{b}_0\)</span> so we must pay extra attention).</p>
-<p>Now, we can simplify <span class="math inline">\(p[\textbf{b},\sigma|\textbf{y},\textbf{X}]\)</span> with <a href="#eq:linlike">(<strong>??</strong>)</a>, <a href="#eq:linprior">(<strong>??</strong>)</a> and <a href="#eq:linsig">(<strong>??</strong>)</a>:
+which is close to that of the left part of <a href="bayes.html#eq:linlike">(10.2)</a>. This corresponds to an inverse gamma distribution for the variance with prior parameters <span class="math inline">\(a_0\)</span> and <span class="math inline">\(b_0\)</span> (this scalar notation is not optimal because it can be confused with the prior mean <span class="math inline">\(\textbf{b}_0\)</span> so we must pay extra attention).</p>
+<p>Now, we can simplify <span class="math inline">\(p[\textbf{b},\sigma|\textbf{y},\textbf{X}]\)</span> with <a href="bayes.html#eq:linlike">(10.2)</a>, <a href="bayes.html#eq:linprior">(10.3)</a> and <a href="bayes.html#eq:linsig">(10.5)</a>:
 <span class="math display">\[\begin{align*}
 p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto 
 (\sigma\sqrt{2\pi})^{-I} \sigma^{-2(1+a_0)} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}\times e^{-\frac{(\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)}{2\sigma^2}}e^{-\frac{b_0}{2\sigma^2}} \\
@@ -520,8 +520,8 @@ p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto
 \end{align*}\]</span></p>
 <p>The above expression is simply a quadratic form in <span class="math inline">\(\textbf{b}\)</span> and it can be rewritten after burdensome algebra in a much more compact manner:
 <span class="math display">\[\begin{equation}
-p(\textbf{b}|\textbf{y},\textbf{X},\sigma) \propto \left[\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_*)&#39;\boldsymbol{\Lambda}_*(\textbf{b}-\textbf{b}_*)}{2\sigma^2}}\right] \times \left[ (\sigma^2)^{-1-a_*}e^{-\frac{b_*}{2\sigma^2}}  \right],
 \label{eq:linpost}
+p(\textbf{b}|\textbf{y},\textbf{X},\sigma) \propto \left[\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_*)&#39;\boldsymbol{\Lambda}_*(\textbf{b}-\textbf{b}_*)}{2\sigma^2}}\right] \times \left[ (\sigma^2)^{-1-a_*}e^{-\frac{b_*}{2\sigma^2}}  \right],
 \end{equation}\]</span></p>
 <p>where
 <span class="math display">\[\begin{align*}
@@ -565,30 +565,30 @@ FIGURE 10.1: Distribution of linear regression coefficients.
 <div id="naive-bayes-classifier" class="section level2">
 <h2><span class="header-section-number">10.4</span> Naive Bayes classifier</h2>
 <p>Bayes’ theorem can also be easily applied to classification. We formulate it with respect to the label and features and write
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:naivebayes">\[\begin{equation}
+\tag{10.6}
 P[\textbf{y} | \textbf{X}] = \frac{P[ \textbf{X} | \textbf{y}]P[\textbf{y}]}{P[\textbf{X}]} \propto P[ \textbf{X} | \textbf{y}]P[\textbf{y}],
-\label{eq:naivebayes}
 \end{equation}\]</span>
 and then split the input matrix into its column vectors <span class="math inline">\(\textbf{X}=(\textbf{x}_1,\dots,\textbf{x}_K)\)</span>. This yields
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:naivebayes2">\[\begin{equation}
+\tag{10.7}
 P[\textbf{y} | \textbf{x}_1,\dots,\textbf{x}_K] \propto P[\textbf{x}_1,\dots,\textbf{x}_K| \textbf{y}]P\textbf{y}].
-\label{eq:naivebayes2}
 \end{equation}\]</span></p>
 <p>The ‘naive’ qualification of the method comes from a simplifying assumption on the features.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> If they are all mutually independent, then the likelihood in the above expression can be expanded into
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:naivebayes3">\[\begin{equation}
+\tag{10.8}
 P[\textbf{y} | \textbf{x}_1,\dots,\textbf{x}_K] \propto P[\textbf{y}]\prod_{k=1}^K P[\textbf{x}_k| \textbf{y}].
-\label{eq:naivebayes3}
 \end{equation}\]</span></p>
 <p>The next step is to be more specific about the likelihood. This can be done non-parametrically (via kernel estimation) or with common distributions (Gaussian for continuous data, Bernoulli for binary data). In factor investing, the features are continuous, thus the Gaussian law is more adequate:
 <span class="math display">\[P[x_{i,k}=z|\textbf{y}_i= c]=\frac{e^{-\frac{(z-m_c)^2}{2\sigma_c^2}}}{\sigma_c\sqrt{2\pi}},\]</span>
 where <span class="math inline">\(c\)</span> is the value of the classes taken by <span class="math inline">\(y\)</span> and <span class="math inline">\(\sigma_c\)</span> and <span class="math inline">\(m_c\)</span> are the standard error and mean of <span class="math inline">\(x_{i,k}\)</span>, conditional on <span class="math inline">\(y_i\)</span> being equal to <span class="math inline">\(c\)</span>. In practice, each class is spanned, the training set is filtered accordingly and <span class="math inline">\(\sigma_c\)</span> and <span class="math inline">\(m_c\)</span> are taken to be the sample statistics. This Gaussian parametrization is probably ill-suited to our dataset because the features are uniformly distributed. Even after conditioning, it is unlikely that the distribution will be even remotely close to Gaussian. Technically, this can be overcome via a double transformation method. Given a vector of features <span class="math inline">\(\textbf{x}_k\)</span> with empirical cdf <span class="math inline">\(F_{\textbf{x}_k}\)</span>, the variable
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:transf">\[\begin{equation}
+\tag{10.9}
 \tilde{\textbf{x}}_k=\Phi^{-1}\left(F_{\textbf{x}_k}(\textbf{x}_k) \right),
-\label{eq:transf}
 \end{equation}\]</span>
 will have a standard normal law whenever <span class="math inline">\(F_{\textbf{x}_k}\)</span> is not pathological (lies in (0,1) for instance). If all features are independent, the transformation should not have any impact on the correlation structure. Otherwise, we refer to the literature on the NORmal-To-Anything (NORTA) method (see, e.g., <span class="citation">Chen (<a href="#ref-chen2001initialization">2001</a>)</span>, <span class="citation">Coqueret (<a href="#ref-coqueret2017approximate">2017</a>)</span>).</p>
-<p>Lastly, the prior <span class="math inline">\(P[\textbf{y}]\)</span> in Equation <a href="#eq:naivebayes3">(<strong>??</strong>)</a> is often either taken to be uniform across the classes (<span class="math inline">\(1/K\)</span> for all <span class="math inline">\(k\)</span>) or equal to the sample distribution.</p>
-<p>We illustrate the naive Bayes classification tool with a simple example. While the package <em>e1071</em> embeds such a classifier, the <em>naivebayes</em> library offers more options (Gaussian, Bernoulli, multinomial and nonparametric likelihoods). Below, since the features are uniformly distributed, thus the transformation in <a href="#eq:transf">(<strong>??</strong>)</a> amounts to apply the inverse Gaussian cdf.</p>
+<p>Lastly, the prior <span class="math inline">\(P[\textbf{y}]\)</span> in Equation <a href="bayes.html#eq:naivebayes3">(10.8)</a> is often either taken to be uniform across the classes (<span class="math inline">\(1/K\)</span> for all <span class="math inline">\(k\)</span>) or equal to the sample distribution.</p>
+<p>We illustrate the naive Bayes classification tool with a simple example. While the package <em>e1071</em> embeds such a classifier, the <em>naivebayes</em> library offers more options (Gaussian, Bernoulli, multinomial and nonparametric likelihoods). Below, since the features are uniformly distributed, thus the transformation in <a href="bayes.html#eq:transf">(10.9)</a> amounts to apply the inverse Gaussian cdf.</p>
 
 <div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1"><span class="kw">library</span>(naivebayes)</a>
 <a class="sourceLine" id="cb94-2" data-line-number="2">gauss_features_train &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -631,15 +631,15 @@ FIGURE 10.2: Distributions of predictor variables, conditional on the class of t
 <h3><span class="header-section-number">10.5.1</span> General formulation</h3>
 <p>Bayesian additive regression trees (BARTs) are an ensemble technique that mixes Bayesian thinking and regression trees. In spirit, they are close to boosted trees, but they differ greatly in their implementation. In BARTs like in Bayesian regressions, the regularization comes from the prior. The original article is <span class="citation">Chipman, George, and McCulloch (<a href="#ref-chipman2010bart">2010</a>)</span> and the implementation (in R) follows <span class="citation">Sparapani, Spanbauer, and McCulloch (<a href="#ref-sparapani2019r">2019</a>)</span>.</p>
 <p>Formally, the model is an aggregation of <span class="math inline">\(M\)</span> models, which we write as
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:BART">\[\begin{equation}
+\tag{10.10}
 y = \sum_{m=1}^M\mathcal{T}_m(q_m,\textbf{w}_m, \textbf{x}) + \epsilon,
-\label{eq:BART}
 \end{equation}\]</span>
 where <span class="math inline">\(\epsilon\)</span> is a Gaussian noise with variance <span class="math inline">\(\sigma^2\)</span>, and the <span class="math inline">\(\mathcal{T}_m=\mathcal{T}_m(q_m,\textbf{w}_m, \textbf{x})\)</span> are decision trees with structure <span class="math inline">\(q_m\)</span> and weights vectors <span class="math inline">\(\textbf{w}_m\)</span>. This decomposition of the tree is the one we used for boosted trees and is illustrated in Figure <a href="trees.html#fig:treeq">7.5</a>. <span class="math inline">\(q_m\)</span> codes all splits (variables chosen for the splits and levels of the splits) and the vectors <span class="math inline">\(\textbf{w}_m\)</span> correspond to the leaf values (at the terminal nodes).</p>
 <p>At the macro level, BARTs can be viewed as traditional Bayesian objects, where the parameters <span class="math inline">\(\boldsymbol{\theta}\)</span> are all of the unknowns coded through <span class="math inline">\(q_m\)</span>, <span class="math inline">\(\textbf{w}_m\)</span> and <span class="math inline">\(\sigma^2\)</span> and where the focus is set on determining the posterior
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:bartpost">\[\begin{equation}
+\tag{10.11}
 \left(q_m,\textbf{w}_m,\sigma^2\right) | (\textbf{X}, \textbf{Y}).
-\label{eq:bartpost}
 \end{equation}\]</span></p>
 <p>Given particular forms of priors for <span class="math inline">\(\left(q_m,\textbf{w}_m,\sigma^2\right)\)</span>, the algorithm draws the parameters using a combination of Metropolis-Hastings <em>and</em> Gibbs samplers.</p>
 </div>
@@ -648,25 +648,25 @@ where <span class="math inline">\(\epsilon\)</span> is a Gaussian noise with var
 <p>The definition of prior in tree models is delicate and intricate. The first important assumption is independence: independence between <span class="math inline">\(\sigma^2\)</span> and all other parameters and independence between trees, that is, between couples <span class="math inline">\((q_m,\textbf{w}_m)\)</span> and <span class="math inline">\((q_n,\textbf{w}_n)\)</span> for <span class="math inline">\(m\neq n\)</span>. This entails</p>
 <p><span class="math display">\[P(\left(q_1,\textbf{w}_1\right),\dots,\left(q_M,\textbf{w}_M\right),\sigma^2)=P(\sigma^2)\prod_{m=1}^MP\left(q_m,\textbf{w}_m\right).\]</span></p>
 <p>Moreover, it is customary (for simplicity) to separate the structure of the tree (<span class="math inline">\(q_m\)</span>) and the terminal weights (<span class="math inline">\(\textbf{w}_m\)</span>), so that
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:bart1">\[\begin{equation}
+\tag{10.12}
 P(\left(q_1,\textbf{w}_1\right),\dots,\left(q_M,\textbf{w}_M\right),\sigma^2)=\underbrace{P(\sigma^2)}_{\text{noise term}}\prod_{m=1}^M\underbrace{P\left(\textbf{w}_m|q_m\right)}_{\text{tree weights}}\underbrace{P(q_m)}_{\text{tree struct.}}
-\label{eq:bart1}
 \end{equation}\]</span></p>
 <p>It remains to formulate the assumptions for each of the three parts.</p>
 <p>We start with the trees’ structures, <span class="math inline">\(q_m\)</span>. Trees are defined by their splits (at nodes) and these splits are characterized by the splitting variable and the splitting level. First, the size of trees is parametrized such that a node at depth <span class="math inline">\(d\)</span> is nonterminal with probability given by
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:bartnode">\[\begin{equation}
+\tag{10.13}
 \alpha(1+d)^{-\beta}, \quad \alpha \in (0,1), \quad \beta &gt;0.
-\label{eq:bartnode}
 \end{equation}\]</span>
 The authors recommend to set <span class="math inline">\(\alpha = 0.95\)</span> and <span class="math inline">\(\beta=2\)</span>. This gives a probability of 5% to have 1 node, 55% to have 2 nodes, 28% to have 3 nodes, 9% to have 4 nodes and 3% to have 5 nodes. Thus, the aim is to force shallow structures.</p>
 <p>Second, the choice of splitting variables is driven by a generalized Bernoulli (categorical) distribution which defines the odds of picking one particular feature. In the original paper by <span class="citation">Chipman, George, and McCulloch (<a href="#ref-chipman2010bart">2010</a>)</span>, the vector of probabilities was uniform (each predictor has the same odds of being chosen for the split). This vector can also be random and sampled from a Dirichlet distribution. The level of the split is drawn uniformly on the set of possible values for the chosen predictor.</p>
 <p>Having determined the prior of structure of the tree <span class="math inline">\(q_m\)</span>, it remains to fix the terminal values at the leaves (<span class="math inline">\(\textbf{w}_m|q_m\)</span>). The weights at all leaves are assumed to follow a Gaussian distribution <span class="math inline">\(\mathcal{N}(\mu_\mu,\sigma_\mu^2)\)</span>, where <span class="math inline">\(\mu_\mu=(y_\text{min}+y_\text{max})/2\)</span> is the center of the range of the label values. The variance <span class="math inline">\(\sigma_\mu^2\)</span> is chosen such that <span class="math inline">\(\mu_\mu\)</span> plus or minus two times <span class="math inline">\(\sigma_\mu^2\)</span> covers 95% of the range observed in the training dataset. Those are default values and can be altered by the user.</p>
-<p>Lastly, for computational purposes similar to those of linear regressions, the parameter <span class="math inline">\(\sigma^2\)</span> (the variance of <span class="math inline">\(\epsilon\)</span> in <a href="#eq:BART">(<strong>??</strong>)</a>) is assumed to follow and inverse Gamma law <span class="math inline">\(\text{IG}(\nu/2,\lambda \nu/2)\)</span>. The parameters are by default computed from the data so that the distribution of <span class="math inline">\(\sigma^2\)</span> is realistic and prevents overfitting. We refer to the original article, section 2.2.4, for more details on this topic.</p>
+<p>Lastly, for computational purposes similar to those of linear regressions, the parameter <span class="math inline">\(\sigma^2\)</span> (the variance of <span class="math inline">\(\epsilon\)</span> in <a href="bayes.html#eq:BART">(10.10)</a>) is assumed to follow and inverse Gamma law <span class="math inline">\(\text{IG}(\nu/2,\lambda \nu/2)\)</span>. The parameters are by default computed from the data so that the distribution of <span class="math inline">\(\sigma^2\)</span> is realistic and prevents overfitting. We refer to the original article, section 2.2.4, for more details on this topic.</p>
 <p>In sum, in addition to <span class="math inline">\(M\)</span> (number of trees), the prior depends on a small number of parameters: <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> (for the tree structure), <span class="math inline">\(\mu_\mu\)</span> and <span class="math inline">\(\sigma_\mu^2\)</span> (for the tree weights) and <span class="math inline">\(\nu\)</span> and <span class="math inline">\(\lambda\)</span> (for the noise term).</p>
 </div>
 <div id="sampling-and-predictions" class="section level3">
 <h3><span class="header-section-number">10.5.3</span> Sampling and predictions</h3>
-<p>The posterior distribution in <a href="#eq:bartpost">(<strong>??</strong>)</a> cannot be obtained analytically but simulations are an efficient shortcut to the model <a href="#eq:BART">(<strong>??</strong>)</a>. Just as in Gibbs and Metropolis-Hastings sampling, the distribution of simulations is expected to converge to the sought posterior. After some burn-in sample, a prediction for a newly observed set <span class="math inline">\(\textbf{x}_*\)</span> will simply be the average (or median) of the predictions from the simulations. If we assume <span class="math inline">\(S\)</span> simulations after burn-in, then the average is equal to
+<p>The posterior distribution in <a href="bayes.html#eq:bartpost">(10.11)</a> cannot be obtained analytically but simulations are an efficient shortcut to the model <a href="bayes.html#eq:BART">(10.10)</a>. Just as in Gibbs and Metropolis-Hastings sampling, the distribution of simulations is expected to converge to the sought posterior. After some burn-in sample, a prediction for a newly observed set <span class="math inline">\(\textbf{x}_*\)</span> will simply be the average (or median) of the predictions from the simulations. If we assume <span class="math inline">\(S\)</span> simulations after burn-in, then the average is equal to
 <span class="math display">\[\tilde{y}(\textbf{x}_*):=\frac{1}{S}\sum_{s=1}^S\sum_{m=1}^M\mathcal{T}_m\left(q_m^{(s)},\textbf{w}_m^{(s)}, \textbf{x}_*\right).\]</span></p>
 <p>The complex part is naturally to generate the simulations. Each tree is sampled using the Metropolis-Hastings method: a tree is proposed, but it replaces the existing one only under some (possibly random) criterion. This procedure is then repeated in a Gibbs-like fashion.</p>
 <p>Let us start with the WH building block. We seek to simulate the conditional distribution</p>
@@ -699,7 +699,7 @@ FIGURE 10.3: Diagram of the MH/Gibbs sampling of BARTs.
 </div>
 <div id="code" class="section level3">
 <h3><span class="header-section-number">10.5.4</span> Code</h3>
-<p>There are several R packages that implement BART methods: <em>BART</em>, <em>bartMachine</em> and an older one (the original), <em>BayesTree</em>. The first one is highly efficient, hence we work with it. We resort to only a few parameters, like the power and base, which are the <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> defined in <a href="#eq:bartnode">(<strong>??</strong>)</a>. The program is a bit verbose and delivers a few parametric details.</p>
+<p>There are several R packages that implement BART methods: <em>BART</em>, <em>bartMachine</em> and an older one (the original), <em>BayesTree</em>. The first one is highly efficient, hence we work with it. We resort to only a few parameters, like the power and base, which are the <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> defined in <a href="bayes.html#eq:bartnode">(10.13)</a>. The program is a bit verbose and delivers a few parametric details.</p>
 
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">fit_bart &lt;-<span class="st"> </span><span class="kw">gbart</span>( </a>
 <a class="sourceLine" id="cb97-2" data-line-number="2">    <span class="dt">x.train =</span> <span class="kw">select</span>(training_sample, features_short) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">data.frame</span>(), <span class="co"># Training features</span></a>
@@ -730,7 +730,7 @@ FIGURE 10.3: Diagram of the MH/Gibbs sampling of BARTs.
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 30s
+## time: 26s
 ## trcnt,tecnt: 200,200</code></pre>
 <p></p>
 <p>Once the model is trained,<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>’.</p>

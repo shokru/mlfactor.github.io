@@ -435,7 +435,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The dataset is first split in two: the out-of-sample period and the initial buffer period. The buffer period is required to train the models for the first portfolio composition. This period is determined by the size of the training sample. There are two options for this size: fixed (usually equal to 2 to 5 years) and expanding. In the first case, the training sample will roll over time, taking into account only the most recent data. In the second case, models are built on all of the available data. This last option can create problems because the first dates of the backtest are based on much smaller amounts of information compared to the last dates. Moreover, there is an ongoing debate on whether including the full history of returns and characteristics is advantageous or not. Proponents argue that this allows models to see many different market conditions. Opponents make the case that old data is by definition outdated and thus useless and possibly misleading.</p>
 <p>Henceforth, we choose the rolling period option for the training sample, as depicted in Figure <a href="backtest.html#fig:backtestoos">13.1</a>.</p>
 <div class="figure" style="text-align: center"><span id="fig:backtestoos"></span>
-<img src="images/backtestoos.png" alt="Backtesting with rolling windows. The training set of the first period is simply the buffer period." width="360px" />
+<img src="images/backtestoos.png" alt="Backtesting with rolling windows. The training set of the first period is simply the buffer period." width="450px" />
 <p class="caption">
 FIGURE 13.1: Backtesting with rolling windows. The training set of the first period is simply the buffer period.
 </p>
@@ -449,7 +449,7 @@ FIGURE 13.1: Backtesting with rolling windows. The training set of the first per
 </ul>
 <p>then the total length of the training sample should be <span class="math inline">\(\Delta_s+\Delta_l\)</span>. Indeed, at any moment <span class="math inline">\(t\)</span>, the training sample should stop at <span class="math inline">\(t-\Delta_l\)</span> so that the last point corresponds to a label that is calculated until time <span class="math inline">\(t\)</span>. This is highlighted in Figure <a href="backtest.html#fig:backtestoos2">13.2</a> in the form of the red danger zone. We call it the red zone because any feature which has a time index <span class="math inline">\(s\)</span> inside the interval <span class="math inline">\((t-\Delta_l,t]\)</span> will engender a forward looking bias. Indeed if a feature is indexed by <span class="math inline">\(s \in (t-\Delta_l,t]\)</span>, then by definition, the label covers the period <span class="math inline">\([s,s+\Delta_l]\)</span> with <span class="math inline">\(s+\Delta_l&gt;t\)</span>. At time <span class="math inline">\(t\)</span>, this requires knowledge of the future and is naturally not realistic.</p>
 <div class="figure" style="text-align: center"><span id="fig:backtestoos2"></span>
-<img src="images/backtestoos2.png" alt="The tricks in rolling training samples." width="360px" />
+<img src="images/backtestoos2.png" alt="The tricks in rolling training samples." width="450px" />
 <p class="caption">
 FIGURE 13.2: The tricks in rolling training samples.
 </p>
@@ -463,30 +463,30 @@ FIGURE 13.2: The tricks in rolling training samples.
 <p>This is for instance an efficient way to test the relevance of the signal. If <span class="math inline">\(Q\)</span> portfolios <span class="math inline">\(q=1,\dots,Q\)</span> are formed according to the rankings of the assets with respect to the signal, then one would expect that the out-of-sample performance of the portfolios be monotonic with <span class="math inline">\(q\)</span>. While a rigorous test of monotonicity would require to account for all portfolios (see, e.g., <span class="citation">Romano and Wolf (<a href="#ref-romano2013testing">2013</a>)</span>), it is often only assumed that the extreme portfolios suffice. If the difference between portfolio number 1 and portfolio number <span class="math inline">\(Q\)</span> is substantial, then the signal is valuable. Whenever the investor is able to short assets, this amounts to a dollar neutral strategy.</p>
 <p>The second step is <strong>weighting</strong>. If the selection process relied on the signal, then a simple weighting scheme is often a good idea. Equally-weighted portfolios are known to be hard to beat (see <span class="citation">DeMiguel, Garlappi, and Uppal (<a href="#ref-demiguel2007optimal">2007</a>)</span>), especially compared to their cap-weighted alternative, as is shown in <span class="citation">Plyakha, Uppal, and Vilkov (<a href="#ref-plyakha2014equal">2014</a>)</span>. More advanced schemes include equal risk contributions (<span class="citation">Maillard, Roncalli, and Teiletche (<a href="#ref-maillard2010properties">2010</a>)</span>) and constrained minimum variance (<span class="citation">Coqueret (<a href="#ref-coqueret2015diversified">2015</a>)</span>). Both only rely on the covariance matrix of the assets and not on any proxy for the vector of expected returns.</p>
 <p>For the sake of completeness, we explicit a generalization of <span class="citation">Coqueret (<a href="#ref-coqueret2015diversified">2015</a>)</span> which is a generic constrained quadratic program:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:coq">\[\begin{equation}
+\tag{13.1}
 \underset{\textbf{w}}{\text{min}} \ \frac{\lambda}{2} \textbf{w}&#39;\boldsymbol{\Sigma}\textbf{w}-\textbf{w}&#39;\boldsymbol{\mu} , \quad \text{s.t.} \quad \begin{array}{ll} \textbf{w}&#39;\textbf{1}=1, \\ (\textbf{w}-\textbf{w}_-)&#39;\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-) \le \delta_R,\\
 \textbf{w}&#39;\textbf{w} \le \delta_D,
 \end{array}
-\label{eq:coq}
 \end{equation}\]</span></p>
 <p>where it is easy to recognize the usual mean-variance optimization in the left-hand side. We impose three constraints on the right-hand side. The first one is the budget constraint (weights sum to one). The second one penalizes variations in weights (compared to the current allocation) via a diagonal matrix <span class="math inline">\(\boldsymbol{\Lambda}\)</span>. This is a crucial point. Portfolios are rarely constructed from scratch and are most of the time adjustments from existing positions. In order to reduce the orders and the corresponding transaction costs, it is possible to penalize large variations from the existing portfolio. In the above program, the current weights are written <span class="math inline">\(\textbf{w}_-\)</span> and the desired ones <span class="math inline">\(\textbf{w}\)</span> so that <span class="math inline">\(\textbf{w}-\textbf{w}_-\)</span> is the vector of deviations from the current positions. The term <span class="math inline">\((\textbf{w}-\textbf{w}_-)\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-)\)</span> is an expression that characterizes the sum of squared deviations, weighted by the diagonal coefficients <span class="math inline">\(\Lambda_{n,n}\)</span>. This can be helpful because some assets may be more costly to trade due to liquidity (large cap stocks are more liquid and their trading costs are lower). When <span class="math inline">\(\delta_R\)</span> decreases, the rotation is reduce because weights are not allowed to deviate to much from <span class="math inline">\(\textbf{w}_-\)</span>. The last constraint enforces diversification via the Herfindhal index of the portfolio: the smaller <span class="math inline">\(\delta_D\)</span>, the more diversified the portfolio.</p>
-<p>Recalling that there are <span class="math inline">\(N\)</span> assets in the universe, the Lagrange form of <a href="#eq:coq">(<strong>??</strong>)</a> is:</p>
-<p><span class="math display">\[\begin{equation}
+<p>Recalling that there are <span class="math inline">\(N\)</span> assets in the universe, the Lagrange form of <a href="backtest.html#eq:coq">(13.1)</a> is:</p>
+<p><span class="math display" id="eq:lagrangew">\[\begin{equation}
+\tag{13.2}
 L(\textbf{w})= \frac{\lambda}{2} \textbf{w}&#39;\boldsymbol{\Sigma}\textbf{w}-\textbf{w}&#39;\boldsymbol{\mu}-\eta (\textbf{w}&#39;\textbf{1}_N-1)+\kappa_R ( (\textbf{w}-\textbf{w}_-)\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-) - \delta_R)+\kappa_D(\textbf{w}&#39;\textbf{w}-\delta_D),
-\label{eq:lagrangew}
 \end{equation}\]</span></p>
 <p>and the first order condition
 <span class="math display">\[\frac{\partial}{\partial \textbf{w}}L(\textbf{w})= \lambda \boldsymbol{\Sigma}\textbf{w}-\boldsymbol{\mu}-\eta\textbf{1}_N+2\kappa_R \boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-)+2\kappa_D\textbf{w}=0,\]</span>
 yields
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:coqw">\[\begin{equation}
+\tag{13.3}
 \textbf{w}^*_\kappa=  (\lambda \boldsymbol{\Sigma}+2\kappa_R \boldsymbol{\Lambda} +2\kappa_D\textbf{I}_N)^{-1} \left(\boldsymbol{\mu} + \eta_{\lambda,\kappa_R,\kappa_D} \textbf{1}_N+2\kappa_R \boldsymbol{\Lambda}\textbf{w}_-\right),
-\label{eq:coqw}
 \end{equation}\]</span>
 with
 <span class="math display">\[\eta_{\lambda,\kappa_R,\kappa_D}=\frac{1- \textbf{1}_N&#39;(\lambda\boldsymbol{\Sigma}+2\kappa_R \boldsymbol{\Lambda}+2\kappa_D\textbf{I}_N)^{-1}(\boldsymbol{\mu}+2\kappa_R\boldsymbol{\Lambda}\textbf{w}_-)}{\textbf{1}&#39;_N(\lambda \boldsymbol{\Sigma}+2\kappa_R \boldsymbol{\Lambda}+2\kappa_D\textbf{I}_N)^{-1}\textbf{1}_N}.\]</span></p>
-<p>This parameter ensures that the budget constraint is satisfied. The optimal weights in <a href="#eq:coqw">(<strong>??</strong>)</a> depend on three tuning parameters: <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span>.
+<p>This parameter ensures that the budget constraint is satisfied. The optimal weights in <a href="backtest.html#eq:coqw">(13.3)</a> depend on three tuning parameters: <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span>.
 - When <span class="math inline">\(\lambda\)</span> is large, the focus is set more on risk reduction than one profit maximization (which is often a good idea given that risk is easier to predict);<br />
-- When <span class="math inline">\(\kappa_R\)</span> is large, the importance of transaction costs in <a href="#eq:lagrangew">(<strong>??</strong>)</a> is high and thus, in the limit when <span class="math inline">\(\kappa_R \rightarrow \infty\)</span>, the optimal weights are equal to the old ones <span class="math inline">\(\textbf{w}_-\)</span> (for finite values of the other parameters).<br />
+- When <span class="math inline">\(\kappa_R\)</span> is large, the importance of transaction costs in <a href="backtest.html#eq:lagrangew">(13.2)</a> is high and thus, in the limit when <span class="math inline">\(\kappa_R \rightarrow \infty\)</span>, the optimal weights are equal to the old ones <span class="math inline">\(\textbf{w}_-\)</span> (for finite values of the other parameters).<br />
 - When <span class="math inline">\(\kappa_D\)</span> is large, the portfolio is more diversified and (all other things equal) when <span class="math inline">\(\kappa_D \rightarrow \infty\)</span>, the weights are all equal (to <span class="math inline">\(1/N\)</span>).<br />
 - When <span class="math inline">\(\kappa_R=\kappa_D=0\)</span>, we recover the classical mean-variance weights that are proportional to <span class="math inline">\((\boldsymbol{\Sigma})^{-1} \boldsymbol{\mu}\)</span>.</p>
 <p>This seemingly complex formula is in fact very flexible and tractable. It requires some tests and adjustments before finding realistic values for <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span>.</p>
@@ -554,9 +554,9 @@ where the <span class="math inline">\(\bar{f}_k\)</span> are the sample average 
 <span class="math display">\[\text{Turnover}=\frac{1}{T-1}\sum_{t=2}^T\sum_{n=1}^N|w_{t,n}-w_{t-,n}|,\]</span>
 where <span class="math inline">\(w_{t,n}\)</span> are the desired <span class="math inline">\(t\)</span>-time weights in the portfolio and <span class="math inline">\(w_{t-,n}\)</span> are the weights just before the rebalancing. The positions of the first period (lauching weights) are exluded from the computation by convention. Transaction costs can then be proxied as a multiple of turnover (times some average or median cost in the cross-section of firms). This is a first order estimate of realized costs that does not take into consideration the evolution of the scale of the portfolio. Nonetheless, a rough figure is much better than none at all.</p>
 <p>Once transaction costs (TC) have been annualized, they can be deducted from average returns to yield a more realistic picture of profitability. In the same vein, the transaction cost-adjusted Sharpe ratio of a portfolio <span class="math inline">\(P\)</span> is given by
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:SRTC">\[\begin{equation}
+\tag{13.4}
 SR_{TC}=\frac{\mu_P-TC}{\sigma_P}.
-\label{eq:SRTC}
 \end{equation}\]</span></p>
 <p>Transaction costs are often overlooked in academic articles but can have a sizable impact in real life trading (see e.g., <span class="citation">Novy-Marx and Velikov (<a href="#ref-novy2015taxonomy">2015</a>)</span>). <span class="citation">Martin Utrera et al. (<a href="#ref-martin2018transaction">2018</a>)</span> show how to use factor investing (and exposures) to combine and offset positions and reduce overall fees.</p>
 </div>
@@ -572,15 +572,15 @@ SR_{TC}=\frac{\mu_P-TC}{\sigma_P}.
 <p>The second major problem is backtest overfitting. The analogy with training set overfitting is easy to grasp. It is a well known issue and was formalized for instance in <span class="citation">White (<a href="#ref-white2000reality">2000</a>)</span> and <span class="citation">Romano and Wolf (<a href="#ref-romano2005stepwise">2005</a>)</span>. In portfolio choice, we refer to <span class="citation">Bajgrowicz and Scaillet (<a href="#ref-bajgrowicz2012technical">2012</a>)</span> and <span class="citation">Bailey and Prado (<a href="#ref-bailey2014deflated">2014</a>)</span> and the references therein.</p>
 <p>At any given moment, a backtest depends on one particular dataset. Often, the result of the first backtest will not be satisfactory - for many possible reasons. Hence, it is tempting to have another try, when altering some parameters that were probably not optimal. This second test may be better, but not quite good enough - yet. Thus, a in a third trial, a new weighting scheme can be tested, along with a new forecasting engine (more sophisticated). Iteratively, the backtester can only end up with a strategy that performs well enough, it is just a matter of time and trials.</p>
 One consequence of backtest overfitting is that it is illusory to hope for the same Sharpe ratios in live trading as those obtained in the backtest. Reasonable professionals divide the Sharpe ratio by two at least (<span class="citation">Harvey and Liu (<a href="#ref-harvey2015backtesting">2015</a>)</span>, <span class="citation">Suhonen, Lennkh, and Perez (<a href="#ref-suhonen2017quantifying">2017</a>)</span>). In <span class="citation">Bailey and Prado (<a href="#ref-bailey2014deflated">2014</a>)</span>, the authors even propose a statistical test for Sharpe ratios, provided that all metrics of all tested strategies are stored in memory. The formula is:
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:tSR">\[\begin{equation}
+\tag{13.5}
 t = \phi\left((SR-SR^*)\sqrt{\frac{T-1}{1-\gamma_3SR+\frac{\gamma_4-1}{4}SR^2}} \right),
-\label{eq:tSR}
 \end{equation}\]</span>
 where <span class="math inline">\(SR\)</span> is the Sharpe Ratio obtained by the best strategy, and
 <span class="math display">\[SR^*=\mathbb{E}[SR]+\sqrt{\mathbb{V}[SR]}\left((1-\gamma)\phi^{-1}\left(1-\frac{1}{N}\right)+\gamma \phi^{-1}\left(1-\frac{1}{Ne}\right)  \right),\]</span>
 is the theoretical average maximum SR. Moreover,
 
-<p>If <span class="math inline">\(t\)</span> defined above is below a certain threshold (e.g., 0.95), then the <span class="math inline">\(SR\)</span> cannot be deemed significant: . Most of the time, sadly, that is the case. In Equation <a href="#eq:tSR">(<strong>??</strong>)</a>, the realized SR must be above the theoretical maximum <span class="math inline">\(SR^*\)</span> and the scaling factor must be sufficiently large to push the argument inside <span class="math inline">\(\phi\)</span> close enough to two.</p>
+<p>If <span class="math inline">\(t\)</span> defined above is below a certain threshold (e.g., 0.95), then the <span class="math inline">\(SR\)</span> cannot be deemed significant: . Most of the time, sadly, that is the case. In Equation <a href="backtest.html#eq:tSR">(13.5)</a>, the realized SR must be above the theoretical maximum <span class="math inline">\(SR^*\)</span> and the scaling factor must be sufficiently large to push the argument inside <span class="math inline">\(\phi\)</span> close enough to two.</p>
 <p>In the scientific community, test overfitting is also known as <em>p</em>-hacking. It is rather common in financial economics and the reading of <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> is strongly advised to grasp the magnitude of the phenomenon. <em>p</em>-hacking is also present in most fields that use statistical tests (see, e.g., <span class="citation">Head et al. (<a href="#ref-head2015extent">2015</a>)</span> to cite but one reference). There are several ways to cope with <em>p</em>-hacking:</p>
 <ol style="list-style-type: decimal">
 <li>don’t rely on <em>p</em>-values (<span class="citation">Amrhein, Greenland, and McShane (<a href="#ref-amrhein2019scientists">2019</a>)</span>);<br />
@@ -594,7 +594,7 @@ is the theoretical average maximum SR. Moreover,
 <div id="simple-saveguards" class="section level3">
 <h3><span class="header-section-number">13.4.3</span> Simple saveguards</h3>
 <p>As is mentioned at the beginning of the chapter, two common sense references for backtesting are <span class="citation">Fabozzi and Prado (<a href="#ref-fabozzi2018being">2018</a>)</span> and <span class="citation">Arnott, Harvey, and Markowitz (<a href="#ref-arnott2019backtesting">2019</a>)</span>. The pieces of advice provide in these two articles are often judicious and thoughtful.</p>
-<p>One additional comment pertains to the output of the backtest. One simple, intuitive and widespread metric is the transaction cost-adjusted Sharpe ratio defined in Equation <a href="#eq:SRTC">(<strong>??</strong>)</a>. In the backtest, let us call <span class="math inline">\(SR_{TC}^B\)</span> the corresponding value for the benchmark, which we like to define as the equally-weighted portfolio of all assets in the trading universe (in our dataset, roughly one thousand US equities). If the <span class="math inline">\(SR_{TC}^P\)</span> of the best strategy is above <span class="math inline">\(2\times SR_{TC}^B\)</span>, then there is probably a glitch somewhere in the backtest.</p>
+<p>One additional comment pertains to the output of the backtest. One simple, intuitive and widespread metric is the transaction cost-adjusted Sharpe ratio defined in Equation <a href="backtest.html#eq:SRTC">(13.4)</a>. In the backtest, let us call <span class="math inline">\(SR_{TC}^B\)</span> the corresponding value for the benchmark, which we like to define as the equally-weighted portfolio of all assets in the trading universe (in our dataset, roughly one thousand US equities). If the <span class="math inline">\(SR_{TC}^P\)</span> of the best strategy is above <span class="math inline">\(2\times SR_{TC}^B\)</span>, then there is probably a glitch somewhere in the backtest.</p>
 <p>This criterion holds under two assumptions: 1) a sufficiently long enough out-of-sample period and 2) long-only portfolios. It is unlikely that any realistic strategy can outperform a solid benchmark by a very wide margin over the long term. Being able to improve the benchmark’s annualized return by 150 basis points (with comparable volatility) is already a great achievement. Backtests that deliver returns 5% above those of the benchmark are dubious.</p>
 </div>
 </div>
@@ -811,7 +811,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <div id="coding-exercises-6" class="section level2">
 <h2><span class="header-section-number">13.7</span> Coding exercises</h2>
 <ol style="list-style-type: decimal">
-<li>Code the advanced weighting function defined in Equation <a href="#eq:coqw">(<strong>??</strong>)</a>.</li>
+<li>Code the advanced weighting function defined in Equation <a href="backtest.html#eq:coqw">(13.3)</a>.</li>
 <li>Test it in a small backtest and check its sensitivity to the parameters.</li>
 <li>Using the functional programming package <em>purrr</em>,</li>
 </ol>

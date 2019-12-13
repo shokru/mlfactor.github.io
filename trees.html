@@ -446,9 +446,9 @@ FIGURE 7.1: Elementary tree scheme: visualization of the splitting process.
 <p>We now turn to the technical construction of regression trees. We follow the standard literature as exposed in <span class="citation">Breiman et al. (<a href="#ref-breiman1984classification">1984</a>)</span> or in Chapter 9 of <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>. Given a sample of (<span class="math inline">\(y_i\)</span>,<span class="math inline">\(\mathbf{x}_i\)</span>) of size <span class="math inline">\(I\)</span>, a <em>regression</em> tree seeks the splitting points that minimize the total variation of the <span class="math inline">\(y_i\)</span> inside the two child clusters. In order to do that, it proceeds in two steps. First, it finds, for each feature <span class="math inline">\(x_i^{(k)}\)</span>, the best splitting point (so that the clusters are homogeneous in <span class="math inline">\(\mathbf{Y}\)</span>). Second, it selects the feature that achieves the highest level of homogeneity.</p>
 <p>Homogeneity in regression trees is closely linked to variance. Since we want the <span class="math inline">\(y_i\)</span> inside each cluster to be similar, we seek to minimize their variability inside each cluster and then sum the two figures. We cannot sum the variances because this would not take into account the relative sizes of clusters. Hence, we work with <em>total</em> variation, which is the variance times the number of elements in the clusters.</p>
 <p>Below, the notation is a bit heavy because we resort to superscripts <span class="math inline">\(k\)</span> (the index of the feature), but it is largely possible to ignore these superscripts to ease understanding. The first step is to find the best split for each feature, that is, solve <span class="math inline">\(\underset{c^{(k)}}{\text{argmin}} \ V^{(k)}_I(c^{(k)})\)</span> with
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:node">\[\begin{equation}
+\tag{7.1}
 V^{(k)}_I(c^{(k}))= \underbrace{\sum_{x_i^{(k)}&lt;c^{(k)}}\left(y_i-m_I^{k,-}(c^{(k)}) \right)^2}_{\text{Total dispersion of first cluster}} + \underbrace{\sum_{x_i^{(k)}&gt;c^{(k)}}\left(y_i-m_I^{k,+}(c^{(k)}) \right)^2}_{\text{Total dispersion of second cluster}},
-\label{eq:node}
 \end{equation}\]</span>
 where <span class="math inline">\(m_I^{k,-}(c^{(k)})=\frac{1}{\#\{i,x_i^{(k)}&lt;c^{(k)} \}}\sum_{\{x_i^{(k)}&lt;c^{(k)} \}}y_i\)</span> and <span class="math inline">\(m_I^{k,+}(c^{(k)})=\frac{1}{\#\{i,x_i^{(k)}&gt;c^{(k)} \}}\sum_{\{x_i^{(k)}&gt;c^{(k)} \}}y_i\)</span> are the average values of <span class="math inline">\(Y\)</span>, conditional on <span class="math inline">\(X^{(k)}\)</span> being smaller or larger than <span class="math inline">\(c\)</span>. The cardinal function <span class="math inline">\(\#\{\cdot\}\)</span> counts the number of instances of its argument. For feature <span class="math inline">\(k\)</span>, the optimal split <span class="math inline">\(c^{k,*}\)</span> is thus the one for which the total dispersion over the two subgroups is the smallest.</p>
 <p>The optimal splits satisfy <span class="math inline">\(c^{k,*}= \underset{c^{(k)}}{\text{argmin}} \ V^{(k)}_I(c^{(k)})\)</span>. Of all the possible splitting variables, the tree will choose the one that minimizes the total dispersion: <span class="math inline">\(k^*=\underset{k}{\text{argmin}} \ V^{(k)}_I(c^{k,*})\)</span>.</p>
@@ -656,22 +656,22 @@ FIGURE 7.4: Combining tree outputs via random forests.
 <ol style="list-style-type: decimal">
 <li>Find a learner <span class="math inline">\(l_m\)</span> that minimizes the weighted loss <span class="math inline">\(\sum_{i=1}^Iw_iL(l_m(\textbf{x}_i),\textbf{y}_i)\)</span>;</li>
 <li>Compute a learner weight
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:adaboostam">\[\begin{equation}
+\tag{7.2}
 a_m=f_a(\textbf{w},l_m(\textbf{x}),\textbf{y});
-\label{eq:adaboostam}
 \end{equation}\]</span></li>
 <li>Update the instance weights
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:adaboostw">\[\begin{equation}
+\tag{7.3}
 w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
-\label{eq:adaboostw}
 \end{equation}\]</span></li>
 <li>Normalize the <span class="math inline">\(w_i\)</span> to sum to one;</li>
 </ol>
 <ul>
 <li>The output for instance <span class="math inline">\(\textbf{x}_i\)</span> is a simple function of <span class="math inline">\(\sum_{m=1}^M a_ml_m(\textbf{x}_i)\)</span>,
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:adaboosty">\[\begin{equation}
+\tag{7.4}
 \tilde{y}_i=f_y\left(\sum_{m=1}^M a_ml_m(\textbf{x}_i) \right).
-\label{eq:adaboosty}
 \end{equation}\]</span></li>
 </ul>
 <p>Let us comment on the steps of the algorithm. The formulation holds for many variations of Adaboost and we will specify the functions <span class="math inline">\(f_a\)</span> and <span class="math inline">\(f_w\)</span> below.</p>
@@ -681,12 +681,48 @@ w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
 <li>The third step is to change the weights of observations. In this case, because the model aims at improving the learning process, <span class="math inline">\(f_w\)</span> is constructed to give more weight on observations for which the current model does not do a good job (i.e., generates the largest errors). Hence, the next learner will be incentivized to pay more attention on these pathological cases.</li>
 <li>The third step is a simple scaling procedure.</li>
 </ol>
-<p>In Table <a href="#tab:adaboost"><strong>??</strong></a>, we detail two examples of weighting functions used in the literature. For the original Adaboost (<span class="citation">Freund and Schapire (<a href="#ref-freund1996experiments">1996</a>)</span>, <span class="citation">Freund and Schapire (<a href="#ref-freund1997decision">1997</a>)</span>), the label is binary with values +1 and -1 only. The second example stems from <span class="citation">Drucker (<a href="#ref-drucker1997improving">1997</a>)</span> and is dedicated to regression analysis (with real-valued label). The interested reader can have a look at other possibilities in <span class="citation">Schapire (<a href="#ref-schapire2003boosting">2003</a>)</span> and <span class="citation">Ridgeway, Madigan, and Richardson (<a href="#ref-ridgeway1999boosting">1999</a>)</span>.</p>
-
-<p>Let us comment on the original Adaboost specification. The basic error term <span class="math inline">\(\epsilon_i=\textbf{1}_{\left\{y_i\neq l_m(\textbf{x}_i) \right\}}\)</span> is a dummy number indicating if the prediction is correct (we recall only two values are possible, +1 and -1). The average error <span class="math inline">\(\epsilon\in [0,1]\)</span> is simply a weighted average of individual errors and the weight of the <span class="math inline">\(m^{th}\)</span> learner defined in Equation <a href="#eq:adaboostam">(<strong>??</strong>)</a> is given by <span class="math inline">\(a_m=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>. The function <span class="math inline">\(x\mapsto \log((1-x)x^{-1})\)</span> decreases on <span class="math inline">\([0,1]\)</span> and switches sign (from positive to negative) at <span class="math inline">\(x=1/2\)</span>. Hence, when the average error is small, the learner has a large positive weight but when the error becomes large, the learner can even obtain a negative weight. Indeed, the threshold <span class="math inline">\(\epsilon&gt;1/2\)</span> indicated that the learner is wrong more than 50% of the time. Obviously, this indicates a problem and the learner should even be discarded.</p>
+<p>In Table <a href="trees.html#tab:adaboost">7.1</a>, we detail two examples of weighting functions used in the literature. For the original Adaboost (<span class="citation">Freund and Schapire (<a href="#ref-freund1996experiments">1996</a>)</span>, <span class="citation">Freund and Schapire (<a href="#ref-freund1997decision">1997</a>)</span>), the label is binary with values +1 and -1 only. The second example stems from <span class="citation">Drucker (<a href="#ref-drucker1997improving">1997</a>)</span> and is dedicated to regression analysis (with real-valued label). The interested reader can have a look at other possibilities in <span class="citation">Schapire (<a href="#ref-schapire2003boosting">2003</a>)</span> and <span class="citation">Ridgeway, Madigan, and Richardson (<a href="#ref-ridgeway1999boosting">1999</a>)</span>.</p>
+<table>
+<caption><span id="tab:adaboost">TABLE 7.1: </span> Examples of functions for Adaboost-like algorithms.</caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Bin. classif. (orig. Adaboost)</th>
+<th>Regression (Drucker (1997))</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Individual error</td>
+<td><span class="math inline">\(\epsilon_i=\textbf{1}_{\left\{y_i\neq l_m(\textbf{x}_i) \right\}}\)</span></td>
+<td><span class="math inline">\(\epsilon_i=\frac{|y_i- l_m(\textbf{x}_i)|}{\underset{i}{\max}|y_i- l_m(\textbf{x}_i)|}\)</span></td>
+</tr>
+<tr class="even">
+<td>Weight of learner via <span class="math inline">\(f_a\)</span></td>
+<td><span class="math inline">\(f_a=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>,with <span class="math inline">\(\epsilon=I^{-1}\sum_{i=1}^Iw_i \epsilon_i\)</span></td>
+<td><span class="math inline">\(f_a=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>,with <span class="math inline">\(\epsilon=I^{-1}\sum_{i=1}^Iw_i \epsilon_i\)</span></td>
+</tr>
+<tr class="odd">
+<td>Weight of instances via <span class="math inline">\(f_w(i)\)</span></td>
+<td><span class="math inline">\(f_w=f_a\epsilon_i\)</span></td>
+<td><span class="math inline">\(f_w=f_a\epsilon_i\)</span></td>
+</tr>
+<tr class="even">
+<td>Output function via <span class="math inline">\(f_y\)</span></td>
+<td><span class="math inline">\(f_y(x) = \text{sign}(x)\)</span></td>
+<td>weighted median of predictions</td>
+</tr>
+</tbody>
+</table>
+<p>Let us comment on the original Adaboost specification. The basic error term <span class="math inline">\(\epsilon_i=\textbf{1}_{\left\{y_i\neq l_m(\textbf{x}_i) \right\}}\)</span> is a dummy number indicating if the prediction is correct (we recall only two values are possible, +1 and -1). The average error <span class="math inline">\(\epsilon\in [0,1]\)</span> is simply a weighted average of individual errors and the weight of the <span class="math inline">\(m^{th}\)</span> learner defined in Equation <a href="trees.html#eq:adaboostam">(7.2)</a> is given by <span class="math inline">\(a_m=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>. The function <span class="math inline">\(x\mapsto \log((1-x)x^{-1})\)</span> decreases on <span class="math inline">\([0,1]\)</span> and switches sign (from positive to negative) at <span class="math inline">\(x=1/2\)</span>. Hence, when the average error is small, the learner has a large positive weight but when the error becomes large, the learner can even obtain a negative weight. Indeed, the threshold <span class="math inline">\(\epsilon&gt;1/2\)</span> indicated that the learner is wrong more than 50% of the time. Obviously, this indicates a problem and the learner should even be discarded.</p>
 <p>The change in instance weights follows a similar logic. The new weight is proportional to <span class="math inline">\(w_i\left(\frac{1-\epsilon}{\epsilon} \right)^{\epsilon_i}\)</span>. If the prediction is right and <span class="math inline">\(\epsilon_i=0\)</span>, the weight is unchanged. If the prediction is wrong and <span class="math inline">\(\epsilon_i=1\)</span>, the weight is adjusted depending on the aggregate error <span class="math inline">\(\epsilon\)</span>. If the error is small and the learner efficient (<span class="math inline">\(\epsilon&lt;1/2\)</span>), then <span class="math inline">\((1-\epsilon)/\epsilon&gt;1\)</span> and the weight of the instance increases. This means that for the next round, the learner will have to focus more on instance <span class="math inline">\(i\)</span>.</p>
 <p>Lastly, the final prediction of the model corresponds to the sign of the weighted sums of individual predictions: if the sum is positive, the model will predict +1 and it will yield -1 otherwise.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> The odds of a zero sum are negligible. In the case of numerical labels, the process is slightly more complicated and we refer to Section 3, step 8 of <span class="citation">Drucker (<a href="#ref-drucker1997improving">1997</a>)</span> for more details on how to proceed.</p>
-<p>We end this presentation with one word on instance weighting. There are two ways to deal with this topic. The first one works at the level of the loss functions. For regression trees, Equation <a href="#eq:node">(<strong>??</strong>)</a> would naturally generalize to
+<p>We end this presentation with one word on instance weighting. There are two ways to deal with this topic. The first one works at the level of the loss functions. For regression trees, Equation <a href="trees.html#eq:node">(7.1)</a> would naturally generalize to
 <span class="math display">\[V^{(k)}_N(c^{(k}), \textbf{w})= \sum_{x_i^{(k)}&lt;c^{(k)}}w_i\left(y_i-m_N^{k,-}(c^{(k)}) \right)^2 + \sum_{x_i^{(k)}&gt;c^{(k)}}w_i\left(y_i-m_N^{k,+}(c^{(k)}) \right)^2,\]</span></p>
 <p>and hence an instance with a large weight <span class="math inline">\(w_i\)</span> would contribute more to the dispersion of its cluster. For classification objectives, the alteration is more complex and we refer to <span class="citation">Ting (<a href="#ref-ting2002instance">2002</a>)</span> for one example of an instance-weighted tree-growing algorithm. The idea is closely linked to the alteration of the misclassification risk via a loss matrix (see Section 9.2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>).</p>
 <p>The second way to enforce instance weighting is via random sampling. If instances have weights <span class="math inline">\(w_i\)</span>, then the training of learners can be performed over a sample that is randomly extracted with distribution equal to <span class="math inline">\(w_i\)</span>. In this case, an instance with a larger weight will have more chances to be represented in the training sample. The original adaboost algorithm relies on this method.</p>
@@ -757,15 +793,16 @@ O&amp;= 2\sum_{i=1}^I\left\{ -y_iT_J(\mathbf{x}_i)+m_{J-1}(\mathbf{x}_i) T_J(\ma
 &amp;=2 \sum_{l=1}^L \left(w_l\sum_{i\in I_l}(-y_i +m_{J-1}(\mathbf{x}_i))+ \frac{w_l^2}{2}\sum_{i\in I_l}\left(1+\frac{\lambda}{2}\right)\right)+ \gamma L
 \end{align*}\]</span><br />
 The function is of the form <span class="math inline">\(aw_l+\frac{b}{2}w_l^2\)</span>, which has minimum values <span class="math inline">\(-\frac{a^2}{2b}\)</span> at point <span class="math inline">\(w_l=-a/b\)</span>. Thus, writing #(.) for the cardinal function that counts the number of items in a set,
-<span class="math display">\[\begin{align}
-\mathbf{\rightarrow} \quad w^*_l&amp;=\frac{\sum_{i\in I_l}(y_i -m_{J-1}(\mathbf{x}_i))}{\left(1+\frac{\lambda}{2}\right)\#\{i\in I_l\}}, \text{ so that} \label{eq:xgbweight} \\
+<span class="math display" id="eq:xgbweight">\[\begin{align}
+\tag{7.5}
+\mathbf{\rightarrow} \quad w^*_l&amp;=\frac{\sum_{i\in I_l}(y_i -m_{J-1}(\mathbf{x}_i))}{\left(1+\frac{\lambda}{2}\right)\#\{i\in I_l\}}, \text{ so that} \\
 O_L(q)&amp;=-\frac{1}{2}\sum_{l=1}^L \frac{\left(\sum_{i\in I_l}(y_i -m_{J-1}(\mathbf{x}_i))\right)^2}{\left(1+\frac{\lambda}{2}\right)\#\{i\in I_l\}}+\gamma L, \nonumber
 \end{align}\]</span>
 where we added the dependence of the objective both in <span class="math inline">\(q\)</span> (structure of tree) and <span class="math inline">\(L\)</span> (number of leaves). Indeed, the meta-shape of the tree remains to be determined.</p>
 </div>
 <div id="tree-structure" class="section level3">
 <h3><span class="header-section-number">7.4.4</span> Tree structure</h3>
-<p>Final problem: the <strong>tree structure</strong>! Let us take a step back. In the construction of a simple regression tree, the output value at each node is equal to the average value of the label within the node (or cluster). When adding a new tree in order to reduce the loss, the nodes values must be computed completely differently, which is the purpose of Equation <a href="#eq:xgbweight">(<strong>??</strong>)</a>.</p>
+<p>Final problem: the <strong>tree structure</strong>! Let us take a step back. In the construction of a simple regression tree, the output value at each node is equal to the average value of the label within the node (or cluster). When adding a new tree in order to reduce the loss, the nodes values must be computed completely differently, which is the purpose of Equation <a href="trees.html#eq:xgbweight">(7.5)</a>.</p>
 <p>Nonetheless, the growing of the iterative trees follows similar lines as simple trees. Features must be tested in order to pick the one that minimizes the objective for each given split. The final question is then: what’s the best depth and when to stop growing the tree? The method is to</p>
 <ul>
 <li>proceed node by node;<br />
@@ -784,7 +821,7 @@ where <span class="math inline">\(I_\mathcal{X}\)</span> is the set of instances
 <p>Following the pioneering work of <span class="citation">Srivastava et al. (<a href="#ref-srivastava2014dropout">2014</a>)</span>, the DART (Dropout for Additive Regression Trees) model was proposed by <span class="citation">Rashmi and Gilad-Bachrach (<a href="#ref-rashmi2015dart">2015</a>)</span>. The idea is to omit a specified number of trees during training. The trees that are removed from the model are chosen randomly. The full specifications can be found at <a href="https://xgboost.readthedocs.io/en/latest/tutorials/dart.html" class="uri">https://xgboost.readthedocs.io/en/latest/tutorials/dart.html</a>.</p>
 <p>Monotonicity constraints are another element that is featured both in xgboost and lightgbm. Sometimes, it is expected that one particular feature has a monotonous impact on the label. For instance, if one deeply believes in momentum, then past returns should have an increasing impact on future returns (in the cross-section of stocks).</p>
 <p>Given the recursive nature of the splitting algorithm, it is possible to choose when to perform a split (according to a particular variable) and when not to. In Figure , we show how the algorithm proceeds. All splits are performed according to the same feature. For the first split, things are easy because it suffices to verify that the averages of each cluster are ranked in the right direction. Things are more complicated for the splits that occur below. Indeed, the average values set by all above splits matter as they give bounds for acceptable values for the future average values in lower splits. If a split violates these bounds, then it is overlooked and another variable will be chosen instead.</p>
-<div class="figure"><span id="fig:monotonic"></span>
+<div class="figure" style="text-align: center"><span id="fig:monotonic"></span>
 <img src="images/tree_monotonic.png" alt="Imposing monotonic constraints. The constraints are shown in bold blue in the bottom leaves." width="590" />
 <p class="caption">
 FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold blue in the bottom leaves.
@@ -885,7 +922,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb66-4" data-line-number="4">                                <span class="dt">label =</span> train_label_xgb,</a>
 <a class="sourceLine" id="cb66-5" data-line-number="5">                                <span class="dt">weight =</span> inst_weights)        <span class="co"># Weights!</span></a></code></pre></div>
 <p></p>
-<p>Then, in the subsequent stages, the optimization will be performed with these hard-coded weights. The splitting points can be altered (via the total weighted loss in clusters) and the terminal weight values <a href="#eq:xgbweight">(<strong>??</strong>)</a> are also impacted.</p>
+<p>Then, in the subsequent stages, the optimization will be performed with these hard-coded weights. The splitting points can be altered (via the total weighted loss in clusters) and the terminal weight values <a href="trees.html#eq:xgbweight">(7.5)</a> are also impacted.</p>
 </div>
 </div>
 <div id="discussion" class="section level2">

@@ -432,26 +432,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="regression-analysis" class="section level3">
 <h3><span class="header-section-number">11.1.1</span> Regression analysis</h3>
 <p>Errors in regression analyses are usually evaluated in a straightforward way. The <span class="math inline">\(L^1\)</span> and <span class="math inline">\(L^2\)</span> norms are mainstream; they are both easy to interpret and to compute. The second one, the root mean squared error (RMSE) is differentiable everywhere but harder to grasp and gives more weight to outliers. The first one, the mean absolute error gives the average distance to the realized value but is not differentiable at zero. Formally, we define them as
-<span class="math display">\[\begin{align}
-\text{MAE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I|y_i-\tilde{y}_i|, \label{eq:MAE} \\
-\text{MSE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I(y_i-\tilde{y}_i)^2, \label{eq:MSE} 
+<span class="math display" id="eq:MSE" id="eq:MAE">\[\begin{align}
+ \tag{11.1}
+\text{MAE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I|y_i-\tilde{y}_i|, \\  \tag{11.2} 
+\text{MSE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I(y_i-\tilde{y}_i)^2, 
 \end{align}\]</span></p>
 <p>and the RMSE is simply the square root of the MSE.</p>
 <p>These metrics are widely used outside ML to assess forecasting errors. Below, we present other indicators that are also sometimes used to quantify the quality of a model. In line with the linear regressions, the <span class="math inline">\(R^2\)</span> can be computed in any predictive exercise.
-<span class="math display">\[\begin{equation}
-R^2(\textbf{y},\tilde{\textbf{y}})=1- \frac{\sum_{i=1}^I(y_i-\tilde{y}_i)^2}{\sum_{i=1}^I(y_i-\bar{y})^2}
-\label{eq:R2},
+<span class="math display" id="eq:R2">\[\begin{equation}
+\tag{11.3} 
+R^2(\textbf{y},\tilde{\textbf{y}})=1- \frac{\sum_{i=1}^I(y_i-\tilde{y}_i)^2}{\sum_{i=1}^I(y_i-\bar{y})^2},
 \end{equation}\]</span>
 where <span class="math inline">\(\bar{y}\)</span> is the sample average of the label. One important difference with the classical <span class="math inline">\(R^2\)</span> is that the above quantity can be computed on the testing sample and not on the training sample. In this case, the <span class="math inline">\(R^2\)</span> can be negative when the mean squared error in the numerator is larger than the (biased) variance of the testing sample. Sometimes, the average value <span class="math inline">\(\bar{y}\)</span> is omitted in the denominator (as in <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span> for instance). The benefit of removing the average value is that it compares the predictions of the model to a zero prediction. This is particularly relevant with returns because the simplest prediction of all is the constant zero value and the <span class="math inline">\(R^2\)</span> can then measure if the model beats this naive benchmark. A zero prediction is always preferable to a sample average because the latter can bery much be period dependent.</p>
 <p>Beyond the simple indicators detailed above, several exotic extensions exist and they all consist in altering the error before taking the averages. Two notable examples are the Mean Absolute Percentage Error (MAPE) and the Mean Square Percentage Error (MSPE). Instead of looking at the raw error, they compute the error relative to the original value (to be predicted). Hence, the error is expressed in a percentage score and the averages are simply equal to:</p>
-<p><span class="math display">\[\begin{align}
-\text{MAPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left|\frac{y_i-\tilde{y}_i}{y_i}\right|, \label{eq:MAPE} \\
-\text{MSPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left(\frac{y_i-\tilde{y}_i}{y_i}\right)^2, \label{eq:MSPE} 
+<p><span class="math display" id="eq:MSPE" id=\tag{11.4}\[\begin{align} (#eq:MAPE) 
+\text{MAPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left|\frac{y_i-\tilde{y}_i}{y_i}\right|,  \\ \tag{11.5} 
+\text{MSPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left(\frac{y_i-\tilde{y}_i}{y_i}\right)^2,
 \end{align}\]</span></p>
 <p>where the latter can be scaled by a square root if need be. When the label is positive with possibly large values, it is possible to scale the magnitude of errors, which can be very large. One way to do this is to resort to the Root Mean Squared Logarithmic Error (RMSLE), defined below:</p>
-<p><span class="math display">\[\begin{align}
-\text{RMSLE}(\textbf{y},\tilde{\textbf{y}})&amp;=\sqrt{\frac{1}{I}\sum_{i=1}^I\log\left(\frac{1+y_i}{1+\tilde{y}_i}\right)}, \label{eq:RMSLE} \\
-\end{align}\]</span></p>
+<p><span class="math display" id="eq:RMSLE">\[\begin{equation}
+ \tag{11.6} 
+\text{RMSLE}(\textbf{y},\tilde{\textbf{y}})=\sqrt{\frac{1}{I}\sum_{i=1}^I\log\left(\frac{1+y_i}{1+\tilde{y}_i}\right)}, 
+\end{equation}\]</span></p>
 <p>where it is obvious that when <span class="math inline">\(y_i=\tilde{y}_i\)</span>, the error metric is equal to zero.</p>
 </div>
 <div id="classification-analysis" class="section level3">
@@ -519,7 +521,7 @@ FIGURE 11.3: Example of ROC curve.
 <p></p>
 <p>In the above figure, the curve is very close to the 45° angle and the model seems as good (or, rather, as bad) as a random classifier.</p>
 <p>Finally, having one entire curve is not practical for comparison purposes, hence the information of the whole curve is synthesized into the area below the curve, i.e., the integral of the corresponding function. The 45° angle (quadrant bisector) has an area of 0.5 (it is half the unit square which has a unit area). Thus, any good model is expected to have an area under the curve (AUC) above 0.5. A perfect model has an AUC of one.</p>
-<p>We end this subsection with a word on multiclass data. When the output (i.e., the label) has more than two categories, things become more complex. It is still possible to compute a confusion matrix, but the dimension is larger and harder to interpret. The simple indicators like <span class="math inline">\(TP\)</span>, <span class="math inline">\(TN\)</span>, etc., must be generalized in a non standard way. The simplest metric in the case is the cross-entropy defined in Equation (<a href="#eq:crossentropy">(<strong>??</strong>)</a>).</p>
+<p>We end this subsection with a word on multiclass data. When the output (i.e., the label) has more than two categories, things become more complex. It is still possible to compute a confusion matrix, but the dimension is larger and harder to interpret. The simple indicators like <span class="math inline">\(TP\)</span>, <span class="math inline">\(TN\)</span>, etc., must be generalized in a non standard way. The simplest metric in the case is the cross-entropy defined in Equation (<a href="NN.html#eq:crossentropy">(8.5)</a>).</p>
 </div>
 </div>
 <div id="validation" class="section level2">
@@ -532,8 +534,8 @@ FIGURE 11.3: Example of ROC curve.
 <p>but the model that is estimated yields</p>
 <p><span class="math display">\[y_i=\hat{f}(\textbf{x}_i)+\hat{\epsilon}_i. \]</span></p>
 <p>Given an unkown sample <span class="math inline">\(\textbf{x}\)</span>, the decomposition of the average squared error is</p>
-<p><span class="math display">\[\begin{align}
-\mathbb{E}[\hat{\epsilon}^2]&amp;=\mathbb{E}[(y-\hat{f}(\textbf{x}))^2]=\mathbb{E}[(f(\textbf{x})+\epsilon-\hat{f}(\textbf{x}))^2]  \label{eq:biasvariance} \\
+<p><span class="math display" id="eq:biasvaria\tag{11.7}n} (#eq:biasvariance)
+\mathbb{E}[\hat{\epsilon}^2]&amp;=\mathbb{E}[(y-\hat{f}(\textbf{x}))^2]=\mathbb{E}[(f(\textbf{x})+\epsilon-\hat{f}(\textbf{x}))^2]   \\
 &amp;= \underbrace{\mathbb{E}[(f(\textbf{x})-\hat{f}(\textbf{x}))^2]}_{\text{total quadratic error}}+\underbrace{\mathbb{E}[\epsilon^2]}_{\text{irreducible error}} \nonumber \\
 &amp;= \mathbb{E}[\hat{f}(\textbf{x})^2]+\mathbb{E}[f(\textbf{x})^2]-2\mathbb{E}[f(\textbf{x})\hat{f}(\textbf{x})]+\sigma^2\nonumber\\
 &amp;=\mathbb{E}[\hat{f}(\textbf{x})^2]+f(\textbf{x})^2-2f(\textbf{x})\mathbb{E}[\hat{f}(\textbf{x})]+\sigma^2\nonumber\\
@@ -565,12 +567,12 @@ FIGURE 11.5: Second representation of the variance-bias tradeoff.
 </p>
 </div>
 <p>The most tractable theoretical form of the variance-bias tradeoff is the ridge regression.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a> The coefficient estimates in this type of regression are given by <span class="math inline">\(\hat{\mathbf{b}}_\lambda=(\mathbf{X}&#39;\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}&#39;\mathbf{Y}\)</span>, where <span class="math inline">\(\lambda\)</span> is the penalization intensity. Assuming a <em>true</em> linear form for the data generating process (<span class="math inline">\(\textbf{y}=\textbf{Xb}+\boldsymbol{\epsilon}\)</span> where <span class="math inline">\(\textbf{b}\)</span> is unknown and <span class="math inline">\(\sigma^2\)</span> the variance of errors), this yields
-<span class="math display">\[\begin{align}
-\mathbb{E}[\hat{\textbf{b}}_\lambda]&amp;=\textbf{b}-\lambda(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}, \label{eq:biastrade}\\
-\mathbb{V}[\hat{\textbf{b}}_\lambda]&amp;=\sigma^2(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1}\textbf{X}&#39;\textbf{X}   (\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1}. \label{eq:vartrade}
+<span class="math display" id="eq:vartrade" i\tag{11.8}">\[\begin{align}   (#eq:biastrade)
+\mathbb{E}[\hat{\textbf{b}}_\lambda]&amp;=\textbf{b}-\lambda(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}, \\  \tag{11.9}
+\mathbb{V}[\hat{\textbf{b}}_\lambda]&amp;=\sigma^2(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1}\textbf{X}&#39;\textbf{X}   (\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1}.
 \end{align}\]</span></p>
 <p>Basically, this means that the bias of the estimator is equal to <span class="math inline">\(-\lambda(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}\)</span>, which is zero in the absence of penalization (classical regression) and converges to some finite number when <span class="math inline">\(\lambda \rightarrow \infty\)</span>, i.e., when the model becomes constant. Note that if the estimator has a zero bias, then predictions will too: <span class="math inline">\(\mathbb{E}[\textbf{X}(\textbf{b}-\hat{\textbf{b}})]=\textbf{0}\)</span>.</p>
-<p>The variance (of estimates) in the case of an unconstrained regression is equal to <span class="math inline">\(\mathbb{V}[\hat{\textbf{b}}]=\sigma (\textbf{X}&#39;\textbf{X})^{-1}\)</span>. In Equation (<a href="#eq:vartrade">(<strong>??</strong>)</a>), the <span class="math inline">\(\lambda\)</span> reduces the magnitude of figures in the inverse matrix. The overall effect is that as <span class="math inline">\(\lambda\)</span> increases, the variance decreases and in the limit <span class="math inline">\(\lambda \rightarrow \infty\)</span>, the variance is zero when the model is constant. The variance of predictions is
+<p>The variance (of estimates) in the case of an unconstrained regression is equal to <span class="math inline">\(\mathbb{V}[\hat{\textbf{b}}]=\sigma (\textbf{X}&#39;\textbf{X})^{-1}\)</span>. In Equation (<a href="valtune.html#eq:vartrade">(11.9)</a>), the <span class="math inline">\(\lambda\)</span> reduces the magnitude of figures in the inverse matrix. The overall effect is that as <span class="math inline">\(\lambda\)</span> increases, the variance decreases and in the limit <span class="math inline">\(\lambda \rightarrow \infty\)</span>, the variance is zero when the model is constant. The variance of predictions is
 <span class="math display">\[\begin{align*}
 \mathbb{V}[\textbf{X}\hat{\textbf{b}}]&amp;=\mathbb{E}[(\textbf{X}\hat{\textbf{b}}-\mathbb{E}[\textbf{X}\hat{\textbf{b}}])(\textbf{X}\hat{\textbf{b}}-\mathbb{E}[\textbf{X}\hat{\textbf{b}}])&#39;] \\
 &amp;= \textbf{X}\mathbb{E}[(\hat{\textbf{b}}-\mathbb{E}[\hat{\textbf{b}}])(\hat{\textbf{b}}-\mathbb{E}[\hat{\textbf{b}}])&#39;]\textbf{X}&#39; \\
@@ -664,20 +666,20 @@ FIGURE 11.8: Confusion matrix: summary of binary outcomes.
 <p>Independent tests are easy and come in two families: grid (deterministic) search and random exploration. The advantage of a deterministic approach is that is covers the space uniformly and makes sure that no corners are omitted. The drawback is the computation time. Indeed, for each parameter, it seems reasonable to test at least five values, which makes <span class="math inline">\(5^p\)</span> combinations. If <span class="math inline">\(p\)</span> is small (smaller than 3), this is manageable when the backtests are not too lengthy. When <span class="math inline">\(p\)</span> is large, the number of combinations may become prohibitive. This is when random exploration can be useful because in this case, the user speciifies the number of tests upfront and the parameters are drawn randomly (usually uniformly). The flaw in random search is that some areas in the parameter space may not be covered, which can be problematic if the best choice is located there. It is nonetheless shown in <span class="citation">Bergstra and Bengio (<a href="#ref-bergstra2012random">2012</a>)</span> that random exploration is preferable to grid search.</p>
 <p>Both grid and random searches are suboptimal because they are likely to spend time in zones of the parameter space that are irrelevant, thereby wasting computation time. Given a number of parameter points that have been tested, it is preferable to focus the search in areas where the best points are the most likely. This is possible via an interative process that adapts the search after each new point has been tested.</p>
 <p>One other popular approach in this direction is Bayesian optimization (BO). The central object is the objective function of the learning process. We call this function <span class="math inline">\(O\)</span> and it can be widely seen as a loss function possibly combined with penalization and constraints. For simplicity here, we will not mention the training/testing samples and they are considered to be fixed. The variable of interest is the vector <span class="math inline">\(\textbf{p}=(p_1,\dots,p_l)\)</span> which synthesizes the hyperparameters (learning rate, penalization intensities, number of models, etc.) that have an impact on <span class="math inline">\(O\)</span>. The program we are interested in is</p>
-<p><span class="math display">\[\begin{equation}
+<p><span class="math display" id="eq:HPO">\[\begin{equation}
+\tag{11.10}
 \textbf{p}_*=\underset{\textbf{p}}{\text{argmin}} \ O(\textbf{p}).
-\label{eq:HPO}
 \end{equation}\]</span></p>
 <p>The main problem with this optimization is that the computation of <span class="math inline">\(O(\textbf{p})\)</span> is very costly. Therefore, it is critical to choose each trial for <span class="math inline">\(\textbf{b}\)</span> wisely. One key assumption of BO is that the distribution of <span class="math inline">\(O\)</span> is Gaussian and that <span class="math inline">\(O\)</span> can be proxied by a linear combination of the <span class="math inline">\(p_l\)</span>. Said differently, the aim is to build a Bayesian linear regression between the input <span class="math inline">\(\textbf{p}\)</span> and the output (dependent variable) <span class="math inline">\(O\)</span>. Once a model has been estimated the information that is concentrated in the posterior density of <span class="math inline">\(O\)</span> is used to make an educated guess at where to look at for new values of <span class="math inline">\(\textbf{p}\)</span>.</p>
 <p>This educated guess is made based on a so-called <em>acquisition function</em>. Suppose we have tested <span class="math inline">\(m\)</span> values for <span class="math inline">\(\textbf{p}\)</span>, which we write <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The current best parameter is written <span class="math inline">\(\textbf{p}_m^*=\underset{1\le k\le m}{\text{argmin}} \ O(\textbf{p}^{(k)})\)</span>. If we test a new point <span class="math inline">\(\textbf{p}\)</span>, then it will lead to an improvement only if <span class="math inline">\(O(\textbf{p})&lt;O(\textbf{p}_m^*)\)</span>, that is if the new objective improves the minimum value that we already know. The average value of this improvement is
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:acquisition">\[\begin{equation}
+\tag{11.11}
 \textbf{EI}_m(\textbf{p})=\mathbb{E}_m[[O(\textbf{p}_m^*)-O(\textbf{p})]_+],
-\label{eq:acquisition}
 \end{equation}\]</span></p>
 <p>where the positive part <span class="math inline">\([\cdot]_+\)</span> emphasizes that when <span class="math inline">\(O(\textbf{p})\ge O(\textbf{p}_m^*)\)</span>, the gain is zero. The expectation is indexed by <span class="math inline">\(m\)</span> because it is computed with respect to the posterior distribution of <span class="math inline">\(O(\textbf{p})\)</span> based on the <span class="math inline">\(m\)</span> samples <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The best choice for the next sample <span class="math inline">\(\textbf{p}^{m+1}\)</span> is then
-<span class="math display">\[\begin{equation}
+<span class="math display" id="eq:EI">\[\begin{equation}
+\tag{11.12}
 \textbf{p}^{m+1}=\underset{\textbf{p}}{\text{argmax}} \ \textbf{EI}_m(\textbf{p}),
-\label{eq:EI}
 \end{equation}\]</span>
 which corresponds to the maximum location of the expected improvement. Instead of the EI, the optimization can be performed on other measures, like the probability of improvement, which is <span class="math inline">\(\mathbb{P}_m[O(\textbf{p})&lt;O(\textbf{p}_m^*)]\)</span>.</p>
 <p>In compact form, the iterative process can be outlined as follows:</p>
@@ -686,7 +688,7 @@ which corresponds to the maximum location of the expected improvement. Instead o
 </li>
 <li><strong>step 2a</strong>: compute sequentially the posterior density of <span class="math inline">\(O\)</span> on all available points.<br />
 </li>
-<li><strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{m+1}\)</span> given in Equation <a href="#eq:EI">(<strong>??</strong>)</a>.<br />
+<li><strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{m+1}\)</span> given in Equation <a href="valtune.html#eq:EI">(11.12)</a>.<br />
 </li>
 <li><strong>step 2c</strong>: compute the new objective value <span class="math inline">\(O(\textbf{p}^{m+1})\)</span>.<br />
 </li>
