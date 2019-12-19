@@ -155,7 +155,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
-<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.4</b> The link with machine learning</a><ul>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4</b> Factor momentum</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.4.1</b> A short list of recent references</a></li>
 <li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.4.2</b> Explicit connexions with asset pricing models</a></li>
 </ul></li>
@@ -485,7 +485,7 @@ FIGURE 5.2: Conditional expecations: average returns as smooth functions of feat
 <a class="sourceLine" id="cb21-6" data-line-number="6">autocorrs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> acf)) <span class="op">+</span><span class="st">                             </span><span class="co"># Plot</span></a>
 <a class="sourceLine" id="cb21-7" data-line-number="7"><span class="st">   </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">60</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
 <div class="figure"><span id="fig:histcorr"></span>
-<img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of feature autocorrelations." width="672" />
+<img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of feature autocorrelations." width="384" />
 <p class="caption">
 FIGURE 5.3: Histogram of feature autocorrelations.
 </p>
@@ -550,10 +550,14 @@ FIGURE 5.3: Histogram of feature autocorrelations.
 </tr>
 </tbody>
 </table>
-<p>In this case, the yield is released quarterly, in March, June, September, etc. But in June, the value is missing. The problem is that we cannot know if it is missing because of a genuine data glitch, or because the firm simply did not pay any dividends in June. Thus, imputation from past value may be erroneous here. There is no perfect solution but a decision must nevertheless be taken. For dividend data, three options are:<br />
-1) Keep the previous value.<br />
-2) Extrapolate from previous observations (this is very different from <strong>inter</strong>polation): for instance, evaluate a trend and pursue that trend.
-3) Set the value to zero. This is tempting but may be sub-optimal due to dividend smoothing practices from executives (see for instance <span class="citation">Leary and Michaely (<a href="#ref-leary2011determinants">2011</a>)</span> and <span class="citation">Chen, Da, and Priestley (<a href="#ref-chen2012dividend">2012</a>)</span> for details on the subject). For persistent time-series, the first two options are probably better.</p>
+<p>In this case, the yield is released quarterly, in March, June, September, etc. But in June, the value is missing. The problem is that we cannot know if it is missing because of a genuine data glitch, or because the firm simply did not pay any dividends in June. Thus, imputation from past value may be erroneous here. There is no perfect solution but a decision must nevertheless be taken. For dividend data, three options are:</p>
+<ol style="list-style-type: decimal">
+<li>Keep the previous value. In R, the function na.locf() from the <em>zoo</em> package is incredibly efficient for this task.<br />
+</li>
+<li>Extrapolate from previous observations (this is very different from <strong>inter</strong>polation): for instance, evaluate a trend and pursue that trend.<br />
+</li>
+<li>Set the value to zero. This is tempting but may be sub-optimal due to dividend smoothing practices from executives (see for instance <span class="citation">Leary and Michaely (<a href="#ref-leary2011determinants">2011</a>)</span> and <span class="citation">Chen, Da, and Priestley (<a href="#ref-chen2012dividend">2012</a>)</span> for details on the subject). For persistent time-series, the first two options are probably better.</li>
+</ol>
 <p>Tests can be perform to evaluate the relative performance of each option. It is also important to <strong>remember</strong> these design choices. There are so many of them that they are easy to forget. Keeping track of them is obviously compulsory. In the ML pipeline, the scripts pertaining to data preparation are often key because they do not serve only once!</p>
 </div>
 <div id="outlier-detection" class="section level2">
@@ -617,12 +621,12 @@ We invite the interested reader to have a look at the recent work of <span class
 <h2><span class="header-section-number">5.5</span> Labelling</h2>
 <div id="simple-labels" class="section level3">
 <h3><span class="header-section-number">5.5.1</span> Simple labels</h3>
-<p>There are several ways to define labels when constructing portfolio policies. Of course, the finality is the portfolio weight, but it is rarely considered as the best choice for the label.<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a></p>
+<p>There are several ways to define labels when constructing portfolio policies. Of course, the finality is the portfolio weight, but it is rarely considered as the best choice for the label.<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a></p>
 <p>Usual labels in factor investing are the following:</p>
 <ul>
 <li>raw asset returns;<br />
 </li>
-<li>future relative returns (versus some benchmark: market-wide, or sector-based for instance);<br />
+<li>future relative returns (versus some benchmark: market-wide index, or sector-based portfolio for instance);<br />
 </li>
 <li>the probability of positive return (or of return above a specified threshold);<br />
 </li>
@@ -630,7 +634,8 @@ We invite the interested reader to have a look at the recent work of <span class
 </li>
 <li>the binary version of the above: YES (outperforming) versus NO (underperforming);<br />
 </li>
-<li>risk-adjusted versions of the above: Sharpe ratios, information ratios (see Section <a href="backtest.html#perfmet">13.3</a>).</li>
+<li>risk-adjusted versions of the above: Sharpe ratios, information ratios (see Section <a href="backtest.html#perfmet">13.3</a>).<br />
+When creating binary variables, it is often tempting to create a test that compares returns to zero (profitable versus non-profitable). This is not optimal because very much time-dependent. In good times, many assets will have positive returns while in market crashed, few will experience positive returns, thereby creating very unbalanced classes. It is a better idea to split the returns in two by comparing them to their time-<span class="math inline">\(t\)</span> median (or average). In this case, the indicator is relative and the two classes are much more balanced.</li>
 </ul>
 <p>As we will discuss later in this chapter, these choices still leave room for additional degrees of freedom. Should the labels be rescaled, just like features are processed? What is the best time horizon on which to compute performance metrics?</p>
 </div>
@@ -642,11 +647,11 @@ We invite the interested reader to have a look at the recent work of <span class
 \tag{5.2}
 y_{t,i}=\left\{  \begin{array}{rll}
 -1 &amp; \text{ if } &amp; \hat{r}_{t,i} &lt; r_- \\
-0 &amp; \text{ if } &amp; \hat{r}_{t,i} \in [r_,r_+] \\
+0 &amp; \text{ if } &amp; \hat{r}_{t,i} \in [r_-,r_+] \\
 +1 &amp; \text{ if } &amp; \hat{r}_{t,i} &gt; r_+ \\
 \end{array} \right.,
 \end{equation}\]</span>
-where <span class="math inline">\(\hat{r}_{t,i}\)</span> is the performance proxy and <span class="math inline">\(r_\pm\)</span> are the decision thresholds. When the predicted performance is below <span class="math inline">\(r_-\)</span>, the decision is -1 (e.g., <em>sell</em>), when it is above <span class="math inline">\(r_+\)</span>, the decision is +1 (e.g., <em>buy</em>) and when it is in the middle (the model is neither very optimistic nor very pessimistic), then the decision is neutral (e.g., <em>hold</em>). The performance proxy can of course be relative to some benchmark so that the decision is directly related to this benchmark. The thresholds <span class="math inline">\(r_\pm\)</span> should be chosen such that the three categories are relatively balanced, that is, have a comparable number of instances.</p>
+where <span class="math inline">\(\hat{r}_{t,i}\)</span> is the performance proxy (e.g., returns or Sharpe ratio) and <span class="math inline">\(r_\pm\)</span> are the decision thresholds. When the predicted performance is below <span class="math inline">\(r_-\)</span>, the decision is -1 (e.g., <em>sell</em>), when it is above <span class="math inline">\(r_+\)</span>, the decision is +1 (e.g., <em>buy</em>) and when it is in the middle (the model is neither very optimistic nor very pessimistic), then the decision is neutral (e.g., <em>hold</em>). The performance proxy can of course be relative to some benchmark so that the decision is directly related to this benchmark. The thresholds <span class="math inline">\(r_\pm\)</span> should be chosen such that the three categories are relatively balanced, that is, have a comparable number of instances.</p>
 <p>In this case, the final output can be both considered as categorical or numerical because it belongs to an important subgroup of categorical variables: the ordered categorical (<strong>ordinal</strong>) variables. If <span class="math inline">\(y\)</span> is taken as a number, then the usual regression tools apply. The transformation of the initial output into a new format is similar to what is performed when engineering features.</p>
 <p>When <span class="math inline">\(y\)</span> is treated as non-ordered (<strong>nominal</strong>) categorical variable, then a new layer of processing is required because ML tools only work with numbers. Hence, the categories must be recoded into digits. The mapping that is most often used is called ‘<strong>one-hot encoding</strong>’. The vector of classes is split in a sparse matrix in which each column is dedicated to one class. The matrix is filled with zeros and ones. A one is allocated to the column corresponding to the class of the instance. We provide a simple illustration in the table below.</p>
 <table>
@@ -698,6 +703,7 @@ where <span class="math inline">\(\hat{r}_{t,i}\)</span> is the performance prox
 </tbody>
 </table>
 <p>In classification tasks, the output has a larger dimension. For each instance, it gives the probability of belonging to each class assigned by the model. As we will see in Chapters <a href="trees.html#trees">7</a> and <a href="NN.html#NN">8</a>, this is easily handled via the softmax function.</p>
+<p>From the standpoint of allocation, handling categorical predictions is not necessarily easy. For long-short portfolios, plus or minus one signals can provide the sign of the position. For long-only portfolio, two possible solutions: <em>i)</em> work with binary classes (in versus out of the portfolio) or <em>ii)</em> adapt weights according to the prediction: zero weight for a -1 prediction, 0.5 weight for a 0 prediction and full weight for a +1 prediction. Weights are then of course normalized.</p>
 </div>
 <div id="the-triple-barrier-method" class="section level3">
 <h3><span class="header-section-number">5.5.3</span> The triple barrier method</h3>
@@ -734,7 +740,7 @@ These two properties are desirable. The first reduces the risk of fitting to sma
 3. smooth label, oscillating feature;<br />
 4. smooth label and feature.</p>
 <p>Of all of these options, the last one is probably preferable because more robust, all things being equal. By all things equal, we mean that in each case, a model is capable of extracting some relevant pattern. A pattern that holds between two slowly moving series is more likely to persist in time. Thus, since features are often highly autocorrelated (cf Figure <a href="Data.html#fig:histcorr">5.3</a>), combining them with smooth labels is probably a good idea. To illustrate how critical this point is, we will purposefully use 1 month returns in most of the examples of the book and show that the corresponding results are always disappointing. These returns are very weakly autocorrelated while 6 month or 12 month returns are much more persistent and are better choices for labels.</p>
-<p>Theoretically, it is possible to understand why that may be the case. For simplicity, let us assume a single feature <span class="math inline">\(x\)</span> that explains returns <span class="math inline">\(r\)</span>: <span class="math inline">\(r_{t+1}=f(x_t)+e_{t+1}\)</span>. If <span class="math inline">\(x_t\)</span> is highly autocorrelated and the noise embeded in <span class="math inline">\(e_{t+1}\)</span> is not too large, then the two-period ahead return <span class="math inline">\((1+r_{t+1})(1+r_{t+2})-1\)</span> may carry more signal than <span class="math inline">\(r_{t+1}\)</span> because the relationship with <span class="math inline">\(x_t\)</span> has diffused through time.</p>
+<p>Theoretically, it is possible to understand why that may be the case. For simplicity, let us assume a single feature <span class="math inline">\(x\)</span> that explains returns <span class="math inline">\(r\)</span>: <span class="math inline">\(r_{t+1}=f(x_t)+e_{t+1}\)</span>. If <span class="math inline">\(x_t\)</span> is highly autocorrelated and the noise embeded in <span class="math inline">\(e_{t+1}\)</span> is not too large, then the two-period ahead return <span class="math inline">\((1+r_{t+1})(1+r_{t+2})-1\)</span> may carry more signal than <span class="math inline">\(r_{t+1}\)</span> because the relationship with <span class="math inline">\(x_t\)</span> has diffused through time. We discuss some practicalities related to autocorrelations in the next section.</p>
 </div>
 </div>
 <div id="pers" class="section level2">
@@ -765,7 +771,12 @@ These two properties are desirable. The first reduces the risk of fitting to sma
 \breve{x}_{t,n}^{(k)}=z_t \times x_{t,n}^{(k)}
 \end{equation}\]</span>
 This technique is used by <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span> who use 8 economic indicators (plus the original predictors (<span class="math inline">\(z_t=1\)</span>)). This increase the feature space ninefold.</p>
-<p>Another route that integrates shifting economic environements is conditional engineering. Suppose that labels are coded via formula <a href="Data.html#eq:catlabel">(5.2)</a>. The thresholds can be made dependent on some exogenous variable. In times of turbulence, it might be a good idea to increase both <span class="math inline">\(r_+\)</span> (buy threshold) and <span class="math inline">\(r_-\)</span> (sell threshold) so that the labels become more conservative: it takes a higher return to make it to the <em>buy</em> category, while short positions are favored. One such example of dynamic thresholding could be <span class="math inline">\(r_{t,\pm}=r_{\pm} \times e^{\delta(\text{VIX}_t-\bar{\text{VIX}})}\)</span>, where <span class="math inline">\(\text{VIX}_t\)</span> is the time-<span class="math inline">\(t\)</span> value of the VIX while <span class="math inline">\(\bar{\text{VIX}}\)</span> is some average or median value. When the VIX is above its average and risk seems to be increasing, the thresholds also increase. The parameter <span class="math inline">\(\delta\)</span> tunes the magnitude of the correction.</p>
+<p>Another route that integrates shifting economic environements is conditional engineering. Suppose that labels are coded via formula <a href="Data.html#eq:catlabel">(5.2)</a>. The thresholds can be made dependent on some exogenous variable. In times of turbulence, it might be a good idea to increase both <span class="math inline">\(r_+\)</span> (buy threshold) and <span class="math inline">\(r_-\)</span> (sell threshold) so that the labels become more conservative: it takes a higher return to make it to the <em>buy</em> category, while short positions are favored. One such example of dynamic thresholding could be</p>
+<p><span class="math display" id="eq:condvix">\[\begin{equation}
+\tag{5.4}
+r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\text{VIX}_t\)</span> is the time-<span class="math inline">\(t\)</span> value of the VIX while <span class="math inline">\(\bar{\text{VIX}}\)</span> is some average or median value. When the VIX is above its average and risk seems to be increasing, the thresholds also increase. The parameter <span class="math inline">\(\delta\)</span> tunes the magnitude of the correction. In the above example, we assume <span class="math inline">\(r_-&lt;0&lt;r_+\)</span>.</p>
 </div>
 </div>
 <div id="additional-code-and-results" class="section level2">
@@ -811,7 +822,7 @@ This technique is used by <span class="citation">Gu, Kelly, and Xiu (<a href="#r
 </div>
 <div id="impact-of-rescaling-toy-example" class="section level3">
 <h3><span class="header-section-number">5.8.2</span> Impact of rescaling: toy example</h3>
-<p>To illustrate the impact of chosing one particular rescaling method,<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
+<p>To illustrate the impact of chosing one particular rescaling method,<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
 
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">firm &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">3</span>,<span class="dv">3</span>))             <span class="co"># Firms (3 lines for each)</span></a>
 <a class="sourceLine" id="cb25-2" data-line-number="2">date &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>)                             <span class="co"># Dates</span></a>
@@ -860,7 +871,9 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 <div id="coding-exercises-1" class="section level2">
 <h2><span class="header-section-number">5.9</span> Coding exercises</h2>
 <ol style="list-style-type: decimal">
-<li>The federal reserve of Saint Louis (<a href="https://fred.stlouisfed.org" class="uri">https://fred.stlouisfed.org</a>) hosts thousands of time-series of economic indicators that can serve as conditioning variables. Pick one, and apply formula <a href="Data.html#eq:macrocond">(5.3)</a> to expand the number of predictors. If need be, use the function defined above.</li>
+<li>The federal reserve of Saint Louis (<a href="https://fred.stlouisfed.org" class="uri">https://fred.stlouisfed.org</a>) hosts thousands of time-series of economic indicators that can serve as conditioning variables. Pick one, and apply formula <a href="Data.html#eq:macrocond">(5.3)</a> to expand the number of predictors. If need be, use the function defined above.<br />
+</li>
+<li>Create a new categorical label based on formulae <a href="Data.html#eq:condvix">(5.4)</a> and <a href="Data.html#eq:catlabel">(5.2)</a>. The time-series of the VIX can also be retrieve from the federal reserve’s website: <a href="https://fred.stlouisfed.org/series/VIXCLS" class="uri">https://fred.stlouisfed.org/series/VIXCLS</a>.</li>
 </ol>
 
 </div>
@@ -975,9 +988,9 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 </div>
 <div class="footnotes">
 <hr />
-<ol start="6">
-<li id="fn6"><p>Some methodologies do map firm attributes into final weights, e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric">2009</a>)</span> and <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics">2016</a>)</span> but these are outside the scope of the book.<a href="Data.html#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p>For a more thorough technical discussion on the impact of feature engineering, we refer to <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting">2016</a>)</span>.<a href="Data.html#fnref7" class="footnote-back">↩</a></p></li>
+<ol start="7">
+<li id="fn7"><p>Some methodologies do map firm attributes into final weights, e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric">2009</a>)</span> and <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics">2016</a>)</span> but these are outside the scope of the book.<a href="Data.html#fnref7" class="footnote-back">↩</a></p></li>
+<li id="fn8"><p>For a more thorough technical discussion on the impact of feature engineering, we refer to <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting">2016</a>)</span>.<a href="Data.html#fnref8" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
