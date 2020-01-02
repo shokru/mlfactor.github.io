@@ -46,7 +46,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -427,11 +426,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="bayes" class="section level1">
 <h1><span class="header-section-number">Chapter 10</span> Bayesian methods</h1>
-<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concept in the subsection below. Good references for Bayesian analysis are <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span> and <span class="citation">Kruschke (<a href="#ref-kruschke2014doing">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code.</p>
+<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concepts in the subsection below. Good references for Bayesian analysis are <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span> and <span class="citation">Kruschke (<a href="#ref-kruschke2014doing">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code.</p>
 <div id="the-bayesian-framework" class="section level2">
 <h2><span class="header-section-number">10.1</span> The Bayesian framework</h2>
-<p>Up to now, the models that have been presented rely on data only. This approach is often referred to as ‘<em>frequentist</em>’. Given one dataset, a frequentist will extract (i.e., estimate) a unique set of optimal parameters and consider it to be the best model. Bayesians, on the other hand, consider datasets as a snapshots of reality and for them, parameters are thus random! Instead of estimating one value for parameters, they a more ambitious and try to determine the whole distribution of the parameter.</p>
-<p>In order to outline how that can be achieved, we introduce basic notations and results. The foundational concept in Bayesian analysis is the conditional probability. Given two random sets (or events) <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we define the probability of <span class="math inline">\(A\)</span> knowing <span class="math inline">\(B\)</span> (or, conditionally on <span class="math inline">\(B\)</span>) as
+<p>Up to now, the models that have been presented rely on data only. This approach is often referred to as ‘<em>frequentist</em>’. Given one dataset, a frequentist will extract (i.e., estimate) a unique set of optimal parameters and consider it to be the best model. Bayesians, on the other hand, consider datasets as a snapshots of reality and for them, parameters are thus random! Instead of estimating one value for parameters, they are more ambitious and try to determine the whole distribution of the parameter.</p>
+<p>In order to outline how that can be achieved, we introduce basic notations and results. The foundational concept in Bayesian analysis is the conditional probability. Given two random sets (or events) <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we define the probability of <span class="math inline">\(A\)</span> knowing <span class="math inline">\(B\)</span> (equivalently, the odds of having <span class="math inline">\(A\)</span>, conditionally on having <span class="math inline">\(B\)</span>) as
 <span class="math display">\[P[A|B]=\frac{P[A \cap B]}{P[B]},\]</span>
 that is, the probability of the intersection between the two sets divided by the probability of <span class="math inline">\(B\)</span>. Likewise, the probability that both events occur is equal to <span class="math inline">\(P[A \cap B] = P[A]P[B|A]\)</span>. Given <span class="math inline">\(n\)</span> disjoint events <span class="math inline">\(A_i\)</span>, <span class="math inline">\(i=1,...n\)</span> such that <span class="math inline">\(\sum_{i=1}^nP(A_i)=1\)</span>, then for any event <span class="math inline">\(B\)</span>, the law of total probabilities is (or implies)
 <span class="math display">\[P(B)=\sum_{i=1}^nP(B \cap A_i)= \sum_{i=1}^nP(B|A_i)P(A_i).\]</span></p>
@@ -448,13 +447,13 @@ p(\boldsymbol{\theta}| \textbf{y})=\frac{p(\boldsymbol{\theta})p(\textbf{y} |\bo
 \end{equation}\]</span></p>
 <p>The interpretation is immediate: the distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> knowing the data <span class="math inline">\(\textbf{y}\)</span> is proportional to the distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> times the distribution of <span class="math inline">\(\textbf{y}\)</span> knowing <span class="math inline">\(\boldsymbol{\theta}\)</span>. The term <span class="math inline">\(p(\textbf{y})\)</span> is often omitted because it is simply a scaling number that ensures that the density sums or integrates to one.</p>
 <p>We use a slightly different notation between Equation <a href="#eq:bayes">(<strong>??</strong>)</a> and Equation <a href="#eq:bayes2">(<strong>??</strong>)</a>. In the former, <span class="math inline">\(P\)</span> denotes a true probability, i.e., it is a number. In the latter, <span class="math inline">\(p\)</span> stands for the whole probability density function of <span class="math inline">\(\boldsymbol{\theta}\)</span> or <span class="math inline">\(\textbf{y}\)</span>.</p>
-<p>The whole purpose of Bayesian analysis is to compute the so-called <em>posterior</em> distribution <span class="math inline">\(p(\boldsymbol{\theta}| \textbf{y})\)</span> via the <em>prior</em> distribution <span class="math inline">\(p(\boldsymbol{\theta})\)</span> and the <em>likelihood function</em> <span class="math inline">\(p(\textbf{y} |\boldsymbol{\theta})\)</span>. Priors are sometimes qualified as informative, weakly informative or uninformative, depending on the degree to which the user is confident on the relevance and robustness of the prior. The simplest way to define a non-informative prior is to set a constant (uniform) distribution over some realistic intervals.</p>
+<p>The whole purpose of Bayesian analysis is to compute the so-called <em>posterior</em> distribution <span class="math inline">\(p(\boldsymbol{\theta}| \textbf{y})\)</span> via the <em>prior</em> distribution <span class="math inline">\(p(\boldsymbol{\theta})\)</span> and the <em>likelihood function</em> <span class="math inline">\(p(\textbf{y} |\boldsymbol{\theta})\)</span>. Priors are sometimes qualified as informative, weakly informative or uninformative, depending on the degree to which the user is confident on the relevance and robustness of the prior. The simplest way to define a non-informative prior is to set a constant (uniform) distribution over some realistic interval(s).</p>
 <p>The most challenging part is usually the likelihood function. The easiest way to solve the problem is to resort to a specific distribution (possibly a parametric family) for the distribution of the data and then consider that obsevations are i.i.d., just as in a simple maximum likelihood inference. If we assume that new parameters for the distributions are gathered into <span class="math inline">\(\boldsymbol{\lambda}\)</span>, then the likelihood can be written as
 <span class="math display" id="eq:likelihood">\[\begin{equation}
 \tag{10.1}
 p(\textbf{y} |\boldsymbol{\theta}, \boldsymbol{\lambda})=\prod_{i=1}^I f_{\boldsymbol{\lambda}}(y_i; \boldsymbol{\beta}), 
 \end{equation}\]</span>
-but in this case the problem because slightly more complex because adding new parameters change the posterior distribution to <span class="math inline">\(p(\boldsymbol{\theta}, \boldsymbol{\lambda}|\textbf{y})\)</span>. The user must find out the joint distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> and <span class="math inline">\(\boldsymbol{\lambda}\)</span> - given <span class="math inline">\(\textbf{y})\)</span>.</p>
+but in this case the problem becomes slightly more complex because adding new parameters changes the posterior distribution to <span class="math inline">\(p(\boldsymbol{\theta}, \boldsymbol{\lambda}|\textbf{y})\)</span>. The user must find out the joint distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> and <span class="math inline">\(\boldsymbol{\lambda}\)</span> - given <span class="math inline">\(\textbf{y})\)</span>.</p>
 </div>
 <div id="bayesian-sampling" class="section level2">
 <h2><span class="header-section-number">10.2</span> Bayesian sampling</h2>
@@ -471,7 +470,7 @@ x_J^{m+1}&amp;= p(X_J|X_1=x_1^{m+1}, X_2=x_2^{m+1}, \dots, X_{J-1}=x_{J-1}^{m+1}
 \end{align*}\]</span></p>
 <p>The important detail is that after each line, the value of the variable is updated. Hence, in the second line, <span class="math inline">\(X_2\)</span> is sampled with the knowledge of <span class="math inline">\(X_1=x_1^{m+1}\)</span> and in the last line, all variable except <span class="math inline">\(X_J\)</span> have been updated to their <span class="math inline">\(m+1^{th}\)</span> state. The above algorithm is called Gibbs sampling. It relates to Markov chains because each new iteration depends only on the previous one.</p>
 <p>Under some technical assumptions, as <span class="math inline">\(T\)</span> increases, the distrbution of <span class="math inline">\(\textbf{x}_T\)</span> converges to that of <span class="math inline">\(p\)</span>. The conditions under which the convergence occurs have been widely discussed in series of articles in the 1990s. The interested reader can have a look for instance at <span class="citation">Tierney (<a href="#ref-tierney1994markov">1994</a>)</span>, <span class="citation">Roberts and Smith (<a href="#ref-roberts1994simple">1994</a>)</span>, as well as at section 11.7 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span>.</p>
-<p>Sometimes, the full distribution is complex and the conditional laws are hard to determine and to sample. Then, a more general method, called Metropolis-Hastings, can be used that relies on the rejection method for the simulation of random variables. For the sake of brevity, we omit the presentation here, but the methods are outlined in section 11.2 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span> and in Chapter 7 of <span class="citation">Kruschke (<a href="#ref-kruschke2014doing">2014</a>)</span>.</p>
+<p>Sometimes, the full distribution is complex and the conditional laws are hard to determine and to sample. Then, a more general method, called Metropolis-Hastings, can be used that relies on the rejection method for the simulation of random variables.</p>
 </div>
 <div id="metropolis-hastings-sampling" class="section level3">
 <h3><span class="header-section-number">10.2.2</span> Metropolis-Hastings sampling</h3>
@@ -485,11 +484,12 @@ x_J^{m+1}&amp;= p(X_J|X_1=x_1^{m+1}, X_2=x_2^{m+1}, \dots, X_{J-1}=x_{J-1}^{m+1}
 </ol>
 <p>The interpretation of the acceptance ratio is not straightforward in the general case. When the sampling generator is symmetric (<span class="math inline">\(p(\textbf{x}|\textbf{y})=(\textbf{y}|\textbf{x})\)</span>), the candidate is always chosen whenever <span class="math inline">\(p(\textbf{x}&#39;_{m+1})\ge p(\textbf{x}_{m})\)</span>. If the reverse condition holds, then it is retained with odds equal to <span class="math inline">\(p(\textbf{x}&#39;_{m+1})/p(\textbf{x}_{m})\)</span>, which is the ratio of likelihoods. The more likely the new proposal, the higher the odds of retaining it.</p>
 <p>Often, the first simulations are discarded in order to leave time to the chain to converge to a high probability region. This procedure (often called ‘burn in’) ensures that the first retained samples are located in a zone that is likely, that is: they are more representative of the law we are trying to simulate.</p>
+<p>For the sake of brevity, we stick to a brief the presentation here, but some additional details are outlined in section 11.2 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span> and in Chapter 7 of <span class="citation">Kruschke (<a href="#ref-kruschke2014doing">2014</a>)</span>.</p>
 </div>
 </div>
 <div id="bayesian-linear-regression" class="section level2">
 <h2><span class="header-section-number">10.3</span> Bayesian linear regression</h2>
-<p>Because Bayesian concepts are rather abstract, it is useful to illustrate the theoretical notions with a simple example. In a linear model, <span class="math inline">\(y_i=\textbf{x}_i\textbf{b}+\epsilon_i\)</span> and it is often statistically assumed that the <span class="math inline">\(\epsilon_i\)</span> are i.i.d. and normally distributed with zero mean and variance <span class="math inline">\(\sigma^2\)</span>. Hence, Equation <a href="bayes.html#eq:likelihood">(10.1)</a> translates into
+<p>Because Bayesian concepts are rather abstract, it is useful to illustrate the theoretical notions with a simple example. In a linear model, <span class="math inline">\(y_i=\textbf{x}_i\textbf{b}+\epsilon_i\)</span> and it is often statistically assumed that the <span class="math inline">\(\epsilon_i\)</span> are i.i.d. and normally distributed with zero mean and variance <span class="math inline">\(\sigma^2\)</span>. Hence, the likelihood of Equation <a href="bayes.html#eq:likelihood">(10.1)</a> translates into
 <span class="math display">\[p(\boldsymbol{\epsilon}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\epsilon_i^2}{2\sigma^2}}.\]</span></p>
 <p>In a regression analysis, the data is given both by <span class="math inline">\(\textbf{y}\)</span> and by <span class="math inline">\(\textbf{X}\)</span>, hence both are reported in the notations. Simply acknowledging that <span class="math inline">\(\boldsymbol{\epsilon}=\textbf{y}-\textbf{Xb}\)</span>, we get
 <span class="math display" id="eq:linlike">\[\begin{align}
@@ -497,7 +497,7 @@ p(\textbf{y},\textbf{X}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilo
 =\underbrace{(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}}_{\text{depends on } \sigma, \text{ not } \textbf{b}}\times \underbrace{e^{-\frac{(\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}}_{\text{ depends on both } \sigma, \text{ and } \textbf{b} },
 \end{align}\]</span>
 where the last line is very convenient because it expresses the law as a function of the difference <span class="math inline">\(\textbf{b}-\hat{\textbf{b}}\)</span>, where <span class="math inline">\(\hat{\textbf{b}}=(\textbf{X}&#39;\textbf{X})^{-1}\textbf{X}&#39;\textbf{y}\)</span> seems like a natural choice for the mean of <span class="math inline">\(\textbf{b}\)</span> - though in the end this vector is chosen for the simple form it produces.</p>
-<p>The above expression is the frequentist (data-based) block of the posterior. If we want to obtain a tractable expression for the posterior, we need to find a prior that has a form that will combine well with the likelihood. These forms are called <em>conjugate priors</em>. A natural candidate for the right part (that depends on both <strong>b</strong> and <span class="math inline">\(\sigma\)</span>) is the multivariate Gaussian density:
+<p>The above expression is the frequentist (data-based) block of the posterior: the likelihood. If we want to obtain a tractable expression for the posterior, we need to find a prior component that has a form that will combine well with this likelihood. These forms are called <em>conjugate priors</em>. A natural candidate for the right part (that depends on both <strong>b</strong> and <span class="math inline">\(\sigma\)</span>) is the multivariate Gaussian density:
 <span class="math display" id="eq:linprior">\[\begin{equation}
 \tag{10.3}
 p[\textbf{b}|\sigma]=\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)}{2\sigma^2}},
@@ -518,8 +518,9 @@ which is close to that of the left part of <a href="bayes.html#eq:linlike">(10.2
 <span class="math display">\[\begin{align*}
 p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto 
 (\sigma\sqrt{2\pi})^{-I} \sigma^{-2(1+a_0)} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}\times e^{-\frac{(\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)}{2\sigma^2}}e^{-\frac{b_0}{2\sigma^2}} \\
-&amp; \propto \sigma^{-I-k-2(1+a_0)}\exp\left(-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right) + (\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}}) + (\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)+b_0}{2\sigma^2} \right) 
-\end{align*}\]</span></p>
+\end{align*}\]</span>
+which is proportional to
+<span class="math display">\[\sigma^{-I-k-2(1+a_0)}\exp\left(-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right) + (\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}}) + (\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)+b_0}{2\sigma^2} \right) .\]</span></p>
 <p>The above expression is simply a quadratic form in <span class="math inline">\(\textbf{b}\)</span> and it can be rewritten after burdensome algebra in a much more compact manner:
 <span class="math display">\[\begin{equation}
 \label{eq:linpost}
@@ -539,7 +540,7 @@ b_* &amp;=b_0+\frac{1}{2}\left(\textbf{y}&#39;\textbf{y}+ \textbf{b}_0&#39;\bold
 where <span class="math inline">\(\alpha\)</span> is the shape and <span class="math inline">\(\beta\)</span> is the scale.</p>
 
 <div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb100-1" data-line-number="1">prior_mean &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>)                    <span class="co"># Average value of parameters (prior)</span></a>
-<a class="sourceLine" id="cb100-2" data-line-number="2">precision_mat &lt;-<span class="st"> </span><span class="kw">diag</span>(prior_mean<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">solve</span>()  <span class="co"># Inverse covariance matrix of parameters (prior)</span></a>
+<a class="sourceLine" id="cb100-2" data-line-number="2">precision_mat &lt;-<span class="st"> </span><span class="kw">diag</span>(prior_mean<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">solve</span>()  <span class="co"># Inverse cov matrix of parameters (prior)</span></a>
 <a class="sourceLine" id="cb100-3" data-line-number="3">fit_lmBayes &lt;-<span class="st"> </span><span class="kw">bayesLMConjugate</span>(</a>
 <a class="sourceLine" id="cb100-4" data-line-number="4">    R1M_Usd <span class="op">~</span><span class="st"> </span>Mkt_Cap_3M_Usd <span class="op">+</span><span class="st"> </span>Pb,          <span class="co"># Model: size and value</span></a>
 <a class="sourceLine" id="cb100-5" data-line-number="5">    <span class="dt">data =</span> testing_sample,                  <span class="co"># Data source, here, the test sample</span></a>
@@ -548,7 +549,7 @@ where <span class="math inline">\(\alpha\)</span> is the shape and <span class="
 <a class="sourceLine" id="cb100-8" data-line-number="8">    <span class="dt">beta.prior.precision =</span> precision_mat,   <span class="co"># Precision matrix</span></a>
 <a class="sourceLine" id="cb100-9" data-line-number="9">    <span class="dt">prior.shape =</span> <span class="fl">0.5</span>,                      <span class="co"># Shape for prior distribution of sigma</span></a>
 <a class="sourceLine" id="cb100-10" data-line-number="10">    <span class="dt">prior.rate =</span> <span class="fl">0.5</span>)                       <span class="co"># Scale for prior distribution fo sigma</span></a></code></pre></div>
-
+<p></p>
 <p>In the above specification, we must also provide a prior for the constant. By default, we set its average value to 0.01, which corresponds to a 1% average monthly return.</p>
 
 <div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">fit_lmBayes<span class="op">$</span>p.beta.tauSq.samples[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></a>
@@ -561,7 +562,7 @@ where <span class="math inline">\(\alpha\)</span> is the shape and <span class="
 FIGURE 10.1: Distribution of linear regression coefficients.
 </p>
 </div>
-
+<p></p>
 <p>The distribution of the constant is firmly to the right, hence soldily positive. For the size coefficient it is the opposite: it is negative (small firms are more profitable). With regard to value, it is hard to conclude, the distribution is balanced around zero.</p>
 </div>
 <div id="naive-bayes-classifier" class="section level2">
@@ -611,7 +612,7 @@ will have a standard normal law whenever <span class="math inline">\(F_{\textbf{
 FIGURE 10.2: Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return.
 </p>
 </div>
-
+<p></p>
 <p>The plots show the distributions of the features, conditionally on each value of the label. Essentially, those are the densities <span class="math inline">\(P[\textbf{x}_k| \textbf{y}]\)</span>. For each feature, both distributions are very similar.</p>
 <p>As usual, when the model has been trained, the accuracy of predictions can be evaluated.</p>
 
@@ -624,7 +625,7 @@ FIGURE 10.2: Distributions of predictor variables, conditional on the class of t
 <a class="sourceLine" id="cb103-7" data-line-number="7"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(features_short)</a>
 <a class="sourceLine" id="cb103-8" data-line-number="8"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_NB_gauss, gauss_features_test) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.4956985</code></pre>
-
+<p></p>
 <p>The performance of the classifier is not satisfactory as it underperforms a random guess.</p>
 </div>
 <div id="BART" class="section level2">
@@ -732,14 +733,14 @@ FIGURE 10.3: Diagram of the MH/Gibbs sampling of BARTs.
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 30s
+## time: 26s
 ## trcnt,tecnt: 200,200</code></pre>
-
+<p></p>
 <p>Once the model is trained,<a href="#fn15" class="footnote-ref" id="fnref15"><sup>15</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>’.</p>
 
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="kw">mean</span>(fit_bart<span class="op">$</span>yhat.test <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
 <pre><code>## [1] 0.542666</code></pre>
-
+<p></p>
 <p>The performance <em>seems</em> reasonable but is by no means not impressive.</p>
 
 </div>

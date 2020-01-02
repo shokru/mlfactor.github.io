@@ -46,7 +46,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -448,14 +447,25 @@ FIGURE 9.1: Diagram of binary classification with support vectors
 \sum_{k=1}^Kw_kx_{i,k}+b \le -1 &amp; \text{ when } y_i=-1,
 \end{array}\right.
 \end{equation}\]</span></p>
-<p>which can be summarized in compact form <span class="math inline">\(y_i \times \left(\sum_{k=1}^K w_kx_{i,k}+b \right)\ge 1\)</span>. Now, the margin between the green model and a support vector on the dashed grey line is equal to <span class="math inline">\(||\textbf{w}||=\sqrt{\sum_{k=1}^Kw_k^2}\)</span>. This value comes from the fact that the distance between a point <span class="math inline">\((x_0,y_0)\)</span> and a line parametrized by <span class="math inline">\(ax+by+c=0\)</span> is equal to <span class="math inline">\(d=\frac{|ax_0+by_0+c|}{\sqrt{a^2+b^2}}\)</span>. In hte case of the model defined above (<a href="svm.html#eq:svm0">(9.1)</a>), the numerator is equal to 1 and the norm is that of <span class="math inline">\(\textbf{w}\)</span>. Thus, the final problem is the following:</p>
+<p>which can be summarized in compact form <span class="math inline">\(y_i \times \left(\sum_{k=1}^K w_kx_{i,k}+b \right)\ge 1\)</span>. Now, the margin between the green model and a support vector on the dashed grey line is equal to <span class="math inline">\(||\textbf{w}||=\sqrt{\sum_{k=1}^Kw_k^2}\)</span>. This value comes from the fact that the distance between a point <span class="math inline">\((x_0,y_0)\)</span> and a line parametrized by <span class="math inline">\(ax+by+c=0\)</span> is equal to <span class="math inline">\(d=\frac{|ax_0+by_0+c|}{\sqrt{a^2+b^2}}\)</span>. In hte case of the model defined above <a href="svm.html#eq:svm0">(9.1)</a>, the numerator is equal to 1 and the norm is that of <span class="math inline">\(\textbf{w}\)</span>. Thus, the final problem is the following:</p>
 <p><span class="math display" id="eq:svm1">\[\begin{equation}
 \tag{9.2}
-\underset{\textbf{w}, b}{\text{argmin}} \ ||\textbf{w}|| \ \text{ s.t. } y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)\ge 1.
+\underset{\textbf{w}, b}{\text{argmin}} \ \frac{1}{2} ||\textbf{w}||^2 \ \text{ s.t. } y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)\ge 1.
 \end{equation}\]</span></p>
+<p>The dual form of this program (see Chapter 5 in <span class="citation">Boyd and Vandenberghe (<a href="#ref-boyd2004convex">2004</a>)</span>) is</p>
+<p><span class="math display" id="eq:svm1b">\[\begin{equation}
+\tag{9.3}
+L(\textbf{w},b,\boldsymbol{\lambda})=
+ \frac{1}{2}||\textbf{w}||^2 + \sum_{i=1}^I\lambda_i\left(y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)- 1\right),
+\end{equation}\]</span>
+where either <span class="math inline">\(\lambda_i=0\)</span> or <span class="math inline">\(y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)= 1\)</span>. Thus, only some points will matter in the solution (the so-called support vectors). The first order conditions impose that the derivatives of this Lagrangian be null:
+<span class="math display">\[\frac{\partial L}{\partial \textbf{w}}L(\textbf{w},b,\boldsymbol{\lambda})=\textbf{0}, \quad \frac{\partial L}{\partial b}L(\textbf{w},b,\boldsymbol{\lambda})=0,\]</span>
+where the first condition leads to
+<span class="math display">\[\textbf{w}^*=\sum_{i=1}^I\lambda_iu_i\textbf{x}_i.\]</span>
+This solution is indeed a linear form of the features, but only some points are taken into account. They are those for which the inequalities <a href="svm.html#eq:svm0">(9.1)</a> are equalities.</p>
 <p>Naturally, this problem becomes infeasible whenever the condition cannot be satisfied, that is, when a simple line cannot perfectly separate the labels, no matter the choice of coefficients. This is the most common configuration and datasets are then called logically <em>not linearly separable</em>. This complicates the process but it is possible to resort to a trick. The idea is to introduce some flexbility in <a href="svm.html#eq:svm0">(9.1)</a> by adding correction variables that allow the conditions to be met:</p>
 <p><span class="math display" id="eq:svm2">\[\begin{equation}
-\tag{9.3}
+\tag{9.4}
 \left\{\begin{array}{lll}
 \sum_{k=1}^Kw_kx_{i,k}+b \ge +1-\xi_i &amp; \text{ when } y_i=+1 \\
 \sum_{k=1}^Kw_kx_{i,k}+b \le -1+\xi_i &amp; \text{ when } y_i=-1,
@@ -470,12 +480,13 @@ FIGURE 9.2: Diagram of binary classification with SVM: linearly inseparable data
 </div>
 <p>The optimization program then becomes
 <span class="math display" id="eq:svm3">\[\begin{equation}
-\tag{9.4}
-\underset{\textbf{w},b, \boldsymbol{\xi}}{\text{argmin}} \ ||\textbf{w}||+C\sum_{i=1}^I\xi_i \ \text{ s.t. } \left\{ y_i\left(\sum_{k=1}^Kw_k\phi(x_{i,k})+b \right)\ge 1-\xi_i \ \text{ and } \ \xi_i\ge 0, \ \forall i  \right\},
+\tag{9.5}
+\underset{\textbf{w},b, \boldsymbol{\xi}}{\text{argmin}} \ \frac{1}{2} ||\textbf{w}||^2+C\sum_{i=1}^I\xi_i \ \text{ s.t. } \left\{ y_i\left(\sum_{k=1}^Kw_k\phi(x_{i,k})+b \right)\ge 1-\xi_i \ \text{ and } \ \xi_i\ge 0, \ \forall i  \right\},
 \end{equation}\]</span>
-where the parameter <span class="math inline">\(C&gt;0\)</span> tunes the cost of mis-classification: as <span class="math inline">\(C\)</span> increases, errors become more penalizing. In addition, the program can be generalized to nonlinear models, via the kernel <span class="math inline">\(\phi\)</span> which is applied to the input points <span class="math inline">\(x_{i,k}\)</span>. Nonlinear kernels can help cope with patterns that are more complex than straight lines (see Figure <a href="svm.html#fig:svmscheme3">9.3</a>). Common kernels can be polynomial, radial or sigmoid. The solution is found using more or less standard techniques for constrained quadratic programs. Once the weights <span class="math inline">\(\textbf{w}\)</span> and bias <span class="math inline">\(b\)</span> a set via training, a prediction for a new vector <span class="math inline">\(\textbf{x}_j\)</span> is simply made by computing <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span> and choosing the class based on the sign of the expression.</p>
-<div class="figure" style="text-align: center"><span id="fig:svmscheme3"></span>
-<img src="images/svm3.png" alt="Examples of nonlinear kernels." width="500px" />
+where the parameter <span class="math inline">\(C&gt;0\)</span> tunes the cost of mis-classification: as <span class="math inline">\(C\)</span> increases, errors become more penalizing.</p>
+<p>In addition, the program can be generalized to nonlinear models, via the kernel <span class="math inline">\(\phi\)</span> which is applied to the input points <span class="math inline">\(x_{i,k}\)</span>. Nonlinear kernels can help cope with patterns that are more complex than straight lines (see Figure <a href="svm.html#fig:svmscheme4">9.3</a>). Common kernels can be polynomial, radial or sigmoid. The solution is found using more or less standard techniques for constrained quadratic programs. Once the weights <span class="math inline">\(\textbf{w}\)</span> and bias <span class="math inline">\(b\)</span> a set via training, a prediction for a new vector <span class="math inline">\(\textbf{x}_j\)</span> is simply made by computing <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span> and choosing the class based on the sign of the expression.</p>
+<div class="figure" style="text-align: center"><span id="fig:svmscheme4"></span>
+<img src="images/kernel.png" alt="Examples of nonlinear kernels." width="400px" />
 <p class="caption">
 FIGURE 9.3: Examples of nonlinear kernels.
 </p>
@@ -483,21 +494,21 @@ FIGURE 9.3: Examples of nonlinear kernels.
 </div>
 <div id="svm-for-regression" class="section level2">
 <h2><span class="header-section-number">9.2</span> SVM for regression</h2>
-<p>The ideas of classification SVM can be transposed to regression exercises. One general formulation is the following</p>
+<p>The ideas of classification SVM can be transposed to regression exercises but the role of the margin is different. One general formulation is the following</p>
 <p><span class="math display" id="eq:svm4">\[\begin{align}
-\underset{\textbf{w},b, \boldsymbol{\xi}}{\text{argmin}} \  &amp; ||\textbf{w}||+C\sum_{i=1}^I\left(\xi_i+\xi_i^* \right)\\
- \text{ s.t. }&amp;  \sum_{k=1}^Kw_k\phi(x_{i,k})+b -y_i\le \epsilon+\xi_i \\ \tag{9.5}
+\underset{\textbf{w},b, \boldsymbol{\xi}}{\text{argmin}} \  &amp; \frac{1}{2} ||\textbf{w}||^2+C\sum_{i=1}^I\left(\xi_i+\xi_i^* \right)\\
+ \text{ s.t. }&amp;  \sum_{k=1}^Kw_k\phi(x_{i,k})+b -y_i\le \epsilon+\xi_i \\ \tag{9.6}
 &amp;  y_i-\sum_{k=1}^Kw_k\phi(x_{i,k})-b \le \epsilon+\xi_i^* \\
 &amp;\xi_i,\xi_i^*\ge 0, \ \forall i  ,
 \end{align}\]</span></p>
-<p>and it is illustrated in Figure <a href="svm.html#fig:svmscheme4">9.4</a>. The user specifies a margin <span class="math inline">\(\epsilon\)</span> and the model will try to find the linear (up to kernal transformation) relationship between the labels <span class="math inline">\(y_i\)</span> and the input <span class="math inline">\(\textbf{x}_i\)</span>. Just as in the classification task, if the data points are inside the strip, the slack variables <span class="math inline">\(\xi_i\)</span> and <span class="math inline">\(\xi_i^*\)</span> are set to zero. When the points violate the threshold, the objective function (first line of the code) is penalized. Note that setting a large <span class="math inline">\(\epsilon\)</span> leaves room for more error. Once the model has been trained, a prediction for <span class="math inline">\(\textbf{x}_j\)</span> is simply <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span>.</p>
-<div class="figure" style="text-align: center"><span id="fig:svmscheme4"></span>
-<img src="images/kernel.png" alt="Examples of nonlinear kernels." width="400px" />
+<p>and it is illustrated in Figure <a href="svm.html#fig:svmscheme3">9.4</a>. The user specifies a margin <span class="math inline">\(\epsilon\)</span> and the model will try to find the linear (up to kernel transformation) relationship between the labels <span class="math inline">\(y_i\)</span> and the input <span class="math inline">\(\textbf{x}_i\)</span>. Just as in the classification task, if the data points are inside the strip, the slack variables <span class="math inline">\(\xi_i\)</span> and <span class="math inline">\(\xi_i^*\)</span> are set to zero. When the points violate the threshold, the objective function (first line of the code) is penalized. Note that setting a large <span class="math inline">\(\epsilon\)</span> leaves room for more error. Once the model has been trained, a prediction for <span class="math inline">\(\textbf{x}_j\)</span> is simply <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span>.</p>
+<div class="figure" style="text-align: center"><span id="fig:svmscheme3"></span>
+<img src="images/svm3.png" alt="Diagram of regression SVM." width="500px" />
 <p class="caption">
-FIGURE 9.4: Examples of nonlinear kernels.
+FIGURE 9.4: Diagram of regression SVM.
 </p>
 </div>
-<p>The models laid out in this section are a preview of the universe of SVM engines. One reference library that is coded in C and C++ is LIBSVM and it is widely used by many other programming languages. The interested reader can have a look at the corresponding article <span class="citation">Chang and Lin (<a href="#ref-chang2011libsvm">2011</a>)</span> for more details on the SVM zoo (a more recent November 2019 version is also available online).</p>
+<p>The models laid out in this section are a preview of the universe of SVM engines and several other formulations have been developed. One reference library that is coded in C and C++ is <strong>LIBSVM</strong> and it is widely used by many other programming languages. The interested reader can have a look at the corresponding article <span class="citation">Chang and Lin (<a href="#ref-chang2011libsvm">2011</a>)</span> for more details on the SVM zoo (a more recent November 2019 version is also available online).</p>
 </div>
 <div id="practice" class="section level2">
 <h2><span class="header-section-number">9.3</span> Practice</h2>
@@ -518,21 +529,21 @@ FIGURE 9.4: Examples of nonlinear kernels.
 <div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_svm, </a>
 <a class="sourceLine" id="cb96-2" data-line-number="2">             <span class="kw">select</span>(testing_sample,features_short)) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5222197</code></pre>
-
+<p></p>
 <p>The results are slightly better than those of the boosted trees. All parameters are completely arbitrary, especially the choice of the kernel. We finally turn to a classification example.</p>
 
 <div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1"><span class="kw">library</span>(e1071)</a>
 <a class="sourceLine" id="cb98-2" data-line-number="2">fit_svm_C &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd_C[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>],   <span class="co"># Train label</span></a>
 <a class="sourceLine" id="cb98-3" data-line-number="3">               <span class="dt">x =</span> training_sample[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>,] <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb98-4" data-line-number="4"><span class="st">                   </span><span class="kw">select</span>(features),                      <span class="co"># Training features</span></a>
-<a class="sourceLine" id="cb98-5" data-line-number="5">               <span class="dt">type =</span> <span class="st">&quot;C-classification&quot;</span>,                 <span class="co"># SVM task type (see LIBSVM documentation)</span></a>
+<a class="sourceLine" id="cb98-5" data-line-number="5">               <span class="dt">type =</span> <span class="st">&quot;C-classification&quot;</span>,                 <span class="co"># SVM task type (see LIBSVM doc.)</span></a>
 <a class="sourceLine" id="cb98-6" data-line-number="6">               <span class="dt">kernel =</span> <span class="st">&quot;sigmoid&quot;</span>,                        <span class="co"># SVM kernel</span></a>
 <a class="sourceLine" id="cb98-7" data-line-number="7">               <span class="dt">gamma =</span> <span class="fl">0.5</span>,                               <span class="co"># Parameter in the sigmoid kernel </span></a>
 <a class="sourceLine" id="cb98-8" data-line-number="8">               <span class="dt">coef0 =</span> <span class="fl">0.3</span>,                               <span class="co"># Parameter in the sigmoid kernel </span></a>
 <a class="sourceLine" id="cb98-9" data-line-number="9">               <span class="dt">cost =</span> <span class="fl">0.2</span>)                                <span class="co"># Slack variable penalisation</span></a>
 <a class="sourceLine" id="cb98-10" data-line-number="10"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_svm_C, <span class="kw">select</span>(testing_sample,features)) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Accuracy</span></a></code></pre></div>
 <pre><code>## [1] 0.5008973</code></pre>
-
+<p></p>
 <p>The arbitrariness in our choice of the parameters may explain why the predictive accuracy is so poor.</p>
 </div>
 <div id="coding-exercises-5" class="section level2">
@@ -553,6 +564,9 @@ FIGURE 9.4: Examples of nonlinear kernels.
 </div>
 <div id="ref-drucker1997support">
 <p>Drucker, Harris, Christopher JC Burges, Linda Kaufman, Alex J Smola, and Vladimir Vapnik. 1997. “Support Vector Regression Machines.” In <em>Advances in Neural Information Processing Systems</em>, 155–61.</p>
+</div>
+<div id="ref-boyd2004convex">
+<p>Boyd, Stephen, and Lieven Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press.</p>
 </div>
 <div id="ref-chang2011libsvm">
 <p>Chang, Chih-Chung, and Chih-Jen Lin. 2011. “LIBSVM: A Library for Support Vector Machines.” <em>ACM Transactions on Intelligent Systems and Technology (TIST)</em> 2 (3): 27.</p>

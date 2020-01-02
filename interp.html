@@ -46,7 +46,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -484,7 +483,7 @@ and it is often rescaled so that the sum of <span class="math inline">\(I(k)\)</
 FIGURE 14.1: Variable importance for tree-based models
 </p>
 </div>
-
+<p></p>
 <p>In the above code, tibbles are like dataframes (they are the v2 of dataframes so to speak).
 Given the way the graph is coded, Figure <a href="interp.html#fig:VItrees">14.1</a> is in fact misleading. Indeed, by construction, the tree model only has a small number of features with nonzero importance. The graph shows these variables (with the intersection of nonzero importances of the other two models). For scale reasons, the normalization is performed <em>after</em> the subset of features is chosen, hence the bars do not exactly correspond to the true values. Nonetheless, we prefered to limit the number of features shown on the graph for obvious readability concerns.</p>
 <p>There are differences in the way the models rely on the features. For instance, the boosted tree model gives the most importance to Ebit_Ta, while the other two models overlook this variable. Across all models, market capitalization is pregnant as it appears via three definitions of the variable. The price-to-book ratio and volatility measures are the other two type of features that seem to matter in the training of the models.</p>
@@ -507,7 +506,7 @@ Below, we implement this algorithm for the features appearing on Figure <a href=
 
 <div class="sourceCode" id="cb178"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb178-1" data-line-number="1">fit_ridge_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_train, y_penalized_train, <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) <span class="co"># Trained model</span></a>
 <a class="sourceLine" id="cb178-2" data-line-number="2">l_star &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_<span class="dv">0</span>, x_penalized_train))<span class="op">^</span><span class="dv">2</span>)         <span class="co"># Loss</span></a></code></pre></div>
-
+<p></p>
 <p>Next, we evaluate the loss when each of the predictors have been sequentially shuffled. To reduce computation time, we only make one round of shuffling.</p>
 
 <div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">l &lt;-<span class="st"> </span><span class="kw">c</span>()</a>
@@ -521,7 +520,7 @@ Below, we implement this algorithm for the features appearing on Figure <a href=
 <a class="sourceLine" id="cb179-9" data-line-number="9">                             <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) </a>
 <a class="sourceLine" id="cb179-10" data-line-number="10">    l[i] &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_temp, x_penalized_temp))<span class="op">^</span><span class="dv">2</span>) <span class="co"># Computes loss</span></a>
 <a class="sourceLine" id="cb179-11" data-line-number="11">}</a></code></pre></div>
-
+<p></p>
 <p>Finally, we plot the results.</p>
 
 <div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1"><span class="kw">data.frame</span>(<span class="dt">Feature =</span> VI_trees[,<span class="dv">1</span>], <span class="dt">loss =</span> l <span class="op">-</span><span class="st"> </span>l_star) <span class="op">%&gt;%</span></a>
@@ -533,7 +532,7 @@ Below, we implement this algorithm for the features appearing on Figure <a href=
 FIGURE 14.2: Variable importance for a ridge regression model.
 </p>
 </div>
-
+<p></p>
 <p>The resulting importances are in line with thoses of thre tree-based models: the most prominent variables are volatility-based, market capitalization-based, and the price-to-book ratio. Note that in some cases (e.g., the ROA), the score can even be negative, which means that the predictions are more accurate than the baseline model when the values of the predictor are shuffled!</p>
 </div>
 <div id="partial-dependence-plot" class="section level3">
@@ -565,7 +564,7 @@ where <span class="math inline">\(\textbf{x}_{-k}^{(m)}\)</span> are independent
 FIGURE 14.3: Partial dependence plot for the price-to-book ratio on the random forest model
 </p>
 </div>
-
+<p></p>
 <p>The average impact of the price-to-book ratio on the predictions is decreasing. This was somewhat expected, given the conditional average of the dependent variable given the price-to-book ratio. This latter function is depicted in Figure <a href="trees.html#fig:rpart3mkt">7.3</a> and shows a behavior comparable to the above curve: strongly decreasing for small value of P/B and then relatively flat.</p>
 </div>
 </div>
@@ -617,7 +616,7 @@ FIGURE 14.4: Simplistic explanation of LIME.
 <a class="sourceLine" id="cb182-9" data-line-number="9">xgb_model &lt;-<span class="st"> </span><span class="kw">xgb.train</span>(params_xgb,         <span class="co"># Training of the model</span></a>
 <a class="sourceLine" id="cb182-10" data-line-number="10">                       train_matrix_xgb,   <span class="co"># Training data</span></a>
 <a class="sourceLine" id="cb182-11" data-line-number="11">                       <span class="dt">nrounds =</span> <span class="dv">10</span>)       <span class="co"># Number of trees</span></a></code></pre></div>
-
+<p></p>
 <p>Then, we head on to steps two and three. As underlined above, we resort to the lime() and explain() functions.</p>
 
 <div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1">explainer &lt;-<span class="st"> </span><span class="kw">lime</span>(training_sample <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(features_short), xgb_model) <span class="co"># Step 2.</span></a>
@@ -631,7 +630,7 @@ FIGURE 14.4: Simplistic explanation of LIME.
 <a class="sourceLine" id="cb183-9" data-line-number="9">)</a>
 <a class="sourceLine" id="cb183-10" data-line-number="10"><span class="kw">plot_features</span>(explanation, <span class="dt">ncol =</span> <span class="dv">1</span>)                    <span class="co"># Visual display</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/lime1-1.png" width="450px" style="display: block; margin: auto;" /></p>
-
+<p></p>
 <p>In each graph (one graph corresponds to the explanation around one instance), there are two types of information: the sign of the impact and the magnitude of the impact. The sign is revealed with the color (positive in green, negative in red) and the magnitude is shown with the size of the rectangles. For the first occurence, the Ebit_Oa variable is associated with a strong negative effect. In the second example, the Earning per Share has a strong positive effect on the future return.</p>
 <p>The values on the left of the graphs show the ranges of the features with which the local approximations were computed.</p>
 <p>Lastly, we briefly discuss the choice of distance function chosen in the code. It is used to evaluate the distance between the true instance and a simulated one to weight the prediction of the sampled instance. Our dataset comprises only numerical data, hence the Euclidean distance is a natural choice:</p>
@@ -665,7 +664,7 @@ Second, instances are analyzed one at a time.</p>
 <a class="sourceLine" id="cb184-6" data-line-number="6">                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Nb of random trees</span></a>
 <a class="sourceLine" id="cb184-7" data-line-number="7">                 <span class="dt">mtry =</span> <span class="dv">4</span>                   <span class="co"># Nb of predictive variables for each tree</span></a>
 <a class="sourceLine" id="cb184-8" data-line-number="8">    )</a></code></pre></div>
-
+<p></p>
 <p>We can then analyze the behavior of the model around the first instance of the training sample.</p>
 
 <div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1">predictor &lt;-<span class="st"> </span>Predictor<span class="op">$</span><span class="kw">new</span>(fit_RF_short,    <span class="co"># This wraps the model &amp; data</span></a>
@@ -683,7 +682,7 @@ Second, instances are analyzed one at a time.</p>
 FIGURE 14.5: Illustration of the Shapley method.
 </p>
 </div>
-
+<p></p>
 <p>In the output, we XXXXXXX</p>
 </div>
 <div id="breakdown" class="section level3">
@@ -706,7 +705,7 @@ FIGURE 14.5: Illustration of the Shapley method.
 <a class="sourceLine" id="cb186-8" data-line-number="8">                 <span class="dt">ntree =</span> <span class="dv">12</span>,                <span class="co"># Nb of random trees</span></a>
 <a class="sourceLine" id="cb186-9" data-line-number="9">                 <span class="dt">mtry =</span> <span class="dv">5</span>                   <span class="co"># Nb of predictive variables for each tree</span></a>
 <a class="sourceLine" id="cb186-10" data-line-number="10">    )</a></code></pre></div>
-
+<p></p>
 <p>Once the model is trained, the syntax for the breakdown of predictions is very simple.</p>
 
 <div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1"><span class="kw">library</span>(breakDown)</a>
@@ -720,7 +719,7 @@ FIGURE 14.5: Illustration of the Shapley method.
 FIGURE 14.6: Example of a breakdown output.
 </p>
 </div>
-
+<p></p>
 <p>The graphical output is intuitively interpreted. The grey bar is the prediction of the model at the chosen instance. Green bars signal a positive contribution and the yellowish rectangles show the variables with negative impact. The relative sizes indicate the importance of each feature.</p>
 
 </div>

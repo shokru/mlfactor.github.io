@@ -46,7 +46,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -583,7 +582,7 @@ When the covariance/correlation <span class="math inline">\(\rho\)</span> increa
 </tr>
 </tbody>
 </table>
-
+<p></p>
 <p>In fact, since there are several indicators for the market capitalization and maybe only one would suffice, but it is not obvious to tell which one is the best choice.</p>
 <p>In the remainder of the chapter, we present two approaches that help reduce the number of predictors:<br />
 - the first one aims at creating new variables that are uncorrelated with each other. Low correlation is favorable from an algorithmic point of view, but the new variables lack interpretability;<br />
@@ -654,7 +653,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 ## Ocf             -0.35759553 -0.049015486 -0.676866120
 ## Pb               0.30866476 -0.038674594 -0.168799297
 ## Vol1Y_Usd       -0.06157461 -0.762587677  0.008632062</code></pre>
-
+<p></p>
 <p>The rotation gives the matrix <span class="math inline">\(\textbf{P}\)</span>: it’s the tool that changes the base. The first row of the output indicates the standard deviation of each new factor (column). Each factor is indicated via a PC index (principal component). Often, the first PC loads positively on all initial columns: a convex weighted average of all features is expected to carry a lot of information. In the above example, it is almost the case, with the exception of volatility, which has a negative coefficient in the first PC.</p>
 <p>Sometimes, it can be useful to visualize the way the principal components are builts. We show one popular representation that is used for two factors (usually the first two).</p>
 
@@ -665,7 +664,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 <a class="sourceLine" id="cb197-5" data-line-number="5">             <span class="dt">repel =</span> <span class="ot">TRUE</span>                <span class="co"># Avoid text overlapping</span></a>
 <a class="sourceLine" id="cb197-6" data-line-number="6">)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/pca2-1.png" width="330px" height="200px" style="display: block; margin: auto;" /></p>
-
+<p></p>
 <p>The plot shows that no initial factor has negative signs for the first two principal components. Volatility is negative for the first one and earnings per share and dividend yield are negative for the second. The numbers indicated along the axes are the proportion of explained variance of each PC. Compared to the figures in the first line of the output, the numbers are squared and then divided by the total sum of squares.</p>
 <p>Once the rotation is known, it is possible to select a subsample of the transformed data. From the original 7 features, it is easy to pick just 4.</p>
 
@@ -682,7 +681,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 ## [4,] 0.5445359 0.5335619 -0.08833864 0.2281793
 ## [5,] 0.5672644 0.5339749 -0.06092424 0.2320938
 ## [6,] 0.5871306 0.6420126 -0.44566482 0.3075399</code></pre>
-
+<p></p>
 <p>These 4 factors can then be used as orthogonal features in any ML engine. The fact that the features are uncorrelated is undoubtedly an asset. But the price of this convenience is high: the features are no longer immediately interpretable. De-correlating the predictors adds yet another layer of “<em>blackbox-ing</em>” in the algorithm.</p>
 </div>
 <div id="ae" class="section level3">
@@ -720,7 +719,7 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 <a class="sourceLine" id="cb200-7" data-line-number="7">decoder &lt;-<span class="st"> </span>encoder <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Then, from encoder, decode</span></a>
 <a class="sourceLine" id="cb200-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">32</span>, <span class="dt">activation =</span> <span class="st">&quot;sigmoid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb200-9" data-line-number="9"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">7</span>)       <span class="co"># the original sample has 7 features</span></a></code></pre></div>
-
+<p></p>
 <p>In the training part, we optimize the MSE and use an Adam update of the weights (see Section <a href="NN.html#backprop">8.2.3</a>).</p>
 
 <div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1">ae_model &lt;-<span class="st"> </span><span class="kw">keras_model</span>(<span class="dt">inputs =</span> input_layer, <span class="dt">outputs =</span> decoder) <span class="co"># Builds the model</span></a>
@@ -730,7 +729,7 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 <a class="sourceLine" id="cb201-5" data-line-number="5">    <span class="dt">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</a>
 <a class="sourceLine" id="cb201-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)</a>
 <a class="sourceLine" id="cb201-7" data-line-number="7">)</a></code></pre></div>
-
+<p></p>
 <p>Finally, we are ready to train the data onto itself!</p>
 
 <div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb202-1" data-line-number="1">fit_ae &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -747,11 +746,11 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 FIGURE 16.1: Output from the training of an auto-encoder.
 </p>
 </div>
-
+<p></p>
 <p>In order to get the details of all weights and biases, the syntax is the following.</p>
 
 <div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1">ae_weights &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">get_weights</span>()</a></code></pre></div>
-
+<p></p>
 <p>Retrieving the encoder and processing the data into the compressed format is just a matter of matrix manipulation (see exercise below).</p>
 </div>
 </div>
@@ -810,7 +809,7 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 ## 18 Roc                                  4
 ## 19 Roce                                 4
 ## 20 Roe                                  4</code></pre>
-
+<p></p>
 <p>We single out the fourth cluster which is composed mainly of accounting ratios related to the profitability of firms. Given these 10 clusters, we can build a much smaller group of features that can then be fed to the predictive engines described in Chapters <a href="lasso.html#lasso">6</a> to <a href="bayes.html#bayes">10</a>. The representative of a cluster can be the member that is closest to the center, or simply the center itself. This pre-processing step can nonetheless cause problems in the forecasting phase. Typically, it requires that the training data be also clustered.</p>
 </div>
 <div id="nearest-neighbors" class="section level2">
@@ -849,7 +848,7 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 ## [1,]   360   673   153   265   858   830   286  1150   166   946   192
 ##      [,25] [,26] [,27] [,28] [,29] [,30]
 ## [1,]   340   162   951   376   785     2</code></pre>
-
+<p></p>
 <p>Once the neighbors and distances are known, we can compute a prediction for the return of the target stock. We use the function <span class="math inline">\(h(z)=e^{-z}\)</span> for the weighting of instances (via the distances).</p>
 
 <div class="sourceCode" id="cb208"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb208-1" data-line-number="1">knn_labels &lt;-<span class="st"> </span>knn_data[neighbors<span class="op">$</span>nn.index,] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(R1M_Usd)           <span class="co"># y values for the neighbors</span></a>
@@ -861,7 +860,7 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 ##   R1M_Usd
 ##     &lt;dbl&gt;
 ## 1   0.089</code></pre>
-
+<p></p>
 <p>The prediction is neither very good, nor very bad (the sign is correct!). However, note that this example cannot be used for predictive purposes because we use data from 2006-12-31 to predict a return at the same date. In order to avoid the forward looking bias, the knn_sample variable should be chosen from a prior point in time.</p>
 <p>The above computations are fast (a handful of seconds at most), but hold for only one asset. In a <span class="math inline">\(k\)</span>-NN exercise each stock gets a customed prediction and the set of neighbors must be re-assessed each time. This is particularly costly in a backtest, especially when several parameters can be tested (<span class="math inline">\(k\)</span>, <span class="math inline">\(a\)</span> in the weighting function <span class="math inline">\(h(z)=e^{-az}\)</span>).</p>
 </div>

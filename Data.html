@@ -46,7 +46,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -441,21 +440,21 @@ Beyond first order moments, second order quantities (variances and covariances/c
 </ul>
 <p>Below, in Figure <a href="Data.html#fig:boxcorr">5.1</a>, we show a box-plot that illustrates the distribution of correlations between features and the one month ahead return. The correlations are computed on a date-by-date basis, over the whole cross-section of stocks. They are mostly located close to zero, but some dates seem to experience extreme shifts (outliers are shown with black circles). The market capitalization has the median which is the most negative while volatility is the only predictor with positive median correlation (this particular example seems to refute the low risk anomaly).</p>
 
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb20-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(features_short, <span class="st">&quot;R1M_Usd&quot;</span>, <span class="st">&quot;date&quot;</span>)) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Keep a few feature, label &amp; date</span></a>
-<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Group: dates!</span></a>
-<a class="sourceLine" id="cb20-4" data-line-number="4"><span class="st">    </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(<span class="kw">cor</span>(.,R1M_Usd))) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Compute correlations</span></a>
-<a class="sourceLine" id="cb20-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Remove label</span></a>
-<a class="sourceLine" id="cb20-6" data-line-number="6"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> key, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">          </span><span class="co"># Put in tidy format</span></a>
-<a class="sourceLine" id="cb20-7" data-line-number="7"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> key, <span class="dt">y =</span> value, <span class="dt">color =</span> key)) <span class="op">+</span><span class="st">       </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb20-8" data-line-number="8"><span class="st">    </span><span class="kw">geom_boxplot</span>(<span class="dt">outlier.colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.6</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(features_short, <span class="st">&quot;R1M_Usd&quot;</span>, <span class="st">&quot;date&quot;</span>)) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Keep a few feature, label &amp; date</span></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Group: dates!</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="st">    </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(<span class="kw">cor</span>(.,R1M_Usd))) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Compute correlations</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(<span class="op">-</span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Remove label</span></a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> key, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">          </span><span class="co"># Put in tidy format</span></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> key, <span class="dt">y =</span> value, <span class="dt">color =</span> key)) <span class="op">+</span><span class="st">       </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="st">    </span><span class="kw">geom_boxplot</span>(<span class="dt">outlier.colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.6</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:boxcorr"></span>
 <img src="ML_factor_files/figure-html/boxcorr-1.png" alt="Boxplot of correlations with the 1M forward return / label." width="400px" />
 <p class="caption">
 FIGURE 5.1: Boxplot of correlations with the 1M forward return / label.
 </p>
 </div>
-
+<p></p>
 <p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>):
 <span class="math display" id="eq:regfun">\[\begin{equation}
 \tag{5.1}
@@ -463,36 +462,36 @@ f(x)=\mathbb{E}[Y|X=x].
 \end{equation}\]</span></p>
 <p>In Figure <a href="Data.html#fig:regfun">5.2</a>, we plot two illustrations of this function when the dependent variable is the one month ahead return. The first one pertains to the average market capitalization over the past year and the second to the volatility over the past year as well. Both predictors have been uniformized (see Section <a href="Data.html#scaling">5.4.2</a> below) so that their values are uniformly distributed in the cross-section of assets for any given time period. Thus, the range of features is <span class="math inline">\([0,1]\)</span> and is shown on the <span class="math inline">\(x\)</span>-axis of the plot. The grey corridors around the lines show 95% level confidence interval for the computation of the mean. Essentially, it is narrow when both i) many data points are available and ii) these points are not too dispersed.</p>
 
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st">                                                      </span><span class="co"># From dataset:</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> R1M_Usd)) <span class="op">+</span><span class="st">                                     </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_12M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>)) <span class="op">+</span><span class="st">  </span><span class="co"># Cond. Exp. Mkt_cap</span></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Vol1Y_Usd, <span class="dt">color =</span> <span class="st">&quot;Volatility&quot;</span>)) <span class="op">+</span><span class="st">        </span><span class="co"># Cond. Exp. Vol</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>)) <span class="op">+</span><span class="st">           </span><span class="co"># Change color</span></a>
-<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dv">10</span>)                                                <span class="co"># Change x/y ratio</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st">                                                      </span><span class="co"># From dataset:</span></a>
+<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> R1M_Usd)) <span class="op">+</span><span class="st">                                     </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_12M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>)) <span class="op">+</span><span class="st">  </span><span class="co"># Cond. Exp. Mkt_cap</span></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Vol1Y_Usd, <span class="dt">color =</span> <span class="st">&quot;Volatility&quot;</span>)) <span class="op">+</span><span class="st">        </span><span class="co"># Cond. Exp. Vol</span></a>
+<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>)) <span class="op">+</span><span class="st">           </span><span class="co"># Change color</span></a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dv">10</span>)                                                <span class="co"># Change x/y ratio</span></a></code></pre></div>
 <div class="figure"><span id="fig:regfun"></span>
 <img src="ML_factor_files/figure-html/regfun-1.png" alt="Conditional expecations: average returns as smooth functions of features." width="672" />
 <p class="caption">
 FIGURE 5.2: Conditional expecations: average returns as smooth functions of features.
 </p>
 </div>
-
+<p></p>
 <p>The two variables have a close to monotonic impact on future returns. Returns, on average, decrease with market capitalization (thereby corroborating the so-called <em>size</em> effect). The reverse pattern is less pronounced for volatility: the curve is rather flat is the first half of volatility scores and progressively increases, especially over the last quintile of volatility values (thereby contradicting the low-vol anomaly).</p>
 <p>One important empirical property of features is <strong>autocorrelation</strong> (or absence thereof). A high level of autocorrelation for one predictors makes it plausible to use simple imputation techniques. But autocorrelation is also important when moving towards prediction tasks and we discuss this issue shortly below in Section <a href="Data.html#pers">5.6</a>. In Figure <a href="Data.html#fig:histcorr">5.3</a>, we build the histogram of autocorrelations, computed stock by stock and feature by feature.</p>
 
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">autocorrs &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                         </span><span class="co"># From dataset:</span></a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;stock_id&quot;</span>, features)) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Keep ids &amp; features</span></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> feature, <span class="dt">value =</span> value, <span class="op">-</span>stock_id) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Put in tidy format</span></a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(stock_id, feature) <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Group</span></a>
-<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">acf =</span> <span class="kw">acf</span>(value, <span class="dt">lag.max =</span> <span class="dv">1</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)<span class="op">$</span>acf[<span class="dv">2</span>])  <span class="co"># Compute ACF</span></a>
-<a class="sourceLine" id="cb22-6" data-line-number="6">autocorrs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> acf)) <span class="op">+</span><span class="st">                             </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7"><span class="st">   </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">60</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">autocorrs &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                         </span><span class="co"># From dataset:</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="st">  </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;stock_id&quot;</span>, features)) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Keep ids &amp; features</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> feature, <span class="dt">value =</span> value, <span class="op">-</span>stock_id) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Put in tidy format</span></a>
+<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(stock_id, feature) <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Group</span></a>
+<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">acf =</span> <span class="kw">acf</span>(value, <span class="dt">lag.max =</span> <span class="dv">1</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)<span class="op">$</span>acf[<span class="dv">2</span>])  <span class="co"># Compute ACF</span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">autocorrs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> acf)) <span class="op">+</span><span class="st">                             </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="st">   </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">60</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
 <div class="figure"><span id="fig:histcorr"></span>
 <img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of feature autocorrelations." width="384" />
 <p class="caption">
 FIGURE 5.3: Histogram of feature autocorrelations.
 </p>
 </div>
-
+<p></p>
 <p>Given the large number of values to evaluate, the above chunk is quite time-consuming. The output shows that predictors are highly autocorrelated: most of them have a first order autocorrelation above 0.80.</p>
 </div>
 <div id="missing-data" class="section level2">
@@ -787,269 +786,61 @@ r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 <h3><span class="header-section-number">5.8.1</span> Impact of rescaling: graphical representation</h3>
 <p>We start with a simple illustration of the different scaling methods. We generate an arbitrary series and then rescale it. The series is not random so that each time the code chunk is executed, the output remains the same.</p>
 
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">Length &lt;-<span class="st"> </span><span class="dv">100</span>                                 <span class="co"># Length of the sequence</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">sin</span>(<span class="dv">1</span><span class="op">:</span>Length))                       <span class="co"># Original data</span></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3">data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length, <span class="dt">x =</span> x)   <span class="co"># Data framed into dataframe</span></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="co"># Plot</span></a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">Length &lt;-<span class="st"> </span><span class="dv">100</span>                                 <span class="co"># Length of the sequence</span></a>
+<a class="sourceLine" id="cb24-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">sin</span>(<span class="dv">1</span><span class="op">:</span>Length))                       <span class="co"># Original data</span></a>
+<a class="sourceLine" id="cb24-3" data-line-number="3">data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length, <span class="dt">x =</span> x)   <span class="co"># Data framed into dataframe</span></a>
+<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="co"># Plot</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/scale_ex-1.png" width="672" /></p>
-
+<p></p>
 <p>We define and plot the scaled variables below.</p>
 
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">norm_unif &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
-<a class="sourceLine" id="cb24-2" data-line-number="2">    v &lt;-<span class="st"> </span>v <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()</a>
-<a class="sourceLine" id="cb24-3" data-line-number="3">    <span class="kw">return</span>(<span class="kw">ecdf</span>(v)(v))</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4">}</a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb24-6" data-line-number="6">norm_<span class="dv">0</span>_<span class="dv">1</span> &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
-<a class="sourceLine" id="cb24-7" data-line-number="7">    <span class="kw">return</span>((v<span class="op">-</span><span class="kw">min</span>(v))<span class="op">/</span>(<span class="kw">max</span>(v)<span class="op">-</span><span class="kw">min</span>(v)))</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8">}</a>
-<a class="sourceLine" id="cb24-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb24-10" data-line-number="10">data_norm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(                        <span class="co"># Formatting the data</span></a>
-<a class="sourceLine" id="cb24-11" data-line-number="11">    <span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length,                           <span class="co"># Index of point/instance</span></a>
-<a class="sourceLine" id="cb24-12" data-line-number="12">    <span class="dt">standard =</span> (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x),           <span class="co"># Standardisation</span></a>
-<a class="sourceLine" id="cb24-13" data-line-number="13">    <span class="dt">norm_0_1 =</span> <span class="kw">norm_0_1</span>(x),                     <span class="co"># [0,1] reduction</span></a>
-<a class="sourceLine" id="cb24-14" data-line-number="14">    <span class="dt">unif =</span> <span class="kw">norm_unif</span>(x)) <span class="op">%&gt;%</span><span class="st">                    </span><span class="co"># Uniformisation</span></a>
-<a class="sourceLine" id="cb24-15" data-line-number="15"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Type, <span class="dt">value =</span> value, <span class="op">-</span>index)   <span class="co"># Putting in tidy format</span></a>
-<a class="sourceLine" id="cb24-16" data-line-number="16"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st">   </span><span class="co"># Plot!</span></a>
-<a class="sourceLine" id="cb24-17" data-line-number="17"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb24-18" data-line-number="18"><span class="st">    </span><span class="kw">facet_grid</span>(Type<span class="op">~</span>.)          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">norm_unif &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2">    v &lt;-<span class="st"> </span>v <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()</a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">    <span class="kw">return</span>(<span class="kw">ecdf</span>(v)(v))</a>
+<a class="sourceLine" id="cb25-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb25-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">norm_<span class="dv">0</span>_<span class="dv">1</span> &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7">    <span class="kw">return</span>((v<span class="op">-</span><span class="kw">min</span>(v))<span class="op">/</span>(<span class="kw">max</span>(v)<span class="op">-</span><span class="kw">min</span>(v)))</a>
+<a class="sourceLine" id="cb25-8" data-line-number="8">}</a>
+<a class="sourceLine" id="cb25-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb25-10" data-line-number="10">data_norm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(                        <span class="co"># Formatting the data</span></a>
+<a class="sourceLine" id="cb25-11" data-line-number="11">    <span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length,                           <span class="co"># Index of point/instance</span></a>
+<a class="sourceLine" id="cb25-12" data-line-number="12">    <span class="dt">standard =</span> (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x),           <span class="co"># Standardisation</span></a>
+<a class="sourceLine" id="cb25-13" data-line-number="13">    <span class="dt">norm_0_1 =</span> <span class="kw">norm_0_1</span>(x),                     <span class="co"># [0,1] reduction</span></a>
+<a class="sourceLine" id="cb25-14" data-line-number="14">    <span class="dt">unif =</span> <span class="kw">norm_unif</span>(x)) <span class="op">%&gt;%</span><span class="st">                    </span><span class="co"># Uniformisation</span></a>
+<a class="sourceLine" id="cb25-15" data-line-number="15"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Type, <span class="dt">value =</span> value, <span class="op">-</span>index)   <span class="co"># Putting in tidy format</span></a>
+<a class="sourceLine" id="cb25-16" data-line-number="16"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st">   </span><span class="co"># Plot!</span></a>
+<a class="sourceLine" id="cb25-17" data-line-number="17"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb25-18" data-line-number="18"><span class="st">    </span><span class="kw">facet_grid</span>(Type<span class="op">~</span>.)          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm-1.png" width="672" /></p>
-
+<p></p>
 <p>Finally, we look at the histogram of the newly created variables.</p>
 
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm_dist-1.png" width="672" /></p>
-
+<p></p>
 <p>With respect to shape, the green and red distributions are close to the original one. It is only the support that changes: the min/max rescaling ensures all values lie in the <span class="math inline">\([0,1]\)</span> interval. In both cases, the smallest values (on the left) display a spike in distribution. By construction, this spike disappears under the uniformisation: the points are evenly distributed over the unit interval.</p>
 </div>
 <div id="impact-of-rescaling-toy-example" class="section level3">
 <h3><span class="header-section-number">5.8.2</span> Impact of rescaling: toy example</h3>
 <p>To illustrate the impact of chosing one particular rescaling method,<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
 
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">firm &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">3</span>,<span class="dv">3</span>))             <span class="co"># Firms (3 lines for each)</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">date &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>)                             <span class="co"># Dates</span></a>
-<a class="sourceLine" id="cb26-3" data-line-number="3">cap &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>,                               <span class="co"># Market capitalisation</span></a>
-<a class="sourceLine" id="cb26-4" data-line-number="4">         <span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">15</span>, </a>
-<a class="sourceLine" id="cb26-5" data-line-number="5">         <span class="dv">200</span>, <span class="dv">120</span>, <span class="dv">80</span>)</a>
-<a class="sourceLine" id="cb26-6" data-line-number="6">return &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.06</span>, <span class="fl">0.01</span>, <span class="fl">-0.06</span>,                      <span class="co"># Return values</span></a>
-<a class="sourceLine" id="cb26-7" data-line-number="7">            <span class="fl">-0.03</span>, <span class="fl">0.00</span>, <span class="fl">0.02</span>,</a>
-<a class="sourceLine" id="cb26-8" data-line-number="8">            <span class="fl">-0.04</span>, <span class="fl">-0.02</span>,<span class="fl">0.00</span>)</a>
-<a class="sourceLine" id="cb26-9" data-line-number="9">data_toy &lt;-<span class="st"> </span><span class="kw">data.frame</span>(firm, date, cap, return)     <span class="co"># Aggregation of data</span></a>
-<a class="sourceLine" id="cb26-10" data-line-number="10">data_toy &lt;-<span class="st"> </span>data_toy <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Transformation of data</span></a>
-<a class="sourceLine" id="cb26-11" data-line-number="11"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                            </span></a>
-<a class="sourceLine" id="cb26-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap_0_1 =</span> <span class="kw">norm_0_1</span>(cap), <span class="dt">cap_u =</span> <span class="kw">norm_unif</span>(cap))</a>
-<a class="sourceLine" id="cb26-13" data-line-number="13">knitr<span class="op">::</span><span class="kw">kable</span>(data_toy, <span class="dt">digits =</span> <span class="dv">3</span>,                  <span class="co"># Display the data</span></a>
-<a class="sourceLine" id="cb26-14" data-line-number="14">             <span class="dt">caption =</span> <span class="st">&quot;Sample data for a toy example.&quot;</span>)   </a></code></pre></div>
-<table>
-<caption>
-<span id="tab:fakedata">TABLE 5.1: </span>Sample data for a toy example.
-</caption>
-<thead>
-<tr>
-<th style="text-align:right;">
-firm
-</th>
-<th style="text-align:right;">
-date
-</th>
-<th style="text-align:right;">
-cap
-</th>
-<th style="text-align:right;">
-return
-</th>
-<th style="text-align:right;">
-cap_0_1
-</th>
-<th style="text-align:right;">
-cap_u
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-0.06
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.333
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-50
-</td>
-<td style="text-align:right;">
-0.01
-</td>
-<td style="text-align:right;">
-0.364
-</td>
-<td style="text-align:right;">
-0.667
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-100
-</td>
-<td style="text-align:right;">
--0.06
-</td>
-<td style="text-align:right;">
-1.000
-</td>
-<td style="text-align:right;">
-1.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
--0.03
-</td>
-<td style="text-align:right;">
-0.026
-</td>
-<td style="text-align:right;">
-0.667
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-10
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.333
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-15
-</td>
-<td style="text-align:right;">
-0.02
-</td>
-<td style="text-align:right;">
-0.000
-</td>
-<td style="text-align:right;">
-0.333
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-1
-</td>
-<td style="text-align:right;">
-200
-</td>
-<td style="text-align:right;">
--0.04
-</td>
-<td style="text-align:right;">
-1.000
-</td>
-<td style="text-align:right;">
-1.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-2
-</td>
-<td style="text-align:right;">
-120
-</td>
-<td style="text-align:right;">
--0.02
-</td>
-<td style="text-align:right;">
-1.000
-</td>
-<td style="text-align:right;">
-1.000
-</td>
-</tr>
-<tr>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-3
-</td>
-<td style="text-align:right;">
-80
-</td>
-<td style="text-align:right;">
-0.00
-</td>
-<td style="text-align:right;">
-0.765
-</td>
-<td style="text-align:right;">
-0.667
-</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1">firm &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">3</span>,<span class="dv">3</span>))             <span class="co"># Firms (3 lines for each)</span></a>
+<a class="sourceLine" id="cb27-2" data-line-number="2">date &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>)                             <span class="co"># Dates</span></a>
+<a class="sourceLine" id="cb27-3" data-line-number="3">cap &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>,                               <span class="co"># Market capitalisation</span></a>
+<a class="sourceLine" id="cb27-4" data-line-number="4">         <span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">15</span>, </a>
+<a class="sourceLine" id="cb27-5" data-line-number="5">         <span class="dv">200</span>, <span class="dv">120</span>, <span class="dv">80</span>)</a>
+<a class="sourceLine" id="cb27-6" data-line-number="6">return &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.06</span>, <span class="fl">0.01</span>, <span class="fl">-0.06</span>,                      <span class="co"># Return values</span></a>
+<a class="sourceLine" id="cb27-7" data-line-number="7">            <span class="fl">-0.03</span>, <span class="fl">0.00</span>, <span class="fl">0.02</span>,</a>
+<a class="sourceLine" id="cb27-8" data-line-number="8">            <span class="fl">-0.04</span>, <span class="fl">-0.02</span>,<span class="fl">0.00</span>)</a>
+<a class="sourceLine" id="cb27-9" data-line-number="9">data_toy &lt;-<span class="st"> </span><span class="kw">data.frame</span>(firm, date, cap, return)     <span class="co"># Aggregation of data</span></a>
+<a class="sourceLine" id="cb27-10" data-line-number="10">data_toy &lt;-<span class="st"> </span>data_toy <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Transformation of data</span></a>
+<a class="sourceLine" id="cb27-11" data-line-number="11"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                            </span></a>
+<a class="sourceLine" id="cb27-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap_0_1 =</span> <span class="kw">norm_0_1</span>(cap), <span class="dt">cap_u =</span> <span class="kw">norm_unif</span>(cap))</a>
+<a class="sourceLine" id="cb27-13" data-line-number="13">knitr<span class="op">::</span><span class="kw">kable</span>(data_toy, <span class="dt">digits =</span> <span class="dv">3</span>,                  <span class="co"># Display the data</span></a>
+<a class="sourceLine" id="cb27-14" data-line-number="14">             <span class="dt">caption =</span> <span class="st">&quot;Sample data for a toy example.&quot;</span>)   </a></code></pre></div>
 
+<p></p>
 <p>Let’s briefly comment on this synthetic data. We assume that dates are ordered chronologically and far away: each date stands for a year or the beginning of a decade, but the (forward) returns are computed on a monthly basis. The first firm is hugely successful and multiplies its cap ten times over the periods. The second firms remains stable cap-wise, while the third one plummets. If we look at ‘local’ future returns, they are strongly negatively related to size for the first and third firms. For the second one, there is no clear pattern.</p>
 <p>Date-by-date, the analysis is fairly similar, though slightly nuanced.</p>
 <ol style="list-style-type: decimal">
@@ -1062,138 +853,19 @@ cap_u
 <p>While the relationship is not always perfectly monotonous, there seems to be a link between size and return and typically, investing in the smallest firm would be a very good strategy with this sample.</p>
 <p>Now let us look at the output of simple regressions.</p>
 
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_<span class="dv">0</span>_<span class="dv">1</span>, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># First regression (min-max rescaling)</span></a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb27-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes </span></a>
-<a class="sourceLine" id="cb27-4" data-line-number="4"><span class="st">                 from min-max rescaling&#39;</span>) </a></code></pre></div>
-<table>
-<caption>
-<span id="tab:datatoyreg">TABLE 5.2: </span>Regression output when the independent var. comes
-from min-max rescaling
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-term
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-std.error
-</th>
-<th style="text-align:right;">
-statistic
-</th>
-<th style="text-align:right;">
-p.value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-(Intercept)
-</td>
-<td style="text-align:right;">
-0.0162778
-</td>
-<td style="text-align:right;">
-0.0137351
-</td>
-<td style="text-align:right;">
-1.185121
-</td>
-<td style="text-align:right;">
-0.2746390
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cap_0_1
-</td>
-<td style="text-align:right;">
--0.0497032
-</td>
-<td style="text-align:right;">
-0.0213706
-</td>
-<td style="text-align:right;">
--2.325777
-</td>
-<td style="text-align:right;">
-0.0529421
-</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_<span class="dv">0</span>_<span class="dv">1</span>, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># First regression (min-max rescaling)</span></a>
+<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes </span></a>
+<a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">                 from min-max rescaling&#39;</span>) </a></code></pre></div>
 
+<p></p>
 
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_u, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Second regression (uniformised feature)</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">   </span></a>
-<a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes from uniformisation&#39;</span>)   </a></code></pre></div>
-<table>
-<caption>
-<span id="tab:datatoyreg2">TABLE 5.3: </span>Regression output when the independent var. comes from uniformisation
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-term
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-std.error
-</th>
-<th style="text-align:right;">
-statistic
-</th>
-<th style="text-align:right;">
-p.value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-(Intercept)
-</td>
-<td style="text-align:right;">
-0.06
-</td>
-<td style="text-align:right;">
-0.0198139
-</td>
-<td style="text-align:right;">
-3.028170
-</td>
-<td style="text-align:right;">
-0.0191640
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-cap_u
-</td>
-<td style="text-align:right;">
--0.10
-</td>
-<td style="text-align:right;">
-0.0275162
-</td>
-<td style="text-align:right;">
--3.634219
-</td>
-<td style="text-align:right;">
-0.0083509
-</td>
-</tr>
-</tbody>
-</table>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_u, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Second regression (uniformised feature)</span></a>
+<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">   </span></a>
+<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes from uniformisation&#39;</span>)   </a></code></pre></div>
 
-<p>In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="Data.html#tab:datatoyreg">5.2</a>) while the second is below 1% (in Table <a href="Data.html#tab:datatoyreg2">5.3</a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalisations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformised variables reduces dispersion and can help solve this problem.</p>
+<p>
+In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="#tab:datatoyreg"><strong>??</strong></a>) while the second is below 1% (in Table <a href="#tab:datatoyreg2"><strong>??</strong></a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalisations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformised variables reduces dispersion and can help solve this problem.</p>
 <p>Note that this is a <strong>double-edged sword</strong>: while it can help avoid <strong>false negatives</strong>, it can also lead to <strong>false positives</strong>.</p>
 </div>
 </div>

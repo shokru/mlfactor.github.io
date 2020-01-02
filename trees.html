@@ -46,7 +46,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -496,7 +495,6 @@ where <span class="math inline">\(m_I^{k,-}(c^{(k)})=\frac{1}{\#\{i,x_i^{(k)}&lt
 <div id="code-and-interpretation" class="section level3">
 <h3><span class="header-section-number">7.1.4</span> Code and interpretation</h3>
 <p>We start with a simple tree and its interpretation. The label is the future 1 month return and the features are all predictors available in the sample. The tree is trained on the full sample.</p>
-<pre><code>## Loading required package: rpart</code></pre>
 
 <div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb43-1" data-line-number="1"><span class="kw">library</span>(rpart)              <span class="co"># Tree package </span></a>
 <a class="sourceLine" id="cb43-2" data-line-number="2"><span class="kw">library</span>(rpart.plot)         <span class="co"># Tree plot package</span></a>
@@ -516,7 +514,7 @@ where <span class="math inline">\(m_I^{k,-}(c^{(k)})=\frac{1}{\#\{i,x_i^{(k)}&lt
 FIGURE 7.2: Simple tree. The dependent variable is the 1 month future return.
 </p>
 </div>
-
+<p></p>
 <p>There usually exists a convention in the representation of trees. At each node, a condition describes the split with a boolean expression. If the expression is true, then the instance goes to the left cluster, if not, it goes to the right cluster. Given the whole sample, the initial split in this tree (Figure <a href="trees.html#fig:rpart1">7.2</a>) is performed according to market capitalization. If the 6 month market capitalization score (or value) of the instance is above 0.025, then the instance is placed in the left bucket, otherwise, it goes in the right bucket.</p>
 <p>At each node, there are two important metrics. The first one is the average value of the label in the cluster and the second one is the proportion of instances in the cluster. At the top of the tree, all instances (100%) are present and the average 1 month future return is 1.3%. One level below, the left cluster is by far the most crowded, with roughly 98% of observations averaging a 1.2% return. The right cluster is much smaller (2%) but concentrates instances with a much higher average return (6.1%).</p>
 <p>The splitting process continues similarly at each node until some condition is satisfied (typically here: the maximum depth is reached). A color codes the average return: from white (low return) to blue (high return). The cluster with the lowest average return consists of firms that satisfy <em>all</em> the following criteria:</p>
@@ -535,7 +533,7 @@ FIGURE 7.2: Simple tree. The dependent variable is the 1 month future return.
 <div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb44-1" data-line-number="1"><span class="kw">predict</span>(fit_tree, data_ml[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,]) <span class="co"># Test (prediction) on the first five instances of the sample</span></a></code></pre></div>
 <pre><code>##           1           2           3           4           5 
 ## 0.009529823 0.009529823 0.009529823 0.009529823 0.009529823</code></pre>
-
+<p></p>
 <p>Given the figure, we immediately conclude that the first three instances belong to the second cluster (starting from the left) and the last two belong to the fourth.</p>
 <p>As a verification of the first split, we plot the smoothed average of future returns, conditionally on market capitalization, past return and price-to-book scores.</p>
 
@@ -550,7 +548,7 @@ FIGURE 7.2: Simple tree. The dependent variable is the 1 month future return.
 FIGURE 7.3: Average of 1 month future returns, conditionally on market capitalization and price-to-book scores
 </p>
 </div>
-
+<p></p>
 <p>Indeed, we acknowledge a strong impact of market capitalization for the smallest firms: they appear to earn a very high return (close to +5% on a monthly basis). The pattern is much more pronounced compared to other well documented anomalies namely the value premium and the (cross-sectional) momentum effect.</p>
 <p>Finally, we assess the predictive quality of a single tree on the testing set (the tree is grown on the training set). We use a deeper tree, with a maximum depth of five.</p>
 
@@ -565,7 +563,7 @@ FIGURE 7.3: Average of 1 month future returns, conditionally on market capitaliz
 <pre><code>## [1] 0.03700039</code></pre>
 <div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb49-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_tree2, testing_sample) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5416619</code></pre>
-
+<p></p>
 <p>The mean squared error is usually hard to interpret. It’s not easy to map an error on returns into the impact on investment decisions. The hit ratio is a more intuitive indicator because it evaluates the proportion of correct guesses (and hence profitable investments). Obviously, it is not perfect: 55% of small gains can be mitigated by 45% of large losses. Nonetheless, it is a popular metric and moreover it corresponds to the usual accuracy measure often computed in binary classification exercises. Here, an accuracy of 0.5416619 is satisfactory. Even if any number above 50% may seem valuable, it must not be forgottent that transaction costs will curtail benefits. Hence, the benchmark threshold is probably at least at 52%.</p>
 </div>
 </div>
@@ -611,7 +609,7 @@ FIGURE 7.4: Combining tree outputs via random forests.
 <a class="sourceLine" id="cb51-11" data-line-number="11"><span class="kw">predict</span>(fit_RF, testing_sample[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,])       <span class="co"># Prediction over the first 5 test instances </span></a></code></pre></div>
 <pre><code>##            1            2            3            4            5 
 ##  0.009787728  0.012507087  0.008722386  0.009398814 -0.011511758</code></pre>
-
+<p></p>
 <p>One first comment is that each instance has its own prediction, which contrasts with the outcome of simple tree-based outcomes. Combining many trees leads to tailored forecasts. Note that the second line of the chunk freezes the random number generation. Indeed, random forests are by construction contingent on the arbitrary combinations of instances and features that are chosen to build the individual learners.</p>
 <p>In the above example, each individual learner (tree) is built on 10,000 randomly chosen instances (without replacement) and each terminal leaf (cluster) must comprise at least 240 elements (observations). In total, 40 trees are aggregated and each tree is constructed based on 30 randomly chosen predictors (out of the whole set of features).</p>
 <p>Unlike for simple trees, it is not possible to simply illustrate the outcome of the learning process. It could be possible to extract all 40 trees but a synthetic visualization is out-of-reach. A simplified view can be obtained via variable importance, as is discussed in Section <a href="interp.html#variable-importance">14.1.1</a>.</p>
@@ -621,7 +619,7 @@ FIGURE 7.4: Combining tree outputs via random forests.
 <pre><code>## [1] 0.03698197</code></pre>
 <div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb55-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF, testing_sample) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5370186</code></pre>
-
+<p></p>
 <p>The MSE is smaller than 4% and the hit ratio is close to 54%, which is reasonably above both 50% and 52% thresholds.</p>
 <p>Let’s see if we can improve the hit ratio by resorting to a classification exercise. We start by training the model on a new formula (the label is R1M_Usd_C).</p>
 
@@ -635,12 +633,12 @@ FIGURE 7.4: Combining tree outputs via random forests.
 <a class="sourceLine" id="cb57-8" data-line-number="8">                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Number of random trees</span></a>
 <a class="sourceLine" id="cb57-9" data-line-number="9">                 <span class="dt">mtry =</span> <span class="dv">30</span>                  <span class="co"># Number of predictive variables for each tree </span></a>
 <a class="sourceLine" id="cb57-10" data-line-number="10">    )</a></code></pre></div>
-
+<p></p>
 <p>We can then assess the proportion of correct (binary) guesses.
 </p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF_C, testing_sample) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.4984475</code></pre>
-
+<p></p>
 <p>The accuracy is disappointing. There are two potential explanations for this (beyond the possibility of very different patterns in the training and testing sets). The first one is the sample size, which may be too small. The original training set has more than 200,000 observations, hence we retain only one in 10 in the above training specification. We are thus probably sideline relevant information and the cost can be heavy. The second reason is the number of predictors, which is set to 30, i.e., one third of the total at our disposal. Unfortunately, this leaves room for the algorithm to pick less pertinent predictors. The default numbers of predictors chosen by the routines are <span class="math inline">\(\sqrt{p}\)</span> and <span class="math inline">\(p/3\)</span> for classification and regression tasks, respectively. Here <span class="math inline">\(p\)</span> is the total number of features.</p>
 </div>
 </div>
@@ -739,12 +737,12 @@ w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
 <a class="sourceLine" id="cb60-3" data-line-number="3">fit_adaboost_C &lt;-<span class="st"> </span><span class="kw">adaboost</span>(formula_C,                                     <span class="co"># Model spec.</span></a>
 <a class="sourceLine" id="cb60-4" data-line-number="4">                         <span class="dt">data =</span> <span class="kw">data.frame</span>(training_sample[subsample,]),  <span class="co"># Data source</span></a>
 <a class="sourceLine" id="cb60-5" data-line-number="5">                         <span class="dt">nIter =</span> <span class="dv">3</span>)                                       <span class="co"># Number of trees              </span></a></code></pre></div>
-
+<p></p>
 <p>Finally, we evaluate the performance of the classifier.</p>
 
 <div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb61-1" data-line-number="1"><span class="kw">mean</span>(testing_sample<span class="op">$</span>R1M_Usd_C <span class="op">==</span><span class="st"> </span><span class="kw">predict</span>(fit_adaboost_C, testing_sample)<span class="op">$</span>class)</a></code></pre></div>
 <pre><code>## [1] 0.5028202</code></pre>
-
+<p></p>
 <p>The accuracy (as evaluated by the hit ratio) is clearly not satisfactory. One reason for this may be the restrictions we enforced for the training (smaller sample and only three trees).</p>
 </div>
 </div>
@@ -847,7 +845,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb63-9" data-line-number="9"><span class="st">    </span><span class="kw">select</span>(R1M_Usd) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                             <span class="co"># Dependent variable</span></a>
 <a class="sourceLine" id="cb63-10" data-line-number="10">train_matrix_xgb &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </a>
 <a class="sourceLine" id="cb63-11" data-line-number="11">                                <span class="dt">label =</span> train_label_xgb)        <span class="co"># XGB format!</span></a></code></pre></div>
-
+<p></p>
 <p>The second (optional) step is to determine the monotonicity constraints that we want to impose. For simplicity, we will only enforce three constraints on</p>
 <ol style="list-style-type: decimal">
 <li>market capitalization (negative, because large firms have smaller returns under the size anomaly);<br />
@@ -861,7 +859,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb64-2" data-line-number="2">mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Mkt_Cap_12M_Usd&quot;</span>)] &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>) <span class="co"># Decreasing in market cap</span></a>
 <a class="sourceLine" id="cb64-3" data-line-number="3">mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Pb&quot;</span>)] &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)              <span class="co"># Decreasing in price-to-book</span></a>
 <a class="sourceLine" id="cb64-4" data-line-number="4">mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Mom_11M_Usd&quot;</span>)] &lt;-<span class="st"> </span><span class="dv">1</span>        <span class="co"># Increasing in past return</span></a></code></pre></div>
-
+<p></p>
 <p>The third step is to train the model on the formatted training data.</p>
 
 <div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb65-1" data-line-number="1">fit_xgb &lt;-<span class="st"> </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> train_matrix_xgb,     <span class="co"># Data source </span></a>
@@ -874,7 +872,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb65-8" data-line-number="8">              <span class="dt">monotone_constraints =</span> mono_const,  <span class="co"># Monotonicity constraints</span></a>
 <a class="sourceLine" id="cb65-9" data-line-number="9">              <span class="dt">verbose =</span> <span class="dv">0</span>                         <span class="co"># No comment from the algo </span></a>
 <a class="sourceLine" id="cb65-10" data-line-number="10">    )</a></code></pre></div>
-
+<p></p>
 <p>Finally, we evaluate the performance of the model. Note that before that, a proper formatting of the testing sample is required.</p>
 
 <div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb66-1" data-line-number="1">xgb_test &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Test sample =&gt; XGB format</span></a>
@@ -884,7 +882,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <pre><code>## [1] 0.03804396</code></pre>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5047146</code></pre>
-
+<p></p>
 <p>The performance is comparable to those observed for other predictive tools. As a final exercise, we show one implementation of a classification task under XGBoost. Only the label changes. In XGBoost, labels must be coded with integer number, starting at zero exactly. In R, factors are numerically coded as integers numbers starting from one, hence the mapping is simple.</p>
 
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" data-line-number="1">train_label_C &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -893,7 +891,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb70-4" data-line-number="4"><span class="st">    </span><span class="kw">select</span>(R1M_Usd_C)</a>
 <a class="sourceLine" id="cb70-5" data-line-number="5">train_matrix_C &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </a>
 <a class="sourceLine" id="cb70-6" data-line-number="6">                              <span class="dt">label =</span> <span class="kw">as.numeric</span>(train_label_C <span class="op">==</span><span class="st"> &quot;TRUE&quot;</span>)) <span class="co"># XGB format!</span></a></code></pre></div>
-
+<p></p>
 <p>When working with categories, the loss function is usually the softmax function (see Section <a href="notdata.html#notations">2.1</a>).</p>
 
 <div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb71-1" data-line-number="1">fit_xgb_C &lt;-<span class="st">  </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> train_matrix_C,  <span class="co"># Data source (pipe input)</span></a>
@@ -904,12 +902,12 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb71-6" data-line-number="6">              <span class="dt">nrounds =</span> <span class="dv">10</span>,                     <span class="co"># Number of trees used</span></a>
 <a class="sourceLine" id="cb71-7" data-line-number="7">              <span class="dt">verbose =</span> <span class="dv">0</span>                       <span class="co"># No warning message </span></a>
 <a class="sourceLine" id="cb71-8" data-line-number="8">    )</a></code></pre></div>
-
+<p></p>
 <p>We can then proceed to the assessment of the quality of the model. We adjust the prediction to the value of the true label and count the proportion of accurate forecasts.</p>
 
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb_C, xgb_test) <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="kw">as.numeric</span>(testing_sample<span class="op">$</span>R1M_Usd_C)) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.495613</code></pre>
-
+<p></p>
 <p>Consistently with the previous classification attempts, the results are underwhelming, as if switching to binary labels incurred a loss of information.</p>
 </div>
 <div id="instweight" class="section level3">
@@ -924,7 +922,7 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <a class="sourceLine" id="cb74-3" data-line-number="3">train_matrix_xgb &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </a>
 <a class="sourceLine" id="cb74-4" data-line-number="4">                                <span class="dt">label =</span> train_label_xgb,</a>
 <a class="sourceLine" id="cb74-5" data-line-number="5">                                <span class="dt">weight =</span> inst_weights)        <span class="co"># Weights!</span></a></code></pre></div>
-
+<p></p>
 <p>Then, in the subsequent stages, the optimization will be performed with these hard-coded weights. The splitting points can be altered (via the total weighted loss in clusters) and the terminal weight values <a href="trees.html#eq:xgbweight">(7.5)</a> are also impacted.</p>
 </div>
 </div>
