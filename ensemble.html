@@ -378,16 +378,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="17.1.2" data-path="RL.html"><a href="RL.html#q-learning"><i class="fa fa-check"></i><b>17.1.2</b> Q-learning</a></li>
 <li class="chapter" data-level="17.1.3" data-path="RL.html"><a href="RL.html#sarsa"><i class="fa fa-check"></i><b>17.1.3</b> SARSA</a></li>
 </ul></li>
-<li class="chapter" data-level="17.2" data-path="RL.html"><a href="RL.html#issues-and-potential-solutions"><i class="fa fa-check"></i><b>17.2</b> Issues and potential solutions</a><ul>
-<li class="chapter" data-level="17.2.1" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>17.2.1</b> The curse of dimensionality</a></li>
-<li class="chapter" data-level="17.2.2" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>17.2.2</b> Policy gradient</a></li>
+<li class="chapter" data-level="17.2" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>17.2</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="17.3" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>17.3</b> Policy gradient</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="RL.html"><a href="RL.html#principle-2"><i class="fa fa-check"></i><b>17.3.1</b> Principle</a></li>
+<li class="chapter" data-level="17.3.2" data-path="RL.html"><a href="RL.html#extensions-2"><i class="fa fa-check"></i><b>17.3.2</b> Extensions</a></li>
 </ul></li>
-<li class="chapter" data-level="17.3" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>17.3</b> Simple examples</a><ul>
-<li class="chapter" data-level="17.3.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>17.3.1</b> Q-learning with simulations</a></li>
-<li class="chapter" data-level="17.3.2" data-path="RL.html"><a href="RL.html#q-learning-with-market-data"><i class="fa fa-check"></i><b>17.3.2</b> Q-learning with market data</a></li>
+<li class="chapter" data-level="17.4" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>17.4</b> Simple examples</a><ul>
+<li class="chapter" data-level="17.4.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>17.4.1</b> Q-learning with simulations</a></li>
+<li class="chapter" data-level="17.4.2" data-path="RL.html"><a href="RL.html#q-learning-with-market-data"><i class="fa fa-check"></i><b>17.4.2</b> Q-learning with market data</a></li>
 </ul></li>
-<li class="chapter" data-level="17.4" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>17.4</b> Concluding remarks</a></li>
-<li class="chapter" data-level="17.5" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>17.5</b> Exercises</a></li>
+<li class="chapter" data-level="17.5" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>17.5</b> Concluding remarks</a></li>
+<li class="chapter" data-level="17.6" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>17.6</b> Exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="18" data-path="NLP.html"><a href="NLP.html"><i class="fa fa-check"></i><b>18</b> Natural Language Processing</a></li>
 <li class="chapter" data-level="19" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>19</b> Conclusion</a></li>
@@ -462,7 +463,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 \end{array}
 \right]\]</span></p>
 <p>so that when <span class="math inline">\(\rho \rightarrow 1\)</span>, the model with the smallest errors (minimum <span class="math inline">\(\sigma_i^2\)</span>) will see its weight increasing towards infinity while the other model will have a similarly large negative weight.</p>
-<p>One improvement proposed to circumvent this trouble, advocated in a seminal publication (<span class="citation">Breiman (<a href="#ref-breiman1996stacked">1996</a>)</span>), is to enforce positivity constraints on the weights and solve</p>
+<p>There is another illustration of the issues caused by correlations. Let’s assume we face <span class="math inline">\(M\)</span> correlated errors <span class="math inline">\(\epsilon_m\)</span> with pairwise correlation <span class="math inline">\(\rho\)</span>, zero mean and variance <span class="math inline">\(\sigma^2\)</span>. The variance of the average error is
+<span class="math display">\[\begin{align*}
+\mathbb{E}\left[\frac{1}{M}\sum_{m=1}^M \epsilon_m^2 \right]&amp;=\frac{1}{M^2}\left[\sum_{m=1}^M\epsilon_m^2+\sum_{m\neq n}\epsilon_n\epsilon_m\right] \\
+&amp;=\frac{\sigma^2}{M}+\frac{1}{M^2}\sum_{n\neq m} \rho \sigma^2 \\
+&amp; =\rho \sigma^2 \frac{\sigma^2(1-\rho)}{M}
+\end{align*}\]</span>
+where while the second term converges to zero as <span class="math inline">\(M\)</span> increases, the second term remains and is linearly increasing with <span class="math inline">\(\rho\)</span>. In passing, this result shows that the common pairwise correlation between <span class="math inline">\(M\)</span> variables is bounded by below by <span class="math inline">\(-(M-1)^{-1}\)</span>.</p>
+<p>One improvement proposed to circumvent the trouble caused by correlations, advocated in a seminal publication (<span class="citation">Breiman (<a href="#ref-breiman1996stacked">1996</a>)</span>), is to enforce positivity constraints on the weights and solve</p>
 <p><span class="math display">\[\underset{\textbf{w}}{\text{argmin}} \ \textbf{w}&#39;\textbf{E}&#39;\textbf{E}\textbf{w} , \quad \text{s.t.} \quad \left\{ 
 \begin{array}{l} \textbf{w}&#39;\textbf{1}_M=1 \\ w_m \ge 0 \quad \forall m \end{array}\right. .\]</span></p>
 <p>Mechanically, if several models are highly correlated, the constraint will impose that only one of them will have a nonzero weight. If there are many models, then just a few of them will be selected by the minimization program. In a very different context, <span class="citation">Jagannathan and Ma (<a href="#ref-jagannathan2003risk">2003</a>)</span> have shown the benefits of constraint in the construction mean-variance portfolios. In our setting, the constraint will similarly help discriminate wisely among the ‘best’ models.</p>
@@ -482,29 +490,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb132-7" data-line-number="7"><span class="kw">colnames</span>(E) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)                               <span class="co"># Column names</span></a>
 <a class="sourceLine" id="cb132-8" data-line-number="8"><span class="kw">cor</span>(E)                                                                               <span class="co"># Corr. matrix</span></a></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9982507 0.9968224 0.9475378 0.9978494
-## Tree    0.9982507 1.0000000 0.9973481 0.9459733 0.9978972
-## RF      0.9968224 0.9973481 1.0000000 0.9446178 0.9978419
-## XGB     0.9475378 0.9459733 0.9446178 1.0000000 0.9456083
-## NN      0.9978494 0.9978972 0.9978419 0.9456083 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9984394 0.9968224 0.9475378 0.9977753
+## Tree    0.9984394 1.0000000 0.9974647 0.9461082 0.9979709
+## RF      0.9968224 0.9974647 1.0000000 0.9446178 0.9978710
+## XGB     0.9475378 0.9461082 0.9446178 1.0000000 0.9454820
+## NN      0.9977753 0.9979709 0.9978710 0.9454820 1.0000000</code></pre>
 <p></p>
 <p>As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. The minimum correlation (though above 95%!) is obtained by the boosted tree models. Below, we compare the training accuracy of models by computing the average absolute value of errors.</p>
 
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">abs</span>(E), <span class="dv">2</span>, mean) <span class="co"># Mean absolute error or columns of E </span></a></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.08345916 0.08366795 0.08327121 0.08916813 0.08346540</code></pre>
+## 0.08345916 0.08362133 0.08327121 0.08916813 0.08376554</code></pre>
 <p></p>
 <p>The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non constrained) weights for the combination of models.</p>
 
 <div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1">w_ensemble &lt;-<span class="st"> </span><span class="kw">solve</span>(<span class="kw">t</span>(E) <span class="op">%*%</span><span class="st"> </span>E) <span class="op">%*%</span><span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">5</span>)                                         <span class="co"># Optimal weights</span></a>
 <a class="sourceLine" id="cb136-2" data-line-number="2">w_ensemble &lt;-<span class="st"> </span>w_ensemble <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w_ensemble)</a>
 <a class="sourceLine" id="cb136-3" data-line-number="3">w_ensemble</a></code></pre></div>
-<pre><code>##                 [,1]
-## Pen_reg -0.740763326
-## Tree    -0.043877280
-## RF       1.284383854
-## XGB     -0.002341248
-## NN       0.502597999</code></pre>
+<pre><code>##                  [,1]
+## Pen_reg -0.5805636453
+## Tree    -0.0035321482
+## RF       1.4473330565
+## XGB     -0.0009488744
+## NN       0.1377116114</code></pre>
 <p></p>
 <p>Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and ‘short’ a few models in order to compensate.</p>
 <p>Note that the weights are of course computed with <strong>training errors</strong>. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.</p>
@@ -518,29 +526,29 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb138-7" data-line-number="7"><span class="kw">colnames</span>(E_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)</a>
 <a class="sourceLine" id="cb138-8" data-line-number="8"><span class="kw">apply</span>(<span class="kw">abs</span>(E_test), <span class="dv">2</span>, mean) <span class="co"># Mean absolute error or columns of E </span></a></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.06618181 0.06650492 0.06710349 0.07149006 0.06696114</code></pre>
+## 0.06618181 0.06653527 0.06710349 0.07149006 0.06700406</code></pre>
 <p></p>
 <p>The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.</p>
 
 <div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">err_EW_test &lt;-<span class="st"> </span><span class="kw">apply</span>(E_test, <span class="dv">1</span>, mean)  <span class="co"># Equally weighted combination</span></a>
 <a class="sourceLine" id="cb140-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">abs</span>(err_EW_test))</a></code></pre></div>
-<pre><code>## [1] 0.06686903</code></pre>
+<pre><code>## [1] 0.06686155</code></pre>
 <p></p>
 <p>Because the errors are very correlated, the equally-weighted combination of forecasts yields an average error which lies ‘in the middle’ of individual errors. The diversification benefits are too small. Let us now test the ‘optimal’ combination <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M&#39;\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}\)</span>.</p>
 
 <div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1">err_opt_test &lt;-<span class="st"> </span>E_test <span class="op">%*%</span><span class="st"> </span>w_ensemble   <span class="co"># Optimal unconstrained combination</span></a>
 <a class="sourceLine" id="cb142-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">abs</span>(err_opt_test))</a></code></pre></div>
-<pre><code>## [1] 0.06844794</code></pre>
+<pre><code>## [1] 0.06830539</code></pre>
 <p></p>
 <p>Again, the result is disappointing because of the lack of diversification across models. The correlations are high not only on the training sample, but also on the testing sample, as shown below.</p>
 
 <div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1"><span class="kw">cor</span>(E_test)</a></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9985518 0.9968882 0.9706767 0.9974898
-## Tree    0.9985518 1.0000000 0.9977644 0.9752078 0.9981140
-## RF      0.9968882 0.9977644 1.0000000 0.9776554 0.9980796
-## XGB     0.9706767 0.9752078 0.9776554 1.0000000 0.9771441
-## NN      0.9974898 0.9981140 0.9980796 0.9771441 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9987069 0.9968882 0.9706767 0.9974860
+## Tree    0.9987069 1.0000000 0.9978366 0.9753921 0.9981041
+## RF      0.9968882 0.9978366 1.0000000 0.9776554 0.9981867
+## XGB     0.9706767 0.9753921 0.9776554 1.0000000 0.9772801
+## NN      0.9974860 0.9981041 0.9981867 0.9772801 1.0000000</code></pre>
 <p></p>
 <p>The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of <span class="citation">Breiman (<a href="#ref-breiman1996stacked">1996</a>)</span> using the <em>quadprog</em> package. If we write <span class="math inline">\(\mathbf{\Sigma}\)</span> for the covariance matrix of errors, we seek
 <span class="math display">\[\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}&#39;\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}&#39;\mathbf{w}=1, \quad w_i\ge 0,\]</span>
@@ -572,7 +580,7 @@ The constraints will be handled as:</p>
 <h2><span class="header-section-number">12.2</span> Stacked ensembles</h2>
 <div id="two-stage-training" class="section level3">
 <h3><span class="header-section-number">12.2.1</span> Two stage training</h3>
-<p>Stacked ensembles are a natural generalization of linear ensembles. The idea of generalizing linear ensembles goes back at least to <span class="citation">Wolpert (<a href="#ref-wolpert1992stacked">1992</a>)</span>. In the general case, the training is performed in two stages. The first stage is the simple one, whereby the <span class="math inline">\(M\)</span> models are trained independently, yielding the predictions <span class="math inline">\(\tilde{y}_{i,m}\)</span> for instance <span class="math inline">\(i\)</span> and model<span class="math inline">\(m\)</span>. The second step is to consider the output of the trained models as input for a new level of machine learning optimization. The second level predictions are <span class="math inline">\(\breve{y}_i=h(\tilde{y}_{i,1},\dots,\tilde{y}_{i,M})\)</span>, where <span class="math inline">\(h\)</span> is a new learner (see Figure <a href="ensemble.html#fig:stackscheme">12.1</a>). Linear ensembles are of course stacked ensembles in which the second layer is a linear regression.</p>
+<p>Stacked ensembles are a natural generalization of linear ensembles. The idea of generalizing linear ensembles goes back at least to <span class="citation">Wolpert (<a href="#ref-wolpert1992stacked">1992</a><a href="#ref-wolpert1992stacked">b</a>)</span>. In the general case, the training is performed in two stages. The first stage is the simple one, whereby the <span class="math inline">\(M\)</span> models are trained independently, yielding the predictions <span class="math inline">\(\tilde{y}_{i,m}\)</span> for instance <span class="math inline">\(i\)</span> and model<span class="math inline">\(m\)</span>. The second step is to consider the output of the trained models as input for a new level of machine learning optimization. The second level predictions are <span class="math inline">\(\breve{y}_i=h(\tilde{y}_{i,1},\dots,\tilde{y}_{i,M})\)</span>, where <span class="math inline">\(h\)</span> is a new learner (see Figure <a href="ensemble.html#fig:stackscheme">12.1</a>). Linear ensembles are of course stacked ensembles in which the second layer is a linear regression.</p>
 <p>The same techniques are then applied to minimize the error between the true values <span class="math inline">\(y_i\)</span> and the predicted ones <span class="math inline">\(\breve{y}_i\)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:stackscheme"></span>
 <img src="images/stack.png" alt="Scheme of Stacked Ensembles." width="350px" />
@@ -602,11 +610,11 @@ FIGURE 12.1: Scheme of Stacked Ensembles.
 <pre><code>## ___________________________________________________________________________
 ## Layer (type)                     Output Shape                  Param #     
 ## ===========================================================================
-## dense_40 (Dense)                 (None, 8)                     48          
+## dense_278 (Dense)                (None, 8)                     48          
 ## ___________________________________________________________________________
-## dense_41 (Dense)                 (None, 4)                     36          
+## dense_279 (Dense)                (None, 4)                     36          
 ## ___________________________________________________________________________
-## dense_42 (Dense)                 (None, 1)                     5           
+## dense_280 (Dense)                (None, 1)                     5           
 ## ===========================================================================
 ## Total params: 89
 ## Trainable params: 89
@@ -662,12 +670,12 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <a class="sourceLine" id="cb156-12" data-line-number="12"><span class="st">    </span><span class="kw">left_join</span>(ts)                                     <span class="co"># Add termspread</span></a>
 <a class="sourceLine" id="cb156-13" data-line-number="13"><span class="kw">head</span>(ens_data)                                        <span class="co"># Show first lines</span></a></code></pre></div>
 <pre><code>##         date err_NN_test      Index CPIAUCSL   inflation termspread
-## 1 2014-01-31 -0.14580833 2014-01-01  235.288 0.002424175       2.47
-## 2 2014-02-28  0.07684414 2014-02-01  235.547 0.001100779       2.38
-## 3 2014-03-31 -0.01636461 2014-03-01  236.028 0.002042055       2.32
-## 4 2014-04-30 -0.08093219 2014-04-01  236.468 0.001864186       2.29
-## 5 2014-05-31 -0.09079696 2014-05-01  236.918 0.001903006       2.17
-## 6 2014-06-30  0.04030960 2014-06-01  237.231 0.001321132       2.15</code></pre>
+## 1 2014-01-31 -0.15920653 2014-01-01  235.288 0.002424175       2.47
+## 2 2014-02-28  0.06830179 2014-02-01  235.547 0.001100779       2.38
+## 3 2014-03-31 -0.01285055 2014-03-01  236.028 0.002042055       2.32
+## 4 2014-04-30 -0.07662877 2014-04-01  236.468 0.001864186       2.29
+## 5 2014-05-31 -0.09003494 2014-05-01  236.918 0.001903006       2.17
+## 6 2014-06-30  0.03780524 2014-06-01  237.231 0.001321132       2.15</code></pre>
 <p></p>
 <p>We can now build a tree that tries to explain the accuracy of models as a function of macro variables.</p>
 
@@ -766,10 +774,10 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <a class="sourceLine" id="cb164-4" data-line-number="4">                        err_ens_<span class="dv">2013</span>)</a>
 <a class="sourceLine" id="cb164-5" data-line-number="5"><span class="kw">cor</span>(E_subtraining)</a></code></pre></div>
 <pre><code>##              err_ens_2007 err_ens_2009 err_ens_2011 err_ens_2013
-## err_ens_2007    1.0000000    0.9399344    0.6415089    0.9978415
-## err_ens_2009    0.9399344    1.0000000    0.6191353    0.9462858
-## err_ens_2011    0.6415089    0.6191353    1.0000000    0.6418434
-## err_ens_2013    0.9978415    0.9462858    0.6418434    1.0000000</code></pre>
+## err_ens_2007    1.0000000    0.9399344    0.6415089    0.9985507
+## err_ens_2009    0.9399344    1.0000000    0.6191353    0.9441545
+## err_ens_2011    0.6415089    0.6191353    1.0000000    0.6417941
+## err_ens_2013    0.9985507    0.9441545    0.6417941    1.0000000</code></pre>
 <p></p>
 <p>The results are overall disappointing. Only one model manages to extract patterns that are somewhat different from the other ones, resulting in a 70% correlation across the board. One possible explanation could be that the models capture mainly noise and little signal. Working with long term labels like annual returns could help improve diversification across models.</p>
 </div>
@@ -858,7 +866,7 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <p>Genre, Véronique, Geoff Kenny, Aidan Meyler, and Allan Timmermann. 2013. “Combining Expert Forecasts: Can Anything Beat the Simple Average?” <em>International Journal of Forecasting</em> 29 (1): 108–21.</p>
 </div>
 <div id="ref-wolpert1992stacked">
-<p>Wolpert, David H. 1992. “Stacked Generalization.” <em>Neural Networks</em> 5 (2): 241–59.</p>
+<p>Wolpert, David H. 1992b. “Stacked Generalization.” <em>Neural Networks</em> 5 (2): 241–59.</p>
 </div>
 </div>
             </section>
