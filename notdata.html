@@ -46,6 +46,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -495,13 +496,13 @@ This dataset comprises information on 1,207 stocks listed in the US (possibly or
 <a class="sourceLine" id="cb5-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> nb_assets)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st">  </span><span class="co"># Plot</span></a>
 <a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">    </span><span class="kw">coord_fixed</span>(<span class="dv">3</span>)</a></code></pre></div>
 <div class="figure"><span id="fig:nbassets"></span>
-<img src="ML_factor_files/figure-html/nbassets-1.png" alt="Number of assets through time." width="384" />
+<img src="ML_factor_files/figure-html/nbassets-1.png" alt="Number of assets through time." width="400" />
 <p class="caption">
 FIGURE 2.1: Number of assets through time.
 </p>
 </div>
 <p></p>
-<p>There are four immediate labels in the dataset: R1M_Usd, R3M_Usd, R6M_Usd and R12M_Usd, which correspond to the 1 month, 3 month, 6 month and 12 month future/forward returns of the stocks. These labels are located in the last 4 columns. We provide their descriptive statistics below.</p>
+<p>There are four immediate labels in the dataset: R1M_Usd, R3M_Usd, R6M_Usd and R12M_Usd, which correspond to the 1 month, 3 month, 6 month and 12 month future/forward returns of the stocks. The returns are total returns, that is, they incorporate potential dividend payments over the considered periods. This is a better proxy of financial gain compared to price returns only. We refer to the analysis of <span class="citation">Hartzmark and Solomon (<a href="#ref-hartzmark2019dividend">2019</a>)</span> for a study on the impact of decoupling price returns and dividends. These labels are located in the last 4 columns of the dataset. We provide their descriptive statistics below.</p>
 
 <p></p>
 <p>In anticipation for future models, we keep the name of the predictors in memory. In addition, we also keep a much shorter list of predictors.
@@ -516,7 +517,7 @@ FIGURE 2.1: Number of assets through time.
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">    </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> &quot;2000-02-29&quot;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Div_Yld)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">100</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="fl">0.03</span>)</a></code></pre></div>
 <div class="figure"><span id="fig:datarectangle"></span>
-<img src="ML_factor_files/figure-html/datarectangle-1.png" alt="Distribution of the dividend yield feature on 2000-02-29." width="384" />
+<img src="ML_factor_files/figure-html/datarectangle-1.png" alt="Distribution of the dividend yield feature on 2000-02-29." width="400" />
 <p class="caption">
 FIGURE 2.2: Distribution of the dividend yield feature on 2000-02-29.
 </p>
@@ -550,6 +551,12 @@ FIGURE 2.2: Distribution of the dividend yield feature on 2000-02-29.
 <a class="sourceLine" id="cb10-8" data-line-number="8"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)      <span class="co"># 3. Put in matrix shape </span></a></code></pre></div>
 <p></p>
 
+</div>
+</div>
+<h3><span class="header-section-number">C</span> References</h3>
+<div id="refs" class="references">
+<div id="ref-hartzmark2019dividend">
+<p>Hartzmark, Samuel M, and David H Solomon. 2019. “The Dividend Disconnect.” <em>Journal of Finance</em>.</p>
 </div>
 </div>
             </section>
