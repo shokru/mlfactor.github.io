@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -458,7 +459,7 @@ Beyond first order moments, second order quantities (variances and covariances/c
 FIGURE 5.1: Boxplot of correlations with the 1M forward return / label.
 </p>
 </div>
-<p></p>
+
 <p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>):
 <span class="math display" id="eq:regfun">\[\begin{equation}
 \tag{5.1}
@@ -478,7 +479,7 @@ f(x)=\mathbb{E}[Y|X=x].
 FIGURE 5.2: Conditional expecations: average returns as smooth functions of features.
 </p>
 </div>
-<p></p>
+
 <p>The two variables have a close to monotonic impact on future returns. Returns, on average, decrease with market capitalization (thereby corroborating the so-called <em>size</em> effect). The reverse pattern is less pronounced for volatility: the curve is rather flat is the first half of volatility scores and progressively increases, especially over the last quintile of volatility values (thereby contradicting the low-vol anomaly).</p>
 <p>One important empirical property of features is <strong>autocorrelation</strong> (or absence thereof). A high level of autocorrelation for one predictors makes it plausible to use simple imputation techniques. But autocorrelation is also important when moving towards prediction tasks and we discuss this issue shortly below in Section <a href="Data.html#pers">5.6</a>. In Figure <a href="Data.html#fig:histcorr">5.3</a>, we build the histogram of autocorrelations, computed stock by stock and feature by feature.</p>
 
@@ -495,7 +496,7 @@ FIGURE 5.2: Conditional expecations: average returns as smooth functions of feat
 FIGURE 5.3: Histogram of sample feature autocorrelations.
 </p>
 </div>
-<p></p>
+
 <p>Given the large number of values to evaluate, the above chunk is quite time-consuming. The output shows that predictors are highly autocorrelated: most of them have a first order autocorrelation above 0.80.</p>
 </div>
 <div id="missing-data" class="section level2">
@@ -795,7 +796,7 @@ r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 <a class="sourceLine" id="cb24-3" data-line-number="3">data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length, <span class="dt">x =</span> x)   <span class="co"># Data framed into dataframe</span></a>
 <a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="co"># Plot</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/scale_ex-1.png" width="672" /></p>
-<p></p>
+
 <p>We define and plot the scaled variables below.</p>
 
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">norm_unif &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
@@ -817,12 +818,12 @@ r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 <a class="sourceLine" id="cb25-17" data-line-number="17"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-18" data-line-number="18"><span class="st">    </span><span class="kw">facet_grid</span>(Type<span class="op">~</span>.)          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm-1.png" width="672" /></p>
-<p></p>
+
 <p>Finally, we look at the histogram of the newly created variables.</p>
 
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm_dist-1.png" width="672" /></p>
-<p></p>
+
 <p>With respect to shape, the green and red distributions are close to the original one. It is only the support that changes: the min/max rescaling ensures all values lie in the <span class="math inline">\([0,1]\)</span> interval. In both cases, the smallest values (on the left) display a spike in distribution. By construction, this spike disappears under the uniformisation: the points are evenly distributed over the unit interval.</p>
 </div>
 <div id="impact-of-rescaling-toy-example" class="section level3">
@@ -843,8 +844,216 @@ r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 <a class="sourceLine" id="cb27-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap_0_1 =</span> <span class="kw">norm_0_1</span>(cap), <span class="dt">cap_u =</span> <span class="kw">norm_unif</span>(cap))</a>
 <a class="sourceLine" id="cb27-13" data-line-number="13">knitr<span class="op">::</span><span class="kw">kable</span>(data_toy, <span class="dt">digits =</span> <span class="dv">3</span>,                  <span class="co"># Display the data</span></a>
 <a class="sourceLine" id="cb27-14" data-line-number="14">             <span class="dt">caption =</span> <span class="st">&quot;Sample data for a toy example.&quot;</span>)   </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:fakedata">TABLE 5.1: </span>Sample data for a toy example.
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+firm
+</th>
+<th style="text-align:right;">
+date
+</th>
+<th style="text-align:right;">
+cap
+</th>
+<th style="text-align:right;">
+return
+</th>
+<th style="text-align:right;">
+cap_0_1
+</th>
+<th style="text-align:right;">
+cap_u
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+0.364
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-0.06
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.765
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+</tbody>
+</table>
 
-<p></p>
 <p>Let’s briefly comment on this synthetic data. We assume that dates are ordered chronologically and far away: each date stands for a year or the beginning of a decade, but the (forward) returns are computed on a monthly basis. The first firm is hugely successful and multiplies its cap ten times over the periods. The second firms remains stable cap-wise, while the third one plummets. If we look at ‘local’ future returns, they are strongly negatively related to size for the first and third firms. For the second one, there is no clear pattern.</p>
 <p>Date-by-date, the analysis is fairly similar, though slightly nuanced.</p>
 <ol style="list-style-type: decimal">
@@ -861,15 +1070,134 @@ r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 <a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes </span></a>
 <a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">                 from min-max rescaling&#39;</span>) </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:datatoyreg">TABLE 5.2: </span>Regression output when the independent var. comes
+from min-max rescaling
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.0162778
+</td>
+<td style="text-align:right;">
+0.0137351
+</td>
+<td style="text-align:right;">
+1.185121
+</td>
+<td style="text-align:right;">
+0.2746390
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_0_1
+</td>
+<td style="text-align:right;">
+-0.0497032
+</td>
+<td style="text-align:right;">
+0.0213706
+</td>
+<td style="text-align:right;">
+-2.325777
+</td>
+<td style="text-align:right;">
+0.0529421
+</td>
+</tr>
+</tbody>
+</table>
 
-<p></p>
 
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_u, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Second regression (uniformised feature)</span></a>
 <a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">   </span></a>
 <a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes from uniformisation&#39;</span>)   </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:datatoyreg2">TABLE 5.3: </span>Regression output when the independent var. comes from uniformisation
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.0198139
+</td>
+<td style="text-align:right;">
+3.028170
+</td>
+<td style="text-align:right;">
+0.0191640
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_u
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+<td style="text-align:right;">
+0.0275162
+</td>
+<td style="text-align:right;">
+-3.634219
+</td>
+<td style="text-align:right;">
+0.0083509
+</td>
+</tr>
+</tbody>
+</table>
 
-<p>
-In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="#tab:datatoyreg"><strong>??</strong></a>) while the second is below 1% (in Table <a href="#tab:datatoyreg2"><strong>??</strong></a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalisations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformised variables reduces dispersion and can help solve this problem.</p>
+<p>In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="Data.html#tab:datatoyreg">5.2</a>) while the second is below 1% (in Table <a href="Data.html#tab:datatoyreg2">5.3</a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalisations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformised variables reduces dispersion and can help solve this problem.</p>
 <p>Note that this is a <strong>double-edged sword</strong>: while it can help avoid <strong>false negatives</strong>, it can also lead to <strong>false positives</strong>.</p>
 </div>
 </div>

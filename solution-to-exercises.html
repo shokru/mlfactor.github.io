@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -434,129 +435,129 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2><span class="header-section-number">B.1</span> Chapter 4</h2>
 <p>For annual values:
 </p>
-<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb224-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb224-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
-<a class="sourceLine" id="cb224-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Creates the sort</span></a>
-<a class="sourceLine" id="cb224-4" data-line-number="4"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Ungroup</span></a>
-<a class="sourceLine" id="cb224-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Creates a year variable</span></a>
-<a class="sourceLine" id="cb224-6" data-line-number="6"><span class="st">    </span><span class="kw">group_by</span>(year, growth) <span class="op">%&gt;%</span><span class="st">                      </span><span class="co"># Analyze by year &amp; sort</span></a>
-<a class="sourceLine" id="cb224-7" data-line-number="7"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Compute average return</span></a>
-<a class="sourceLine" id="cb224-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> ret, <span class="dt">fill =</span> growth)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># Plot!</span></a>
-<a class="sourceLine" id="cb224-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb225-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb225-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
+<a class="sourceLine" id="cb225-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Creates the sort</span></a>
+<a class="sourceLine" id="cb225-4" data-line-number="4"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Ungroup</span></a>
+<a class="sourceLine" id="cb225-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Creates a year variable</span></a>
+<a class="sourceLine" id="cb225-6" data-line-number="6"><span class="st">    </span><span class="kw">group_by</span>(year, growth) <span class="op">%&gt;%</span><span class="st">                      </span><span class="co"># Analyze by year &amp; sort</span></a>
+<a class="sourceLine" id="cb225-7" data-line-number="7"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb225-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> ret, <span class="dt">fill =</span> growth)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="co"># Plot!</span></a>
+<a class="sourceLine" id="cb225-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex41b"></span>
 <img src="ML_factor_files/figure-html/ex41b-1.png" alt="The value factor: annual returns" width="400px" height="150px" />
 <p class="caption">
 FIGURE B.1: The value factor: annual returns
 </p>
 </div>
-<p></p>
+
 <p>For monthly values:
 </p>
-<div class="sourceCode" id="cb225"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb225-1" data-line-number="1">returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
-<a class="sourceLine" id="cb225-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Creates the sort</span></a>
-<a class="sourceLine" id="cb225-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, growth) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Analyze by date &amp; sort</span></a>
-<a class="sourceLine" id="cb225-5" data-line-number="5"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Compute average return</span></a>
-<a class="sourceLine" id="cb225-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> growth, <span class="dt">value =</span> ret) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Pivot to wide matrix format</span></a>
-<a class="sourceLine" id="cb225-7" data-line-number="7"><span class="st">    </span><span class="kw">ungroup</span>()</a>
-<a class="sourceLine" id="cb225-8" data-line-number="8"><span class="kw">colnames</span>(returns)[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;growth&quot;</span>)                     <span class="co"># Changing column names</span></a>
-<a class="sourceLine" id="cb225-9" data-line-number="9">returns <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>value),                             <span class="co"># From returns to portf. values</span></a>
-<a class="sourceLine" id="cb225-11" data-line-number="11">           <span class="dt">growth =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>growth)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb225-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> portfolio, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Back in tidy format</span></a>
-<a class="sourceLine" id="cb225-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> portfolio)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st">     </span><span class="co"># Plot!  </span></a>
-<a class="sourceLine" id="cb225-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" data-line-number="1">returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
+<a class="sourceLine" id="cb226-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Creates the sort</span></a>
+<a class="sourceLine" id="cb226-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, growth) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Analyze by date &amp; sort</span></a>
+<a class="sourceLine" id="cb226-5" data-line-number="5"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb226-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> growth, <span class="dt">value =</span> ret) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Pivot to wide matrix format</span></a>
+<a class="sourceLine" id="cb226-7" data-line-number="7"><span class="st">    </span><span class="kw">ungroup</span>()</a>
+<a class="sourceLine" id="cb226-8" data-line-number="8"><span class="kw">colnames</span>(returns)[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;growth&quot;</span>)                     <span class="co"># Changing column names</span></a>
+<a class="sourceLine" id="cb226-9" data-line-number="9">returns <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>value),                             <span class="co"># From returns to portf. values</span></a>
+<a class="sourceLine" id="cb226-11" data-line-number="11">           <span class="dt">growth =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>growth)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb226-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> portfolio, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Back in tidy format</span></a>
+<a class="sourceLine" id="cb226-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> portfolio)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st">     </span><span class="co"># Plot!  </span></a>
+<a class="sourceLine" id="cb226-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex41"></span>
 <img src="ML_factor_files/figure-html/ex41-1.png" alt="The value factor: portfolio values." width="400px" height="150px" />
 <p class="caption">
 FIGURE B.2: The value factor: portfolio values.
 </p>
 </div>
-<p></p>
+
 </div>
 <div id="chapter-5" class="section level2">
 <h2><span class="header-section-number">B.2</span> Chapter 5</h2>
 <p>Below, we import a credit spread supplied by Bank of America. Its symbol/ticker is “BAMLC0A0CM”. We apply the data expansion on the small number of predictors to save memory space. One important trick that should not be overlooked is the uniformization step after the product <a href="Data.html#eq:macrocond">(5.3)</a> is computed. Indeed, we want the new features to have the same properties as the old ones. If we skip this step, distributions will be altered, as we show in one example below.</p>
 <p>We start with the data extraction and joining. It’s important to join early so as to keep the highest data frequency (daily) in order to replace missing points with <strong>close values</strong>. Joining with monthly data before replacing creates unnecessary lags.</p>
 
-<div class="sourceCode" id="cb226"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb226-1" data-line-number="1"><span class="kw">getSymbols.FRED</span>(<span class="st">&quot;BAMLC0A0CM&quot;</span>,                               <span class="co"># Extract data</span></a>
-<a class="sourceLine" id="cb226-2" data-line-number="2">                <span class="dt">env =</span> <span class="st">&quot;.GlobalEnv&quot;</span>, </a>
-<a class="sourceLine" id="cb226-3" data-line-number="3">                <span class="dt">return.class =</span> <span class="st">&quot;xts&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb227"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb227-1" data-line-number="1"><span class="kw">getSymbols.FRED</span>(<span class="st">&quot;BAMLC0A0CM&quot;</span>,                               <span class="co"># Extract data</span></a>
+<a class="sourceLine" id="cb227-2" data-line-number="2">                <span class="dt">env =</span> <span class="st">&quot;.GlobalEnv&quot;</span>, </a>
+<a class="sourceLine" id="cb227-3" data-line-number="3">                <span class="dt">return.class =</span> <span class="st">&quot;xts&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;BAMLC0A0CM&quot;</code></pre>
-<div class="sourceCode" id="cb228"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb228-1" data-line-number="1">cred_spread &lt;-<span class="st"> </span><span class="kw">fortify</span>(BAMLC0A0CM)                          <span class="co"># Transform to dataframe</span></a>
-<a class="sourceLine" id="cb228-2" data-line-number="2"><span class="kw">colnames</span>(cred_spread) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;spread&quot;</span>)                <span class="co"># Change column name</span></a>
-<a class="sourceLine" id="cb228-3" data-line-number="3">cred_spread &lt;-<span class="st"> </span>cred_spread <span class="op">%&gt;%</span><span class="st">                              </span><span class="co"># Take extraction and...</span></a>
-<a class="sourceLine" id="cb228-4" data-line-number="4"><span class="st">    </span><span class="kw">full_join</span>(data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(date), <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Join!</span></a>
-<a class="sourceLine" id="cb228-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">spread =</span> <span class="kw">na.locf</span>(spread))                        <span class="co"># Replace NA by previous</span></a>
-<a class="sourceLine" id="cb228-6" data-line-number="6">cred_spread &lt;-<span class="st"> </span>cred_spread[<span class="op">!</span><span class="kw">duplicated</span>(cred_spread),]       <span class="co"># Remove duplicates</span></a></code></pre></div>
-<p></p>
+<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb229-1" data-line-number="1">cred_spread &lt;-<span class="st"> </span><span class="kw">fortify</span>(BAMLC0A0CM)                          <span class="co"># Transform to dataframe</span></a>
+<a class="sourceLine" id="cb229-2" data-line-number="2"><span class="kw">colnames</span>(cred_spread) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;spread&quot;</span>)                <span class="co"># Change column name</span></a>
+<a class="sourceLine" id="cb229-3" data-line-number="3">cred_spread &lt;-<span class="st"> </span>cred_spread <span class="op">%&gt;%</span><span class="st">                              </span><span class="co"># Take extraction and...</span></a>
+<a class="sourceLine" id="cb229-4" data-line-number="4"><span class="st">    </span><span class="kw">full_join</span>(data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(date), <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Join!</span></a>
+<a class="sourceLine" id="cb229-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">spread =</span> <span class="kw">na.locf</span>(spread))                        <span class="co"># Replace NA by previous</span></a>
+<a class="sourceLine" id="cb229-6" data-line-number="6">cred_spread &lt;-<span class="st"> </span>cred_spread[<span class="op">!</span><span class="kw">duplicated</span>(cred_spread),]       <span class="co"># Remove duplicates</span></a></code></pre></div>
+
 <p>The creation of the augmented dataset requires some manipulation.</p>
 
-<div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb229-1" data-line-number="1">data_cond &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Create new dataset</span></a>
-<a class="sourceLine" id="cb229-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;stock_id&quot;</span>, <span class="st">&quot;date&quot;</span>, features_short))</a>
-<a class="sourceLine" id="cb229-3" data-line-number="3">names_cred_spread &lt;-<span class="st"> </span><span class="kw">paste0</span>(features_short, <span class="st">&quot;_cred_spread&quot;</span>) <span class="co"># New column names</span></a>
-<a class="sourceLine" id="cb229-4" data-line-number="4">feat_cred_spread &lt;-<span class="st"> </span>data_cond <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Old values</span></a>
-<a class="sourceLine" id="cb229-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(features_short)</a>
-<a class="sourceLine" id="cb229-6" data-line-number="6">cred_spread &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Create vector of spreads</span></a>
-<a class="sourceLine" id="cb229-7" data-line-number="7"><span class="st">    </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb229-8" data-line-number="8"><span class="st">    </span><span class="kw">left_join</span>(cred_spread, <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) </a>
-<a class="sourceLine" id="cb229-9" data-line-number="9">feat_cred_spread &lt;-<span class="st"> </span>feat_cred_spread <span class="op">*</span><span class="st">                      </span><span class="co"># This product creates...</span></a>
-<a class="sourceLine" id="cb229-10" data-line-number="10"><span class="st">    </span><span class="kw">matrix</span>(cred_spread<span class="op">$</span>spread,                              <span class="co"># the new values...</span></a>
-<a class="sourceLine" id="cb229-11" data-line-number="11">           <span class="kw">length</span>(cred_spread<span class="op">$</span>spread),                      <span class="co"># using duplicated...</span></a>
-<a class="sourceLine" id="cb229-12" data-line-number="12">           <span class="kw">length</span>(features_short))                          <span class="co"># columns</span></a>
-<a class="sourceLine" id="cb229-13" data-line-number="13"><span class="kw">colnames</span>(feat_cred_spread) &lt;-<span class="st"> </span>names_cred_spread             <span class="co"># New column names</span></a>
-<a class="sourceLine" id="cb229-14" data-line-number="14">data_cond &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(data_cond, feat_cred_spread)         <span class="co"># Aggregate old &amp; new</span></a>
-<a class="sourceLine" id="cb229-15" data-line-number="15">data_cond <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Eps_cred_spread)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>() <span class="co"># Plot example</span></a></code></pre></div>
+<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb230-1" data-line-number="1">data_cond &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Create new dataset</span></a>
+<a class="sourceLine" id="cb230-2" data-line-number="2"><span class="st">    </span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;stock_id&quot;</span>, <span class="st">&quot;date&quot;</span>, features_short))</a>
+<a class="sourceLine" id="cb230-3" data-line-number="3">names_cred_spread &lt;-<span class="st"> </span><span class="kw">paste0</span>(features_short, <span class="st">&quot;_cred_spread&quot;</span>) <span class="co"># New column names</span></a>
+<a class="sourceLine" id="cb230-4" data-line-number="4">feat_cred_spread &lt;-<span class="st"> </span>data_cond <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Old values</span></a>
+<a class="sourceLine" id="cb230-5" data-line-number="5"><span class="st">    </span><span class="kw">select</span>(features_short)</a>
+<a class="sourceLine" id="cb230-6" data-line-number="6">cred_spread &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Create vector of spreads</span></a>
+<a class="sourceLine" id="cb230-7" data-line-number="7"><span class="st">    </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb230-8" data-line-number="8"><span class="st">    </span><span class="kw">left_join</span>(cred_spread, <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) </a>
+<a class="sourceLine" id="cb230-9" data-line-number="9">feat_cred_spread &lt;-<span class="st"> </span>feat_cred_spread <span class="op">*</span><span class="st">                      </span><span class="co"># This product creates...</span></a>
+<a class="sourceLine" id="cb230-10" data-line-number="10"><span class="st">    </span><span class="kw">matrix</span>(cred_spread<span class="op">$</span>spread,                              <span class="co"># the new values...</span></a>
+<a class="sourceLine" id="cb230-11" data-line-number="11">           <span class="kw">length</span>(cred_spread<span class="op">$</span>spread),                      <span class="co"># using duplicated...</span></a>
+<a class="sourceLine" id="cb230-12" data-line-number="12">           <span class="kw">length</span>(features_short))                          <span class="co"># columns</span></a>
+<a class="sourceLine" id="cb230-13" data-line-number="13"><span class="kw">colnames</span>(feat_cred_spread) &lt;-<span class="st"> </span>names_cred_spread             <span class="co"># New column names</span></a>
+<a class="sourceLine" id="cb230-14" data-line-number="14">data_cond &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(data_cond, feat_cred_spread)         <span class="co"># Aggregate old &amp; new</span></a>
+<a class="sourceLine" id="cb230-15" data-line-number="15">data_cond <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Eps_cred_spread)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>() <span class="co"># Plot example</span></a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex5b"></span>
 <img src="ML_factor_files/figure-html/ex5b-1.png" alt="Distribution of Eps after conditioning" width="400px" height="150px" />
 <p class="caption">
 FIGURE B.3: Distribution of Eps after conditioning
 </p>
 </div>
-<p></p>
+
 <p>To prevent this issue, uniformization is required.</p>
 
-<div class="sourceCode" id="cb230"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb230-1" data-line-number="1">data_cond &lt;-<span class="st"> </span>data_cond <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># From new dataset</span></a>
-<a class="sourceLine" id="cb230-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># Group by date and...</span></a>
-<a class="sourceLine" id="cb230-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate_at</span>(names_cred_spread, norm_unif)  <span class="co"># Uniformize the new features</span></a>
-<a class="sourceLine" id="cb230-4" data-line-number="4">data_cond <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Eps_cred_spread)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">100</span>) <span class="co"># Verification</span></a></code></pre></div>
+<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb231-1" data-line-number="1">data_cond &lt;-<span class="st"> </span>data_cond <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># From new dataset</span></a>
+<a class="sourceLine" id="cb231-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># Group by date and...</span></a>
+<a class="sourceLine" id="cb231-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate_at</span>(names_cred_spread, norm_unif)  <span class="co"># Uniformize the new features</span></a>
+<a class="sourceLine" id="cb231-4" data-line-number="4">data_cond <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Eps_cred_spread)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">100</span>) <span class="co"># Verification</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/ex51c-1.png" width="400px" height="150px" style="display: block; margin: auto;" /></p>
-<p></p>
+
 <p>The second question naturally requires the downloading of VIX series first and the joining with the original data.</p>
 
-<div class="sourceCode" id="cb231"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb231-1" data-line-number="1"><span class="kw">getSymbols.FRED</span>(<span class="st">&quot;VIXCLS&quot;</span>,                           <span class="co"># Extract data</span></a>
-<a class="sourceLine" id="cb231-2" data-line-number="2">                <span class="dt">env =</span> <span class="st">&quot;.GlobalEnv&quot;</span>, </a>
-<a class="sourceLine" id="cb231-3" data-line-number="3">                <span class="dt">return.class =</span> <span class="st">&quot;xts&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb232"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb232-1" data-line-number="1"><span class="kw">getSymbols.FRED</span>(<span class="st">&quot;VIXCLS&quot;</span>,                           <span class="co"># Extract data</span></a>
+<a class="sourceLine" id="cb232-2" data-line-number="2">                <span class="dt">env =</span> <span class="st">&quot;.GlobalEnv&quot;</span>, </a>
+<a class="sourceLine" id="cb232-3" data-line-number="3">                <span class="dt">return.class =</span> <span class="st">&quot;xts&quot;</span>)</a></code></pre></div>
 <pre><code>## [1] &quot;VIXCLS&quot;</code></pre>
-<div class="sourceCode" id="cb233"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb233-1" data-line-number="1">vix &lt;-<span class="st"> </span><span class="kw">fortify</span>(VIXCLS)                              <span class="co"># Transform to dataframe</span></a>
-<a class="sourceLine" id="cb233-2" data-line-number="2"><span class="kw">colnames</span>(vix) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;vix&quot;</span>)                   <span class="co"># Change column name</span></a>
-<a class="sourceLine" id="cb233-3" data-line-number="3">vix &lt;-<span class="st"> </span>vix <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># Take extraction and...</span></a>
-<a class="sourceLine" id="cb233-4" data-line-number="4"><span class="st">    </span><span class="kw">full_join</span>(data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(date), <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Join! </span></a>
-<a class="sourceLine" id="cb233-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">vix =</span> <span class="kw">na.locf</span>(vix))                      <span class="co"># Replace NA by previous</span></a>
-<a class="sourceLine" id="cb233-6" data-line-number="6">vix &lt;-<span class="st"> </span>vix[<span class="op">!</span><span class="kw">duplicated</span>(vix),]                       <span class="co"># Remove duplicates</span></a>
-<a class="sourceLine" id="cb233-7" data-line-number="7">vix &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Keep original data format</span></a>
-<a class="sourceLine" id="cb233-8" data-line-number="8"><span class="st">    </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># ...</span></a>
-<a class="sourceLine" id="cb233-9" data-line-number="9"><span class="st">    </span><span class="kw">left_join</span>(vix, <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>)                     <span class="co"># Via left_join()</span></a></code></pre></div>
-<p></p>
+<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb234-1" data-line-number="1">vix &lt;-<span class="st"> </span><span class="kw">fortify</span>(VIXCLS)                              <span class="co"># Transform to dataframe</span></a>
+<a class="sourceLine" id="cb234-2" data-line-number="2"><span class="kw">colnames</span>(vix) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;date&quot;</span>, <span class="st">&quot;vix&quot;</span>)                   <span class="co"># Change column name</span></a>
+<a class="sourceLine" id="cb234-3" data-line-number="3">vix &lt;-<span class="st"> </span>vix <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># Take extraction and...</span></a>
+<a class="sourceLine" id="cb234-4" data-line-number="4"><span class="st">    </span><span class="kw">full_join</span>(data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">select</span>(date), <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Join! </span></a>
+<a class="sourceLine" id="cb234-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">vix =</span> <span class="kw">na.locf</span>(vix))                      <span class="co"># Replace NA by previous</span></a>
+<a class="sourceLine" id="cb234-6" data-line-number="6">vix &lt;-<span class="st"> </span>vix[<span class="op">!</span><span class="kw">duplicated</span>(vix),]                       <span class="co"># Remove duplicates</span></a>
+<a class="sourceLine" id="cb234-7" data-line-number="7">vix &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Keep original data format</span></a>
+<a class="sourceLine" id="cb234-8" data-line-number="8"><span class="st">    </span><span class="kw">select</span>(date) <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># ...</span></a>
+<a class="sourceLine" id="cb234-9" data-line-number="9"><span class="st">    </span><span class="kw">left_join</span>(vix, <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>)                     <span class="co"># Via left_join()</span></a></code></pre></div>
+
 <p>We can then proceed with the categorization. We create the vector label in a new (smaller) dataset but not attached to the large data_ml variable. Also, we check the balance of labels and its evolution through time.</p>
 
-<div class="sourceCode" id="cb234"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb234-1" data-line-number="1">delta &lt;-<span class="st"> </span><span class="fl">0.5</span>                                       <span class="co"># Magnitude of vix correction</span></a>
-<a class="sourceLine" id="cb234-2" data-line-number="2">vix_bar &lt;-<span class="st"> </span><span class="kw">median</span>(vix<span class="op">$</span>vix)                         <span class="co"># Median of vix</span></a>
-<a class="sourceLine" id="cb234-3" data-line-number="3">data_vix &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Smaller dataset</span></a>
-<a class="sourceLine" id="cb234-4" data-line-number="4"><span class="st">    </span><span class="kw">select</span>(stock_id, date, R1M_Usd) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb234-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">r_minus =</span> (<span class="op">-</span><span class="fl">0.02</span>) <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>delta<span class="op">*</span>(vix<span class="op">$</span>vix<span class="op">-</span>vix_bar)),  <span class="co"># r_-</span></a>
-<a class="sourceLine" id="cb234-6" data-line-number="6">           <span class="dt">r_plus =</span> <span class="fl">0.02</span> <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(delta<span class="op">*</span>(vix<span class="op">$</span>vix<span class="op">-</span>vix_bar)))       <span class="co"># r_+</span></a>
-<a class="sourceLine" id="cb234-7" data-line-number="7">data_vix &lt;-<span class="st"> </span>data_vix <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb234-8" data-line-number="8"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">R1M_Usd_Cvix =</span> <span class="kw">if_else</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span>r_minus, <span class="dv">-1</span>,       <span class="co"># New label!</span></a>
-<a class="sourceLine" id="cb234-9" data-line-number="9">                                  <span class="kw">if_else</span>(R1M_Usd <span class="op">&gt;</span><span class="st"> </span>r_plus, <span class="dv">1</span>,<span class="dv">0</span>)),</a>
-<a class="sourceLine" id="cb234-10" data-line-number="10">           <span class="dt">R1M_Usd_Cvix =</span> <span class="kw">as.factor</span>(R1M_Usd_Cvix))</a>
-<a class="sourceLine" id="cb234-11" data-line-number="11">data_vix <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb234-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb234-13" data-line-number="13"><span class="st">    </span><span class="kw">group_by</span>(year, R1M_Usd_Cvix) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb234-14" data-line-number="14"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb234-15" data-line-number="15"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> nb, <span class="dt">fill =</span> R1M_Usd_Cvix)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb235"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb235-1" data-line-number="1">delta &lt;-<span class="st"> </span><span class="fl">0.5</span>                                       <span class="co"># Magnitude of vix correction</span></a>
+<a class="sourceLine" id="cb235-2" data-line-number="2">vix_bar &lt;-<span class="st"> </span><span class="kw">median</span>(vix<span class="op">$</span>vix)                         <span class="co"># Median of vix</span></a>
+<a class="sourceLine" id="cb235-3" data-line-number="3">data_vix &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Smaller dataset</span></a>
+<a class="sourceLine" id="cb235-4" data-line-number="4"><span class="st">    </span><span class="kw">select</span>(stock_id, date, R1M_Usd) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-5" data-line-number="5"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">r_minus =</span> (<span class="op">-</span><span class="fl">0.02</span>) <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>delta<span class="op">*</span>(vix<span class="op">$</span>vix<span class="op">-</span>vix_bar)),  <span class="co"># r_-</span></a>
+<a class="sourceLine" id="cb235-6" data-line-number="6">           <span class="dt">r_plus =</span> <span class="fl">0.02</span> <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(delta<span class="op">*</span>(vix<span class="op">$</span>vix<span class="op">-</span>vix_bar)))       <span class="co"># r_+</span></a>
+<a class="sourceLine" id="cb235-7" data-line-number="7">data_vix &lt;-<span class="st"> </span>data_vix <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb235-8" data-line-number="8"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">R1M_Usd_Cvix =</span> <span class="kw">if_else</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span>r_minus, <span class="dv">-1</span>,       <span class="co"># New label!</span></a>
+<a class="sourceLine" id="cb235-9" data-line-number="9">                                  <span class="kw">if_else</span>(R1M_Usd <span class="op">&gt;</span><span class="st"> </span>r_plus, <span class="dv">1</span>,<span class="dv">0</span>)),</a>
+<a class="sourceLine" id="cb235-10" data-line-number="10">           <span class="dt">R1M_Usd_Cvix =</span> <span class="kw">as.factor</span>(R1M_Usd_Cvix))</a>
+<a class="sourceLine" id="cb235-11" data-line-number="11">data_vix <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb235-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-13" data-line-number="13"><span class="st">    </span><span class="kw">group_by</span>(year, R1M_Usd_Cvix) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-14" data-line-number="14"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb235-15" data-line-number="15"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> nb, <span class="dt">fill =</span> R1M_Usd_Cvix)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>()</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/ex52b-1.png" width="400px" height="150px" style="display: block; margin: auto;" /></p>
-<p></p>
+
 </div>
 <div id="chapter-6" class="section level2">
 <h2><span class="header-section-number">B.3</span> Chapter 6</h2>

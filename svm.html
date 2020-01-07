@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -519,35 +520,35 @@ FIGURE 9.4: Diagram of regression SVM.
 <p>In R the LIBSVM library is exploited in several packages. One of them, <em>e1071</em>, is a good choice because it also nests many other interesting functions, especially a naive Bayes classifier that we will use below.</p>
 <p>In the implementation of LIBSVM, the package requires to specify the label and features separately. For this reason, we recycle the variables used for the boosted trees. Moreover, the training being slow, we perform it on a subsample of these sets (first thousand instances).</p>
 
-<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1"><span class="kw">library</span>(e1071)</a>
-<a class="sourceLine" id="cb94-2" data-line-number="2">fit_svm &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">y =</span> train_label_xgb[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>],      <span class="co"># Train label</span></a>
-<a class="sourceLine" id="cb94-3" data-line-number="3">               <span class="dt">x =</span> train_features_xgb[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>,],  <span class="co"># Training features</span></a>
-<a class="sourceLine" id="cb94-4" data-line-number="4">               <span class="dt">type =</span> <span class="st">&quot;eps-regression&quot;</span>,          <span class="co"># SVM task type (see LIBSVM documentation)</span></a>
-<a class="sourceLine" id="cb94-5" data-line-number="5">               <span class="dt">kernel =</span> <span class="st">&quot;radial&quot;</span>,                <span class="co"># SVM kernel (or: linear, polynomial, sigmoid)</span></a>
-<a class="sourceLine" id="cb94-6" data-line-number="6">               <span class="dt">epsilon =</span> <span class="fl">0.1</span>,                    <span class="co"># Width of strip for errors</span></a>
-<a class="sourceLine" id="cb94-7" data-line-number="7">               <span class="dt">gamma =</span> <span class="fl">0.5</span>,                      <span class="co"># Constant in the radial kernel </span></a>
-<a class="sourceLine" id="cb94-8" data-line-number="8">               <span class="dt">cost =</span> <span class="fl">0.1</span>)                       <span class="co"># Slack variable penalisation</span></a>
-<a class="sourceLine" id="cb94-9" data-line-number="9"><span class="kw">mean</span>((<span class="kw">predict</span>(fit_svm, </a>
-<a class="sourceLine" id="cb94-10" data-line-number="10">              <span class="kw">select</span>(testing_sample,features_short)) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></a></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1"><span class="kw">library</span>(e1071)</a>
+<a class="sourceLine" id="cb95-2" data-line-number="2">fit_svm &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">y =</span> train_label_xgb[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>],      <span class="co"># Train label</span></a>
+<a class="sourceLine" id="cb95-3" data-line-number="3">               <span class="dt">x =</span> train_features_xgb[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>,],  <span class="co"># Training features</span></a>
+<a class="sourceLine" id="cb95-4" data-line-number="4">               <span class="dt">type =</span> <span class="st">&quot;eps-regression&quot;</span>,          <span class="co"># SVM task type (see LIBSVM documentation)</span></a>
+<a class="sourceLine" id="cb95-5" data-line-number="5">               <span class="dt">kernel =</span> <span class="st">&quot;radial&quot;</span>,                <span class="co"># SVM kernel (or: linear, polynomial, sigmoid)</span></a>
+<a class="sourceLine" id="cb95-6" data-line-number="6">               <span class="dt">epsilon =</span> <span class="fl">0.1</span>,                    <span class="co"># Width of strip for errors</span></a>
+<a class="sourceLine" id="cb95-7" data-line-number="7">               <span class="dt">gamma =</span> <span class="fl">0.5</span>,                      <span class="co"># Constant in the radial kernel </span></a>
+<a class="sourceLine" id="cb95-8" data-line-number="8">               <span class="dt">cost =</span> <span class="fl">0.1</span>)                       <span class="co"># Slack variable penalisation</span></a>
+<a class="sourceLine" id="cb95-9" data-line-number="9"><span class="kw">mean</span>((<span class="kw">predict</span>(fit_svm, </a>
+<a class="sourceLine" id="cb95-10" data-line-number="10">              <span class="kw">select</span>(testing_sample,features_short)) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></a></code></pre></div>
 <pre><code>## [1] 0.03839085</code></pre>
-<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_svm, </a>
-<a class="sourceLine" id="cb96-2" data-line-number="2">             <span class="kw">select</span>(testing_sample,features_short)) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_svm, </a>
+<a class="sourceLine" id="cb97-2" data-line-number="2">             <span class="kw">select</span>(testing_sample,features_short)) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5222197</code></pre>
-<p></p>
+
 <p>The results are slightly better than those of the boosted trees. All parameters are completely arbitrary, especially the choice of the kernel. We finally turn to a classification example.</p>
 
-<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1"><span class="kw">library</span>(e1071)</a>
-<a class="sourceLine" id="cb98-2" data-line-number="2">fit_svm_C &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd_C[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>],   <span class="co"># Train label</span></a>
-<a class="sourceLine" id="cb98-3" data-line-number="3">               <span class="dt">x =</span> training_sample[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>,] <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb98-4" data-line-number="4"><span class="st">                   </span><span class="kw">select</span>(features),                      <span class="co"># Training features</span></a>
-<a class="sourceLine" id="cb98-5" data-line-number="5">               <span class="dt">type =</span> <span class="st">&quot;C-classification&quot;</span>,                 <span class="co"># SVM task type (see LIBSVM doc.)</span></a>
-<a class="sourceLine" id="cb98-6" data-line-number="6">               <span class="dt">kernel =</span> <span class="st">&quot;sigmoid&quot;</span>,                        <span class="co"># SVM kernel</span></a>
-<a class="sourceLine" id="cb98-7" data-line-number="7">               <span class="dt">gamma =</span> <span class="fl">0.5</span>,                               <span class="co"># Parameter in the sigmoid kernel </span></a>
-<a class="sourceLine" id="cb98-8" data-line-number="8">               <span class="dt">coef0 =</span> <span class="fl">0.3</span>,                               <span class="co"># Parameter in the sigmoid kernel </span></a>
-<a class="sourceLine" id="cb98-9" data-line-number="9">               <span class="dt">cost =</span> <span class="fl">0.2</span>)                                <span class="co"># Slack variable penalisation</span></a>
-<a class="sourceLine" id="cb98-10" data-line-number="10"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_svm_C, <span class="kw">select</span>(testing_sample,features)) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Accuracy</span></a></code></pre></div>
+<div class="sourceCode" id="cb99"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb99-1" data-line-number="1"><span class="kw">library</span>(e1071)</a>
+<a class="sourceLine" id="cb99-2" data-line-number="2">fit_svm_C &lt;-<span class="st"> </span><span class="kw">svm</span>(<span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd_C[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>],   <span class="co"># Train label</span></a>
+<a class="sourceLine" id="cb99-3" data-line-number="3">               <span class="dt">x =</span> training_sample[<span class="dv">1</span><span class="op">:</span><span class="dv">1000</span>,] <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb99-4" data-line-number="4"><span class="st">                   </span><span class="kw">select</span>(features),                      <span class="co"># Training features</span></a>
+<a class="sourceLine" id="cb99-5" data-line-number="5">               <span class="dt">type =</span> <span class="st">&quot;C-classification&quot;</span>,                 <span class="co"># SVM task type (see LIBSVM doc.)</span></a>
+<a class="sourceLine" id="cb99-6" data-line-number="6">               <span class="dt">kernel =</span> <span class="st">&quot;sigmoid&quot;</span>,                        <span class="co"># SVM kernel</span></a>
+<a class="sourceLine" id="cb99-7" data-line-number="7">               <span class="dt">gamma =</span> <span class="fl">0.5</span>,                               <span class="co"># Parameter in the sigmoid kernel </span></a>
+<a class="sourceLine" id="cb99-8" data-line-number="8">               <span class="dt">coef0 =</span> <span class="fl">0.3</span>,                               <span class="co"># Parameter in the sigmoid kernel </span></a>
+<a class="sourceLine" id="cb99-9" data-line-number="9">               <span class="dt">cost =</span> <span class="fl">0.2</span>)                                <span class="co"># Slack variable penalisation</span></a>
+<a class="sourceLine" id="cb99-10" data-line-number="10"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_svm_C, <span class="kw">select</span>(testing_sample,features)) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Accuracy</span></a></code></pre></div>
 <pre><code>## [1] 0.5008973</code></pre>
-<p></p>
+
 <p>The arbitrariness in our choice of the parameters may explain why the predictive accuracy is so poor.</p>
 </div>
 <div id="coding-exercises-5" class="section level2">
