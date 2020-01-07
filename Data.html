@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 5 Data preprocessing | Machine Learning for Factor Investing</title>
+  <meta name="description" content="Chapter 5 Data preprocessing | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:title" content="Chapter 5 Data preprocessing | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
   
   
@@ -17,28 +16,32 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  <meta name="twitter:title" content="Chapter 5 Data preprocessing | Machine Learning for Factor Investing" />
   
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="factor.html">
-<link rel="next" href="lasso.html">
+<link rel="prev" href="factor.html"/>
+<link rel="next" href="lasso.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -486,10 +489,10 @@ FIGURE 5.2: Conditional expecations: average returns as smooth functions of feat
 <a class="sourceLine" id="cb23-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">acf =</span> <span class="kw">acf</span>(value, <span class="dt">lag.max =</span> <span class="dv">1</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)<span class="op">$</span>acf[<span class="dv">2</span>])  <span class="co"># Compute ACF</span></a>
 <a class="sourceLine" id="cb23-6" data-line-number="6">autocorrs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> acf)) <span class="op">+</span><span class="st">                             </span><span class="co"># Plot</span></a>
 <a class="sourceLine" id="cb23-7" data-line-number="7"><span class="st">   </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">60</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.3</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
-<div class="figure"><span id="fig:histcorr"></span>
-<img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of feature autocorrelations." width="384" />
+<div class="figure" style="text-align: center"><span id="fig:histcorr"></span>
+<img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of sample feature autocorrelations." width="384" />
 <p class="caption">
-FIGURE 5.3: Histogram of feature autocorrelations.
+FIGURE 5.3: Histogram of sample feature autocorrelations.
 </p>
 </div>
 <p></p>
@@ -882,80 +885,56 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
-<div id="ref-boehmke2019hands">
-<p>Boehmke, Brad, and Brandon Greenwell. 2019. <em>Hands-on Machine Learning with R</em>. Chapman; Hall.</p>
-</div>
-<div id="ref-kuhn2019feature">
-<p>Kuhn, Max, and Kjell Johnson. 2019. <em>Feature Engineering and Selection: A Practical Approach for Predictive Models</em>. CRC Press.</p>
-</div>
-<div id="ref-friedman2009elements">
-<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
+<div id="ref-aggarwal2013outlier">
+<p>Aggarwal, Charu C. 2013. <em>Outlier Analysis</em>. Springer.</p>
 </div>
 <div id="ref-allison2001missing">
 <p>Allison, Paul D. 2001. <em>Missing Data</em>. Vol. 136. Sage publications.</p>
 </div>
-<div id="ref-enders2010applied">
-<p>Enders, Craig K. 2010. <em>Applied Missing Data Analysis</em>. Guilford press.</p>
-</div>
-<div id="ref-little2014statistical">
-<p>Little, Roderick JA, and Donald B Rubin. 2014. <em>Statistical Analysis with Missing Data</em>. Vol. 333. John Wiley &amp; Sons.</p>
-</div>
-<div id="ref-van2018flexible">
-<p>Van Buuren, Stef. 2018. <em>Flexible Imputation of Missing Data</em>. Chapman; Hall/CRC.</p>
-</div>
-<div id="ref-honaker2010missing">
-<p>Honaker, James, and Gary King. 2010. “What to Do About Missing Values in Time-Series Cross-Section Data.” <em>American Journal of Political Science</em> 54 (2): 561–81.</p>
-</div>
-<div id="ref-che2018recurrent">
-<p>Che, Zhengping, Sanjay Purushotham, Kyunghyun Cho, David Sontag, and Yan Liu. 2018. “Recurrent Neural Networks for Multivariate Time Series with Missing Values.” <em>Scientific Reports</em> 8 (1): 6085.</p>
-</div>
-<div id="ref-stekhoven2011missforest">
-<p>Stekhoven, Daniel J, and Peter Bühlmann. 2011. “MissForest—Non-Parametric Missing Value Imputation for Mixed-Type Data.” <em>Bioinformatics</em> 28 (1): 112–18.</p>
-</div>
-<div id="ref-shah2014comparison">
-<p>Shah, Anoop D, Jonathan W Bartlett, James Carpenter, Owen Nicholas, and Harry Hemingway. 2014. “Comparison of Random Forest and Parametric Imputation Models for Imputing Missing Data Using Mice: A Caliber Study.” <em>American Journal of Epidemiology</em> 179 (6): 764–74.</p>
-</div>
-<div id="ref-schafer1999multiple">
-<p>Schafer, Joseph L. 1999. “Multiple Imputation: A Primer.” <em>Statistical Methods in Medical Research</em> 8 (1): 3–15.</p>
-</div>
-<div id="ref-enders2001primer">
-<p>Enders, Craig K. 2001. “A Primer on Maximum Likelihood Algorithms Available for Use with Missing Data.” <em>Structural Equation Modeling</em> 8 (1). Taylor &amp; Francis: 128–41.</p>
-</div>
-<div id="ref-garcia2009k">
-<p>Garcı'a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı'bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9). Elsevier: 1483–93.</p>
-</div>
-<div id="ref-leary2011determinants">
-<p>Leary, Mark T, and Roni Michaely. 2011. “Determinants of Dividend Smoothing: Empirical Evidence.” <em>Review of Financial Studies</em> 24 (10): 3197–3249.</p>
-</div>
-<div id="ref-chen2012dividend">
-<p>Chen, Long, Zhi Da, and Richard Priestley. 2012. “Dividend Smoothing and Predictability.” <em>Management Science</em> 58 (10): 1834–53.</p>
-</div>
-<div id="ref-hodge2004survey">
-<p>Hodge, Victoria, and Jim Austin. 2004. “A Survey of Outlier Detection Methodologies.” <em>Artificial Intelligence Review</em> 22 (2): 85–126.</p>
+<div id="ref-boehmke2019hands">
+<p>Boehmke, Brad, and Brandon Greenwell. 2019. <em>Hands-on Machine Learning with R</em>. Chapman; Hall.</p>
 </div>
 <div id="ref-chandola2009anomaly">
 <p>Chandola, Varun, Arindam Banerjee, and Vipin Kumar. 2009. “Anomaly Detection: A Survey.” <em>ACM Computing Surveys (CSUR)</em> 41 (3): 15.</p>
 </div>
-<div id="ref-gupta2014outlier">
-<p>Gupta, Manish, Jing Gao, Charu Aggarwal, and Jiawei Han. 2014. “Outlier Detection for Temporal Data.” <em>IEEE Transactions on Knowledge and Data Engineering</em> 26 (9): 2250–67.</p>
+<div id="ref-che2018recurrent">
+<p>Che, Zhengping, Sanjay Purushotham, Kyunghyun Cho, David Sontag, and Yan Liu. 2018. “Recurrent Neural Networks for Multivariate Time Series with Missing Values.” <em>Scientific Reports</em> 8 (1): 6085.</p>
 </div>
-<div id="ref-aggarwal2013outlier">
-<p>Aggarwal, Charu C. 2013. <em>Outlier Analysis</em>. Springer.</p>
+<div id="ref-chen2012dividend">
+<p>Chen, Long, Zhi Da, and Richard Priestley. 2012. “Dividend Smoothing and Predictability.” <em>Management Science</em> 58 (10): 1834–53.</p>
 </div>
-<div id="ref-rousseeuw2005robust">
-<p>Rousseeuw, Peter J, and Annick M Leroy. 2005. <em>Robust Regression and Outlier Detection</em>. Vol. 589. Wiley.</p>
-</div>
-<div id="ref-guyon2003introduction">
-<p>Guyon, Isabelle, and André Elisseeff. 2003. “An Introduction to Variable and Feature Selection.” <em>Journal of Lachine Learning Research</em> 3 (Mar): 1157–82.</p>
-</div>
-<div id="ref-galili2016splitting">
-<p>Galili, Tal, and Isaac Meilijson. 2016. “Splitting Matters: How Monotone Transformation of Predictor Variables May Improve the Predictions of Decision Tree Models.” <em>arXiv Preprint</em>, no. 1611.04561.</p>
+<div id="ref-coqueret2019training">
+<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
 </div>
 <div id="ref-de2018advances">
 <p>De Prado, Marcos Lopez. 2018. <em>Advances in Financial Machine Learning</em>. John Wiley &amp; Sons.</p>
 </div>
+<div id="ref-enders2001primer">
+<p>Enders, Craig K. 2001. “A Primer on Maximum Likelihood Algorithms Available for Use with Missing Data.” <em>Structural Equation Modeling</em> 8 (1). Taylor &amp; Francis: 128–41.</p>
+</div>
+<div id="ref-enders2010applied">
+<p>Enders, Craig K. 2010. <em>Applied Missing Data Analysis</em>. Guilford press.</p>
+</div>
 <div id="ref-fu2018machine">
 <p>Fu, XingYu, JinHong Du, YiFeng Guo, MingWen Liu, Tao Dong, and XiuWen Duan. 2018. “A Machine Learning Framework for Stock Selection.” <em>arXiv Preprint</em>, no. 1806.01743.</p>
+</div>
+<div id="ref-galili2016splitting">
+<p>Galili, Tal, and Isaac Meilijson. 2016. “Splitting Matters: How Monotone Transformation of Predictor Variables May Improve the Predictions of Decision Tree Models.” <em>arXiv Preprint</em>, no. 1611.04561.</p>
+</div>
+<div id="ref-garcia2009k">
+<p>Garcı'a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı'bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9). Elsevier: 1483–93.</p>
+</div>
+<div id="ref-gong2015momentum">
+<p>Gong, Qiang, Ming Liu, and Qianqiu Liu. 2015. “Momentum Is Really Short-Term Momentum.” <em>Journal of Banking &amp; Finance</em> 50: 169–82.</p>
+</div>
+<div id="ref-gonzalo2018predictive">
+<p>Gonzalo, Jesús, and Jean-Yves Pitarakis. 2018. “Predictive Regressions.” In <em>Oxford Research Encyclopedia of Economics and Finance</em>.</p>
+</div>
+<div id="ref-goyal2015momentum">
+<p>Goyal, Amit, and Sunil Wahal. 2015. “Is Momentum an Echo?” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1237–67.</p>
+</div>
+<div id="ref-gu2018empirical">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
 </div>
 <div id="ref-guida2019big">
 <p>Guida, Tony, and Guillaume Coqueret. 2018a. “Ensemble Learning Applied to Quant Equity: Gradient Boosting in a Multifactor Framework.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 129–48. Wiley.</p>
@@ -963,29 +942,53 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 <div id="ref-guida2018machine">
 <p>Guida, Tony, and Guillaume Coqueret. 2018b. “Machine Learning in Systematic Equity Allocation: A Model Comparison.” <em>Wilmott</em> 2018 (98): 24–33.</p>
 </div>
-<div id="ref-coqueret2019training">
-<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
+<div id="ref-gupta2014outlier">
+<p>Gupta, Manish, Jing Gao, Charu Aggarwal, and Jiawei Han. 2014. “Outlier Detection for Temporal Data.” <em>IEEE Transactions on Knowledge and Data Engineering</em> 26 (9): 2250–67.</p>
+</div>
+<div id="ref-guyon2003introduction">
+<p>Guyon, Isabelle, and André Elisseeff. 2003. “An Introduction to Variable and Feature Selection.” <em>Journal of Lachine Learning Research</em> 3 (Mar): 1157–82.</p>
+</div>
+<div id="ref-friedman2009elements">
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
+</div>
+<div id="ref-hodge2004survey">
+<p>Hodge, Victoria, and Jim Austin. 2004. “A Survey of Outlier Detection Methodologies.” <em>Artificial Intelligence Review</em> 22 (2): 85–126.</p>
+</div>
+<div id="ref-honaker2010missing">
+<p>Honaker, James, and Gary King. 2010. “What to Do About Missing Values in Time-Series Cross-Section Data.” <em>American Journal of Political Science</em> 54 (2): 561–81.</p>
 </div>
 <div id="ref-jegadeesh1993returns">
 <p>Jegadeesh, Narasimhan, and Sheridan Titman. 1993. “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency.” <em>Journal of Finance</em> 48 (1): 65–91.</p>
 </div>
+<div id="ref-kuhn2019feature">
+<p>Kuhn, Max, and Kjell Johnson. 2019. <em>Feature Engineering and Selection: A Practical Approach for Predictive Models</em>. CRC Press.</p>
+</div>
+<div id="ref-leary2011determinants">
+<p>Leary, Mark T, and Roni Michaely. 2011. “Determinants of Dividend Smoothing: Empirical Evidence.” <em>Review of Financial Studies</em> 24 (10): 3197–3249.</p>
+</div>
+<div id="ref-little2014statistical">
+<p>Little, Roderick JA, and Donald B Rubin. 2014. <em>Statistical Analysis with Missing Data</em>. Vol. 333. John Wiley &amp; Sons.</p>
+</div>
 <div id="ref-novy2012momentum">
 <p>Novy-Marx, Robert. 2012. “Is Momentum Really Momentum?” <em>Journal of Financial Economics</em> 103 (3): 429–53.</p>
 </div>
-<div id="ref-gong2015momentum">
-<p>Gong, Qiang, Ming Liu, and Qianqiu Liu. 2015. “Momentum Is Really Short-Term Momentum.” <em>Journal of Banking &amp; Finance</em> 50: 169–82.</p>
+<div id="ref-rousseeuw2005robust">
+<p>Rousseeuw, Peter J, and Annick M Leroy. 2005. <em>Robust Regression and Outlier Detection</em>. Vol. 589. Wiley.</p>
 </div>
-<div id="ref-goyal2015momentum">
-<p>Goyal, Amit, and Sunil Wahal. 2015. “Is Momentum an Echo?” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1237–67.</p>
+<div id="ref-schafer1999multiple">
+<p>Schafer, Joseph L. 1999. “Multiple Imputation: A Primer.” <em>Statistical Methods in Medical Research</em> 8 (1): 3–15.</p>
+</div>
+<div id="ref-shah2014comparison">
+<p>Shah, Anoop D, Jonathan W Bartlett, James Carpenter, Owen Nicholas, and Harry Hemingway. 2014. “Comparison of Random Forest and Parametric Imputation Models for Imputing Missing Data Using Mice: A Caliber Study.” <em>American Journal of Epidemiology</em> 179 (6): 764–74.</p>
 </div>
 <div id="ref-stambaugh1999predictive">
 <p>Stambaugh, Robert F. 1999. “Predictive Regressions.” <em>Journal of Financial Economics</em> 54 (3): 375–421.</p>
 </div>
-<div id="ref-gonzalo2018predictive">
-<p>Gonzalo, Jesús, and Jean-Yves Pitarakis. 2018. “Predictive Regressions.” In <em>Oxford Research Encyclopedia of Economics and Finance</em>.</p>
+<div id="ref-stekhoven2011missforest">
+<p>Stekhoven, Daniel J, and Peter Bühlmann. 2011. “MissForest—Non-Parametric Missing Value Imputation for Mixed-Type Data.” <em>Bioinformatics</em> 28 (1): 112–18.</p>
 </div>
-<div id="ref-gu2018empirical">
-<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
+<div id="ref-van2018flexible">
+<p>Van Buuren, Stef. 2018. <em>Flexible Imputation of Missing Data</em>. Chapman; Hall/CRC.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -1006,11 +1009,13 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1018,13 +1023,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1032,6 +1035,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -1052,9 +1063,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

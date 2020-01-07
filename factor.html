@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing</title>
+  <meta name="description" content="Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:title" content="Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
   
   
@@ -17,28 +16,32 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  <meta name="twitter:title" content="Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing" />
   
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="intro.html">
-<link rel="next" href="Data.html">
+<link rel="prev" href="intro.html"/>
+<link rel="next" href="Data.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -459,8 +462,8 @@ r_{t,n}= \alpha_n+\sum_{k=1}^K\beta_{n,k}f_{t,k}+\epsilon_{t,n},
 <div id="detecting-anomalies" class="section level2">
 <h2><span class="header-section-number">4.2</span> Detecting anomalies</h2>
 <p>Obviously, a crucial step is to be able to identify an anomaly and the complexity of this task should not be underestimated. Given the publication bias towards positive results (see, e.g., <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> in Finance), researchers are often tempted to report partial results that are sometimes invalidated by further studies. The need for replication is therefore high and many findings have no tomorrow (<span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history">2018</a>)</span>). Some researcher document fading effects because of publication: once the anomaly becomes public, agents invest in it, which pushes prices up and the anomaly disappears. <span class="citation">McLean and Pontiff (<a href="#ref-mclean2016does">2016</a>)</span> document this effect in the US but <span class="citation">Jacobs and Müller (<a href="#ref-jacobs2019anomalies">2019</a>)</span> find that all other countries experience sustained post-publication factor returns. With a different methodology, <span class="citation">A. Y. Chen and Zimmermann (<a href="#ref-chen2019publication">2019</a>)</span> introduce a publication bias adjustment for returns and the authors note that this (negative) adjustment is in fact rather small. <span class="citation">Penasse (<a href="#ref-penasse2018understanding">2018</a>)</span> recommends the notion of <span class="math inline">\(alpha decay\)</span> to study the persistence or attenuation of anomalies.</p>
-<p>The destruction of factor premia may due to herding (<span class="citation">Krkoska and Schenk-Hoppé (<a href="#ref-krkoska2019herding">2019</a>)</span>) and could be accelerated by the democritization of so-called smart-beta products (Equity Traded Funds (ETFs) notably) that allow investors to directly invest in particular styles (value, low volatility, etc.).</p>
-<p>This subsection was inspired from <span class="citation">Baker, Luo, and Taliaferro (<a href="#ref-baker2017detecting">2017</a>)</span> and <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span>.</p>
+<p>The destruction of factor premia may due to herding (<span class="citation">Krkoska and Schenk-Hoppé (<a href="#ref-krkoska2019herding">2019</a>)</span>) and could be accelerated by the democritization of so-called smart-beta products (Equity Traded Funds (ETFs) notably) that allow investors to directly invest in particular styles (value, low volatility, etc.). On the other hand, <span class="citation">DeMiguel, Martin Utrera, and Uppal (<a href="#ref-demiguel2019crowding">2019</a>)</span> argue that the price impact of crowding in the smart-beta universe is mitigated by trading diversification stemming from external institutions that trade according to strategies outside this space.</p>
+<p>The remainder of this subsection was inspired from <span class="citation">Baker, Luo, and Taliaferro (<a href="#ref-baker2017detecting">2017</a>)</span> and <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2017</a>)</span>.</p>
 <div id="simple-portfolio-sorts" class="section level3">
 <h3><span class="header-section-number">4.2.1</span> Simple portfolio sorts</h3>
 <p>This is the most common procedure and the one used in <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span>. The idea is simple. On one date,</p>
@@ -491,7 +494,7 @@ Then, iterate the procedure until the chronological end of the sample is reached
 <a class="sourceLine" id="cb11-11" data-line-number="11"><span class="st">    </span><span class="kw">coord_fixed</span>(<span class="dv">124</span>) <span class="op">+</span><span class="st">                                            </span><span class="co"># x/y aspect ratio</span></a>
 <a class="sourceLine" id="cb11-12" data-line-number="12"><span class="st">    </span><span class="kw">scale_fill_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>))             <span class="co"># Colors</span></a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:factportsort"></span>
-<img src="ML_factor_files/figure-html/factportsort-1.png" alt="The size factor: average returns of small (=FALSE) versus large (=TRUE) firms." width="672" />
+<img src="ML_factor_files/figure-html/factportsort-1.png" alt="The size factor: average returns of small (=FALSE) versus large (=TRUE) firms." width="432" />
 <p class="caption">
 FIGURE 4.1: The size factor: average returns of small (=FALSE) versus large (=TRUE) firms.
 </p>
@@ -506,7 +509,7 @@ FIGURE 4.1: The size factor: average returns of small (=FALSE) versus large (=TR
 </li>
 <li>value (<strong>HM</strong> = high minus low: undervalued minus `growth’ firms): <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span>, <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span>, <span class="citation">Asness, Moskowitz, and Pedersen (<a href="#ref-asness2013value">2013</a>)</span>.<br />
 </li>
-<li>momentum (<strong>WML</strong> = winners minus looser): <span class="citation">Jegadeesh and Titman (<a href="#ref-jegadeesh1993returns">1993</a>)</span>, <span class="citation">Asness, Moskowitz, and Pedersen (<a href="#ref-asness2013value">2013</a>)</span>. The winners are the assets that have experienced the highest returns over the last year (sometimes the computation of the return is truncated to omit the last month). Cross-sectional momentum is linked, but not equivalent, to time-series momentum (trend following), see e.g., <span class="citation">Moskowitz, Ooi, and Pedersen (<a href="#ref-moskowitz2012time">2012</a>)</span> and <span class="citation">Lempérière et al. (<a href="#ref-lemperiere2014two">2014</a>)</span>.<br />
+<li>momentum (<strong>WML</strong> = winners minus looser): <span class="citation">Jegadeesh and Titman (<a href="#ref-jegadeesh1993returns">1993</a>)</span>, <span class="citation">Carhart (<a href="#ref-carhart1997persistence">1997</a>)</span> and <span class="citation">Asness, Moskowitz, and Pedersen (<a href="#ref-asness2013value">2013</a>)</span>. The winners are the assets that have experienced the highest returns over the last year (sometimes the computation of the return is truncated to omit the last month). Cross-sectional momentum is linked, but not equivalent, to time-series momentum (trend following), see e.g., <span class="citation">Moskowitz, Ooi, and Pedersen (<a href="#ref-moskowitz2012time">2012</a>)</span> and <span class="citation">Lempérière et al. (<a href="#ref-lemperiere2014two">2014</a>)</span>.<br />
 </li>
 <li>profitability (<strong>RMW</strong> = robust minus weak profits): <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>, <span class="citation">Bouchaud et al. (<a href="#ref-bouchaud2019sticky">2019</a>)</span>. In the former reference, profitability is measured as (revenues - (cost and expenses))/equity.<br />
 </li>
@@ -743,6 +746,7 @@ The interesting metric is then the test statistic associated to the estimation o
 <p></p>
 <p>We confirm that the HML factor remains redundant when the four other are present in the asset pricing model. The figures we obtain are very close to the ones in the original paper (<span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>), which makes sense, since we only add 5 years to their initial sample.</p>
 <p>At a more macro-level, researchers also try to figure out which models (i.e., combinations of factors) are the most likely, given the data empirically observed (and possibly given priors formulated by the econometrician). For instance, this stream of literature seeks to quantify to which extent the 3 factor model of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span> outperforms the 5 factors in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>. In this direction, <span class="citation">De Moor, Dhaene, and Sercu (<a href="#ref-de2015comparing">2015</a>)</span> introduce a novel computation for <em>p</em>-values that compare the relative likelihood that two models pass a zero-alpha test. More generally, the Bayesian method of <span class="citation">Barillas and Shanken (<a href="#ref-barillas2018comparing">2018</a>)</span> was subsequently improved by <span class="citation">Chib, Zeng, and Zhao (<a href="#ref-chib2019comparing">2019</a>)</span>.</p>
+<p>Lastly, even the optimal number of factors is a subject of disagreement among conclusions of recent work. While the traditional literature focuses on a limited number (3-5) of factors, <span class="citation">Martin Utrera et al. (<a href="#ref-martin2018transaction">2018</a>)</span> and <span class="citation">He, Huang, and Zhou (<a href="#ref-he2019factors">2019</a>)</span> advocate the need to use 15 or more.</p>
 </div>
 <div id="advanced-techniques" class="section level3">
 <h3><span class="header-section-number">4.2.6</span> Advanced techniques</h3>
@@ -780,7 +784,7 @@ The interesting metric is then the test statistic associated to the estimation o
 </li>
 <li>in the same vein as <span class="citation">Hoechle, Schmid, and Zimmermann (<a href="#ref-hoechle2018correcting">2018</a>)</span>, <span class="citation">Gospodinov, Kan, and Robotti (<a href="#ref-gospodinov2019too">2019</a>)</span> and <span class="citation">Bryzgalova (<a href="#ref-bryzgalova2019spurious">2019</a>)</span> and discuss potential errors that arise when working with portfolio sorts that yield long-short returns. The authors show that in some cases, tests based on this procedure may be deceitful. This happens when the characteristic chosen to perform the sort is correlated with an external (unobservable) factor. They propose a novel regression-based approach aimed at bypassing this problem.</li>
 </ul>
-<p>More recently and in a separate stream of literature, <span class="citation">Ralph S.J. Koijen and Yogo (<a href="#ref-koijen2019demand">2019</a>)</span> have introduced a demand model in which investors for their portfolios according to their preferences towards particular firm characteristics. They show that this allows them to mimic the portfolios of large institutional investors. In their model, aggregate demands (and hence, prices) are directly linked to characteristics, not to factors. In a follow-up paper, <span class="citation">Ralph SJ Koijen, Richmond, and Yogo (<a href="#ref-koijen2019investors">2019</a>)</span> show that a few set of characteristics suffice to predict future returns. They also show that, based on institutional holdings from the UK and the US, the largest investors are those who are the most influencial in the formation of prices. In a similar vein, <span class="citation">Betermier, Calvet, and Jo (<a href="#ref-betermier2019supply">2019</a>)</span> derive an elegant (theoretical) general equilibrium model that generates some well documented anomalies (size, book-to-market). Finally, in <span class="citation">Martin and Nagel (<a href="#ref-martin2019market">2019</a>)</span>, characteristics influence returns via the role they play in the predictability of dividend growth. This paper discussed the asymptotic case when the number of assets and the number of characteristics are proportional and both increase to infinity.</p>
+<p>More recently and in a separate stream of literature, <span class="citation">Ralph S.J. Koijen and Yogo (<a href="#ref-koijen2019demand">2019</a>)</span> have introduced a demand model in which investors for their portfolios according to their preferences towards particular firm characteristics. They show that this allows them to mimic the portfolios of large institutional investors. In their model, aggregate demands (and hence, prices) are directly linked to characteristics, not to factors. In a follow-up paper, <span class="citation">Ralph SJ Koijen, Richmond, and Yogo (<a href="#ref-koijen2019investors">2019</a>)</span> show that a few set of characteristics suffice to predict future returns. They also show that, based on institutional holdings from the UK and the US, the largest investors are those who are the most influencial in the formation of prices. In a similar vein, <span class="citation">Betermier, Calvet, and Jo (<a href="#ref-betermier2019supply">2019</a>)</span> derive an elegant (theoretical) general equilibrium model that generates some well documented anomalies (size, book-to-market). Finally, in <span class="citation">I. Martin and Nagel (<a href="#ref-martin2019market">2019</a>)</span>, characteristics influence returns via the role they play in the predictability of dividend growth. This paper discussed the asymptotic case when the number of assets and the number of characteristics are proportional and both increase to infinity.</p>
 </div>
 <div id="factor-momentum" class="section level2">
 <h2><span class="header-section-number">4.4</span> Factor momentum</h2>
@@ -882,44 +886,188 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
-<div id="ref-ilmanen2011expected">
-<p>Ilmanen, Antti. 2011. <em>Expected Returns: An Investor’s Guide to Harvesting Market Rewards</em>. John Wiley &amp; Sons.</p>
+<div id="ref-ammann2016characteristics">
+<p>Ammann, Manuel, Guillaume Coqueret, and Jan-Philip Schade. 2016. “Characteristics-Based Portfolio Choice with Leverage Constraints.” <em>Journal of Banking &amp; Finance</em> 70: 23–37.</p>
 </div>
 <div id="ref-ang2014asset">
 <p>Ang, Andrew. 2014. <em>Asset Management: A Systematic Approach to Factor Investing</em>. Oxford University Press.</p>
 </div>
+<div id="ref-ang2006cross">
+<p>Ang, Andrew, Robert J Hodrick, Yuhang Xing, and Xiaoyan Zhang. 2006. “The Cross-Section of Volatility and Expected Returns.” <em>Journal of Finance</em> 61 (1): 259–99.</p>
+</div>
+<div id="ref-ang2012testing">
+<p>Ang, Andrew, and Dennis Kristensen. 2012. “Testing Conditional Factor Models.” <em>Journal of Financial Economics</em> 106 (1): 132–56.</p>
+</div>
+<div id="ref-ang2018using">
+<p>Ang, Andrew, Jun Liu, and Krista Schwarz. 2018. “Using Individual Stocks or Portfolios in Tests of Factor Models.” <em>SSRN Working Paper</em> 1106463.</p>
+</div>
+<div id="ref-arnott2019factor">
+<p>Arnott, Robert D, Mark Clements, Vitali Kalesnik, and Juhani T Linnainmaa. 2019. “Factor Momentum.” <em>SSRN Working Paper</em> 3116974.</p>
+</div>
+<div id="ref-asness2018size">
+<p>Asness, Clifford, Andrea Frazzini, Ronen Israel, Tobias J Moskowitz, and Lasse H Pedersen. 2018. “Size Matters, If You Control Your Junk.” <em>Journal of Financial Economics</em> 129 (3): 479–509.</p>
+</div>
+<div id="ref-asness2013value">
+<p>Asness, Clifford S, Tobias J Moskowitz, and Lasse Heje Pedersen. 2013. “Value and Momentum Everywhere.” <em>Journal of Finance</em> 68 (3): 929–85.</p>
+</div>
+<div id="ref-astakhov2019firm">
+<p>Astakhov, Anton, Tomas Havranek, and Jiri Novak. 2019. “Firm Size and Stock Returns: A Quantitative Survey.” <em>Journal of Economic Surveys</em> XXX: XX–XX.</p>
+</div>
+<div id="ref-back2010asset">
+<p>Back, Kerry. 2010. <em>Asset Pricing and Portfolio Choice Theory</em>. Oxford University Press.</p>
+</div>
+<div id="ref-baker2011benchmarks">
+<p>Baker, Malcolm, Brendan Bradley, and Jeffrey Wurgler. 2011. “Benchmarks as Limits to Arbitrage: Understanding the Low-Volatility Anomaly.” <em>Financial Analysts Journal</em> 67 (1): 40–54.</p>
+</div>
+<div id="ref-baker2017detecting">
+<p>Baker, Malcolm, Patrick Luo, and Ryan Taliaferro. 2017. “Detecting Anomalies: The Relevance and Power of Standard Asset Pricing Tests.”</p>
+</div>
 <div id="ref-bali2016empirical">
 <p>Bali, Turan G, Robert F Engle, and Scott Murray. 2016. <em>Empirical Asset Pricing: The Cross Section of Stock Returns</em>. John Wiley &amp; Sons.</p>
 </div>
-<div id="ref-jurczenko2017factor">
-<p>Jurczenko, Emmanuel. 2017. <em>Factor Investing: From Traditional to Alternative Risk Premia</em>. Elsevier.</p>
+<div id="ref-ballings2015evaluating">
+<p>Ballings, Michel, Dirk Van den Poel, Nathalie Hespeels, and Ruben Gryp. 2015. “Evaluating Multiple Classifiers for Stock Price Direction Prediction.” <em>Expert Systems with Applications</em> 42 (20): 7046–56.</p>
 </div>
-<div id="ref-goyal2012empirical">
-<p>Goyal, Amit. 2012. “Empirical Cross-Sectional Asset Pricing: A Survey.” <em>Financial Markets and Portfolio Management</em> 26 (1): 3–38.</p>
+<div id="ref-ban2016machine">
+<p>Ban, Gah-Yi, Noureddine El Karoui, and Andrew EB Lim. 2016. “Machine Learning and Portfolio Optimization.” <em>Management Science</em> 64 (3): 1136–54.</p>
 </div>
-<div id="ref-cazalet2014facts">
-<p>Cazalet, Zélia, and Thierry Roncalli. 2014. “Facts and Fantasies About Factor Investing.” <em>SSRN Working Paper</em> 2524547.</p>
+<div id="ref-bansal1993no">
+<p>Bansal, Ravi, and Salim Viswanathan. 1993. “No Arbitrage and Arbitrage Pricing: A New Approach.” <em>Journal of Finance</em> 48 (4): 1231–62.</p>
+</div>
+<div id="ref-banz1981relationship">
+<p>Banz, Rolf W. 1981. “The Relationship Between Return and Market Value of Common Stocks.” <em>Journal of Financial Economics</em> 9 (1): 3–18.</p>
+</div>
+<div id="ref-barberis2018psychology">
+<p>Barberis, Nicholas. 2018. “Psychology-Based Models of Asset Prices and Trading Volume.” In <em>Handbook of Behavioral Economics-Foundations and Applications</em>.</p>
+</div>
+<div id="ref-barberis2019prospect">
+<p>Barberis, Nicholas, Lawrence J Jin, and Baolian Wang. 2019. “Prospect Theory and Stock Market Anomalies.” <em>SSRN Working Paper</em> 3477463.</p>
+</div>
+<div id="ref-barberis2016prospect">
+<p>Barberis, Nicholas, Abhiroop Mukherjee, and Baolian Wang. 2016. “Prospect Theory and Stock Returns: An Empirical Test.” <em>Review of Financial Studies</em> 29 (11): 3068–3107.</p>
+</div>
+<div id="ref-barberis2003style">
+<p>Barberis, Nicholas, and Andrei Shleifer. 2003. “Style Investing.” <em>Journal of Financial Economics</em> 68 (2): 161–99.</p>
+</div>
+<div id="ref-barillas2018comparing">
+<p>Barillas, Francisco, and Jay Shanken. 2018. “Comparing Asset Pricing Models.” <em>Journal of Finance</em> 73 (2): 715–54.</p>
 </div>
 <div id="ref-baz2015dissecting">
 <p>Baz, Jamil, Nicolas Granger, Campbell R Harvey, Nicolas Le Roux, and Sandy Rattray. 2015. “Dissecting Investment Strategies in the Cross Section and Time Series.” <em>SSRN Working Paper</em> 2695101.</p>
 </div>
-<div id="ref-krkoska2019herding">
-<p>Krkoska, Eduard, and Klaus Reiner Schenk-Hoppé. 2019. “Herding in Smart-Beta Investment Products.” <em>Journal of Risk and Financial Management</em> 12 (1): 47.</p>
+<div id="ref-belsley2005regression">
+<p>Belsley, David A, Edwin Kuh, and Roy E Welsch. 2005. <em>Regression Diagnostics: Identifying Influential Data and Sources of Collinearity</em>. Vol. 571. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-berk1999optimal">
+<p>Berk, Jonathan B, Richard C Green, and Vasant Naik. 1999. “Optimal Investment, Growth Options, and Security Returns.” <em>Journal of Finance</em> 54 (5): 1553–1607.</p>
+</div>
+<div id="ref-betermier2019supply">
+<p>Betermier, Sebastien, Laurent E Calvet, and Evan Jo. 2019. “A Supply and Demand Approach to Equity Pricing.” <em>SSRN Working Paper</em> 3440147.</p>
+</div>
+<div id="ref-betermier2017value">
+<p>Betermier, Sebastien, Laurent E Calvet, and Paolo Sodini. 2017. “Who Are the Value and Growth Investors?” <em>Journal of Finance</em> 72 (1): 5–46.</p>
+</div>
+<div id="ref-bhamra2019does">
+<p>Bhamra, Harjoat S, and Raman Uppal. 2019. “Does Household Finance Matter? Small Financial Errors with Large Social Costs.” <em>American Economic Review</em> 109 (3): 1116–54.</p>
+</div>
+<div id="ref-boloorforoosh2019beta">
+<p>Boloorforoosh, Ali, Peter Christoffersen, Christian Gourieroux, and Mathieu Fournier. 2019. “Beta Risk in the Cross-Section of Equities.” <em>Review of Financial Studies</em> Forthcoming.</p>
+</div>
+<div id="ref-bouchaud2019sticky">
+<p>Bouchaud, Jean-philippe, Philipp Krueger, Augustin Landier, and David Thesmar. 2019. “Sticky Expectations and the Profitability Anomaly.” <em>The Journal of Finance</em> 74 (2): 639–74.</p>
+</div>
+<div id="ref-brandt2009parametric">
+<p>Brandt, Michael W, Pedro Santa-Clara, and Rossen Valkanov. 2009. “Parametric Portfolio Policies: Exploiting Characteristics in the Cross-Section of Equity Returns.” <em>Review of Financial Studies</em> 22 (9): 3411–47.</p>
+</div>
+<div id="ref-bryzgalova2019spurious">
+<p>Bryzgalova, Svetlana. 2019. “Spurious Factors in Linear Asset Pricing Models.”</p>
+</div>
+<div id="ref-bryzgalova2019bayesian">
+<p>Bryzgalova, Svetlana, Jiantao Huang, and Christian Julliard. 2019. “Bayesian Solutions for the Factor Zoo: We Just Ran Two Quadrillion Models.” <em>SSRN Working Paper</em> 3481736.</p>
+</div>
+<div id="ref-bryzgalova2019forest">
+<p>Bryzgalova, Svetlana, Markus Pelger, and Jason Zhu. 2019. “Forest Through the Trees: Building Cross-Sections of Stock Returns.” <em>SSRN Working Paper</em> 3493458.</p>
+</div>
+<div id="ref-cao2003support">
+<p>Cao, Li-Juan, and Francis Eng Hock Tay. 2003. “Support Vector Machine with Adaptive Parameters in Financial Time Series Forecasting.” <em>IEEE Transactions on Neural Networks</em> 14 (6): 1506–18.</p>
+</div>
+<div id="ref-carhart1997persistence">
+<p>Carhart, Mark M. 1997. “On Persistence in Mutual Fund Performance.” <em>Journal of Finance</em> 52 (1): 57–82.</p>
+</div>
+<div id="ref-carlson2004corporate">
+<p>Carlson, Murray, Adlai Fisher, and Ron Giammarino. 2004. “Corporate Investment and Asset Price Dynamics: Implications for the Cross-Section of Returns.” <em>Journal of Finance</em> 59 (6): 2577–2603.</p>
+</div>
+<div id="ref-cattaneo2019characteristic">
+<p>Cattaneo, Matias D, Richard K Crump, Max Farrell, and Ernst Schaumburg. 2019. “Characteristic-Sorted Portfolios: Estimation and Inference” Forthcoming. Review of Economics; Statistics.</p>
+</div>
+<div id="ref-cazalet2014facts">
+<p>Cazalet, Zélia, and Thierry Roncalli. 2014. “Facts and Fantasies About Factor Investing.” <em>SSRN Working Paper</em> 2524547.</p>
+</div>
+<div id="ref-chen2019publication">
+<p>Chen, Andrew Y, and Tom Zimmermann. 2019. “Publication Bias and the Cross-Section of Stock Returns.” <em>Review of Asset Pricing Studies</em> Forthcoming.</p>
+</div>
+<div id="ref-chen2019deep">
+<p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
+</div>
+<div id="ref-chib2019comparing">
+<p>Chib, Siddhartha, Xiaming Zeng, and Lingxiao Zhao. 2019. “On Comparing Asset Pricing Models.” <em>Journal of Finance</em> Forthcoming.</p>
+</div>
+<div id="ref-chinco2019sparse">
+<p>Chinco, Alexander, Adam D Clark-Joseph, and Mao Ye. 2019. “Sparse Signals in the Cross-Section of Returns.” <em>Journal of Finance</em> 74 (1): 449–92.</p>
+</div>
+<div id="ref-chinco2019estimating">
+<p>Chinco, Alexander, Andreas Neuhierl, and Michael Weber. 2019. “Estimating the Anomaly Baserate.” <em>SSRN Working Paper</em> 3344499.</p>
+</div>
+<div id="ref-choi2014momentum">
+<p>Choi, Seung Mo, and Hwagyun Kim. 2014. “Momentum Effect as Part of a Market Equilibrium.” <em>Journal of Financial and Quantitative Analysis</em> 49 (1): 107–30.</p>
+</div>
+<div id="ref-chordia2015cross">
+<p>Chordia, Tarun, Amit Goyal, and Jay Shanken. 2015. “Cross-Sectional Asset Pricing with Individual Stocks: Betas Versus Characteristics.” <em>SSRN Working Paper</em> 2549578.</p>
+</div>
+<div id="ref-cocco2019evidence">
+<p>Cocco, Joao F, Francisco Gomes, and Paula Lopes. 2019. “Evidence on Expectations of Household Finances.” <em>SSRN Working Paper</em> 3362495.</p>
+</div>
+<div id="ref-cochrane2009asset">
+<p>Cochrane, John H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton university press.</p>
 </div>
 <div id="ref-cong2019rise">
 <p>Cong, Lin William, and Douglas Xu. 2019. “Rise of Factor Investing: Asset Prices, Informational Efficiency, and Security Design.” <em>SSRN Working Paper</em> 2800590.</p>
 </div>
-<div id="ref-ross1976arbitrage">
-<p>Ross, Stephen A. 1976. “The Arbitrage Theory of Capital Asset Pricing.” <em>Journal of Economic Theory</em> 13 (3): 341–60.</p>
+<div id="ref-cooper2018new">
+<p>Cooper, Ilan, and Paulo F Maio. 2019. “New Evidence on Conditional Factor Models.” <em>Journal of Financial and Quantitative Analysis</em> 54 (5): 1975–2016.</p>
 </div>
-<div id="ref-sharpe1964capital">
-<p>Sharpe, William F. 1964. “Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk.” <em>Journal of Finance</em> 19 (3): 425–42.</p>
+<div id="ref-cronqvist2015fetal">
+<p>Cronqvist, Henrik, Alessandro Previtero, Stephan Siegel, and Roderick E White. 2015. “The Fetal Origins Hypothesis in Finance: Prenatal Environment, the Gender Gap, and Investor Behavior.” <em>Review of Financial Studies</em> 29 (3): 739–86.</p>
 </div>
-<div id="ref-lintner1965valuation">
-<p>Lintner, John. 1965. “The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets.” <em>Review of Economics and Statistics</em> 47 (1): 13–37.</p>
+<div id="ref-cronqvist2015value">
+<p>Cronqvist, Henrik, Stephan Siegel, and Frank Yu. 2015. “Value Versus Growth Investing: Why Do Different Investors Have Different Styles?” <em>Journal of Financial Economics</em> 117 (2): 333–49.</p>
 </div>
-<div id="ref-mossin1966equilibrium">
-<p>Mossin, Jan. 1966. “Equilibrium in a Capital Asset Market.” <em>Econometrica: Journal of the Econometric Society</em> 34 (4). JSTOR: 768–83.</p>
+<div id="ref-daniel2001overconfidence">
+<p>Daniel, Kent D, David Hirshleifer, and Avanidhar Subrahmanyam. 2001. “Overconfidence, Arbitrage, and Equilibrium Asset Pricing.” <em>Journal of Finance</em> 56 (3): 921–65.</p>
+</div>
+<div id="ref-daniel2019short">
+<p>Daniel, Kent, David Hirshleifer, and Lin Sun. 2019. “Short and Long Horizon Behavioral Factors.” <em>Review of Financial Studies</em> XXX (XXX).</p>
+</div>
+<div id="ref-daniel1997evidence">
+<p>Daniel, Kent, and Sheridan Titman. 1997. “Evidence on the Characteristics of Cross Sectional Variation in Stock Returns.” <em>Journal of Finance</em> 52 (1): 1–33.</p>
+</div>
+<div id="ref-daniel2012testing">
+<p>Daniel, Kent, and Sheridan Titman. 2012. “Testing Factor-Model Explanations of Market Anomalies.” <em>Critical Finance Review</em> 1 (1): 103–39.</p>
+</div>
+<div id="ref-daniel2001explaining">
+<p>Daniel, Kent, Sheridan Titman, and KC John Wei. 2001. “Explaining the Cross-Section of Stock Returns in Japan: Factors or Characteristics?” <em>Journal of Finance</em> 56 (2): 743–66.</p>
+</div>
+<div id="ref-demiguel2019crowding">
+<p>DeMiguel, Victor, Alberto Martin Utrera, and Raman Uppal. 2019. “What Alleviates Crowding in Factor Investing?” <em>SSRN Working Paper</em> 3392875.</p>
+</div>
+<div id="ref-de2015comparing">
+<p>De Moor, Lieven, Geert Dhaene, and Piet Sercu. 2015. “On Comparing Zero-Alpha Tests Across Multifactor Asset Pricing Models.” <em>Journal of Banking &amp; Finance</em> 61: S235–S240.</p>
+</div>
+<div id="ref-dunis2013hybrid">
+<p>Dunis, Christian L, Spiros D Likothanassis, Andreas S Karathanasopoulos, Georgios S Sermpinis, and Konstantinos A Theofilatos. 2013. “A Hybrid Genetic Algorithm–Support Vector Machine Approach in the Task of Forecasting and Trading.” <em>Journal of Asset Management</em> 14 (1): 52–71.</p>
+</div>
+<div id="ref-ehsani2019factor">
+<p>Ehsani, Sina, and Juhani T Linnainmaa. 2019. “Factor Momentum and the Momentum Factor.” <em>SSRN Working Paper</em> 3014521.</p>
 </div>
 <div id="ref-fama1992cross">
 <p>Fama, Eugene F, and Kenneth R French. 1992. “The Cross-Section of Expected Stock Returns.” <em>Journal of Finance</em> 47 (2): 427–65.</p>
@@ -927,137 +1075,23 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 <div id="ref-fama1993common">
 <p>Fama, Eugene F, and Kenneth R French. 1993. “Common Risk Factors in the Returns on Stocks and Bonds.” <em>Journal of Financial Economics</em> 33 (1): 3–56.</p>
 </div>
-<div id="ref-green2013supraview">
-<p>Green, Jeremiah, John RM Hand, and X Frank Zhang. 2013. “The Supraview of Return Predictive Signals.” <em>Review of Accounting Studies</em> 18 (3): 692–730.</p>
+<div id="ref-fama2015five">
+<p>Fama, Eugene F, and Kenneth R French. 2015. “A Five-Factor Asset Pricing Model.” <em>Journal of Financial Economics</em> 116 (1): 1–22.</p>
 </div>
-<div id="ref-harvey2016and">
-<p>Harvey, Campbell R, Yan Liu, and Heqing Zhu. 2016. “… And the Cross-Section of Expected Returns.” <em>Review of Financial Studies</em> 29 (1): 5–68.</p>
+<div id="ref-fama2018choosing">
+<p>Fama, Eugene F, and Kenneth R French. 2018. “Choosing Factors.” <em>Journal of Financial Economics</em> 128 (2): 234–52.</p>
 </div>
-<div id="ref-mclean2016does">
-<p>McLean, R David, and Jeffrey Pontiff. 2016. “Does Academic Research Destroy Stock Return Predictability?” <em>Journal of Finance</em> 71 (1). Wiley Online Library: 5–32.</p>
+<div id="ref-fama1973risk">
+<p>Fama, Eugene F, and James D MacBeth. 1973. “Risk, Return, and Equilibrium: Empirical Tests.” <em>Journal of Political Economy</em> 81 (3): 607–36.</p>
 </div>
-<div id="ref-ang2012testing">
-<p>Ang, Andrew, and Dennis Kristensen. 2012. “Testing Conditional Factor Models.” <em>Journal of Financial Economics</em> 106 (1): 132–56.</p>
-</div>
-<div id="ref-cooper2018new">
-<p>Cooper, Ilan, and Paulo F Maio. 2019. “New Evidence on Conditional Factor Models.” <em>Journal of Financial and Quantitative Analysis</em> 54 (5): 1975–2016.</p>
-</div>
-<div id="ref-harvey2017presidential">
-<p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
-</div>
-<div id="ref-linnainmaa2018history">
-<p>Linnainmaa, Juhani T, and Michael R Roberts. 2018. “The History of the Cross-Section of Stock Returns.” <em>Review of Financial Studies</em> 31 (7): 2606–49.</p>
-</div>
-<div id="ref-jacobs2019anomalies">
-<p>Jacobs, Heiko, and Sebastian Müller. 2019. “Anomalies Across the Globe: Once Public, No Longer Existent?” <em>Journal of Financial Economics</em> XXX (XXX): XXX–XXX.</p>
-</div>
-<div id="ref-chen2019publication">
-<p>Chen, Andrew Y, and Tom Zimmermann. 2019. “Publication Bias and the Cross-Section of Stock Returns.” <em>Review of Asset Pricing Studies</em> Forthcoming.</p>
-</div>
-<div id="ref-penasse2018understanding">
-<p>Penasse, Julien. 2018. “Understanding Alpha Decay.” <em>SSRN Working Paper</em> 2953614.</p>
-</div>
-<div id="ref-baker2017detecting">
-<p>Baker, Malcolm, Patrick Luo, and Ryan Taliaferro. 2017. “Detecting Anomalies: The Relevance and Power of Standard Asset Pricing Tests.”</p>
-</div>
-<div id="ref-harvey2017lucky">
-<p>Harvey, Campbell, and Yan Liu. 2017. “Lucky Factors.” <em>SSRN Working Paper</em> 2528780.</p>
-</div>
-<div id="ref-patton2010monotonicity">
-<p>Patton, Andrew J, and Allan Timmermann. 2010. “Monotonicity in Asset Returns: New Tests with Applications to the Term Structure, the CAPM, and Portfolio Sorts.” <em>Journal of Financial Economics</em> 98 (3). Elsevier: 605–25.</p>
-</div>
-<div id="ref-romano2013testing">
-<p>Romano, Joseph P, and Michael Wolf. 2013. “Testing for Monotonicity in Expected Asset Returns.” <em>Journal of Empirical Finance</em> 23: 93–116.</p>
+<div id="ref-feng2019taming">
+<p>Feng, Guanhao, Stefano Giglio, and Dacheng Xiu. 2019. “Taming the Factor Zoo: A Test of New Factors.” <em>Journal of Finance</em> Forthcoming.</p>
 </div>
 <div id="ref-feng2019deep">
 <p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Characteristics-Sorted Factor Models.” <em>SSRN Working Paper</em> 3243683.</p>
 </div>
-<div id="ref-bryzgalova2019forest">
-<p>Bryzgalova, Svetlana, Markus Pelger, and Jason Zhu. 2019. “Forest Through the Trees: Building Cross-Sections of Stock Returns.” <em>SSRN Working Paper</em> 3493458.</p>
-</div>
-<div id="ref-ledoit2018efficient">
-<p>Ledoit, Olivier, Michael Wolf, and Zhao Zhao. 2018. “Efficient Weighting: A More Powerful Test for Cross-Sectional Anomalies.” <em>SSRN Working Paper</em> 2881417.</p>
-</div>
-<div id="ref-cattaneo2019characteristic">
-<p>Cattaneo, Matias D, Richard K Crump, Max Farrell, and Ernst Schaumburg. 2019. “Characteristic-Sorted Portfolios: Estimation and Inference” Forthcoming. Review of Economics; Statistics.</p>
-</div>
-<div id="ref-banz1981relationship">
-<p>Banz, Rolf W. 1981. “The Relationship Between Return and Market Value of Common Stocks.” <em>Journal of Financial Economics</em> 9 (1): 3–18.</p>
-</div>
-<div id="ref-van2011size">
-<p>Van Dijk, Mathijs A. 2011. “Is Size Dead? A Review of the Size Effect in Equity Returns.” <em>Journal of Banking &amp; Finance</em> 35 (12): 3263–74.</p>
-</div>
-<div id="ref-asness2018size">
-<p>Asness, Clifford, Andrea Frazzini, Ronen Israel, Tobias J Moskowitz, and Lasse H Pedersen. 2018. “Size Matters, If You Control Your Junk.” <em>Journal of Financial Economics</em> 129 (3): 479–509.</p>
-</div>
-<div id="ref-astakhov2019firm">
-<p>Astakhov, Anton, Tomas Havranek, and Jiri Novak. 2019. “Firm Size and Stock Returns: A Quantitative Survey.” <em>Journal of Economic Surveys</em> XXX: XX–XX.</p>
-</div>
-<div id="ref-asness2013value">
-<p>Asness, Clifford S, Tobias J Moskowitz, and Lasse Heje Pedersen. 2013. “Value and Momentum Everywhere.” <em>Journal of Finance</em> 68 (3): 929–85.</p>
-</div>
-<div id="ref-jegadeesh1993returns">
-<p>Jegadeesh, Narasimhan, and Sheridan Titman. 1993. “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency.” <em>Journal of Finance</em> 48 (1): 65–91.</p>
-</div>
-<div id="ref-moskowitz2012time">
-<p>Moskowitz, Tobias J, Yao Hua Ooi, and Lasse Heje Pedersen. 2012. “Time Series Momentum.” <em>Journal of Financial Economics</em> 104 (2): 228–50.</p>
-</div>
-<div id="ref-lemperiere2014two">
-<p>Lempérière, Yves, Cyril Deremble, Philip Seager, Marc Potters, and Jean-Philippe Bouchaud. 2014. “Two Centuries of Trend Following.” <em>arXiv Preprint</em>, no. 1404.3274.</p>
-</div>
-<div id="ref-fama2015five">
-<p>Fama, Eugene F, and Kenneth R French. 2015. “A Five-Factor Asset Pricing Model.” <em>Journal of Financial Economics</em> 116 (1): 1–22.</p>
-</div>
-<div id="ref-bouchaud2019sticky">
-<p>Bouchaud, Jean-philippe, Philipp Krueger, Augustin Landier, and David Thesmar. 2019. “Sticky Expectations and the Profitability Anomaly.” <em>The Journal of Finance</em> 74 (2): 639–74.</p>
-</div>
-<div id="ref-hou2015digesting">
-<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2015. “Digesting Anomalies: An Investment Approach.” <em>Review of Financial Studies</em> 28 (3): 650–705.</p>
-</div>
-<div id="ref-ang2006cross">
-<p>Ang, Andrew, Robert J Hodrick, Yuhang Xing, and Xiaoyan Zhang. 2006. “The Cross-Section of Volatility and Expected Returns.” <em>Journal of Finance</em> 61 (1): 259–99.</p>
-</div>
-<div id="ref-baker2011benchmarks">
-<p>Baker, Malcolm, Brendan Bradley, and Jeffrey Wurgler. 2011. “Benchmarks as Limits to Arbitrage: Understanding the Low-Volatility Anomaly.” <em>Financial Analysts Journal</em> 67 (1): 40–54.</p>
-</div>
 <div id="ref-frazzini2014betting">
 <p>Frazzini, Andrea, and Lasse Heje Pedersen. 2014. “Betting Against Beta.” <em>Journal of Financial Economics</em> 111 (1): 1–25.</p>
-</div>
-<div id="ref-boloorforoosh2019beta">
-<p>Boloorforoosh, Ali, Peter Christoffersen, Christian Gourieroux, and Mathieu Fournier. 2019. “Beta Risk in the Cross-Section of Equities.” <em>Review of Financial Studies</em> Forthcoming.</p>
-</div>
-<div id="ref-berk1999optimal">
-<p>Berk, Jonathan B, Richard C Green, and Vasant Naik. 1999. “Optimal Investment, Growth Options, and Security Returns.” <em>Journal of Finance</em> 54 (5): 1553–1607.</p>
-</div>
-<div id="ref-daniel2001overconfidence">
-<p>Daniel, Kent D, David Hirshleifer, and Avanidhar Subrahmanyam. 2001. “Overconfidence, Arbitrage, and Equilibrium Asset Pricing.” <em>Journal of Finance</em> 56 (3): 921–65.</p>
-</div>
-<div id="ref-barberis2003style">
-<p>Barberis, Nicholas, and Andrei Shleifer. 2003. “Style Investing.” <em>Journal of Financial Economics</em> 68 (2): 161–99.</p>
-</div>
-<div id="ref-gomes2003equilibrium">
-<p>Gomes, Joao, Leonid Kogan, and Lu Zhang. 2003. “Equilibrium Cross Section of Returns.” <em>Journal of Political Economy</em> 111 (4): 693–732.</p>
-</div>
-<div id="ref-carlson2004corporate">
-<p>Carlson, Murray, Adlai Fisher, and Ron Giammarino. 2004. “Corporate Investment and Asset Price Dynamics: Implications for the Cross-Section of Returns.” <em>Journal of Finance</em> 59 (6): 2577–2603.</p>
-</div>
-<div id="ref-johnson2002rational">
-<p>Johnson, Timothy C. 2002. “Rational Momentum Effects.” <em>Journal of Finance</em> 57 (2). Wiley Online Library: 585–608.</p>
-</div>
-<div id="ref-grinblatt2005prospect">
-<p>Grinblatt, Mark, and Bing Han. 2005. “Prospect Theory, Mental Accounting, and Momentum.” <em>Journal of Financial Economics</em> 78 (2). Elsevier: 311–39.</p>
-</div>
-<div id="ref-vayanos2013institutional">
-<p>Vayanos, Dimitri, and Paul Woolley. 2013. “An Institutional Theory of Momentum and Reversal.” <em>Review of Financial Studies</em> 26 (5): 1087–1145.</p>
-</div>
-<div id="ref-choi2014momentum">
-<p>Choi, Seung Mo, and Hwagyun Kim. 2014. “Momentum Effect as Part of a Market Equilibrium.” <em>Journal of Financial and Quantitative Analysis</em> 49 (1): 107–30.</p>
-</div>
-<div id="ref-barberis2016prospect">
-<p>Barberis, Nicholas, Abhiroop Mukherjee, and Baolian Wang. 2016. “Prospect Theory and Stock Returns: An Empirical Test.” <em>Review of Financial Studies</em> 29 (11): 3068–3107.</p>
-</div>
-<div id="ref-daniel2019short">
-<p>Daniel, Kent, David Hirshleifer, and Lin Sun. 2019. “Short and Long Horizon Behavioral Factors.” <em>Review of Financial Studies</em> XXX (XXX).</p>
 </div>
 <div id="ref-gagliardini2016time">
 <p>Gagliardini, Patrick, Elisa Ossola, and Olivier Scaillet. 2016. “Time-Varying Risk Premium in Large Cross-Sectional Equity Data Sets.” <em>Econometrica</em> 84 (3): 985–1046.</p>
@@ -1065,230 +1099,209 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 <div id="ref-gagliardini2019estimation">
 <p>Gagliardini, Patrick, Elisa Ossola, and Olivier Scaillet. 2019. “Estimation of Large Dimensional Conditional Factor Models in Finance.” <em>SSRN Working Paper</em> 3443426.</p>
 </div>
-<div id="ref-ilmanen2019factor">
-<p>Ilmanen, Antti, Ronen Israel, Tobias J Moskowitz, Ashwin K Thapar, and Franklin Wang. 2019. “Factor Premia and Factor Timing: A Century of Evidence.” <em>SSRN Working Paper</em> 3400998.</p>
-</div>
-<div id="ref-betermier2017value">
-<p>Betermier, Sebastien, Laurent E Calvet, and Paolo Sodini. 2017. “Who Are the Value and Growth Investors?” <em>Journal of Finance</em> 72 (1): 5–46.</p>
-</div>
-<div id="ref-cronqvist2015value">
-<p>Cronqvist, Henrik, Stephan Siegel, and Frank Yu. 2015. “Value Versus Growth Investing: Why Do Different Investors Have Different Styles?” <em>Journal of Financial Economics</em> 117 (2): 333–49.</p>
-</div>
-<div id="ref-cocco2019evidence">
-<p>Cocco, Joao F, Francisco Gomes, and Paula Lopes. 2019. “Evidence on Expectations of Household Finances.” <em>SSRN Working Paper</em> 3362495.</p>
-</div>
-<div id="ref-cronqvist2015fetal">
-<p>Cronqvist, Henrik, Alessandro Previtero, Stephan Siegel, and Roderick E White. 2015. “The Fetal Origins Hypothesis in Finance: Prenatal Environment, the Gender Gap, and Investor Behavior.” <em>Review of Financial Studies</em> 29 (3): 739–86.</p>
-</div>
-<div id="ref-barberis2018psychology">
-<p>Barberis, Nicholas. 2018. “Psychology-Based Models of Asset Prices and Trading Volume.” In <em>Handbook of Behavioral Economics-Foundations and Applications</em>.</p>
-</div>
-<div id="ref-bhamra2019does">
-<p>Bhamra, Harjoat S, and Raman Uppal. 2019. “Does Household Finance Matter? Small Financial Errors with Large Social Costs.” <em>American Economic Review</em> 109 (3): 1116–54.</p>
-</div>
-<div id="ref-barberis2019prospect">
-<p>Barberis, Nicholas, Lawrence J Jin, and Baolian Wang. 2019. “Prospect Theory and Stock Market Anomalies.” <em>SSRN Working Paper</em> 3477463.</p>
-</div>
-<div id="ref-hou2019replicating">
-<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2019. “Replicating Anomalies.” <em>Review of Financial Studies</em> XX (XX): XXX–XX.</p>
-</div>
-<div id="ref-harvey2019census">
-<p>Harvey, Campbell R, and Yan Liu. 2019. “A Census of the Factor Zoo.” <em>SSRN Working Paper</em> 3341728.</p>
-</div>
-<div id="ref-bryzgalova2019bayesian">
-<p>Bryzgalova, Svetlana, Jiantao Huang, and Christian Julliard. 2019. “Bayesian Solutions for the Factor Zoo: We Just Ran Two Quadrillion Models.” <em>SSRN Working Paper</em> 3481736.</p>
-</div>
-<div id="ref-fama1973risk">
-<p>Fama, Eugene F, and James D MacBeth. 1973. “Risk, Return, and Equilibrium: Empirical Tests.” <em>Journal of Political Economy</em> 81 (3): 607–36.</p>
-</div>
-<div id="ref-chinco2019estimating">
-<p>Chinco, Alexander, Andreas Neuhierl, and Michael Weber. 2019. “Estimating the Anomaly Baserate.” <em>SSRN Working Paper</em> 3344499.</p>
-</div>
-<div id="ref-jagannathan1998asymptotic">
-<p>Jagannathan, Ravi, and Zhenyu Wang. 1998. “An Asymptotic Theory for Estimating Beta-Pricing Models Using Cross-Sectional Regression.” <em>Journal of Finance</em> 53 (4): 1285–1309.</p>
-</div>
-<div id="ref-petersen2009estimating">
-<p>Petersen, Mitchell A. 2009. “Estimating Standard Errors in Finance Panel Data Sets: Comparing Approaches.” <em>Review of Financial Studies</em> 22 (1): 435–80.</p>
-</div>
-<div id="ref-shanken1992estimation">
-<p>Shanken, Jay. 1992. “On the Estimation of Beta-Pricing Models.” <em>Review of Financial Studies</em> 5 (1): 1–33.</p>
-</div>
-<div id="ref-ang2018using">
-<p>Ang, Andrew, Jun Liu, and Krista Schwarz. 2018. “Using Individual Stocks or Portfolios in Tests of Factor Models.” <em>SSRN Working Paper</em> 1106463.</p>
-</div>
-<div id="ref-jegadeesh2019empirical">
-<p>Jegadeesh, Narasimhan, Joonki Noh, Kuntara Pukthuanthong, Richard Roll, and Junbo L Wang. 2019. “Empirical Tests of Asset Pricing Models with Individual Assets: Resolving the Errors-in-Variables Bias in Risk Premium Estimation.” <em>Journal of Financial Economics</em> Forthcoming (XXXX).</p>
-</div>
-<div id="ref-belsley2005regression">
-<p>Belsley, David A, Edwin Kuh, and Roy E Welsch. 2005. <em>Regression Diagnostics: Identifying Influential Data and Sources of Collinearity</em>. Vol. 571. John Wiley &amp; Sons.</p>
-</div>
-<div id="ref-de2015comparing">
-<p>De Moor, Lieven, Geert Dhaene, and Piet Sercu. 2015. “On Comparing Zero-Alpha Tests Across Multifactor Asset Pricing Models.” <em>Journal of Banking &amp; Finance</em> 61: S235–S240.</p>
-</div>
-<div id="ref-barillas2018comparing">
-<p>Barillas, Francisco, and Jay Shanken. 2018. “Comparing Asset Pricing Models.” <em>Journal of Finance</em> 73 (2): 715–54.</p>
-</div>
-<div id="ref-chib2019comparing">
-<p>Chib, Siddhartha, Xiaming Zeng, and Lingxiao Zhao. 2019. “On Comparing Asset Pricing Models.” <em>Journal of Finance</em> Forthcoming.</p>
-</div>
-<div id="ref-feng2019taming">
-<p>Feng, Guanhao, Stefano Giglio, and Dacheng Xiu. 2019. “Taming the Factor Zoo: A Test of New Factors.” <em>Journal of Finance</em> Forthcoming.</p>
-</div>
-<div id="ref-fama2018choosing">
-<p>Fama, Eugene F, and Kenneth R French. 2018. “Choosing Factors.” <em>Journal of Financial Economics</em> 128 (2): 234–52.</p>
-</div>
 <div id="ref-giglio2018asset">
 <p>Giglio, Stefano, and Dacheng Xiu. 2018. “Asset Pricing with Omitted Factors.” <em>SSRN Working Paper</em> 2865922.</p>
 </div>
-<div id="ref-pukthuanthong2018protocol">
-<p>Pukthuanthong, Kuntara, Richard Roll, and Avanidhar Subrahmanyam. 2018. “A Protocol for Factor Identification.” <em>Review of Financial Studies</em> 32 (4): 1573–1607.</p>
+<div id="ref-gomes2003equilibrium">
+<p>Gomes, Joao, Leonid Kogan, and Lu Zhang. 2003. “Equilibrium Cross Section of Returns.” <em>Journal of Political Economy</em> 111 (4): 693–732.</p>
 </div>
 <div id="ref-gospodinov2019too">
 <p>Gospodinov, Nikolay, Raymond Kan, and Cesare Robotti. 2019. “Too Good to Be True? Fallacies in Evaluating Risk Factor Models.” <em>Journal of Financial Economics</em> 132 (2): 451–71.</p>
 </div>
-<div id="ref-bryzgalova2019spurious">
-<p>Bryzgalova, Svetlana. 2019. “Spurious Factors in Linear Asset Pricing Models.”</p>
-</div>
-<div id="ref-ma2018testing">
-<p>Ma, Shujie, Wei Lan, Liangjun Su, and Chih-Ling Tsai. 2018. “Testing Alphas in Conditional Time-Varying Factor Models with High Dimensional Assets.” <em>Journal of Business &amp; Economic Statistics</em> XXX (XXX). Taylor &amp; Francis: 1–34.</p>
-</div>
-<div id="ref-lakonishok1994contrarian">
-<p>Lakonishok, Josef, Andrei Shleifer, and Robert W Vishny. 1994. “Contrarian Investment, Extrapolation, and Risk.” <em>Journal of Finance</em> 49 (5): 1541–78.</p>
-</div>
-<div id="ref-daniel1997evidence">
-<p>Daniel, Kent, and Sheridan Titman. 1997. “Evidence on the Characteristics of Cross Sectional Variation in Stock Returns.” <em>Journal of Finance</em> 52 (1): 1–33.</p>
-</div>
-<div id="ref-daniel2001explaining">
-<p>Daniel, Kent, Sheridan Titman, and KC John Wei. 2001. “Explaining the Cross-Section of Stock Returns in Japan: Factors or Characteristics?” <em>Journal of Finance</em> 56 (2): 743–66.</p>
-</div>
-<div id="ref-daniel2012testing">
-<p>Daniel, Kent, and Sheridan Titman. 2012. “Testing Factor-Model Explanations of Market Anomalies.” <em>Critical Finance Review</em> 1 (1): 103–39.</p>
-</div>
-<div id="ref-chordia2015cross">
-<p>Chordia, Tarun, Amit Goyal, and Jay Shanken. 2015. “Cross-Sectional Asset Pricing with Individual Stocks: Betas Versus Characteristics.” <em>SSRN Working Paper</em> 2549578.</p>
-</div>
-<div id="ref-kozak2018interpreting">
-<p>Kozak, Serhiy, Stefan Nagel, and Shrihari Santosh. 2018. “Interpreting Factor Models.” <em>Journal of Finance</em> 73 (3): 1183–1223.</p>
-</div>
-<div id="ref-han2018firm">
-<p>Han, Yufeng, Ai He, D Rapach, and Guofu Zhou. 2019. “Firm Characteristics and Expected Stock Returns.” <em>SSRN Working Paper</em> 3185335.</p>
-</div>
-<div id="ref-rapach2019time">
-<p>Rapach, David, and Guofu Zhou. 2019. “Time-Series and Cross-Sectional Stock Return Forecasting: New Machine Learning Methods.” <em>SSRN Working Paper</em> 3428095.</p>
-</div>
-<div id="ref-kelly2019characteristics">
-<p>Kelly, Bryan, Seth Pruitt, and Yinan Su. 2019. “Characteristics Are Covariances: A Unified Model of Risk and Return.” <em>Journal of Financial Economics</em> Forthcoming (XXX): XXX–XXX.</p>
-</div>
-<div id="ref-kim2019arbitrage">
-<p>Kim, Soohun, Robert A Korajczyk, and Andreas Neuhierl. 2019. “Arbitrage Portfolios.” <em>SSRN Working Paper</em> 3263001.</p>
-</div>
-<div id="ref-lettau2018estimating">
-<p>Lettau, Martin, and Markus Pelger. n.d. “Estimating Latent Asset-Pricing Factors.” <em>Journal of Econometrics</em> XXX: XXX–XXX.</p>
-</div>
-<div id="ref-lettau2018factors">
-<p>Lettau, Martin, and Markus Pelger. 2018. “Factors That Fit the Time Series and Cross-Section of Stock Returns.” <em>SSRN Working Paper</em> 3211106.</p>
-</div>
-<div id="ref-hoechle2018correcting">
-<p>Hoechle, Daniel, Markus Schmid, and Heinz Zimmermann. 2018. “Correcting Alpha Misattribution in Portfolio Sorts.” <em>SSRN Working Paper</em> 3190310.</p>
-</div>
-<div id="ref-koijen2019demand">
-<p>Koijen, Ralph S.J., and Motohiro Yogo. 2019. “A Demand System Approach to Asset Pricing.” <em>Journal of Political Economy</em> 127 (4): 1475–1515.</p>
-</div>
-<div id="ref-koijen2019investors">
-<p>Koijen, Ralph SJ, Robert J Richmond, and Motohiro Yogo. 2019. “Which Investors Matter for Global Equity Valuations and Expected Returns?” <em>SSRN Working Paper</em> 3378340.</p>
-</div>
-<div id="ref-betermier2019supply">
-<p>Betermier, Sebastien, Laurent E Calvet, and Evan Jo. 2019. “A Supply and Demand Approach to Equity Pricing.” <em>SSRN Working Paper</em> 3440147.</p>
-</div>
-<div id="ref-martin2019market">
-<p>Martin, Ian, and Stefan Nagel. 2019. “Market Efficiency in the Age of Big Data.” <em>SSRN Working Paper</em> XXXXXXXXXXXXX.</p>
-</div>
-<div id="ref-gupta2019factor">
-<p>Gupta, Tarun, and Bryan Kelly. 2019. “Factor Momentum Everywhere.” <em>Journal of Portfolio Management</em> 45 (3): 13–36.</p>
-</div>
-<div id="ref-arnott2019factor">
-<p>Arnott, Robert D, Mark Clements, Vitali Kalesnik, and Juhani T Linnainmaa. 2019. “Factor Momentum.” <em>SSRN Working Paper</em> 3116974.</p>
-</div>
-<div id="ref-moskowitz1999industries">
-<p>Moskowitz, Tobias J, and Mark Grinblatt. 1999. “Do Industries Explain Momentum?” <em>Journal of Finance</em> 54 (4): 1249–90.</p>
-</div>
-<div id="ref-ehsani2019factor">
-<p>Ehsani, Sina, and Juhani T Linnainmaa. 2019. “Factor Momentum and the Momentum Factor.” <em>SSRN Working Paper</em> 3014521.</p>
-</div>
-<div id="ref-brandt2009parametric">
-<p>Brandt, Michael W, Pedro Santa-Clara, and Rossen Valkanov. 2009. “Parametric Portfolio Policies: Exploiting Characteristics in the Cross-Section of Equity Returns.” <em>Review of Financial Studies</em> 22 (9): 3411–47.</p>
-</div>
-<div id="ref-hjalmarsson2012characteristic">
-<p>Hjalmarsson, Erik, and Petar Manchev. 2012. “Characteristic-Based Mean-Variance Portfolio Choice.” <em>Journal of Banking &amp; Finance</em> 36 (5): 1392–1401.</p>
-</div>
-<div id="ref-ammann2016characteristics">
-<p>Ammann, Manuel, Guillaume Coqueret, and Jan-Philip Schade. 2016. “Characteristics-Based Portfolio Choice with Leverage Constraints.” <em>Journal of Banking &amp; Finance</em> 70: 23–37.</p>
-</div>
-<div id="ref-martin2018transaction">
-<p>Martin Utrera, Alberto, Victor DeMiguel, Raman Uppal, and Francisco J Nogales. 2018. “A Transaction-Cost Perspective on the Multitude of Firm Characteristics.” <em>SSRN Working Paper</em> 2912819.</p>
-</div>
 <div id="ref-goto2015improving">
 <p>Goto, Shingo, and Yan Xu. 2015. “Improving Mean Variance Optimization Through Sparse Hedging Restrictions.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1415–41.</p>
 </div>
-<div id="ref-ban2016machine">
-<p>Ban, Gah-Yi, Noureddine El Karoui, and Andrew EB Lim. 2016. “Machine Learning and Portfolio Optimization.” <em>Management Science</em> 64 (3): 1136–54.</p>
+<div id="ref-goyal2012empirical">
+<p>Goyal, Amit. 2012. “Empirical Cross-Sectional Asset Pricing: A Survey.” <em>Financial Markets and Portfolio Management</em> 26 (1): 3–38.</p>
 </div>
-<div id="ref-perrin2019machine">
-<p>Perrin, Sarah, and Thierry Roncalli. 2019. “Machine Learning Optimization Algorithms &amp; Portfolio Allocation.” <em>SSRN Working Paper</em> 3425827.</p>
+<div id="ref-green2013supraview">
+<p>Green, Jeremiah, John RM Hand, and X Frank Zhang. 2013. “The Supraview of Return Predictive Signals.” <em>Review of Accounting Studies</em> 18 (3): 692–730.</p>
 </div>
-<div id="ref-rapach2013international">
-<p>Rapach, David E, Jack K Strauss, and Guofu Zhou. 2013. “International Stock Return Predictability: What Is the Role of the United States?” <em>Journal of Finance</em> 68 (4): 1633–62.</p>
-</div>
-<div id="ref-chinco2019sparse">
-<p>Chinco, Alexander, Adam D Clark-Joseph, and Mao Ye. 2019. “Sparse Signals in the Cross-Section of Returns.” <em>Journal of Finance</em> 74 (1): 449–92.</p>
-</div>
-<div id="ref-cao2003support">
-<p>Cao, Li-Juan, and Francis Eng Hock Tay. 2003. “Support Vector Machine with Adaptive Parameters in Financial Time Series Forecasting.” <em>IEEE Transactions on Neural Networks</em> 14 (6): 1506–18.</p>
-</div>
-<div id="ref-kim2003financial">
-<p>Kim, Kyoung-jae. 2003. “Financial Time Series Forecasting Using Support Vector Machines.” <em>Neurocomputing</em> 55 (1-2). Elsevier: 307–19.</p>
-</div>
-<div id="ref-huang2005forecasting">
-<p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>
-</div>
-<div id="ref-matias2012forecasting">
-<p>Matı'as, José M, and Juan C Reboredo. 2012. “Forecasting Performance of Nonlinear Models for Intraday Stock Returns.” <em>Journal of Forecasting</em> 31 (2). Wiley Online Library: 172–88.</p>
-</div>
-<div id="ref-reboredo2012nonlinearity">
-<p>Reboredo, Juan C, José M Matı'as, and Raquel Garcia-Rubio. 2012. “Nonlinearity in Forecasting of High-Frequency Stock Returns.” <em>Computational Economics</em> 40 (3): 245–64.</p>
-</div>
-<div id="ref-dunis2013hybrid">
-<p>Dunis, Christian L, Spiros D Likothanassis, Andreas S Karathanasopoulos, Georgios S Sermpinis, and Konstantinos A Theofilatos. 2013. “A Hybrid Genetic Algorithm–Support Vector Machine Approach in the Task of Forecasting and Trading.” <em>Journal of Asset Management</em> 14 (1): 52–71.</p>
+<div id="ref-grinblatt2005prospect">
+<p>Grinblatt, Mark, and Bing Han. 2005. “Prospect Theory, Mental Accounting, and Momentum.” <em>Journal of Financial Economics</em> 78 (2). Elsevier: 311–39.</p>
 </div>
 <div id="ref-gu2018empirical">
 <p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
 </div>
+<div id="ref-gu2019autoencoder">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
+</div>
 <div id="ref-guida2018machine">
 <p>Guida, Tony, and Guillaume Coqueret. 2018b. “Machine Learning in Systematic Equity Allocation: A Model Comparison.” <em>Wilmott</em> 2018 (98): 24–33.</p>
 </div>
-<div id="ref-ballings2015evaluating">
-<p>Ballings, Michel, Dirk Van den Poel, Nathalie Hespeels, and Ruben Gryp. 2015. “Evaluating Multiple Classifiers for Stock Price Direction Prediction.” <em>Expert Systems with Applications</em> 42 (20): 7046–56.</p>
+<div id="ref-gupta2019factor">
+<p>Gupta, Tarun, and Bryan Kelly. 2019. “Factor Momentum Everywhere.” <em>Journal of Portfolio Management</em> 45 (3): 13–36.</p>
 </div>
-<div id="ref-henrique2019literature">
-<p>Henrique, Bruno Miranda, Vinicius Amorim Sobreiro, and Herbert Kimura. 2019. “Literature Review: Machine Learning Techniques Applied to Financial Market Prediction.” <em>Expert Systems with Applications</em> XXX (XXX).</p>
-</div>
-<div id="ref-bansal1993no">
-<p>Bansal, Ravi, and Salim Viswanathan. 1993. “No Arbitrage and Arbitrage Pricing: A New Approach.” <em>Journal of Finance</em> 48 (4): 1231–62.</p>
-</div>
-<div id="ref-cochrane2009asset">
-<p>Cochrane, John H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton university press.</p>
+<div id="ref-han2018firm">
+<p>Han, Yufeng, Ai He, D Rapach, and Guofu Zhou. 2019. “Firm Characteristics and Expected Stock Returns.” <em>SSRN Working Paper</em> 3185335.</p>
 </div>
 <div id="ref-hansen1982large">
 <p>Hansen, Lars Peter. 1982. “Large Sample Properties of Generalized Method of Moments Estimators.” <em>Econometrica</em>, 1029–54.</p>
 </div>
-<div id="ref-back2010asset">
-<p>Back, Kerry. 2010. <em>Asset Pricing and Portfolio Choice Theory</em>. Oxford University Press.</p>
+<div id="ref-harvey2017lucky">
+<p>Harvey, Campbell, and Yan Liu. 2017. “Lucky Factors.” <em>SSRN Working Paper</em> 2528780.</p>
 </div>
-<div id="ref-chen2019deep">
-<p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
+<div id="ref-harvey2017presidential">
+<p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
 </div>
-<div id="ref-gu2019autoencoder">
-<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
+<div id="ref-harvey2019census">
+<p>Harvey, Campbell R, and Yan Liu. 2019. “A Census of the Factor Zoo.” <em>SSRN Working Paper</em> 3341728.</p>
+</div>
+<div id="ref-harvey2016and">
+<p>Harvey, Campbell R, Yan Liu, and Heqing Zhu. 2016. “… And the Cross-Section of Expected Returns.” <em>Review of Financial Studies</em> 29 (1): 5–68.</p>
+</div>
+<div id="ref-he2019factors">
+<p>He, Ai, Dashan Huang, and Guofu Zhou. 2019. “New Factors Wanted: Evidence from a Simple Specification Test.” <em>SSRN Working Paper</em> 3143752.</p>
+</div>
+<div id="ref-henrique2019literature">
+<p>Henrique, Bruno Miranda, Vinicius Amorim Sobreiro, and Herbert Kimura. 2019. “Literature Review: Machine Learning Techniques Applied to Financial Market Prediction.” <em>Expert Systems with Applications</em> XXX (XXX).</p>
+</div>
+<div id="ref-hjalmarsson2012characteristic">
+<p>Hjalmarsson, Erik, and Petar Manchev. 2012. “Characteristic-Based Mean-Variance Portfolio Choice.” <em>Journal of Banking &amp; Finance</em> 36 (5): 1392–1401.</p>
+</div>
+<div id="ref-hoechle2018correcting">
+<p>Hoechle, Daniel, Markus Schmid, and Heinz Zimmermann. 2018. “Correcting Alpha Misattribution in Portfolio Sorts.” <em>SSRN Working Paper</em> 3190310.</p>
+</div>
+<div id="ref-hou2015digesting">
+<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2015. “Digesting Anomalies: An Investment Approach.” <em>Review of Financial Studies</em> 28 (3): 650–705.</p>
+</div>
+<div id="ref-hou2019replicating">
+<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2019. “Replicating Anomalies.” <em>Review of Financial Studies</em> XX (XX): XXX–XX.</p>
+</div>
+<div id="ref-huang2005forecasting">
+<p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>
+</div>
+<div id="ref-ilmanen2011expected">
+<p>Ilmanen, Antti. 2011. <em>Expected Returns: An Investor’s Guide to Harvesting Market Rewards</em>. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-ilmanen2019factor">
+<p>Ilmanen, Antti, Ronen Israel, Tobias J Moskowitz, Ashwin K Thapar, and Franklin Wang. 2019. “Factor Premia and Factor Timing: A Century of Evidence.” <em>SSRN Working Paper</em> 3400998.</p>
+</div>
+<div id="ref-jacobs2019anomalies">
+<p>Jacobs, Heiko, and Sebastian Müller. 2019. “Anomalies Across the Globe: Once Public, No Longer Existent?” <em>Journal of Financial Economics</em> XXX (XXX): XXX–XXX.</p>
+</div>
+<div id="ref-jagannathan1998asymptotic">
+<p>Jagannathan, Ravi, and Zhenyu Wang. 1998. “An Asymptotic Theory for Estimating Beta-Pricing Models Using Cross-Sectional Regression.” <em>Journal of Finance</em> 53 (4): 1285–1309.</p>
+</div>
+<div id="ref-jegadeesh2019empirical">
+<p>Jegadeesh, Narasimhan, Joonki Noh, Kuntara Pukthuanthong, Richard Roll, and Junbo L Wang. 2019. “Empirical Tests of Asset Pricing Models with Individual Assets: Resolving the Errors-in-Variables Bias in Risk Premium Estimation.” <em>Journal of Financial Economics</em> Forthcoming (XXXX).</p>
+</div>
+<div id="ref-jegadeesh1993returns">
+<p>Jegadeesh, Narasimhan, and Sheridan Titman. 1993. “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency.” <em>Journal of Finance</em> 48 (1): 65–91.</p>
+</div>
+<div id="ref-johnson2002rational">
+<p>Johnson, Timothy C. 2002. “Rational Momentum Effects.” <em>Journal of Finance</em> 57 (2). Wiley Online Library: 585–608.</p>
+</div>
+<div id="ref-jurczenko2017factor">
+<p>Jurczenko, Emmanuel. 2017. <em>Factor Investing: From Traditional to Alternative Risk Premia</em>. Elsevier.</p>
+</div>
+<div id="ref-kelly2019characteristics">
+<p>Kelly, Bryan, Seth Pruitt, and Yinan Su. 2019. “Characteristics Are Covariances: A Unified Model of Risk and Return.” <em>Journal of Financial Economics</em> Forthcoming (XXX): XXX–XXX.</p>
+</div>
+<div id="ref-kim2003financial">
+<p>Kim, Kyoung-jae. 2003. “Financial Time Series Forecasting Using Support Vector Machines.” <em>Neurocomputing</em> 55 (1-2). Elsevier: 307–19.</p>
+</div>
+<div id="ref-kim2019arbitrage">
+<p>Kim, Soohun, Robert A Korajczyk, and Andreas Neuhierl. 2019. “Arbitrage Portfolios.” <em>SSRN Working Paper</em> 3263001.</p>
+</div>
+<div id="ref-koijen2019investors">
+<p>Koijen, Ralph SJ, Robert J Richmond, and Motohiro Yogo. 2019. “Which Investors Matter for Global Equity Valuations and Expected Returns?” <em>SSRN Working Paper</em> 3378340.</p>
+</div>
+<div id="ref-koijen2019demand">
+<p>Koijen, Ralph S.J., and Motohiro Yogo. 2019. “A Demand System Approach to Asset Pricing.” <em>Journal of Political Economy</em> 127 (4): 1475–1515.</p>
+</div>
+<div id="ref-kozak2018interpreting">
+<p>Kozak, Serhiy, Stefan Nagel, and Shrihari Santosh. 2018. “Interpreting Factor Models.” <em>Journal of Finance</em> 73 (3): 1183–1223.</p>
+</div>
+<div id="ref-krkoska2019herding">
+<p>Krkoska, Eduard, and Klaus Reiner Schenk-Hoppé. 2019. “Herding in Smart-Beta Investment Products.” <em>Journal of Risk and Financial Management</em> 12 (1): 47.</p>
+</div>
+<div id="ref-lakonishok1994contrarian">
+<p>Lakonishok, Josef, Andrei Shleifer, and Robert W Vishny. 1994. “Contrarian Investment, Extrapolation, and Risk.” <em>Journal of Finance</em> 49 (5): 1541–78.</p>
+</div>
+<div id="ref-ledoit2018efficient">
+<p>Ledoit, Olivier, Michael Wolf, and Zhao Zhao. 2018. “Efficient Weighting: A More Powerful Test for Cross-Sectional Anomalies.” <em>SSRN Working Paper</em> 2881417.</p>
+</div>
+<div id="ref-lemperiere2014two">
+<p>Lempérière, Yves, Cyril Deremble, Philip Seager, Marc Potters, and Jean-Philippe Bouchaud. 2014. “Two Centuries of Trend Following.” <em>arXiv Preprint</em>, no. 1404.3274.</p>
+</div>
+<div id="ref-lettau2018factors">
+<p>Lettau, Martin, and Markus Pelger. 2018. “Factors That Fit the Time Series and Cross-Section of Stock Returns.” <em>SSRN Working Paper</em> 3211106.</p>
+</div>
+<div id="ref-lettau2018estimating">
+<p>Lettau, Martin, and Markus Pelger. n.d. “Estimating Latent Asset-Pricing Factors.” <em>Journal of Econometrics</em> XXX: XXX–XXX.</p>
+</div>
+<div id="ref-linnainmaa2018history">
+<p>Linnainmaa, Juhani T, and Michael R Roberts. 2018. “The History of the Cross-Section of Stock Returns.” <em>Review of Financial Studies</em> 31 (7): 2606–49.</p>
+</div>
+<div id="ref-lintner1965valuation">
+<p>Lintner, John. 1965. “The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets.” <em>Review of Economics and Statistics</em> 47 (1): 13–37.</p>
+</div>
+<div id="ref-ma2018testing">
+<p>Ma, Shujie, Wei Lan, Liangjun Su, and Chih-Ling Tsai. 2018. “Testing Alphas in Conditional Time-Varying Factor Models with High Dimensional Assets.” <em>Journal of Business &amp; Economic Statistics</em> XXX (XXX). Taylor &amp; Francis: 1–34.</p>
+</div>
+<div id="ref-martin2019market">
+<p>Martin, Ian, and Stefan Nagel. 2019. “Market Efficiency in the Age of Big Data.” <em>SSRN Working Paper</em> XXXXXXXXXXXXX.</p>
+</div>
+<div id="ref-martin2018transaction">
+<p>Martin Utrera, Alberto, Victor DeMiguel, Raman Uppal, and Francisco J Nogales. 2018. “A Transaction-Cost Perspective on the Multitude of Firm Characteristics.” <em>SSRN Working Paper</em> 2912819.</p>
+</div>
+<div id="ref-matias2012forecasting">
+<p>Matı'as, José M, and Juan C Reboredo. 2012. “Forecasting Performance of Nonlinear Models for Intraday Stock Returns.” <em>Journal of Forecasting</em> 31 (2). Wiley Online Library: 172–88.</p>
+</div>
+<div id="ref-mclean2016does">
+<p>McLean, R David, and Jeffrey Pontiff. 2016. “Does Academic Research Destroy Stock Return Predictability?” <em>Journal of Finance</em> 71 (1). Wiley Online Library: 5–32.</p>
+</div>
+<div id="ref-moskowitz1999industries">
+<p>Moskowitz, Tobias J, and Mark Grinblatt. 1999. “Do Industries Explain Momentum?” <em>Journal of Finance</em> 54 (4): 1249–90.</p>
+</div>
+<div id="ref-moskowitz2012time">
+<p>Moskowitz, Tobias J, Yao Hua Ooi, and Lasse Heje Pedersen. 2012. “Time Series Momentum.” <em>Journal of Financial Economics</em> 104 (2): 228–50.</p>
+</div>
+<div id="ref-mossin1966equilibrium">
+<p>Mossin, Jan. 1966. “Equilibrium in a Capital Asset Market.” <em>Econometrica: Journal of the Econometric Society</em> 34 (4). JSTOR: 768–83.</p>
+</div>
+<div id="ref-patton2010monotonicity">
+<p>Patton, Andrew J, and Allan Timmermann. 2010. “Monotonicity in Asset Returns: New Tests with Applications to the Term Structure, the CAPM, and Portfolio Sorts.” <em>Journal of Financial Economics</em> 98 (3). Elsevier: 605–25.</p>
+</div>
+<div id="ref-penasse2018understanding">
+<p>Penasse, Julien. 2018. “Understanding Alpha Decay.” <em>SSRN Working Paper</em> 2953614.</p>
+</div>
+<div id="ref-perrin2019machine">
+<p>Perrin, Sarah, and Thierry Roncalli. 2019. “Machine Learning Optimization Algorithms &amp; Portfolio Allocation.” <em>SSRN Working Paper</em> 3425827.</p>
+</div>
+<div id="ref-petersen2009estimating">
+<p>Petersen, Mitchell A. 2009. “Estimating Standard Errors in Finance Panel Data Sets: Comparing Approaches.” <em>Review of Financial Studies</em> 22 (1): 435–80.</p>
+</div>
+<div id="ref-pukthuanthong2018protocol">
+<p>Pukthuanthong, Kuntara, Richard Roll, and Avanidhar Subrahmanyam. 2018. “A Protocol for Factor Identification.” <em>Review of Financial Studies</em> 32 (4): 1573–1607.</p>
+</div>
+<div id="ref-rapach2013international">
+<p>Rapach, David E, Jack K Strauss, and Guofu Zhou. 2013. “International Stock Return Predictability: What Is the Role of the United States?” <em>Journal of Finance</em> 68 (4): 1633–62.</p>
+</div>
+<div id="ref-rapach2019time">
+<p>Rapach, David, and Guofu Zhou. 2019. “Time-Series and Cross-Sectional Stock Return Forecasting: New Machine Learning Methods.” <em>SSRN Working Paper</em> 3428095.</p>
+</div>
+<div id="ref-reboredo2012nonlinearity">
+<p>Reboredo, Juan C, José M Matı'as, and Raquel Garcia-Rubio. 2012. “Nonlinearity in Forecasting of High-Frequency Stock Returns.” <em>Computational Economics</em> 40 (3): 245–64.</p>
+</div>
+<div id="ref-romano2013testing">
+<p>Romano, Joseph P, and Michael Wolf. 2013. “Testing for Monotonicity in Expected Asset Returns.” <em>Journal of Empirical Finance</em> 23: 93–116.</p>
+</div>
+<div id="ref-ross1976arbitrage">
+<p>Ross, Stephen A. 1976. “The Arbitrage Theory of Capital Asset Pricing.” <em>Journal of Economic Theory</em> 13 (3): 341–60.</p>
+</div>
+<div id="ref-shanken1992estimation">
+<p>Shanken, Jay. 1992. “On the Estimation of Beta-Pricing Models.” <em>Review of Financial Studies</em> 5 (1): 1–33.</p>
+</div>
+<div id="ref-sharpe1964capital">
+<p>Sharpe, William F. 1964. “Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk.” <em>Journal of Finance</em> 19 (3): 425–42.</p>
+</div>
+<div id="ref-van2011size">
+<p>Van Dijk, Mathijs A. 2011. “Is Size Dead? A Review of the Size Effect in Equity Returns.” <em>Journal of Banking &amp; Finance</em> 35 (12): 3263–74.</p>
+</div>
+<div id="ref-vayanos2013institutional">
+<p>Vayanos, Dimitri, and Paul Woolley. 2013. “An Institutional Theory of Momentum and Reversal.” <em>Review of Financial Studies</em> 26 (5): 1087–1145.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -1310,11 +1323,13 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1322,13 +1337,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1336,6 +1349,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -1356,9 +1377,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

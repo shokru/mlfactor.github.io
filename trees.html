@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 7 Tree-based methods | Machine Learning for Factor Investing</title>
+  <meta name="description" content="Chapter 7 Tree-based methods | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:title" content="Chapter 7 Tree-based methods | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
   
   
@@ -17,28 +16,32 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  <meta name="twitter:title" content="Chapter 7 Tree-based methods | Machine Learning for Factor Investing" />
   
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="lasso.html">
-<link rel="next" href="NN.html">
+<link rel="prev" href="lasso.html"/>
+<link rel="next" href="NN.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -428,7 +431,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="trees" class="section level1">
 <h1><span class="header-section-number">Chapter 7</span> Tree-based methods</h1>
 <p></p>
-<p>Classification and regression trees are simple yet powerful clustering algorithms popularised by the monograph <span class="citation">Breiman et al. (<a href="#ref-breiman1984classification">1984</a>)</span>. Decision trees and their extensions are known to be quite efficient forecasting tools when working on tabular data. A large proportion of winning solutions in ML contests (especially on the Kaggle webiste<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>) resort to improvements of simple trees.</p>
+<p>Classification and regression trees are simple yet powerful clustering algorithms popularised by the monograph <span class="citation">Breiman et al. (<a href="#ref-breiman1984classification">1984</a>)</span>. Decision trees and their extensions are known to be quite efficient forecasting tools when working on tabular data. A large proportion of winning solutions in ML contests (especially on the Kaggle webiste<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a>) resort to improvements of simple trees. For instance, the meta study in bioinformatics <span class="citation">Olson et al. (<a href="#ref-olson2018data">2018</a>)</span> finds that boosted trees and random forests are the top 2 algorithms from a group of 13 - excluding neural networks.</p>
 <p>Recently, the surge in Machine Learning applications in Finance has led to multiple publications that use trees in portfolio allocation problems. A long, though not exhaustive, list includes: <span class="citation">Ballings et al. (<a href="#ref-ballings2015evaluating">2015</a>)</span>, <span class="citation">Patel, Shah, Thakkar, and Kotecha (<a href="#ref-patel2015predicting">2015</a><a href="#ref-patel2015predicting">a</a>)</span>, <span class="citation">Patel, Shah, Thakkar, and Kotecha (<a href="#ref-patel2015bpredicting">2015</a><a href="#ref-patel2015bpredicting">b</a>)</span>, <span class="citation">Moritz and Zimmermann (<a href="#ref-moritz2016tree">2016</a>)</span>, <span class="citation">Krauss, Do, and Huck (<a href="#ref-krauss2017deep">2017</a>)</span>, <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span>, <span class="citation">Guida and Coqueret (<a href="#ref-guida2019big">2018</a><a href="#ref-guida2019big">a</a>)</span>, <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2019</a>)</span> and <span class="citation">Simonian et al. (<a href="#ref-simonian2019machine">2019</a>)</span>. One notable contribution is <span class="citation">Bryzgalova, Pelger, and Zhu (<a href="#ref-bryzgalova2019forest">2019</a>)</span> in which the authors create factors from trees by sorting portfolios via simple trees, which they call <em>Asset Pricing Trees</em>.</p>
 <p>In this chapter, we review the methodologies associated to trees and their applications in portfolio choice.</p>
 <div id="simple-trees" class="section level2">
@@ -644,7 +647,7 @@ where the left part is the average number of votes based on the <span class="mat
 <p>We can then assess the proportion of correct (binary) guesses.
 </p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF_C, testing_sample) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4970374</code></pre>
+<pre><code>## [1] 0.4977923</code></pre>
 <p></p>
 <p>The accuracy is disappointing. There are two potential explanations for this (beyond the possibility of very different patterns in the training and testing sets). The first one is the sample size, which may be too small. The original training set has more than 200,000 observations, hence we retain only one in 10 in the above training specification. We are thus probably sideline relevant information and the cost can be heavy. The second reason is the number of predictors, which is set to 30, i.e., one third of the total at our disposal. Unfortunately, this leaves room for the algorithm to pick less pertinent predictors. The default numbers of predictors chosen by the routines are <span class="math inline">\(\sqrt{p}\)</span> and <span class="math inline">\(p/3\)</span> for classification and regression tasks, respectively. Here <span class="math inline">\(p\)</span> is the total number of features.</p>
 </div>
@@ -947,95 +950,47 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
-<div id="ref-breiman1984classification">
-<p>Breiman, Leo, Jerome Friedman, Charles J. Stone, and R.A. Olshen. 1984. <em>Classification and Regression Trees</em>. Chapman; Hall.</p>
-</div>
 <div id="ref-ballings2015evaluating">
 <p>Ballings, Michel, Dirk Van den Poel, Nathalie Hespeels, and Ruben Gryp. 2015. “Evaluating Multiple Classifiers for Stock Price Direction Prediction.” <em>Expert Systems with Applications</em> 42 (20): 7046–56.</p>
-</div>
-<div id="ref-patel2015predicting">
-<p>Patel, Jigar, Sahil Shah, Priyank Thakkar, and K Kotecha. 2015a. “Predicting Stock and Stock Price Index Movement Using Trend Deterministic Data Preparation and Machine Learning Techniques.” <em>Expert Systems with Applications</em> 42 (1): 259–68.</p>
-</div>
-<div id="ref-patel2015bpredicting">
-<p>Patel, Jigar, Sahil Shah, Priyank Thakkar, and Ketan Kotecha. 2015b. “Predicting Stock Market Index Using Fusion of Machine Learning Techniques.” <em>Expert Systems with Applications</em> 42 (4): 2162–72.</p>
-</div>
-<div id="ref-moritz2016tree">
-<p>Moritz, Benjamin, and Tom Zimmermann. 2016. “Tree-Based Conditional Portfolio Sorts: The Relation Between Past and Future Stock Returns.” <em>SSRN Working Paper</em> 2740751.</p>
-</div>
-<div id="ref-krauss2017deep">
-<p>Krauss, Christopher, Xuan Anh Do, and Nicolas Huck. 2017. “Deep Neural Networks, Gradient-Boosted Trees, Random Forests: Statistical Arbitrage on the S&amp;P 500.” <em>European Journal of Operational Research</em> 259 (2): 689–702.</p>
-</div>
-<div id="ref-gu2018empirical">
-<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
-</div>
-<div id="ref-guida2019big">
-<p>Guida, Tony, and Guillaume Coqueret. 2018a. “Ensemble Learning Applied to Quant Equity: Gradient Boosting in a Multifactor Framework.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 129–48. Wiley.</p>
-</div>
-<div id="ref-coqueret2019training">
-<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
-</div>
-<div id="ref-simonian2019machine">
-<p>Simonian, Joseph, Chenwei Wu, Daniel Itano, and Vyshaal Narayanam. 2019. “A Machine Learning Approach to Risk Factors: A Case Study Using the Fama-French-Carhart Model.” <em>Journal of Financial Data Science</em> 1 (1): 32–44.</p>
-</div>
-<div id="ref-bryzgalova2019forest">
-<p>Bryzgalova, Svetlana, Markus Pelger, and Jason Zhu. 2019. “Forest Through the Trees: Building Cross-Sections of Stock Returns.” <em>SSRN Working Paper</em> 3493458.</p>
-</div>
-<div id="ref-friedman2009elements">
-<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
-</div>
-<div id="ref-schapire1990strength">
-<p>Schapire, Robert E. 1990. “The Strength of Weak Learnability.” <em>Machine Learning</em> 5 (2): 197–227.</p>
-</div>
-<div id="ref-ho1995random">
-<p>Ho, Tin Kam. 1995. “Random Decision Forests.” In <em>Proceedings of 3rd International Conference on Document Analysis and Recognition</em>, 1:278–82. IEEE.</p>
-</div>
-<div id="ref-breiman2001random">
-<p>Breiman, Leo. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1): 5–32.</p>
-</div>
-<div id="ref-huck2019large">
-<p>Huck, Nicolas. 2019. “Large Data Sets and Machine Learning: Applications to Statistical Arbitrage.” <em>European Journal of Operational Research</em> 278 (1). Elsevier: 330–42.</p>
 </div>
 <div id="ref-biau2012analysis">
 <p>Biau, Gérard. 2012. “Analysis of a Random Forests Model.” <em>Journal of Machine Learning Research</em> 13 (Apr): 1063–95.</p>
 </div>
-<div id="ref-scornet2015consistency">
-<p>Scornet, Erwan, Gérard Biau, Jean-Philippe Vert, and others. 2015. “Consistency of Random Forests.” <em>Annals of Statistics</em> 43 (4). Institute of Mathematical Statistics: 1716–41.</p>
-</div>
 <div id="ref-biau2008consistency">
 <p>Biau, Gérard, Luc Devroye, and GAbor Lugosi. 2008. “Consistency of Random Forests and Other Averaging Classifiers.” <em>Journal of Machine Learning Research</em> 9 (Sep): 2015–33.</p>
 </div>
-<div id="ref-denil2014narrowing">
-<p>Denil, Misha, David Matheson, and Nando De Freitas. 2014. “Narrowing the Gap: Random Forests in Theory and in Practice.” In <em>International Conference on Machine Learning</em>, 665–73.</p>
+<div id="ref-black1992global">
+<p>Black, Fischer, and Robert Litterman. 1992. “Global Portfolio Optimization.” <em>Financial Analysts Journal</em> 48 (5): 28–43.</p>
 </div>
-<div id="ref-freund1997decision">
-<p>Freund, Yoav, and Robert E Schapire. 1997. “A Decision-Theoretic Generalization of on-Line Learning and an Application to Boosting.” <em>Journal of Computer and System Sciences</em> 55 (1): 119–39.</p>
+<div id="ref-breiman2001random">
+<p>Breiman, Leo. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1): 5–32.</p>
 </div>
-<div id="ref-freund1996experiments">
-<p>Freund, Yoav, and Robert E Schapire. 1996. “Experiments with a New Boosting Algorithm.” In <em>Machine Learning: Proceedings of the Thirteenth International Conference</em>, 96:148–56.</p>
-</div>
-<div id="ref-schapire2012boosting">
-<p>Schapire, Robert E, and Yoav Freund. 2012. <em>Boosting: Foundations and Algorithms</em>. MIT press.</p>
-</div>
-<div id="ref-friedman2000additive">
-<p>Friedman, Jerome, Trevor Hastie, Robert Tibshirani, and others. 2000. “Additive Logistic Regression: A Statistical View of Boosting (with Discussion and a Rejoinder by the Authors).” <em>Annals of Statistics</em> 28 (2): 337–407.</p>
-</div>
-<div id="ref-drucker1997improving">
-<p>Drucker, Harris. 1997. “Improving Regressors Using Boosting Techniques.” In <em>International Conference on Machine Learning</em>, 97:107–15.</p>
+<div id="ref-breiman1984classification">
+<p>Breiman, Leo, Jerome Friedman, Charles J. Stone, and R.A. Olshen. 1984. <em>Classification and Regression Trees</em>. Chapman; Hall.</p>
 </div>
 <div id="ref-breiman2004population">
 <p>Breiman, Leo, and others. 2004. “Population Theory for Boosting Ensembles.” <em>Annals of Statistics</em> 32 (1): 1–11.</p>
 </div>
-<div id="ref-schapire2003boosting">
-<p>Schapire, Robert E. 2003. “The Boosting Approach to Machine Learning: An Overview.” In <em>Nonlinear Estimation and Classification</em>, 149–71. Springer.</p>
+<div id="ref-bryzgalova2019forest">
+<p>Bryzgalova, Svetlana, Markus Pelger, and Jason Zhu. 2019. “Forest Through the Trees: Building Cross-Sections of Stock Returns.” <em>SSRN Working Paper</em> 3493458.</p>
 </div>
-<div id="ref-ridgeway1999boosting">
-<p>Ridgeway, Greg, David Madigan, and Thomas Richardson. 1999. “Boosting Methodology for Regression Problems.” In <em>AISTATS</em>.</p>
+<div id="ref-chen2016xgboost">
+<p>Chen, Tianqi, and Carlos Guestrin. 2016. “Xgboost: A Scalable Tree Boosting System.” In <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–94. ACM.</p>
 </div>
-<div id="ref-ting2002instance">
-<p>Ting, Kai Ming. 2002. “An Instance-Weighting Method to Induce Cost-Sensitive Trees.” <em>IEEE Transactions on Knowledge &amp; Data Engineering</em>, no. 3: 659–65.</p>
+<div id="ref-coqueret2019training">
+<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
 </div>
-<div id="ref-mason2000boosting">
-<p>Mason, Llew, Jonathan Baxter, Peter L Bartlett, and Marcus R Frean. 2000. “Boosting Algorithms as Gradient Descent.” In <em>Advances in Neural Information Processing Systems</em>, 512–18.</p>
+<div id="ref-denil2014narrowing">
+<p>Denil, Misha, David Matheson, and Nando De Freitas. 2014. “Narrowing the Gap: Random Forests in Theory and in Practice.” In <em>International Conference on Machine Learning</em>, 665–73.</p>
+</div>
+<div id="ref-drucker1997improving">
+<p>Drucker, Harris. 1997. “Improving Regressors Using Boosting Techniques.” In <em>International Conference on Machine Learning</em>, 97:107–15.</p>
+</div>
+<div id="ref-freund1996experiments">
+<p>Freund, Yoav, and Robert E Schapire. 1996. “Experiments with a New Boosting Algorithm.” In <em>Machine Learning: Proceedings of the Thirteenth International Conference</em>, 96:148–56.</p>
+</div>
+<div id="ref-freund1997decision">
+<p>Freund, Yoav, and Robert E Schapire. 1997. “A Decision-Theoretic Generalization of on-Line Learning and an Application to Boosting.” <em>Journal of Computer and System Sciences</em> 55 (1): 119–39.</p>
 </div>
 <div id="ref-friedman2001greedy">
 <p>Friedman, Jerome H. 2001. “Greedy Function Approximation: A Gradient Boosting Machine.” <em>Annals of Statistics</em>, 1189–1232.</p>
@@ -1043,20 +998,71 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <div id="ref-friedman2002stochastic">
 <p>Friedman, Jerome H. 2002. “Stochastic Gradient Boosting.” <em>Computational Statistics &amp; Data Analysis</em> 38 (4): 367–78.</p>
 </div>
-<div id="ref-chen2016xgboost">
-<p>Chen, Tianqi, and Carlos Guestrin. 2016. “Xgboost: A Scalable Tree Boosting System.” In <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–94. ACM.</p>
+<div id="ref-friedman2000additive">
+<p>Friedman, Jerome, Trevor Hastie, Robert Tibshirani, and others. 2000. “Additive Logistic Regression: A Statistical View of Boosting (with Discussion and a Rejoinder by the Authors).” <em>Annals of Statistics</em> 28 (2): 337–407.</p>
+</div>
+<div id="ref-gu2018empirical">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
+</div>
+<div id="ref-guida2019big">
+<p>Guida, Tony, and Guillaume Coqueret. 2018a. “Ensemble Learning Applied to Quant Equity: Gradient Boosting in a Multifactor Framework.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 129–48. Wiley.</p>
+</div>
+<div id="ref-friedman2009elements">
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
+</div>
+<div id="ref-ho1995random">
+<p>Ho, Tin Kam. 1995. “Random Decision Forests.” In <em>Proceedings of 3rd International Conference on Document Analysis and Recognition</em>, 1:278–82. IEEE.</p>
+</div>
+<div id="ref-huck2019large">
+<p>Huck, Nicolas. 2019. “Large Data Sets and Machine Learning: Applications to Statistical Arbitrage.” <em>European Journal of Operational Research</em> 278 (1). Elsevier: 330–42.</p>
 </div>
 <div id="ref-ke2017lightgbm">
 <p>Ke, Guolin, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, and Tie-Yan Liu. 2017. “Lightgbm: A Highly Efficient Gradient Boosting Decision Tree.” In <em>Advances in Neural Information Processing Systems</em>, 3146–54.</p>
 </div>
-<div id="ref-srivastava2014dropout">
-<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>Journal of Machine Learning Research</em> 15 (1): 1929–58.</p>
+<div id="ref-krauss2017deep">
+<p>Krauss, Christopher, Xuan Anh Do, and Nicolas Huck. 2017. “Deep Neural Networks, Gradient-Boosted Trees, Random Forests: Statistical Arbitrage on the S&amp;P 500.” <em>European Journal of Operational Research</em> 259 (2): 689–702.</p>
+</div>
+<div id="ref-mason2000boosting">
+<p>Mason, Llew, Jonathan Baxter, Peter L Bartlett, and Marcus R Frean. 2000. “Boosting Algorithms as Gradient Descent.” In <em>Advances in Neural Information Processing Systems</em>, 512–18.</p>
+</div>
+<div id="ref-moritz2016tree">
+<p>Moritz, Benjamin, and Tom Zimmermann. 2016. “Tree-Based Conditional Portfolio Sorts: The Relation Between Past and Future Stock Returns.” <em>SSRN Working Paper</em> 2740751.</p>
+</div>
+<div id="ref-olson2018data">
+<p>Olson, Randal S, William La Cava, Zairah Mustahsan, Akshay Varik, and Jason H Moore. 2018. “Data-Driven Advice for Applying Machine Learning to Bioinformatics Problems.” <em>arXiv Preprint</em>, no. 1708.05070.</p>
+</div>
+<div id="ref-patel2015predicting">
+<p>Patel, Jigar, Sahil Shah, Priyank Thakkar, and K Kotecha. 2015a. “Predicting Stock and Stock Price Index Movement Using Trend Deterministic Data Preparation and Machine Learning Techniques.” <em>Expert Systems with Applications</em> 42 (1): 259–68.</p>
+</div>
+<div id="ref-patel2015bpredicting">
+<p>Patel, Jigar, Sahil Shah, Priyank Thakkar, and Ketan Kotecha. 2015b. “Predicting Stock Market Index Using Fusion of Machine Learning Techniques.” <em>Expert Systems with Applications</em> 42 (4): 2162–72.</p>
 </div>
 <div id="ref-rashmi2015dart">
 <p>Rashmi, Korlakai Vinayak, and Ran Gilad-Bachrach. 2015. “DART: Dropouts Meet Multiple Additive Regression Trees.” In <em>AISTATS</em>, 489–97.</p>
 </div>
-<div id="ref-black1992global">
-<p>Black, Fischer, and Robert Litterman. 1992. “Global Portfolio Optimization.” <em>Financial Analysts Journal</em> 48 (5): 28–43.</p>
+<div id="ref-ridgeway1999boosting">
+<p>Ridgeway, Greg, David Madigan, and Thomas Richardson. 1999. “Boosting Methodology for Regression Problems.” In <em>AISTATS</em>.</p>
+</div>
+<div id="ref-schapire1990strength">
+<p>Schapire, Robert E. 1990. “The Strength of Weak Learnability.” <em>Machine Learning</em> 5 (2): 197–227.</p>
+</div>
+<div id="ref-schapire2003boosting">
+<p>Schapire, Robert E. 2003. “The Boosting Approach to Machine Learning: An Overview.” In <em>Nonlinear Estimation and Classification</em>, 149–71. Springer.</p>
+</div>
+<div id="ref-schapire2012boosting">
+<p>Schapire, Robert E, and Yoav Freund. 2012. <em>Boosting: Foundations and Algorithms</em>. MIT press.</p>
+</div>
+<div id="ref-scornet2015consistency">
+<p>Scornet, Erwan, Gérard Biau, Jean-Philippe Vert, and others. 2015. “Consistency of Random Forests.” <em>Annals of Statistics</em> 43 (4). Institute of Mathematical Statistics: 1716–41.</p>
+</div>
+<div id="ref-simonian2019machine">
+<p>Simonian, Joseph, Chenwei Wu, Daniel Itano, and Vyshaal Narayanam. 2019. “A Machine Learning Approach to Risk Factors: A Case Study Using the Fama-French-Carhart Model.” <em>Journal of Financial Data Science</em> 1 (1): 32–44.</p>
+</div>
+<div id="ref-srivastava2014dropout">
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>Journal of Machine Learning Research</em> 15 (1): 1929–58.</p>
+</div>
+<div id="ref-ting2002instance">
+<p>Ting, Kai Ming. 2002. “An Instance-Weighting Method to Induce Cost-Sensitive Trees.” <em>IEEE Transactions on Knowledge &amp; Data Engineering</em>, no. 3: 659–65.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -1079,11 +1085,13 @@ FIGURE 7.6: Imposing monotonic constraints. The constraints are shown in bold bl
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1091,13 +1099,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1105,6 +1111,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -1125,9 +1139,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

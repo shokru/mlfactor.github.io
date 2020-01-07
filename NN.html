@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Neural networks | Machine Learning for Factor Investing</title>
+  <meta name="description" content="Chapter 8 Neural networks | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:title" content="Chapter 8 Neural networks | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
   
   
@@ -17,28 +16,32 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  <meta name="twitter:title" content="Chapter 8 Neural networks | Machine Learning for Factor Investing" />
   
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="trees.html">
-<link rel="next" href="svm.html">
+<link rel="prev" href="trees.html"/>
+<link rel="next" href="svm.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -692,19 +695,19 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb77-4" data-line-number="4">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)         <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb77-5" data-line-number="5">)</a>
 <a class="sourceLine" id="cb77-6" data-line-number="6"><span class="kw">summary</span>(model)                                 <span class="co"># Model architecture</span></a></code></pre></div>
-<pre><code>## ___________________________________________________________________________
-## Layer (type)                     Output Shape                  Param #     
-## ===========================================================================
-## dense_270 (Dense)                (None, 16)                    1504        
-## ___________________________________________________________________________
-## dense_271 (Dense)                (None, 8)                     136         
-## ___________________________________________________________________________
-## dense_272 (Dense)                (None, 1)                     9           
-## ===========================================================================
+<pre><code>## _______________________________________________________________________________________________________________________________________
+## Layer (type)                                                Output Shape                                          Param #              
+## =======================================================================================================================================
+## dense_14 (Dense)                                            (None, 16)                                            1504                 
+## _______________________________________________________________________________________________________________________________________
+## dense_15 (Dense)                                            (None, 8)                                             136                  
+## _______________________________________________________________________________________________________________________________________
+## dense_16 (Dense)                                            (None, 1)                                             9                    
+## =======================================================================================================================================
 ## Total params: 1,649
 ## Trainable params: 1,649
 ## Non-trainable params: 0
-## ___________________________________________________________________________</code></pre>
+## _______________________________________________________________________________________________________________________________________</code></pre>
 <p></p>
 <p>The summary of the model lists the layers in their order from input to output (forward pass). Because we are working with 93 features, the number of parameters for the first layer (16 units) is 93 plus one (for the bias) multiplied by 16, which makes 1504. For the second layer, the number of inputs is equal to the size of the output from the previous layer (16). Hence given the the second layer has 8 units, the total number of parameters is (16+1)*8 = 136.</p>
 <p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>: some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross entropy, see Equation <a href="NN.html#eq:crossentropy">(8.5)</a>). The RMS propragation optimizer is the classical mini-batch backpropagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
@@ -718,7 +721,7 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb79-6" data-line-number="6">)</a>
 <a class="sourceLine" id="cb79-7" data-line-number="7"><span class="kw">plot</span>(fit_NN)                                                                  <span class="co"># Plot, evidently!</span></a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:NN3"></span>
-<img src="ML_factor_files/figure-html/NN3-1.png" alt="Output from a trained neural network (regression task)" width="400px" />
+<img src="ML_factor_files/figure-html/NN3-1.png" alt="Output from a trained neural network (regression task)" width="500px" />
 <p class="caption">
 FIGURE 8.6: Output from a trained neural network (regression task)
 </p>
@@ -730,7 +733,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5098849</code></pre>
+<pre><code>## [1] 0.4977068</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -771,21 +774,21 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <a class="sourceLine" id="cb84-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;categorical_accuracy&#39;</span>)            <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb84-7" data-line-number="7">)</a>
 <a class="sourceLine" id="cb84-8" data-line-number="8"><span class="kw">summary</span>(model_C)                                   <span class="co"># Model structure</span></a></code></pre></div>
-<pre><code>## ___________________________________________________________________________
-## Layer (type)                     Output Shape                  Param #     
-## ===========================================================================
-## dense_273 (Dense)                (None, 16)                    1504        
-## ___________________________________________________________________________
-## dropout_19 (Dropout)             (None, 16)                    0           
-## ___________________________________________________________________________
-## dense_274 (Dense)                (None, 8)                     136         
-## ___________________________________________________________________________
-## dense_275 (Dense)                (None, 2)                     18          
-## ===========================================================================
+<pre><code>## _______________________________________________________________________________________________________________________________________
+## Layer (type)                                                Output Shape                                          Param #              
+## =======================================================================================================================================
+## dense_17 (Dense)                                            (None, 16)                                            1504                 
+## _______________________________________________________________________________________________________________________________________
+## dropout_1 (Dropout)                                         (None, 16)                                            0                    
+## _______________________________________________________________________________________________________________________________________
+## dense_18 (Dense)                                            (None, 8)                                             136                  
+## _______________________________________________________________________________________________________________________________________
+## dense_19 (Dense)                                            (None, 2)                                             18                   
+## =======================================================================================================================================
 ## Total params: 1,658
 ## Trainable params: 1,658
 ## Non-trainable params: 0
-## ___________________________________________________________________________</code></pre>
+## _______________________________________________________________________________________________________________________________________</code></pre>
 <p></p>
 <p>Here again, many changes have been made: all levels have been revised. The loss is now the crossentropy. Since we work with two categories, we resort to a specific choice (binary crossentropy) but the more general form is categorical_crossentropy and works for any number of classes (strictly above 1). The optimizer is also different and allows for several parameters and we refer to <span class="citation">Kingma and Ba (<a href="#ref-kingma2014adam">2014</a>)</span>. Simply put, the two beta parameters control decay rates for exponentially-weighted moving averages used in the update of weights. The two averages are estimates for the first and second moment of the gradient and can be exploited to increase the speed of learning. The performance metric in the above chunk is the categorical accuracy. In multiclass classification, the accuracy is defined as the average accuracy over all classes and all predictions. Since a prediction for one instance is a vector of weights, the ‘terminal’ prediction is the class that is associated with the largest weight. The accuracy then measures the proportion of times when the prediction is equal to the realized value.</p>
 <p>Finally, we proceed with the training of the model.</p>
@@ -933,7 +936,7 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.500086</code></pre>
+<pre><code>## [1] 0.4943397</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
@@ -1009,65 +1012,14 @@ However, in many ML tournaments in the 2010 decade, neural networks have often b
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
-<div id="ref-haykin2009neural">
-<p>Haykin, Simon S. 2009. <em>Neural Networks and Learning Machines</em>. Prentice Hall.</p>
-</div>
-<div id="ref-du2013neural">
-<p>Du, Ke-Lin, and Madisetti NS Swamy. 2013. <em>Neural Networks and Statistical Learning</em>. Springer Science &amp; Business Media.</p>
-</div>
-<div id="ref-goodfellow2016deep">
-<p>Goodfellow, Ian, Yoshua Bengio, Aaron Courville, and Yoshua Bengio. 2016. <em>Deep Learning</em>. Vol. 1. MIT press Cambridge.</p>
-</div>
-<div id="ref-chollet2017deep">
-<p>Chollet, François. 2017. <em>Deep Learning with Python</em>. Manning Publications Company.</p>
-</div>
-<div id="ref-bansal1993no">
-<p>Bansal, Ravi, and Salim Viswanathan. 1993. “No Arbitrage and Arbitrage Pricing: A New Approach.” <em>Journal of Finance</em> 48 (4): 1231–62.</p>
-</div>
-<div id="ref-eakins1998analyzing">
-<p>Eakins, Stanley G, Stanley R Stansell, and James F Buck. 1998. “Analyzing the Nature of Institutional Demand for Common Stocks.” <em>Quarterly Journal of Business and Economics</em>. JSTOR, 33–48.</p>
-</div>
-<div id="ref-burrell1997impact">
-<p>Burrell, Phillip R., and Bukola Otulayo Folarin. 1997. “The Impact of Neural Networks in Finance.” <em>Neural Computing &amp; Applications</em> 6 (4): 193–200.</p>
-</div>
-<div id="ref-kimoto1990stock">
-<p>Kimoto, Takashi, Kazuo Asakawa, Morio Yoda, and Masakazu Takeoka. 1990. “Stock Market Prediction System with Modular Neural Networks.” In <em>1990 Ijcnn International Joint Conference on Neural Networks</em>, 1–6. IEEE.</p>
-</div>
-<div id="ref-enke2005use">
-<p>Enke, David, and Suraphan Thawornwong. 2005. “The Use of Data Mining and Neural Networks for Forecasting Stock Market Returns.” <em>Expert Systems with Applications</em> 29 (4): 927–40.</p>
-</div>
-<div id="ref-zhang2009stock">
-<p>Zhang, Yudong, and Lenan Wu. 2009. “Stock Market Prediction of S&amp;P 500 via Combination of Improved Bco Approach and Bp Neural Network.” <em>Expert Systems with Applications</em> 36 (5): 8849–54.</p>
-</div>
-<div id="ref-guresen2011using">
-<p>Guresen, Erkam, Gulgun Kayakutlu, and Tugrul U Daim. 2011. “Using Artificial Neural Network Models in Stock Market Index Prediction.” <em>Expert Systems with Applications</em> 38 (8): 10389–97.</p>
-</div>
-<div id="ref-feng2019deep">
-<p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Characteristics-Sorted Factor Models.” <em>SSRN Working Paper</em> 3243683.</p>
-</div>
-<div id="ref-gu2018empirical">
-<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
-</div>
-<div id="ref-chen2019deep">
-<p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
-</div>
-<div id="ref-rosenblatt1958perceptron">
-<p>Rosenblatt, Frank. 1958. “The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.” <em>Psychological Review</em> 65 (6): 386.</p>
-</div>
-<div id="ref-olazaran1996sociological">
-<p>Olazaran, Mikel. 1996. “A Sociological Study of the Official History of the Perceptrons Controversy.” <em>Social Studies of Science</em> 26 (3). Sage Publications London: 611–59.</p>
-</div>
 <div id="ref-anderson2000talking">
 <p>Anderson, James A, and Edward Rosenfeld. 2000. <em>Talking Nets: An Oral History of Neural Networks</em>. MIT Press.</p>
 </div>
-<div id="ref-cybenko1989approximation">
-<p>Cybenko, George. 1989. “Approximation by Superpositions of a Sigmoidal Function.” <em>Mathematics of Control, Signals and Systems</em> 2 (4): 303–14.</p>
+<div id="ref-arik2019tabnet">
+<p>Arik, Sercan O, and Tomas Pfister. 2019. “TabNet: Attentive Interpretable Tabular Learning.” <em>arXiv Preprint</em>, no. 1908.07442.</p>
 </div>
-<div id="ref-guliyev2018approximation">
-<p>Guliyev, Namig J, and Vugar E Ismailov. 2018. “On the Approximation by Single Hidden Layer Feedforward Neural Networks with Fixed Weights.” <em>Neural Networks</em> 98: 296–304.</p>
-</div>
-<div id="ref-costarelli2016survey">
-<p>Costarelli, Danilo, Renato Spigler, and Gianluca Vinti. 2016. “A Survey on Approximation by Means of Neural Network Operators.” <em>Journal of NeuroTechnology</em> 1 (1).</p>
+<div id="ref-bansal1993no">
+<p>Bansal, Ravi, and Salim Viswanathan. 1993. “No Arbitrage and Arbitrage Pricing: A New Approach.” <em>Journal of Finance</em> 48 (4): 1231–62.</p>
 </div>
 <div id="ref-barron1993universal">
 <p>Barron, Andrew R. 1993. “Universal Approximation Bounds for Superpositions of a Sigmoidal Function.” <em>IEEE Transactions on Information Theory</em> 39 (3): 930–45.</p>
@@ -1075,83 +1027,134 @@ However, in many ML tournaments in the 2010 decade, neural networks have often b
 <div id="ref-barron1994approximation">
 <p>Barron, Andrew R. 1994. “Approximation and Estimation Bounds for Artificial Neural Networks.” <em>Machine Learning</em> 14 (1): 115–33.</p>
 </div>
-<div id="ref-polyak1964some">
-<p>Polyak, Boris T. 1964. “Some Methods of Speeding up the Convergence of Iteration Methods.” <em>USSR Computational Mathematics and Mathematical Physics</em> 4 (5): 1–17.</p>
-</div>
-<div id="ref-nesterov1983method">
-<p>Nesterov, Yurii. 1983. “A Method for Unconstrained Convex Minimization Problem with the Rate of Convergence O (1/K^ 2).” In <em>Doklady an Ussr</em>, 269:543–47.</p>
-</div>
-<div id="ref-duchi2011adaptive">
-<p>Duchi, John, Elad Hazan, and Yoram Singer. 2011. “Adaptive Subgradient Methods for Online Learning and Stochastic Optimization.” <em>Journal of Machine Learning Research</em> 12 (Jul): 2121–59.</p>
-</div>
-<div id="ref-zeiler2012adadelta">
-<p>Zeiler, Matthew D. 2012. “ADADELTA: An Adaptive Learning Rate Method.” <em>arXiv Preprint</em>, no. 1212.5701.</p>
-</div>
-<div id="ref-kingma2014adam">
-<p>Kingma, Diederik P, and Jimmy Ba. 2014. “Adam: A Method for Stochastic Optimization.” <em>arXiv Preprint</em>, no. 1412.6980.</p>
-</div>
-<div id="ref-masters1993practical">
-<p>Masters, Timothy. 1993. <em>Practical Neural Network Recipes in C++</em>. Morgan Kaufmann.</p>
-</div>
-<div id="ref-orimoloye2019comparing">
-<p>Orimoloye, Larry Olanrewaju, Ming-Chien Sung, Tiejun Ma, and Johnnie EV Johnson. 2019. “Comparing the Effectiveness of Deep Feedforward Neural Networks and Shallow Architectures for Predicting Stock Price Indices.” <em>Expert Systems with Applications</em>. Elsevier, 112828.</p>
-</div>
-<div id="ref-srivastava2014dropout">
-<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>Journal of Machine Learning Research</em> 15 (1): 1929–58.</p>
-</div>
-<div id="ref-elman1990finding">
-<p>Elman, Jeffrey L. 1990. “Finding Structure in Time.” <em>Cognitive Science</em> 14 (2): 179–211.</p>
-</div>
-<div id="ref-jordan1997serial">
-<p>Jordan, Michael I. 1997. “Serial Order: A Parallel Distributed Processing Approach.” In <em>Advances in Psychology</em>, 121:471–95. Elsevier.</p>
-</div>
-<div id="ref-hochreiter1997long">
-<p>Hochreiter, Sepp, and Jürgen Schmidhuber. 1997. “Long Short-Term Memory.” <em>Neural Computation</em> 9 (8). MIT Press: 1735–80.</p>
-</div>
-<div id="ref-chung2015gated">
-<p>Chung, Junyoung, Caglar Gulcehre, Kyunghyun Cho, and Yoshua Bengio. 2015. “Gated Feedback Recurrent Neural Networks.” In <em>International Conference on Machine Learning</em>, 2067–75.</p>
-</div>
-<div id="ref-fischer2018deep">
-<p>Fischer, Thomas, and Christopher Krauss. 2018. “Deep Learning with Long Short-Term Memory Networks for Financial Market Predictions.” <em>European Journal of Operational Research</em> 270 (2): 654–69.</p>
-</div>
-<div id="ref-wang2019portfolio">
-<p>Wang, Wuyu, Weizi Li, Ning Zhang, and Kecheng Liu. 2019. “Portfolio Formation with Preselection Using Deep Learning from Long-Term Financial Data.” <em>Expert Systems with Applications</em> Forthcoming: XXX–XXX.</p>
-</div>
-<div id="ref-goodfellow2014generative">
-<p>Goodfellow, Ian, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. “Generative Adversarial Nets.” In <em>Advances in Neural Information Processing Systems</em>, 2672–80.</p>
-</div>
-<div id="ref-efimov2019using">
-<p>Efimov, Dmitry, and Di Xu. 2019. “Using Generative Adversarial Networks to Synthesize Artificial Financial Datasets.” <em>Proceedings of the Conference on Neural Information Processing Systems</em>.</p>
-</div>
-<div id="ref-huck2019large">
-<p>Huck, Nicolas. 2019. “Large Data Sets and Machine Learning: Applications to Statistical Arbitrage.” <em>European Journal of Operational Research</em> 278 (1). Elsevier: 330–42.</p>
-</div>
-<div id="ref-gu2019autoencoder">
-<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
+<div id="ref-burrell1997impact">
+<p>Burrell, Phillip R., and Bukola Otulayo Folarin. 1997. “The Impact of Neural Networks in Finance.” <em>Neural Computing &amp; Applications</em> 6 (4): 193–200.</p>
 </div>
 <div id="ref-chen2016financial">
 <p>Chen, Jou-Fan, Wei-Lun Chen, Chun-Ping Huang, Szu-Hao Huang, and An-Pin Chen. 2016. “Financial Time-Series Data Analysis Using Deep Convolutional Neural Networks.” In <em>2016 7th International Conference on Cloud Computing and Big Data (Ccbd)</em>, 87–92. IEEE.</p>
 </div>
-<div id="ref-loreggia2016deep">
-<p>Loreggia, Andrea, Yuri Malitsky, Horst Samulowitz, and Vijay Saraswat. 2016. “Deep Learning for Algorithm Portfolios.” In <em>Proceedings of the Thirtieth Aaai Conference on Artificial Intelligence</em>, 1280–6. AAAI Press.</p>
+<div id="ref-chen2019deep">
+<p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
+</div>
+<div id="ref-chollet2017deep">
+<p>Chollet, François. 2017. <em>Deep Learning with Python</em>. Manning Publications Company.</p>
+</div>
+<div id="ref-chung2015gated">
+<p>Chung, Junyoung, Caglar Gulcehre, Kyunghyun Cho, and Yoshua Bengio. 2015. “Gated Feedback Recurrent Neural Networks.” In <em>International Conference on Machine Learning</em>, 2067–75.</p>
+</div>
+<div id="ref-costarelli2016survey">
+<p>Costarelli, Danilo, Renato Spigler, and Gianluca Vinti. 2016. “A Survey on Approximation by Means of Neural Network Operators.” <em>Journal of NeuroTechnology</em> 1 (1).</p>
+</div>
+<div id="ref-cybenko1989approximation">
+<p>Cybenko, George. 1989. “Approximation by Superpositions of a Sigmoidal Function.” <em>Mathematics of Control, Signals and Systems</em> 2 (4): 303–14.</p>
 </div>
 <div id="ref-dingli2017financial">
 <p>Dingli, Alexiei, and Karl Sant Fournier. 2017. “Financial Time Series Forecasting–a Deep Learning Approach.” <em>International Journal of Machine Learning and Computing</em> 7 (5): 118–22.</p>
 </div>
-<div id="ref-tsantekidis2017forecasting">
-<p>Tsantekidis, Avraam, Nikolaos Passalis, Anastasios Tefas, Juho Kanniainen, Moncef Gabbouj, and Alexandros Iosifidis. 2017. “Forecasting Stock Prices from the Limit Order Book Using Convolutional Neural Networks.” In <em>2017 Ieee 19th Conference on Business Informatics (Cbi)</em>, 1:7–12.</p>
+<div id="ref-du2013neural">
+<p>Du, Ke-Lin, and Madisetti NS Swamy. 2013. <em>Neural Networks and Statistical Learning</em>. Springer Science &amp; Business Media.</p>
+</div>
+<div id="ref-duchi2011adaptive">
+<p>Duchi, John, Elad Hazan, and Yoram Singer. 2011. “Adaptive Subgradient Methods for Online Learning and Stochastic Optimization.” <em>Journal of Machine Learning Research</em> 12 (Jul): 2121–59.</p>
+</div>
+<div id="ref-eakins1998analyzing">
+<p>Eakins, Stanley G, Stanley R Stansell, and James F Buck. 1998. “Analyzing the Nature of Institutional Demand for Common Stocks.” <em>Quarterly Journal of Business and Economics</em>. JSTOR, 33–48.</p>
+</div>
+<div id="ref-efimov2019using">
+<p>Efimov, Dmitry, and Di Xu. 2019. “Using Generative Adversarial Networks to Synthesize Artificial Financial Datasets.” <em>Proceedings of the Conference on Neural Information Processing Systems</em>.</p>
+</div>
+<div id="ref-elman1990finding">
+<p>Elman, Jeffrey L. 1990. “Finding Structure in Time.” <em>Cognitive Science</em> 14 (2): 179–211.</p>
+</div>
+<div id="ref-enke2005use">
+<p>Enke, David, and Suraphan Thawornwong. 2005. “The Use of Data Mining and Neural Networks for Forecasting Stock Market Returns.” <em>Expert Systems with Applications</em> 29 (4): 927–40.</p>
+</div>
+<div id="ref-feng2019deep">
+<p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Characteristics-Sorted Factor Models.” <em>SSRN Working Paper</em> 3243683.</p>
+</div>
+<div id="ref-fischer2018deep">
+<p>Fischer, Thomas, and Christopher Krauss. 2018. “Deep Learning with Long Short-Term Memory Networks for Financial Market Predictions.” <em>European Journal of Operational Research</em> 270 (2): 654–69.</p>
+</div>
+<div id="ref-goodfellow2016deep">
+<p>Goodfellow, Ian, Yoshua Bengio, Aaron Courville, and Yoshua Bengio. 2016. <em>Deep Learning</em>. Vol. 1. MIT press Cambridge.</p>
+</div>
+<div id="ref-goodfellow2014generative">
+<p>Goodfellow, Ian, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. “Generative Adversarial Nets.” In <em>Advances in Neural Information Processing Systems</em>, 2672–80.</p>
+</div>
+<div id="ref-gu2018empirical">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
+</div>
+<div id="ref-gu2019autoencoder">
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
+</div>
+<div id="ref-guliyev2018approximation">
+<p>Guliyev, Namig J, and Vugar E Ismailov. 2018. “On the Approximation by Single Hidden Layer Feedforward Neural Networks with Fixed Weights.” <em>Neural Networks</em> 98: 296–304.</p>
+</div>
+<div id="ref-guresen2011using">
+<p>Guresen, Erkam, Gulgun Kayakutlu, and Tugrul U Daim. 2011. “Using Artificial Neural Network Models in Stock Market Index Prediction.” <em>Expert Systems with Applications</em> 38 (8): 10389–97.</p>
+</div>
+<div id="ref-haykin2009neural">
+<p>Haykin, Simon S. 2009. <em>Neural Networks and Learning Machines</em>. Prentice Hall.</p>
+</div>
+<div id="ref-hochreiter1997long">
+<p>Hochreiter, Sepp, and Jürgen Schmidhuber. 1997. “Long Short-Term Memory.” <em>Neural Computation</em> 9 (8). MIT Press: 1735–80.</p>
 </div>
 <div id="ref-hoseinzade2019cnnpred">
 <p>Hoseinzade, Ehsan, and Saman Haratizadeh. 2019. “CNNpred: CNN-Based Stock Market Prediction Using a Diverse Set of Variables.” <em>Expert Systems with Applications</em> XXX.</p>
 </div>
-<div id="ref-arik2019tabnet">
-<p>Arik, Sercan O, and Tomas Pfister. 2019. “TabNet: Attentive Interpretable Tabular Learning.” <em>arXiv Preprint</em>, no. 1908.07442.</p>
+<div id="ref-huck2019large">
+<p>Huck, Nicolas. 2019. “Large Data Sets and Machine Learning: Applications to Statistical Arbitrage.” <em>European Journal of Operational Research</em> 278 (1). Elsevier: 330–42.</p>
+</div>
+<div id="ref-jordan1997serial">
+<p>Jordan, Michael I. 1997. “Serial Order: A Parallel Distributed Processing Approach.” In <em>Advances in Psychology</em>, 121:471–95. Elsevier.</p>
+</div>
+<div id="ref-kimoto1990stock">
+<p>Kimoto, Takashi, Kazuo Asakawa, Morio Yoda, and Masakazu Takeoka. 1990. “Stock Market Prediction System with Modular Neural Networks.” In <em>1990 Ijcnn International Joint Conference on Neural Networks</em>, 1–6. IEEE.</p>
+</div>
+<div id="ref-kingma2014adam">
+<p>Kingma, Diederik P, and Jimmy Ba. 2014. “Adam: A Method for Stochastic Optimization.” <em>arXiv Preprint</em>, no. 1412.6980.</p>
+</div>
+<div id="ref-loreggia2016deep">
+<p>Loreggia, Andrea, Yuri Malitsky, Horst Samulowitz, and Vijay Saraswat. 2016. “Deep Learning for Algorithm Portfolios.” In <em>Proceedings of the Thirtieth Aaai Conference on Artificial Intelligence</em>, 1280–6. AAAI Press.</p>
+</div>
+<div id="ref-masters1993practical">
+<p>Masters, Timothy. 1993. <em>Practical Neural Network Recipes in C++</em>. Morgan Kaufmann.</p>
+</div>
+<div id="ref-nesterov1983method">
+<p>Nesterov, Yurii. 1983. “A Method for Unconstrained Convex Minimization Problem with the Rate of Convergence O (1/K^ 2).” In <em>Doklady an Ussr</em>, 269:543–47.</p>
+</div>
+<div id="ref-nuti2019adaptive">
+<p>Nuti, Giuseppe, Lluı's Antoni Jiménez Rugama, and Kaspar Thommen. 2019. “Adaptive Reticulum.” <em>arXiv Preprint</em>, no. 1912.05901.</p>
+</div>
+<div id="ref-olazaran1996sociological">
+<p>Olazaran, Mikel. 1996. “A Sociological Study of the Official History of the Perceptrons Controversy.” <em>Social Studies of Science</em> 26 (3). Sage Publications London: 611–59.</p>
+</div>
+<div id="ref-orimoloye2019comparing">
+<p>Orimoloye, Larry Olanrewaju, Ming-Chien Sung, Tiejun Ma, and Johnnie EV Johnson. 2019. “Comparing the Effectiveness of Deep Feedforward Neural Networks and Shallow Architectures for Predicting Stock Price Indices.” <em>Expert Systems with Applications</em>. Elsevier, 112828.</p>
+</div>
+<div id="ref-polyak1964some">
+<p>Polyak, Boris T. 1964. “Some Methods of Speeding up the Convergence of Iteration Methods.” <em>USSR Computational Mathematics and Mathematical Physics</em> 4 (5): 1–17.</p>
 </div>
 <div id="ref-popov2019neural">
 <p>Popov, Sergei, Stanislav Morozov, and Artem Babenko. 2019. “Neural Oblivious Decision Ensembles for Deep Learning on Tabular Data.” <em>arXiv Preprint</em>, no. 1909.06312.</p>
 </div>
-<div id="ref-nuti2019adaptive">
-<p>Nuti, Giuseppe, Lluı's Antoni Jiménez Rugama, and Kaspar Thommen. 2019. “Adaptive Reticulum.” <em>arXiv Preprint</em>, no. 1912.05901.</p>
+<div id="ref-rosenblatt1958perceptron">
+<p>Rosenblatt, Frank. 1958. “The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.” <em>Psychological Review</em> 65 (6): 386.</p>
+</div>
+<div id="ref-srivastava2014dropout">
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>Journal of Machine Learning Research</em> 15 (1): 1929–58.</p>
+</div>
+<div id="ref-tsantekidis2017forecasting">
+<p>Tsantekidis, Avraam, Nikolaos Passalis, Anastasios Tefas, Juho Kanniainen, Moncef Gabbouj, and Alexandros Iosifidis. 2017. “Forecasting Stock Prices from the Limit Order Book Using Convolutional Neural Networks.” In <em>2017 Ieee 19th Conference on Business Informatics (Cbi)</em>, 1:7–12.</p>
+</div>
+<div id="ref-wang2019portfolio">
+<p>Wang, Wuyu, Weizi Li, Ning Zhang, and Kecheng Liu. 2019. “Portfolio Formation with Preselection Using Deep Learning from Long-Term Financial Data.” <em>Expert Systems with Applications</em> Forthcoming: XXX–XXX.</p>
+</div>
+<div id="ref-zeiler2012adadelta">
+<p>Zeiler, Matthew D. 2012. “ADADELTA: An Adaptive Learning Rate Method.” <em>arXiv Preprint</em>, no. 1212.5701.</p>
+</div>
+<div id="ref-zhang2009stock">
+<p>Zhang, Yudong, and Lenan Wu. 2009. “Stock Market Prediction of S&amp;P 500 via Combination of Improved Bco Approach and Bp Neural Network.” <em>Expert Systems with Applications</em> 36 (5): 8849–54.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -1172,11 +1175,13 @@ However, in many ML tournaments in the 2010 decade, neural networks have often b
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -1184,13 +1189,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -1198,6 +1201,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -1218,9 +1229,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

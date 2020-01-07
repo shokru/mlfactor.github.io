@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 11 Validating and tuning | Machine Learning for Factor Investing</title>
+  <meta name="description" content="Chapter 11 Validating and tuning | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:title" content="Chapter 11 Validating and tuning | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
   
   
@@ -17,28 +16,32 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  <meta name="twitter:title" content="Chapter 11 Validating and tuning | Machine Learning for Factor Investing" />
   
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="bayes.html">
-<link rel="next" href="ensemble.html">
+<link rel="prev" href="bayes.html"/>
+<link rel="next" href="ensemble.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -569,12 +572,12 @@ FIGURE 11.5: Second representation of the variance-bias tradeoff.
 </p>
 </div>
 <p>The most tractable theoretical form of the variance-bias tradeoff is the ridge regression.<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> The coefficient estimates in this type of regression are given by <span class="math inline">\(\hat{\mathbf{b}}_\lambda=(\mathbf{X}&#39;\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}&#39;\mathbf{Y}\)</span>, where <span class="math inline">\(\lambda\)</span> is the penalization intensity. Assuming a <em>true</em> linear form for the data generating process (<span class="math inline">\(\textbf{y}=\textbf{Xb}+\boldsymbol{\epsilon}\)</span> where <span class="math inline">\(\textbf{b}\)</span> is unknown and <span class="math inline">\(\sigma^2\)</span> the variance of errors), this yields
-<span class="math display" id="eq:vartrade" i\tag{11.8}">\[\begin{align}   (#eq:biastrade)
-\mathbb{E}[\hat{\textbf{b}}_\lambda]&amp;=\textbf{b}-\lambda(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}, \\  \tag{11.9}
+<span class="math display" id="eq:vartrade">\[\begin{align}  
+\mathbb{E}[\hat{\textbf{b}}_\lambda]&amp;=\textbf{b}-\lambda(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}, \\  \tag{11.8}
 \mathbb{V}[\hat{\textbf{b}}_\lambda]&amp;=\sigma^2(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1}\textbf{X}&#39;\textbf{X}   (\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1}.
 \end{align}\]</span></p>
 <p>Basically, this means that the bias of the estimator is equal to <span class="math inline">\(-\lambda(\textbf{X}&#39;\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}\)</span>, which is zero in the absence of penalization (classical regression) and converges to some finite number when <span class="math inline">\(\lambda \rightarrow \infty\)</span>, i.e., when the model becomes constant. Note that if the estimator has a zero bias, then predictions will too: <span class="math inline">\(\mathbb{E}[\textbf{X}(\textbf{b}-\hat{\textbf{b}})]=\textbf{0}\)</span>.</p>
-<p>The variance (of estimates) in the case of an unconstrained regression is equal to <span class="math inline">\(\mathbb{V}[\hat{\textbf{b}}]=\sigma (\textbf{X}&#39;\textbf{X})^{-1}\)</span>. In Equation (<a href="valtune.html#eq:vartrade">(11.9)</a>), the <span class="math inline">\(\lambda\)</span> reduces the magnitude of figures in the inverse matrix. The overall effect is that as <span class="math inline">\(\lambda\)</span> increases, the variance decreases and in the limit <span class="math inline">\(\lambda \rightarrow \infty\)</span>, the variance is zero when the model is constant. The variance of predictions is
+<p>The variance (of estimates) in the case of an unconstrained regression is equal to <span class="math inline">\(\mathbb{V}[\hat{\textbf{b}}]=\sigma (\textbf{X}&#39;\textbf{X})^{-1}\)</span>. In Equation (<a href="valtune.html#eq:vartrade">(11.8)</a>), the <span class="math inline">\(\lambda\)</span> reduces the magnitude of figures in the inverse matrix. The overall effect is that as <span class="math inline">\(\lambda\)</span> increases, the variance decreases and in the limit <span class="math inline">\(\lambda \rightarrow \infty\)</span>, the variance is zero when the model is constant. The variance of predictions is
 <span class="math display">\[\begin{align*}
 \mathbb{V}[\textbf{X}\hat{\textbf{b}}]&amp;=\mathbb{E}[(\textbf{X}\hat{\textbf{b}}-\mathbb{E}[\textbf{X}\hat{\textbf{b}}])(\textbf{X}\hat{\textbf{b}}-\mathbb{E}[\textbf{X}\hat{\textbf{b}}])&#39;] \\
 &amp;= \textbf{X}\mathbb{E}[(\hat{\textbf{b}}-\mathbb{E}[\hat{\textbf{b}}])(\hat{\textbf{b}}-\mathbb{E}[\hat{\textbf{b}}])&#39;]\textbf{X}&#39; \\
@@ -669,18 +672,18 @@ FIGURE 11.8: Confusion matrix: summary of binary outcomes.
 <p>Both grid and random searches are suboptimal because they are likely to spend time in zones of the parameter space that are irrelevant, thereby wasting computation time. Given a number of parameter points that have been tested, it is preferable to focus the search in areas where the best points are the most likely. This is possible via an interative process that adapts the search after each new point has been tested.</p>
 <p>One other popular approach in this direction is Bayesian optimization (BO). The central object is the objective function of the learning process. We call this function <span class="math inline">\(O\)</span> and it can be widely seen as a loss function possibly combined with penalization and constraints. For simplicity here, we will not mention the training/testing samples and they are considered to be fixed. The variable of interest is the vector <span class="math inline">\(\textbf{p}=(p_1,\dots,p_l)\)</span> which synthesizes the hyperparameters (learning rate, penalization intensities, number of models, etc.) that have an impact on <span class="math inline">\(O\)</span>. The program we are interested in is</p>
 <p><span class="math display" id="eq:HPO">\[\begin{equation}
-\tag{11.10}
+\tag{11.9}
 \textbf{p}_*=\underset{\textbf{p}}{\text{argmin}} \ O(\textbf{p}).
 \end{equation}\]</span></p>
 <p>The main problem with this optimization is that the computation of <span class="math inline">\(O(\textbf{p})\)</span> is very costly. Therefore, it is critical to choose each trial for <span class="math inline">\(\textbf{b}\)</span> wisely. One key assumption of BO is that the distribution of <span class="math inline">\(O\)</span> is Gaussian and that <span class="math inline">\(O\)</span> can be proxied by a linear combination of the <span class="math inline">\(p_l\)</span>. Said differently, the aim is to build a Bayesian linear regression between the input <span class="math inline">\(\textbf{p}\)</span> and the output (dependent variable) <span class="math inline">\(O\)</span>. Once a model has been estimated the information that is concentrated in the posterior density of <span class="math inline">\(O\)</span> is used to make an educated guess at where to look at for new values of <span class="math inline">\(\textbf{p}\)</span>.</p>
 <p>This educated guess is made based on a so-called <em>acquisition function</em>. Suppose we have tested <span class="math inline">\(m\)</span> values for <span class="math inline">\(\textbf{p}\)</span>, which we write <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The current best parameter is written <span class="math inline">\(\textbf{p}_m^*=\underset{1\le k\le m}{\text{argmin}} \ O(\textbf{p}^{(k)})\)</span>. If we test a new point <span class="math inline">\(\textbf{p}\)</span>, then it will lead to an improvement only if <span class="math inline">\(O(\textbf{p})&lt;O(\textbf{p}_m^*)\)</span>, that is if the new objective improves the minimum value that we already know. The average value of this improvement is
 <span class="math display" id="eq:acquisition">\[\begin{equation}
-\tag{11.11}
+\tag{11.10}
 \textbf{EI}_m(\textbf{p})=\mathbb{E}_m[[O(\textbf{p}_m^*)-O(\textbf{p})]_+],
 \end{equation}\]</span></p>
 <p>where the positive part <span class="math inline">\([\cdot]_+\)</span> emphasizes that when <span class="math inline">\(O(\textbf{p})\ge O(\textbf{p}_m^*)\)</span>, the gain is zero. The expectation is indexed by <span class="math inline">\(m\)</span> because it is computed with respect to the posterior distribution of <span class="math inline">\(O(\textbf{p})\)</span> based on the <span class="math inline">\(m\)</span> samples <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The best choice for the next sample <span class="math inline">\(\textbf{p}^{m+1}\)</span> is then
 <span class="math display" id="eq:EI">\[\begin{equation}
-\tag{11.12}
+\tag{11.11}
 \textbf{p}^{m+1}=\underset{\textbf{p}}{\text{argmax}} \ \textbf{EI}_m(\textbf{p}),
 \end{equation}\]</span>
 which corresponds to the maximum location of the expected improvement. Instead of the EI, the optimization can be performed on other measures, like the probability of improvement, which is <span class="math inline">\(\mathbb{P}_m[O(\textbf{p})&lt;O(\textbf{p}_m^*)]\)</span>.</p>
@@ -690,7 +693,7 @@ which corresponds to the maximum location of the expected improvement. Instead o
 </li>
 <li><strong>step 2a</strong>: compute sequentially the posterior density of <span class="math inline">\(O\)</span> on all available points.<br />
 </li>
-<li><strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{m+1}\)</span> given in Equation <a href="valtune.html#eq:EI">(11.12)</a>.<br />
+<li><strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{m+1}\)</span> given in Equation <a href="valtune.html#eq:EI">(11.11)</a>.<br />
 </li>
 <li><strong>step 2c</strong>: compute the new objective value <span class="math inline">\(O(\textbf{p}^{m+1})\)</span>.<br />
 </li>
@@ -802,10 +805,10 @@ FIGURE 11.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 <a class="sourceLine" id="cb127-9" data-line-number="9">                     <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## 
 ##  Best Parameters Found: 
-## Round = 26   eta = 0.3954    lambda = 11.8355    nrounds = 12.0519   Value = -0.0372</code></pre>
+## Round = 18   eta = 0.2934    lambda = 12.7814    nrounds = 13.7481   Value = -0.0372</code></pre>
 <div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">bayes_opt<span class="op">$</span>Best_Par</a></code></pre></div>
 <pre><code>##        eta     lambda    nrounds 
-##  0.3953682 11.8354694 12.0519044</code></pre>
+##  0.2933516 12.7813514 13.7481070</code></pre>
 <p></p>
 <p>The final parameters indicate that it is advised to resist overfitting: small number of learners and large penalization seem to be the best choices.</p>
 <p>As a confirmation of these results, we plot the relationship between the loss (up to the sign) and two hyperparameters. Each point corresponds to a value tested in the optimization. The best values are clearly to the left of the left graph and to the right of the right graph and the pattern is reliably pronounced.</p>
@@ -846,8 +849,17 @@ FIGURE 11.10: Relationship between (minus) loss and hyperparameter values.
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
-<div id="ref-probst2018tunability">
-<p>Probst, Philipp, Bernd Bischl, and Anne-Laure Boulesteix. 2018. “Tunability: Importance of Hyperparameters of Machine Learning Algorithms.” <em>arXiv Preprint</em>, no. 1802.09596.</p>
+<div id="ref-bergstra2012random">
+<p>Bergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” <em>Journal of Machine Learning Research</em> 13 (Feb): 281–305.</p>
+</div>
+<div id="ref-breiman2001random">
+<p>Breiman, Leo. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1): 5–32.</p>
+</div>
+<div id="ref-de2018advances">
+<p>De Prado, Marcos Lopez. 2018. <em>Advances in Financial Machine Learning</em>. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-frazier2018tutorial">
+<p>Frazier, Peter I. 2018. “A Tutorial on Bayesian Optimization.” <em>arXiv Preprint</em>, no. 1807.02811.</p>
 </div>
 <div id="ref-gu2018empirical">
 <p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
@@ -855,29 +867,20 @@ FIGURE 11.10: Relationship between (minus) loss and hyperparameter values.
 <div id="ref-hsu2018asset">
 <p>Hsu, Po-Hsuan, Qiheng Han, Wensheng Wu, and Zhiguang Cao. 2018. “Asset Allocation Strategies, Data Snooping, and the 1/N Rule.” <em>Journal of Banking &amp; Finance</em> 97: 257–69.</p>
 </div>
-<div id="ref-white2000reality">
-<p>White, Halbert. 2000. “A Reality Check for Data Snooping.” <em>Econometrica</em> 68 (5): 1097–1126.</p>
+<div id="ref-maclaurin2015gradient">
+<p>Maclaurin, Dougal, David Duvenaud, and Ryan Adams. 2015. “Gradient-Based Hyperparameter Optimization Through Reversible Learning.” In <em>International Conference on Machine Learning</em>, 2113–22.</p>
 </div>
-<div id="ref-breiman2001random">
-<p>Breiman, Leo. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1): 5–32.</p>
+<div id="ref-probst2018tunability">
+<p>Probst, Philipp, Bernd Bischl, and Anne-Laure Boulesteix. 2018. “Tunability: Importance of Hyperparameters of Machine Learning Algorithms.” <em>arXiv Preprint</em>, no. 1802.09596.</p>
 </div>
-<div id="ref-bergstra2012random">
-<p>Bergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” <em>Journal of Machine Learning Research</em> 13 (Feb): 281–305.</p>
+<div id="ref-schnaubelt2019comparison">
+<p>Schnaubelt, Matthias. 2019. “A Comparison of Machine Learning Model Validation Schemes for Non-Stationary Time Series Data.” FAU Discussion Papers in Economics.</p>
 </div>
 <div id="ref-snoek2012practical">
 <p>Snoek, Jasper, Hugo Larochelle, and Ryan P Adams. 2012. “Practical Bayesian Optimization of Machine Learning Algorithms.” In <em>Advances in Neural Information Processing Systems</em>, 2951–9.</p>
 </div>
-<div id="ref-frazier2018tutorial">
-<p>Frazier, Peter I. 2018. “A Tutorial on Bayesian Optimization.” <em>arXiv Preprint</em>, no. 1807.02811.</p>
-</div>
-<div id="ref-maclaurin2015gradient">
-<p>Maclaurin, Dougal, David Duvenaud, and Ryan Adams. 2015. “Gradient-Based Hyperparameter Optimization Through Reversible Learning.” In <em>International Conference on Machine Learning</em>, 2113–22.</p>
-</div>
-<div id="ref-de2018advances">
-<p>De Prado, Marcos Lopez. 2018. <em>Advances in Financial Machine Learning</em>. John Wiley &amp; Sons.</p>
-</div>
-<div id="ref-schnaubelt2019comparison">
-<p>Schnaubelt, Matthias. 2019. “A Comparison of Machine Learning Model Validation Schemes for Non-Stationary Time Series Data.” FAU Discussion Papers in Economics.</p>
+<div id="ref-white2000reality">
+<p>White, Halbert. 2000. “A Reality Check for Data Snooping.” <em>Econometrica</em> 68 (5): 1097–1126.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -897,11 +900,13 @@ FIGURE 11.10: Relationship between (minus) loss and hyperparameter values.
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -909,13 +914,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -923,6 +926,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -943,9 +954,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

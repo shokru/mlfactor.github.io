@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta name="description" content="Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
@@ -22,23 +21,27 @@
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
 
-<link rel="next" href="notdata.html">
+<link rel="next" href="notdata.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -427,8 +430,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="header">
 <h1 class="title">Machine Learning for Factor Investing</h1>
-<h4 class="author"><em>Guillaume Coqueret and Tony Guida</em></h4>
-<h4 class="date"><em>2020-01-03 PRELIMINARY &amp; VERY INCOMPLETE</em></h4>
+<p class="author"><em>Guillaume Coqueret and Tony Guida</em></p>
+<p class="date"><em>2020-01-07 PRELIMINARY &amp; VERY INCOMPLETE</em></p>
 </div>
 <div id="preface" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Preface</h1>
@@ -492,7 +495,7 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
 <p>In terms of coding requirements, we rely heavily on the <strong>tidyverse</strong>, which is a collection of <strong>packages</strong> (or libraries). The three packages we use most are <strong>dplyr</strong> which implements simple data manipulations (filter, select, arrange), <strong>tidyr</strong> which formats data in a tidy fashion, and <strong>ggplot</strong>, for graphical outputs.</p>
 <p>A list of the packages we used can be found below.</p>
 
-<p>Of all of these packages (or collections thereof), the <strong>tidyverse</strong> and <strong>lubridate</strong> are compulsory in almost all sections of the book. To install a new package in R, just type install.packages(“name_of_the_package”) in the console.</p>
+<p>Of all of these packages (or collections thereof), the <strong>tidyverse</strong> and <strong>lubridate</strong> are compulsory in almost all sections of the book. To install a new package in R, just type install.packages(“name_of_the_package”) in the console. Sometimes, because of function name conflicts, we use the syntax package::function() to make sure the function call is from the right source.</p>
 <p>As much as we could, we created short <strong>code chunks</strong> and commented each line whenever we felt it was useful. Comments are displayed at the end of a row and preceded with a single hastag #.</p>
 <p>The book is constructed as a very big notebook, thus results are often presented below code chunks. They can be graphs or tables. Sometimes, they are simple numbers are are preceded with two hashtags ##. The example below illustrates this formatting.</p>
 
@@ -513,8 +516,8 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
-<div id="ref-ngai2011application">
-<p>Ngai, Eric WT, Yong Hu, YH Wong, Yijun Chen, and Xin Sun. 2011. “The Application of Data Mining Techniques in Financial Fraud Detection: A Classification Framework and an Academic Review of Literature.” <em>Decision Support Systems</em> 50 (3). Elsevier: 559–69.</p>
+<div id="ref-abbasi2012metafraud">
+<p>Abbasi, Ahmed, Conan Albrecht, Anthony Vance, and James Hansen. 2012. “Metafraud: A Meta-Learning Framework for Detecting Financial Fraud.” <em>MIS Quarterly</em>, 1293–1327.</p>
 </div>
 <div id="ref-baesens2015fraud">
 <p>Baesens, Bart, Veronique Van Vlasselaer, and Wouter Verbeke. 2015. <em>Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques: A Guide to Data Science for Fraud Detection</em>. John Wiley &amp; Sons.</p>
@@ -522,44 +525,14 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
 <div id="ref-bhattacharyya2011data">
 <p>Bhattacharyya, Siddhartha, Sanjeev Jha, Kurian Tharakunnel, and J Christopher Westland. 2011. “Data Mining for Credit Card Fraud: A Comparative Study.” <em>Decision Support Systems</em> 50 (3): 602–13.</p>
 </div>
-<div id="ref-ravisankar2011detection">
-<p>Ravisankar, Pediredla, Vadlamani Ravi, G Raghava Rao, and Indranil Bose. 2011. “Detection of Financial Statement Fraud and Feature Selection Using Data Mining Techniques.” <em>Decision Support Systems</em> 50 (2): 491–500.</p>
-</div>
-<div id="ref-abbasi2012metafraud">
-<p>Abbasi, Ahmed, Conan Albrecht, Anthony Vance, and James Hansen. 2012. “Metafraud: A Meta-Learning Framework for Detecting Financial Fraud.” <em>MIS Quarterly</em>, 1293–1327.</p>
-</div>
-<div id="ref-wang2011comparative">
-<p>Wang, Gang, Jinxing Hao, Jian Ma, and Hongbing Jiang. 2011. “A Comparative Assessment of Ensemble Learning for Credit Scoring.” <em>Expert Systems with Applications</em> 38 (1): 223–30.</p>
+<div id="ref-blank2019using">
+<p>Blank, Herbert, Richard Davis, and Shannon Greene. 2019. “Using Alternative Research Data in Real-World Portfolios.” <em>Journal of Investing</em> 28 (4): 95–103.</p>
 </div>
 <div id="ref-brown2012experimental">
 <p>Brown, Iain, and Christophe Mues. 2012. “An Experimental Comparison of Classification Algorithms for Imbalanced Credit Scoring Data Sets.” <em>Expert Systems with Applications</em> 39 (3): 3446–53.</p>
 </div>
-<div id="ref-kearns2013machine">
-<p>Kearns, Michael, and Yuriy Nevmyvaka. 2013. “Machine Learning for Market Microstructure and High Frequency Trading.” <em>High Frequency Trading: New Realities for Traders, Markets, and Regulators</em>.</p>
-</div>
-<div id="ref-sirignano2019universal">
-<p>Sirignano, Justin, and Rama Cont. 2019. “Universal Features of Price Formation in Financial Markets: Perspectives from Deep Learning.” <em>Quantitative Finance</em> 19 (9): 1449–59.</p>
-</div>
-<div id="ref-blank2019using">
-<p>Blank, Herbert, Richard Davis, and Shannon Greene. 2019. “Using Alternative Research Data in Real-World Portfolios.” <em>Journal of Investing</em> 28 (4): 95–103.</p>
-</div>
-<div id="ref-jha2019implementing">
-<p>Jha, Vinesh. 2019. “Implementing Alternative Data in an Investment Process.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 51–74. Wiley.</p>
-</div>
-<div id="ref-ke2019predicting">
-<p>Ke, Zheng Tracy, Bryan T Kelly, and Dacheng Xiu. 2019. “Predicting Returns with Text Data.” <em>SSRN Working Paper</em> 3388293.</p>
-</div>
-<div id="ref-friedman2009elements">
-<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
-</div>
 <div id="ref-cornuejols2011apprentissage">
 <p>Cornuejols, Antoine, Laurent Miclet, and Vincent Barra. 2018. <em>Apprentissage Artificiel: Deep Learning, Concepts et Algorithmes</em>. Eyrolles.</p>
-</div>
-<div id="ref-james2013introduction">
-<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Vol. 112. Springer.</p>
-</div>
-<div id="ref-mohri2018foundations">
-<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.</p>
 </div>
 <div id="ref-du2013neural">
 <p>Du, Ke-Lin, and Madisetti NS Swamy. 2013. <em>Neural Networks and Statistical Learning</em>. Springer Science &amp; Business Media.</p>
@@ -567,8 +540,38 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
 <div id="ref-goodfellow2016deep">
 <p>Goodfellow, Ian, Yoshua Bengio, Aaron Courville, and Yoshua Bengio. 2016. <em>Deep Learning</em>. Vol. 1. MIT press Cambridge.</p>
 </div>
+<div id="ref-friedman2009elements">
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
+</div>
+<div id="ref-james2013introduction">
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Vol. 112. Springer.</p>
+</div>
+<div id="ref-jha2019implementing">
+<p>Jha, Vinesh. 2019. “Implementing Alternative Data in an Investment Process.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 51–74. Wiley.</p>
+</div>
+<div id="ref-ke2019predicting">
+<p>Ke, Zheng Tracy, Bryan T Kelly, and Dacheng Xiu. 2019. “Predicting Returns with Text Data.” <em>SSRN Working Paper</em> 3388293.</p>
+</div>
+<div id="ref-kearns2013machine">
+<p>Kearns, Michael, and Yuriy Nevmyvaka. 2013. “Machine Learning for Market Microstructure and High Frequency Trading.” <em>High Frequency Trading: New Realities for Traders, Markets, and Regulators</em>.</p>
+</div>
+<div id="ref-mohri2018foundations">
+<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.</p>
+</div>
+<div id="ref-ngai2011application">
+<p>Ngai, Eric WT, Yong Hu, YH Wong, Yijun Chen, and Xin Sun. 2011. “The Application of Data Mining Techniques in Financial Fraud Detection: A Classification Framework and an Academic Review of Literature.” <em>Decision Support Systems</em> 50 (3). Elsevier: 559–69.</p>
+</div>
+<div id="ref-ravisankar2011detection">
+<p>Ravisankar, Pediredla, Vadlamani Ravi, G Raghava Rao, and Indranil Bose. 2011. “Detection of Financial Statement Fraud and Feature Selection Using Data Mining Techniques.” <em>Decision Support Systems</em> 50 (2): 491–500.</p>
+</div>
+<div id="ref-sirignano2019universal">
+<p>Sirignano, Justin, and Rama Cont. 2019. “Universal Features of Price Formation in Financial Markets: Perspectives from Deep Learning.” <em>Quantitative Finance</em> 19 (9): 1449–59.</p>
+</div>
 <div id="ref-sutton2018reinforcement">
 <p>Sutton, Richard S, and Andrew G Barto. 2018. <em>Reinforcement Learning: An Introduction (2nd Edition)</em>. MIT press.</p>
+</div>
+<div id="ref-wang2011comparative">
+<p>Wang, Gang, Jinxing Hao, Jian Ma, and Hongbing Jiang. 2011. “A Comparative Assessment of Ensemble Learning for Credit Scoring.” <em>Expert Systems with Applications</em> 38 (1): 223–30.</p>
 </div>
 </div>
 <div class="footnotes">
@@ -589,11 +592,13 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -601,13 +606,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -615,6 +618,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -635,9 +646,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();

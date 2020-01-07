@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html >
-
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
 <head>
 
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Machine Learning for Factor Investing</title>
-  <meta name="description" content="Machine Learning for Factor Investing">
-  <meta name="generator" content="bookdown 0.7 and GitBook 2.6.7">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 12 Ensemble models | Machine Learning for Factor Investing</title>
+  <meta name="description" content="Chapter 12 Ensemble models | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
 
-  <meta property="og:title" content="Machine Learning for Factor Investing" />
+  <meta property="og:title" content="Chapter 12 Ensemble models | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
   
   
@@ -17,28 +16,32 @@
   
 
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Machine Learning for Factor Investing" />
+  <meta name="twitter:title" content="Chapter 12 Ensemble models | Machine Learning for Factor Investing" />
   
   
   
 
-<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
   
   
-<link rel="prev" href="valtune.html">
-<link rel="next" href="backtest.html">
+<link rel="prev" href="valtune.html"/>
+<link rel="next" href="backtest.html"/>
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
 
 
 
@@ -54,7 +57,6 @@ a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
@@ -352,6 +354,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
 <li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
 <li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
 <li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
@@ -490,17 +493,17 @@ where while the second term converges to zero as <span class="math inline">\(M\)
 <a class="sourceLine" id="cb132-7" data-line-number="7"><span class="kw">colnames</span>(E) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)                               <span class="co"># Column names</span></a>
 <a class="sourceLine" id="cb132-8" data-line-number="8"><span class="kw">cor</span>(E)                                                                               <span class="co"># Corr. matrix</span></a></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9984394 0.9968224 0.9475378 0.9977753
-## Tree    0.9984394 1.0000000 0.9974647 0.9461082 0.9979709
-## RF      0.9968224 0.9974647 1.0000000 0.9446178 0.9978710
-## XGB     0.9475378 0.9461082 0.9446178 1.0000000 0.9454820
-## NN      0.9977753 0.9979709 0.9978710 0.9454820 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9984394 0.9968224 0.9475378 0.9965290
+## Tree    0.9984394 1.0000000 0.9974647 0.9461082 0.9971411
+## RF      0.9968224 0.9974647 1.0000000 0.9446178 0.9973855
+## XGB     0.9475378 0.9461082 0.9446178 1.0000000 0.9443783
+## NN      0.9965290 0.9971411 0.9973855 0.9443783 1.0000000</code></pre>
 <p></p>
 <p>As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. The minimum correlation (though above 95%!) is obtained by the boosted tree models. Below, we compare the training accuracy of models by computing the average absolute value of errors.</p>
 
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">abs</span>(E), <span class="dv">2</span>, mean) <span class="co"># Mean absolute error or columns of E </span></a></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.08345916 0.08362133 0.08327121 0.08916813 0.08376554</code></pre>
+## 0.08345916 0.08362133 0.08327121 0.08916813 0.08411090</code></pre>
 <p></p>
 <p>The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non constrained) weights for the combination of models.</p>
 
@@ -508,11 +511,11 @@ where while the second term converges to zero as <span class="math inline">\(M\)
 <a class="sourceLine" id="cb136-2" data-line-number="2">w_ensemble &lt;-<span class="st"> </span>w_ensemble <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w_ensemble)</a>
 <a class="sourceLine" id="cb136-3" data-line-number="3">w_ensemble</a></code></pre></div>
 <pre><code>##                  [,1]
-## Pen_reg -0.5805636453
-## Tree    -0.0035321482
-## RF       1.4473330565
-## XGB     -0.0009488744
-## NN       0.1377116114</code></pre>
+## Pen_reg -0.5570397748
+## Tree    -0.0626618530
+## RF       1.3892932164
+## XGB     -0.0001885519
+## NN       0.2305969632</code></pre>
 <p></p>
 <p>Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and ‘short’ a few models in order to compensate.</p>
 <p>Note that the weights are of course computed with <strong>training errors</strong>. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.</p>
@@ -526,29 +529,29 @@ where while the second term converges to zero as <span class="math inline">\(M\)
 <a class="sourceLine" id="cb138-7" data-line-number="7"><span class="kw">colnames</span>(E_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)</a>
 <a class="sourceLine" id="cb138-8" data-line-number="8"><span class="kw">apply</span>(<span class="kw">abs</span>(E_test), <span class="dv">2</span>, mean) <span class="co"># Mean absolute error or columns of E </span></a></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.06618181 0.06653527 0.06710349 0.07149006 0.06700406</code></pre>
+## 0.06618181 0.06653527 0.06710349 0.07149006 0.06728838</code></pre>
 <p></p>
 <p>The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.</p>
 
 <div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1">err_EW_test &lt;-<span class="st"> </span><span class="kw">apply</span>(E_test, <span class="dv">1</span>, mean)  <span class="co"># Equally weighted combination</span></a>
 <a class="sourceLine" id="cb140-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">abs</span>(err_EW_test))</a></code></pre></div>
-<pre><code>## [1] 0.06686155</code></pre>
+<pre><code>## [1] 0.06685044</code></pre>
 <p></p>
 <p>Because the errors are very correlated, the equally-weighted combination of forecasts yields an average error which lies ‘in the middle’ of individual errors. The diversification benefits are too small. Let us now test the ‘optimal’ combination <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M&#39;\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}\)</span>.</p>
 
 <div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb142-1" data-line-number="1">err_opt_test &lt;-<span class="st"> </span>E_test <span class="op">%*%</span><span class="st"> </span>w_ensemble   <span class="co"># Optimal unconstrained combination</span></a>
 <a class="sourceLine" id="cb142-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">abs</span>(err_opt_test))</a></code></pre></div>
-<pre><code>## [1] 0.06830539</code></pre>
+<pre><code>## [1] 0.06826951</code></pre>
 <p></p>
 <p>Again, the result is disappointing because of the lack of diversification across models. The correlations are high not only on the training sample, but also on the testing sample, as shown below.</p>
 
 <div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb144-1" data-line-number="1"><span class="kw">cor</span>(E_test)</a></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9987069 0.9968882 0.9706767 0.9974860
-## Tree    0.9987069 1.0000000 0.9978366 0.9753921 0.9981041
-## RF      0.9968882 0.9978366 1.0000000 0.9776554 0.9981867
-## XGB     0.9706767 0.9753921 0.9776554 1.0000000 0.9772801
-## NN      0.9974860 0.9981041 0.9981867 0.9772801 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9987069 0.9968882 0.9706767 0.9965397
+## Tree    0.9987069 1.0000000 0.9978366 0.9753921 0.9975095
+## RF      0.9968882 0.9978366 1.0000000 0.9776554 0.9977554
+## XGB     0.9706767 0.9753921 0.9776554 1.0000000 0.9776216
+## NN      0.9965397 0.9975095 0.9977554 0.9776216 1.0000000</code></pre>
 <p></p>
 <p>The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of <span class="citation">Breiman (<a href="#ref-breiman1996stacked">1996</a>)</span> using the <em>quadprog</em> package. If we write <span class="math inline">\(\mathbf{\Sigma}\)</span> for the covariance matrix of errors, we seek
 <span class="math display">\[\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}&#39;\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}&#39;\mathbf{w}=1, \quad w_i\ge 0,\]</span>
@@ -571,7 +574,7 @@ The constraints will be handled as:</p>
 <a class="sourceLine" id="cb146-8" data-line-number="8">              <span class="dt">meq =</span> <span class="dv">1</span>                   <span class="co"># One line of constraints is equality, others are inequalities</span></a>
 <a class="sourceLine" id="cb146-9" data-line-number="9">              )</a>
 <a class="sourceLine" id="cb146-10" data-line-number="10">w_const<span class="op">$</span>solution <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)           <span class="co"># Solution</span></a></code></pre></div>
-<pre><code>## [1] 0 0 1 0 0</code></pre>
+<pre><code>## [1] 0.000 0.000 0.931 0.000 0.069</code></pre>
 <p></p>
 <p>Compared to the unconstrained solution, the weights ar sparse a concentrated on one or two models, usually those with small training sample errors.</p>
 </div>
@@ -607,19 +610,19 @@ FIGURE 12.1: Scheme of Stacked Ensembles.
 <a class="sourceLine" id="cb149-4" data-line-number="4">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)         <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb149-5" data-line-number="5">)</a>
 <a class="sourceLine" id="cb149-6" data-line-number="6"><span class="kw">summary</span>(model_stack)                           <span class="co"># Model architecture</span></a></code></pre></div>
-<pre><code>## ___________________________________________________________________________
-## Layer (type)                     Output Shape                  Param #     
-## ===========================================================================
-## dense_278 (Dense)                (None, 8)                     48          
-## ___________________________________________________________________________
-## dense_279 (Dense)                (None, 4)                     36          
-## ___________________________________________________________________________
-## dense_280 (Dense)                (None, 1)                     5           
-## ===========================================================================
+<pre><code>## _______________________________________________________________________________________________________________________________________
+## Layer (type)                                                Output Shape                                          Param #              
+## =======================================================================================================================================
+## dense_22 (Dense)                                            (None, 8)                                             48                   
+## _______________________________________________________________________________________________________________________________________
+## dense_23 (Dense)                                            (None, 4)                                             36                   
+## _______________________________________________________________________________________________________________________________________
+## dense_24 (Dense)                                            (None, 1)                                             5                    
+## =======================================================================================================================================
 ## Total params: 89
 ## Trainable params: 89
 ## Non-trainable params: 0
-## ___________________________________________________________________________</code></pre>
+## _______________________________________________________________________________________________________________________________________</code></pre>
 <p></p>
 
 <div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">y_tilde &lt;-<span class="st"> </span>E <span class="op">+</span><span class="st"> </span><span class="kw">matrix</span>(<span class="kw">rep</span>(training_sample<span class="op">$</span>R1M_Usd, nb_mods), <span class="dt">ncol =</span> nb_mods)    <span class="co"># Training predictions</span></a>
@@ -670,12 +673,12 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <a class="sourceLine" id="cb156-12" data-line-number="12"><span class="st">    </span><span class="kw">left_join</span>(ts)                                     <span class="co"># Add termspread</span></a>
 <a class="sourceLine" id="cb156-13" data-line-number="13"><span class="kw">head</span>(ens_data)                                        <span class="co"># Show first lines</span></a></code></pre></div>
 <pre><code>##         date err_NN_test      Index CPIAUCSL   inflation termspread
-## 1 2014-01-31 -0.15920653 2014-01-01  235.288 0.002424175       2.47
-## 2 2014-02-28  0.06830179 2014-02-01  235.547 0.001100779       2.38
-## 3 2014-03-31 -0.01285055 2014-03-01  236.028 0.002042055       2.32
-## 4 2014-04-30 -0.07662877 2014-04-01  236.468 0.001864186       2.29
-## 5 2014-05-31 -0.09003494 2014-05-01  236.918 0.001903006       2.17
-## 6 2014-06-30  0.03780524 2014-06-01  237.231 0.001321132       2.15</code></pre>
+## 1 2014-01-31 -0.16261724 2014-01-01  235.288 0.002424175       2.47
+## 2 2014-02-28  0.06522411 2014-02-01  235.547 0.001100779       2.38
+## 3 2014-03-31 -0.01437798 2014-03-01  236.028 0.002042055       2.32
+## 4 2014-04-30 -0.07619413 2014-04-01  236.468 0.001864186       2.29
+## 5 2014-05-31 -0.08980968 2014-05-01  236.918 0.001903006       2.17
+## 6 2014-06-30  0.03999142 2014-06-01  237.231 0.001321132       2.15</code></pre>
 <p></p>
 <p>We can now build a tree that tries to explain the accuracy of models as a function of macro variables.</p>
 
@@ -774,10 +777,10 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <a class="sourceLine" id="cb164-4" data-line-number="4">                        err_ens_<span class="dv">2013</span>)</a>
 <a class="sourceLine" id="cb164-5" data-line-number="5"><span class="kw">cor</span>(E_subtraining)</a></code></pre></div>
 <pre><code>##              err_ens_2007 err_ens_2009 err_ens_2011 err_ens_2013
-## err_ens_2007    1.0000000    0.9399344    0.6415089    0.9985507
-## err_ens_2009    0.9399344    1.0000000    0.6191353    0.9441545
-## err_ens_2011    0.6415089    0.6191353    1.0000000    0.6417941
-## err_ens_2013    0.9985507    0.9441545    0.6417941    1.0000000</code></pre>
+## err_ens_2007    1.0000000    0.9551499    0.6460091    0.9975918
+## err_ens_2009    0.9551499    1.0000000    0.6300326    0.9607418
+## err_ens_2011    0.6460091    0.6300326    1.0000000    0.6459740
+## err_ens_2013    0.9975918    0.9607418    0.6459740    1.0000000</code></pre>
 <p></p>
 <p>The results are overall disappointing. Only one model manages to extract patterns that are somewhat different from the other ones, resulting in a 70% correlation across the board. One possible explanation could be that the models capture mainly noise and little signal. Working with long term labels like annual returns could help improve diversification across models.</p>
 </div>
@@ -793,71 +796,23 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <div id="ref-bates1969combination">
 <p>Bates, John M, and Clive WJ Granger. 1969. “The Combination of Forecasts.” <em>Journal of the Operational Research Society</em> 20 (4): 451–68.</p>
 </div>
-<div id="ref-zhou2012ensemble">
-<p>Zhou, Zhi-Hua. 2012. <em>Ensemble Methods: Foundations and Algorithms</em>. Chapman; Hall/CRC.</p>
-</div>
-<div id="ref-schapire2012boosting">
-<p>Schapire, Robert E, and Yoav Freund. 2012. <em>Boosting: Foundations and Algorithms</em>. MIT press.</p>
-</div>
-<div id="ref-seni2010ensemble">
-<p>Seni, Giovanni, and John F Elder. 2010. “Ensemble Methods in Data Mining: Improving Accuracy Through Combining Predictions.” <em>Synthesis Lectures on Data Mining and Knowledge Discovery</em> 2 (1): 1–126.</p>
-</div>
-<div id="ref-claeskens2008model">
-<p>Claeskens, Gerda, and Nils Lid Hjort. 2008. <em>Model Selection and Model Averaging</em>. Cambridge University Press.</p>
-</div>
-<div id="ref-zhang2012ensemble">
-<p>Zhang, Cha, and Yunqian Ma. 2012. <em>Ensemble Machine Learning: Methods and Applications</em>. Springer.</p>
-</div>
-<div id="ref-okun2011ensembles">
-<p>Okun, Oleg, Giorgio Valentini, and Matteo Re. 2011. <em>Ensembles in Machine Learning Applications</em>. Vol. 373. Springer Science &amp; Business Media.</p>
-</div>
-<div id="ref-schapire1990strength">
-<p>Schapire, Robert E. 1990. “The Strength of Weak Learnability.” <em>Machine Learning</em> 5 (2): 197–227.</p>
-</div>
-<div id="ref-jacobs1991adaptive">
-<p>Jacobs, Robert A, Michael I Jordan, Steven J Nowlan, Geoffrey E Hinton, and others. 1991. “Adaptive Mixtures of Local Experts.” <em>Neural Computation</em> 3 (1): 79–87.</p>
-</div>
-<div id="ref-freund1997decision">
-<p>Freund, Yoav, and Robert E Schapire. 1997. “A Decision-Theoretic Generalization of on-Line Learning and an Application to Boosting.” <em>Journal of Computer and System Sciences</em> 55 (1): 119–39.</p>
+<div id="ref-bonaccolto2019developing">
+<p>Bonaccolto, Giovanni, and Sandra Paterlini. 2019. “Developing New Portfolio Strategies by Aggregation.” <em>Annals of Operations Research</em>, 1–39.</p>
 </div>
 <div id="ref-breiman1996stacked">
 <p>Breiman, Leo. 1996. “Stacked Regressions.” <em>Machine Learning</em> 24 (1): 49–64.</p>
 </div>
-<div id="ref-jagannathan2003risk">
-<p>Jagannathan, Ravi, and Tongshu Ma. 2003. “Risk Reduction in Large Portfolios: Why Imposing the Wrong Constraints Helps.” <em>Journal of Finance</em> 58 (4): 1651–83.</p>
-</div>
-<div id="ref-von1972probabilistic">
-<p>Von Holstein, Carl-Axel S Staël. 1972. “Probabilistic Forecasting: An Experiment Related to the Stock Market.” <em>Organizational Behavior and Human Performance</em> 8 (1): 139–58.</p>
-</div>
-<div id="ref-virtanen1987forecasting">
-<p>Virtanen, Ilkka, and Paavo Yli-Olli. 1987. “Forecasting Stock Market Prices in a Thin Security Market.” <em>Omega</em> 15 (2): 145–55.</p>
-</div>
-<div id="ref-wang2012stock">
-<p>Wang, Ju-Jie, Jian-Zhou Wang, Zhe-George Zhang, and Shu-Po Guo. 2012. “Stock Index Forecasting Based on a Hybrid Model.” <em>Omega</em> 40 (6): 758–66.</p>
-</div>
-<div id="ref-donaldson1996forecast">
-<p>Donaldson, R Glen, and Mark Kamstra. 1996. “Forecast Combining with Neural Networks.” <em>Journal of Forecasting</em> 15 (1): 49–61.</p>
+<div id="ref-claeskens2008model">
+<p>Claeskens, Gerda, and Nils Lid Hjort. 2008. <em>Model Selection and Model Averaging</em>. Cambridge University Press.</p>
 </div>
 <div id="ref-clark2009improving">
 <p>Clark, Todd E, and Michael W McCracken. 2009. “Improving Forecast Accuracy by Combining Recursive and Rolling Forecasts.” <em>International Economic Review</em> 50 (2): 363–95.</p>
 </div>
-<div id="ref-huang2005forecasting">
-<p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>
+<div id="ref-donaldson1996forecast">
+<p>Donaldson, R Glen, and Mark Kamstra. 1996. “Forecast Combining with Neural Networks.” <em>Journal of Forecasting</em> 15 (1): 49–61.</p>
 </div>
-<div id="ref-leung2001using">
-<p>Leung, Mark T, Hazem Daouk, and An-Sing Chen. 2001. “Using Investment Portfolio Return to Combine Forecasts: A Multiobjective Approach.” <em>European Journal of Operational Research</em> 134 (1): 84–102.</p>
-</div>
-<div id="ref-bonaccolto2019developing">
-<p>Bonaccolto, Giovanni, and Sandra Paterlini. 2019. “Developing New Portfolio Strategies by Aggregation.” <em>Annals of Operations Research</em>, 1–39.</p>
-</div>
-<div id="ref-harrald1997evolving">
-<p>Harrald, Paul G, and Mark Kamstra. 1997. “Evolving Artificial Neural Networks to Combine Financial Forecasts.” <em>IEEE Transactions on Evolutionary Computation</em> 1 (1): 40–52.</p>
-</div>
-<div id="ref-hassan2007fusion">
-<p>Hassan, Md Rafiul, Baikunth Nath, and Michael Kirley. 2007. “A Fusion Model of Hmm, Ann and Ga for Stock Market Forecasting.” <em>Expert Systems with Applications</em> 33 (1): 171–80.</p>
-</div>
-<div id="ref-grushka2016ensembles">
-<p>Grushka-Cockayne, Yael, Victor Richmond R Jose, and Kenneth C Lichtendahl Jr. 2016. “Ensembles of Overfit and Overconfident Forecasts.” <em>Management Science</em> 63 (4): 1110–30.</p>
+<div id="ref-freund1997decision">
+<p>Freund, Yoav, and Robert E Schapire. 1997. “A Decision-Theoretic Generalization of on-Line Learning and an Application to Boosting.” <em>Journal of Computer and System Sciences</em> 55 (1): 119–39.</p>
 </div>
 <div id="ref-gaba2017combining">
 <p>Gaba, Anil, Ilia Tsetlin, and Robert L Winkler. 2017. “Combining Interval Forecasts.” <em>Decision Analysis</em> 14 (1): 1–20.</p>
@@ -865,8 +820,56 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <div id="ref-genre2013combining">
 <p>Genre, Véronique, Geoff Kenny, Aidan Meyler, and Allan Timmermann. 2013. “Combining Expert Forecasts: Can Anything Beat the Simple Average?” <em>International Journal of Forecasting</em> 29 (1): 108–21.</p>
 </div>
+<div id="ref-grushka2016ensembles">
+<p>Grushka-Cockayne, Yael, Victor Richmond R Jose, and Kenneth C Lichtendahl Jr. 2016. “Ensembles of Overfit and Overconfident Forecasts.” <em>Management Science</em> 63 (4): 1110–30.</p>
+</div>
+<div id="ref-harrald1997evolving">
+<p>Harrald, Paul G, and Mark Kamstra. 1997. “Evolving Artificial Neural Networks to Combine Financial Forecasts.” <em>IEEE Transactions on Evolutionary Computation</em> 1 (1): 40–52.</p>
+</div>
+<div id="ref-hassan2007fusion">
+<p>Hassan, Md Rafiul, Baikunth Nath, and Michael Kirley. 2007. “A Fusion Model of Hmm, Ann and Ga for Stock Market Forecasting.” <em>Expert Systems with Applications</em> 33 (1): 171–80.</p>
+</div>
+<div id="ref-huang2005forecasting">
+<p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>
+</div>
+<div id="ref-jacobs1991adaptive">
+<p>Jacobs, Robert A, Michael I Jordan, Steven J Nowlan, Geoffrey E Hinton, and others. 1991. “Adaptive Mixtures of Local Experts.” <em>Neural Computation</em> 3 (1): 79–87.</p>
+</div>
+<div id="ref-jagannathan2003risk">
+<p>Jagannathan, Ravi, and Tongshu Ma. 2003. “Risk Reduction in Large Portfolios: Why Imposing the Wrong Constraints Helps.” <em>Journal of Finance</em> 58 (4): 1651–83.</p>
+</div>
+<div id="ref-leung2001using">
+<p>Leung, Mark T, Hazem Daouk, and An-Sing Chen. 2001. “Using Investment Portfolio Return to Combine Forecasts: A Multiobjective Approach.” <em>European Journal of Operational Research</em> 134 (1): 84–102.</p>
+</div>
+<div id="ref-okun2011ensembles">
+<p>Okun, Oleg, Giorgio Valentini, and Matteo Re. 2011. <em>Ensembles in Machine Learning Applications</em>. Vol. 373. Springer Science &amp; Business Media.</p>
+</div>
+<div id="ref-schapire1990strength">
+<p>Schapire, Robert E. 1990. “The Strength of Weak Learnability.” <em>Machine Learning</em> 5 (2): 197–227.</p>
+</div>
+<div id="ref-schapire2012boosting">
+<p>Schapire, Robert E, and Yoav Freund. 2012. <em>Boosting: Foundations and Algorithms</em>. MIT press.</p>
+</div>
+<div id="ref-seni2010ensemble">
+<p>Seni, Giovanni, and John F Elder. 2010. “Ensemble Methods in Data Mining: Improving Accuracy Through Combining Predictions.” <em>Synthesis Lectures on Data Mining and Knowledge Discovery</em> 2 (1): 1–126.</p>
+</div>
+<div id="ref-virtanen1987forecasting">
+<p>Virtanen, Ilkka, and Paavo Yli-Olli. 1987. “Forecasting Stock Market Prices in a Thin Security Market.” <em>Omega</em> 15 (2): 145–55.</p>
+</div>
+<div id="ref-von1972probabilistic">
+<p>Von Holstein, Carl-Axel S Staël. 1972. “Probabilistic Forecasting: An Experiment Related to the Stock Market.” <em>Organizational Behavior and Human Performance</em> 8 (1): 139–58.</p>
+</div>
+<div id="ref-wang2012stock">
+<p>Wang, Ju-Jie, Jian-Zhou Wang, Zhe-George Zhang, and Shu-Po Guo. 2012. “Stock Index Forecasting Based on a Hybrid Model.” <em>Omega</em> 40 (6): 758–66.</p>
+</div>
 <div id="ref-wolpert1992stacked">
 <p>Wolpert, David H. 1992b. “Stacked Generalization.” <em>Neural Networks</em> 5 (2): 241–59.</p>
+</div>
+<div id="ref-zhang2012ensemble">
+<p>Zhang, Cha, and Yunqian Ma. 2012. <em>Ensemble Machine Learning: Methods and Applications</em>. Springer.</p>
+</div>
+<div id="ref-zhou2012ensemble">
+<p>Zhou, Zhi-Hua. 2012. <em>Ensemble Methods: Foundations and Algorithms</em>. Chapman; Hall/CRC.</p>
 </div>
 </div>
             </section>
@@ -880,11 +883,13 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
 <script>
 gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
@@ -892,13 +897,11 @@ gitbook.start({
 "github": false,
 "facebook": false,
 "twitter": true,
-"google": false,
 "linkedin": true,
 "weibo": false,
-"instapper": false,
+"instapaper": false,
 "vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"],
-"instapaper": false
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
 },
 "fontsettings": {
 "theme": "white",
@@ -906,6 +909,14 @@ gitbook.start({
 "size": 2
 },
 "edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
 "download": ["ML_factor.pdf"],
 "toc": {
 "collapse": "section",
@@ -926,9 +937,10 @@ gitbook.start({
     var script = document.createElement("script");
     script.type = "text/javascript";
     var src = "true";
-    if (src === "" || src === "true") src = "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:" && /^https?:/.test(src))
-      src = src.replace(/^https?:/, '');
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
