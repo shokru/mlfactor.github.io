@@ -49,7 +49,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -510,7 +509,7 @@ FIGURE 11.2: Stylized ROC curves.
 <p>Below, we use a particular package (<em>caTools</em>) to compute a ROC curve for a given set of predictions on the testing sample.</p>
 
 <div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(caTools)){<span class="kw">install.packages</span>(<span class="st">&quot;caTools&quot;</span>)}</a></code></pre></div>
-
+<p></p>
 
 <div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb110-1" data-line-number="1"><span class="kw">library</span>(caTools)  <span class="co"># Package for AUC computation</span></a>
 <a class="sourceLine" id="cb110-2" data-line-number="2"><span class="kw">colAUC</span>(<span class="dt">X =</span> <span class="kw">predict</span>(fit_RF_C, testing_sample, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>), </a>
@@ -524,7 +523,7 @@ FIGURE 11.3: Example of ROC curve.
 </div>
 <pre><code>##                    FALSE      TRUE
 ## FALSE vs. TRUE 0.5003885 0.5003885</code></pre>
-
+<p></p>
 <p>In the above figure, the curve is very close to the 45° angle and the model seems as good (or, rather, as bad) as a random classifier.</p>
 <p>Finally, having one entire curve is not practical for comparison purposes, hence the information of the whole curve is synthesized into the area below the curve, i.e., the integral of the corresponding function. The 45° angle (quadrant bisector) has an area of 0.5 (it is half the unit square which has a unit area). Thus, any good model is expected to have an area under the curve (AUC) above 0.5. A perfect model has an AUC of one.</p>
 <p>We end this subsection with a word on multiclass data. When the output (i.e., the label) has more than two categories, things become more complex. It is still possible to compute a confusion matrix, but the dimension is larger and harder to interpret. The simple indicators like <span class="math inline">\(TP\)</span>, <span class="math inline">\(TN\)</span>, etc., must be generalized in a non standard way. The simplest metric in the case is the cross-entropy defined in Equation (<a href="NN.html#eq:crossentropy">(8.5)</a>).</p>
@@ -601,7 +600,7 @@ FIGURE 11.5: Second representation of the variance-bias tradeoff.
 FIGURE 11.6: Error decomposition for a ridge regression
 </p>
 </div>
-
+<p></p>
 <p>In Figure <a href="valtune.html#fig:ridgetrade">11.6</a>, the pattern is different from the one depicted in Figure <a href="valtune.html#fig:varbiastrade">11.5</a>. In the graph, when the intensity lambda increases, the magnitude of parameters shrinks and the model becomes simpler. Hence, the most simple model seems like the best choice: adding complexity increases variance but does not improve the bias! One possible reason for that is that features don’t actually carry much predictive value and hence a constant model is just as good as more sophisticated ones based on unrelevant variables.</p>
 </div>
 <div id="the-variance-bias-tradeoff-illustration" class="section level3">
@@ -621,7 +620,7 @@ FIGURE 11.6: Error decomposition for a ridge regression
 FIGURE 11.7: Simple tree.
 </p>
 </div>
-
+<p></p>
 <p>The model only has 4 clusters, which means that the predictions can only take four values. The smallest one is 0.011 and encompasses a large portion of the sample (85%) and the largest one is 0.062 and corresponds to only 4% of the training sample.<br />
 We are then able to compute the bias and the variance of the predictions on the <em>testing</em> set.</p>
 
@@ -629,7 +628,7 @@ We are then able to compute the bias and the variance of the predictions on the 
 <pre><code>## [1] 0.004973917</code></pre>
 <div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw">var</span>(<span class="kw">predict</span>(fit_tree_simple, testing_sample))                           <span class="co"># Variance</span></a></code></pre></div>
 <pre><code>## [1] 0.0001398003</code></pre>
-
+<p></p>
 <p>On average, the error is slightly positive, with an overall overestimation of 0.005 . As expected, the variance is very small (10^{-4}).</p>
 <p>For the complex model, we take the boosted tree that was obtained in Section <a href="trees.html#boostcode">7.4.6</a> (fit_xgb). The model aggregates 40 trees with a maximum depth of 4, it is thus undoubtedly more complex.</p>
 
@@ -637,7 +636,7 @@ We are then able to compute the bias and the variance of the predictions on the 
 <pre><code>## [1] 0.00324996</code></pre>
 <div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="kw">var</span>(<span class="kw">predict</span>(fit_xgb, xgb_test))                           <span class="co"># Variance</span></a></code></pre></div>
 <pre><code>## [1] 0.002206797</code></pre>
-
+<p></p>
 <p>The bias is indeed smaller compared to that of the simple model, but in exchange, the variance increases sustantially. The net effect (via the <em>squared bias</em>) is in favor of the simpler model.</p>
 </div>
 <div id="the-risk-of-overfitting-principle" class="section level3">
@@ -722,7 +721,7 @@ which corresponds to the maximum location of the expected improvement. Instead o
 <a class="sourceLine" id="cb122-5" data-line-number="5">eta &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>]</a>
 <a class="sourceLine" id="cb122-6" data-line-number="6">nrounds &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]</a>
 <a class="sourceLine" id="cb122-7" data-line-number="7">lambda &lt;-<span class="st"> </span>pars[,<span class="dv">3</span>]</a></code></pre></div>
-
+<p></p>
 <p>Given the computational cost of grid search, we perform the exploration on the dataset with the small number of features (which we recycle from Chapter <a href="trees.html#trees">7</a>). In order to avoid the burden of loops, we resort to the functional programming capabilities of R, via the <em>purrr</em> package. This allows us to define a function that will lighten and simplify the code. This function, coded below, takes data and parameter inputs and returns an error metric for the algorithm. We choose the mean squared error to evaluate the impact of hyperparameter values.</p>
 
 <div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1">grid_par &lt;-<span class="st"> </span><span class="cf">function</span>(train_matrix, test_features, test_label, eta, nrounds, lambda){</a>
@@ -740,7 +739,7 @@ which corresponds to the maximum location of the expected improvement. Instead o
 <a class="sourceLine" id="cb123-13" data-line-number="13">    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Preditions based on fitted model &amp; test values</span></a>
 <a class="sourceLine" id="cb123-14" data-line-number="14">    <span class="kw">return</span>(<span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>))             <span class="co"># Mean squared error</span></a>
 <a class="sourceLine" id="cb123-15" data-line-number="15">}</a></code></pre></div>
-
+<p></p>
 <p>The grid_par function can then be processed by the functional programming tool <strong>pmap</strong> that is going to perform the loop on parameter values automatically.</p>
 
 <div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="co"># grid_par(train_matrix_xgb, xgb_test, testing_sample$R1M_Usd, 0.1, 3, 0.1) # Test of the function</span></a>
@@ -751,7 +750,7 @@ which corresponds to the maximum location of the expected improvement. Instead o
 <a class="sourceLine" id="cb124-6" data-line-number="6">            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd     <span class="co"># Input for function: test labels (returns) </span></a>
 <a class="sourceLine" id="cb124-7" data-line-number="7">)</a>
 <a class="sourceLine" id="cb124-8" data-line-number="8">grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(eta, nrounds, lambda, <span class="dt">error =</span> <span class="kw">unlist</span>(grd)) <span class="co"># Dataframe with all results</span></a></code></pre></div>
-
+<p></p>
 <p>Once the squared mean errors have been gathered, it is possible to plot them. We chose to work with 3 parameters on purpose because their influence can be simultaneuously plotted on one graph.</p>
 
 <div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1">grd<span class="op">$</span>eta &lt;-<span class="st"> </span><span class="kw">as.factor</span>(eta)                                  <span class="co"># Parameters as categories (for plotting)</span></a>
@@ -764,7 +763,7 @@ which corresponds to the maximum location of the expected improvement. Instead o
 FIGURE 11.9: Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda.
 </p>
 </div>
-
+<p></p>
 <p>In Figure <a href="valtune.html#fig:gridvisu">11.9</a>, the main information is that a small learning rate (<span class="math inline">\(\eta=0.1\)</span>) is detrimental to the quality of the forecasts. This remains true even when the number of trees is large (nrounds=100), which means that the algorithm does not learn enough.</p>
 <p>Grid search can be performed in two stages: the first stage helps locate the zones that are of interest (with the lowest loss/objective values) and then zoom in on these zones with refined values for the parameter on the grid. With the results above, this would means shrinking the support of eta to <span class="math inline">\([0.3,0.7]\)</span> and also probably avoid the lowest values for lambda.</p>
 </div>
@@ -792,7 +791,7 @@ FIGURE 11.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 <a class="sourceLine" id="cb126-17" data-line-number="17">    <span class="kw">list</span>(<span class="dt">Score =</span> <span class="op">-</span><span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>),      <span class="co"># Minus RMSE</span></a>
 <a class="sourceLine" id="cb126-18" data-line-number="18">         <span class="dt">Pred =</span> pred)                             <span class="co"># Predictions on test set</span></a>
 <a class="sourceLine" id="cb126-19" data-line-number="19">}</a></code></pre></div>
-
+<p></p>
 <p>Once the objective function is defined, it can be fed to the Bayesian optimizer.</p>
 
 <div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="kw">library</span>(rBayesianOptimization)</a>
@@ -810,7 +809,7 @@ FIGURE 11.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 <div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">bayes_opt<span class="op">$</span>Best_Par</a></code></pre></div>
 <pre><code>##        eta     lambda    nrounds 
 ##  0.2933516 12.7813514 13.7481070</code></pre>
-
+<p></p>
 <p>The final parameters indicate that it is advised to resist overfitting: small number of learners and large penalization seem to be the best choices.</p>
 <p>As a confirmation of these results, we plot the relationship between the loss (up to the sign) and two hyperparameters. Each point corresponds to a value tested in the optimization. The best values are clearly to the left of the left graph and to the right of the right graph and the pattern is reliably pronounced.</p>
 
@@ -827,7 +826,7 @@ FIGURE 11.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 FIGURE 11.10: Relationship between (minus) loss and hyperparameter values.
 </p>
 </div>
-
+<p></p>
 </div>
 </div>
 <div id="short-discussion-on-validation-in-backtests" class="section level2">

@@ -49,7 +49,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -554,7 +553,7 @@ where <span class="math inline">\(\alpha\)</span> is the shape and <span class="
 <a class="sourceLine" id="cb100-8" data-line-number="8">    <span class="dt">beta.prior.precision =</span> precision_mat,   <span class="co"># Precision matrix</span></a>
 <a class="sourceLine" id="cb100-9" data-line-number="9">    <span class="dt">prior.shape =</span> <span class="fl">0.5</span>,                      <span class="co"># Shape for prior distribution of sigma</span></a>
 <a class="sourceLine" id="cb100-10" data-line-number="10">    <span class="dt">prior.rate =</span> <span class="fl">0.5</span>)                       <span class="co"># Scale for prior distribution fo sigma</span></a></code></pre></div>
-
+<p></p>
 <p>In the above specification, we must also provide a prior for the constant. By default, we set its average value to 0.01, which corresponds to a 1% average monthly return.</p>
 
 <div class="sourceCode" id="cb101"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb101-1" data-line-number="1">fit_lmBayes<span class="op">$</span>p.beta.tauSq.samples[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></a>
@@ -567,7 +566,7 @@ where <span class="math inline">\(\alpha\)</span> is the shape and <span class="
 FIGURE 10.1: Distribution of linear regression coefficients (betas).
 </p>
 </div>
-
+<p></p>
 <p>The distribution of the constant is firmly to the right, hence soldily positive. For the size coefficient it is the opposite: it is negative (small firms are more profitable). With regard to value, it is hard to conclude, the distribution is balanced around zero.</p>
 </div>
 <div id="naive-bayes-classifier" class="section level2">
@@ -617,7 +616,7 @@ will have a standard normal law whenever <span class="math inline">\(F_{\textbf{
 FIGURE 10.2: Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return.
 </p>
 </div>
-
+<p></p>
 <p>The plots show the distributions of the features, conditionally on each value of the label. Essentially, those are the densities <span class="math inline">\(P[\textbf{x}_k| \textbf{y}]\)</span>. For each feature, both distributions are very similar.</p>
 <p>As usual, when the model has been trained, the accuracy of predictions can be evaluated.</p>
 
@@ -630,7 +629,7 @@ FIGURE 10.2: Distributions of predictor variables, conditional on the class of t
 <a class="sourceLine" id="cb103-7" data-line-number="7"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(features_short)</a>
 <a class="sourceLine" id="cb103-8" data-line-number="8"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_NB_gauss, gauss_features_test) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.4956985</code></pre>
-
+<p></p>
 <p>The performance of the classifier is not satisfactory as it underperforms a random guess.</p>
 </div>
 <div id="BART" class="section level2">
@@ -739,14 +738,14 @@ FIGURE 10.3: Diagram of the MH/Gibbs sampling of BARTs.
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 32s
+## time: 27s
 ## trcnt,tecnt: 200,200</code></pre>
-
+<p></p>
 <p>Once the model is trained,<a href="#fn16" class="footnote-ref" id="fnref16"><sup>16</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>’.</p>
 
 <div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1"><span class="kw">mean</span>(fit_bart<span class="op">$</span>yhat.test <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
 <pre><code>## [1] 0.5417584</code></pre>
-
+<p></p>
 <p>The performance <em>seems</em> reasonable but is by no means not impressive.</p>
 
 </div>

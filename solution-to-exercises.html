@@ -49,7 +49,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -580,9 +579,78 @@ FIGURE B.4: Distribution of Eps after conditioning
 <a class="sourceLine" id="cb235-15" data-line-number="15"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> nb, <span class="dt">fill =</span> R1M_Usd_Cvix)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>()</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/ex52b-1.png" width="400px" height="150px" style="display: block; margin: auto;" /></p>
 
+<p>Finally, we switch to the outliers.
+</p>
+<div class="sourceCode" id="cb236"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb236-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb236-2" data-line-number="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> R12M_Usd)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>()</a></code></pre></div>
+<p><img src="ML_factor_files/figure-html/ex53a-1.png" width="400px" height="150px" style="display: block; margin: auto;" /></p>
+
+<p>Returns above 50 should indeed be rare.</p>
+
+<div class="sourceCode" id="cb237"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb237-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(R12M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(stock_id, date, R12M_Usd)</a></code></pre></div>
+<pre><code>## # A tibble: 8 x 3
+##   stock_id date       R12M_Usd
+##      &lt;int&gt; &lt;date&gt;        &lt;dbl&gt;
+## 1      212 2000-12-31     53.0
+## 2      221 2008-12-31     53.5
+## 3      221 2009-01-31     55.2
+## 4      221 2009-02-28     54.8
+## 5      296 2002-06-30     72.2
+## 6      683 2009-02-28     96.0
+## 7      683 2009-03-31     64.8
+## 8      862 2009-02-28     58.0</code></pre>
+
+<p>The largest return comes from stock #683. Let’s have a look at the stream of monthly returns in 2009.</p>
+
+<div class="sourceCode" id="cb239"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb239-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb239-2" data-line-number="2"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">683</span>, <span class="kw">year</span>(date) <span class="op">==</span><span class="st"> </span><span class="dv">2009</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb239-3" data-line-number="3"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(date, R1M_Usd)</a></code></pre></div>
+<pre><code>## # A tibble: 12 x 2
+##    date       R1M_Usd
+##    &lt;date&gt;       &lt;dbl&gt;
+##  1 2009-01-31  -0.625
+##  2 2009-02-28   0.472
+##  3 2009-03-31   1.44 
+##  4 2009-04-30   0.139
+##  5 2009-05-31   0.086
+##  6 2009-06-30   0.185
+##  7 2009-07-31   0.363
+##  8 2009-08-31   0.103
+##  9 2009-09-30   9.91 
+## 10 2009-10-31   0.101
+## 11 2009-11-30   0.202
+## 12 2009-12-31  -0.251</code></pre>
+
+<p>The returns are all very high. The annual value is plausible. In addition, a quick glance at the Vol1Y values show that the stock is the most volatile of the dataset.</p>
 </div>
 <div id="chapter-6" class="section level2">
 <h2><span class="header-section-number">B.3</span> Chapter 6</h2>
+<p>We recycle the training ans testing data variables created in the chapter. In addition, we create a dedicated function and resort to the <em>map2</em>() function from the <em>purrr</em> package.</p>
+
+<div class="sourceCode" id="cb241"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb241-1" data-line-number="1">alpha_seq &lt;-<span class="st"> </span>(<span class="dv">0</span><span class="op">:</span><span class="dv">10</span>)<span class="op">/</span><span class="dv">10</span>                     <span class="co"># Sequence of alpha values</span></a>
+<a class="sourceLine" id="cb241-2" data-line-number="2">lambda_seq &lt;-<span class="st"> </span><span class="fl">0.1</span><span class="op">^</span>(<span class="dv">0</span><span class="op">:</span><span class="dv">5</span>)                    <span class="co"># Sequence of lambda values</span></a>
+<a class="sourceLine" id="cb241-3" data-line-number="3">pars &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(alpha_seq, lambda_seq) <span class="co"># Exploring all combinations!</span></a>
+<a class="sourceLine" id="cb241-4" data-line-number="4">alpha_seq &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb241-5" data-line-number="5">lambda_seq &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb241-6" data-line-number="6">lasso_sens &lt;-<span class="st"> </span><span class="cf">function</span>(alpha, lambda, x_train, y_train, x_test, y_test){ <span class="co"># Function</span></a>
+<a class="sourceLine" id="cb241-7" data-line-number="7">    fit_temp &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_train, y_train,                                 <span class="co"># Model</span></a>
+<a class="sourceLine" id="cb241-8" data-line-number="8">                       <span class="dt">alpha =</span> alpha, <span class="dt">lambda =</span> lambda)</a>
+<a class="sourceLine" id="cb241-9" data-line-number="9">    <span class="kw">return</span>(<span class="kw">sqrt</span>(<span class="kw">mean</span>((<span class="kw">predict</span>(fit_temp, x_test) <span class="op">-</span><span class="st"> </span>y_test)<span class="op">^</span><span class="dv">2</span>)))           <span class="co"># Output</span></a>
+<a class="sourceLine" id="cb241-10" data-line-number="10">}</a>
+<a class="sourceLine" id="cb241-11" data-line-number="11">rmse_elas &lt;-<span class="st"> </span><span class="kw">map2</span>(alpha_seq, lambda_seq, lasso_sens,                     <span class="co"># Automation</span></a>
+<a class="sourceLine" id="cb241-12" data-line-number="12">     <span class="dt">x_train =</span> x_penalized_train, <span class="dt">y_train =</span> y_penalized_train,</a>
+<a class="sourceLine" id="cb241-13" data-line-number="13">     <span class="dt">x_test =</span> x_penalized_test, <span class="dt">y_test =</span> testing_sample<span class="op">$</span>R1M_Usd)</a>
+<a class="sourceLine" id="cb241-14" data-line-number="14"><span class="kw">bind_cols</span>(<span class="dt">alpha =</span> alpha_seq, <span class="dt">lambda =</span> <span class="kw">as.factor</span>(lambda_seq), <span class="dt">rmse =</span> <span class="kw">unlist</span>(rmse_elas)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb241-15" data-line-number="15"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> alpha, <span class="dt">y =</span> rmse, <span class="dt">fill =</span> lambda)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(lambda <span class="op">~</span>.) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb241-16" data-line-number="16"><span class="st">    </span><span class="kw">coord_cartesian</span>(<span class="dt">ylim =</span> <span class="kw">c</span>(<span class="fl">0.1985</span>, <span class="fl">0.199</span>))</a></code></pre></div>
+<div class="figure"><span id="fig:ex61"></span>
+<img src="ML_factor_files/figure-html/ex61-1.png" alt="Performance of elasticnet across parameter values." width="432" />
+<p class="caption">
+FIGURE B.5: Performance of elasticnet across parameter values.
+</p>
+</div>
+
+<p>The parameters have a very marginal impact. Maybe the model is not a good fit for the task.</p>
 </div>
 <div id="chapter-7" class="section level2">
 <h2><span class="header-section-number">B.4</span> Chapter 7</h2>

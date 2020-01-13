@@ -49,7 +49,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -434,12 +433,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Neural networks (NN) are an immensely rich and complicated topic. In this chapter, we introduce the simple ideas and concepts behind the most simple architectures of NN. For more exhaustive treatments on NN idiosyncracies, we refer to the monographs <span class="citation">Haykin (<a href="#ref-haykin2009neural">2009</a>)</span>, <span class="citation">Du and Swamy (<a href="#ref-du2013neural">2013</a>)</span> and <span class="citation">Goodfellow et al. (<a href="#ref-goodfellow2016deep">2016</a>)</span>. The latter is available freely online: www.deeplearningbook.org. For a practical introduction, we recommend the great book of <span class="citation">Chollet (<a href="#ref-chollet2017deep">2017</a>)</span>.</p>
 <p>For starters, we briefly comment on the qualification “neural network”. Most experts agree that the term is not very well chosen, as NN have little to do with how the human brain works (of which we know not that much). This explains why they are often referred to as “artificial neural networks” - we do not use the adjective for notational simplicity. Because we consider it more appropriate, we recall the definition of NN given by François Chollet: “<em>chains of differentiable, parameterised geometric functions, trained with gradient descent (with gradients obtained via the chain rule)</em>”.</p>
 <p>Early references of neural networks in finance are <span class="citation">Bansal and Viswanathan (<a href="#ref-bansal1993no">1993</a>)</span> and <span class="citation">Eakins, Stansell, and Buck (<a href="#ref-eakins1998analyzing">1998</a>)</span>. Both have very different goals. In the first one, the authors aims to estimate a nonlinear form for the pricing kernel. In the second one, the purpose is to identify and quantify relationships between institutional investments in stocks and the attributes of the firms (an early contribution towards factor investing). An early review (<span class="citation">Burrell and Folarin (<a href="#ref-burrell1997impact">1997</a>)</span>) lists financial applications of NN during the 1990s decade.</p>
-<p>The pure predictive ability of NN in financial markets is a popular subject and we cite for example <span class="citation">Kimoto et al. (<a href="#ref-kimoto1990stock">1990</a>)</span>, <span class="citation">Enke and Thawornwong (<a href="#ref-enke2005use">2005</a>)</span>, <span class="citation">Zhang and Wu (<a href="#ref-zhang2009stock">2009</a>)</span> and <span class="citation">Guresen, Kayakutlu, and Daim (<a href="#ref-guresen2011using">2011</a>)</span>.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> This list is very far from exhaustive. More recent studies on neural networks include:</p>
+<p>The pure predictive ability of NN in financial markets is a popular subject and we cite for example <span class="citation">Kimoto et al. (<a href="#ref-kimoto1990stock">1990</a>)</span>, <span class="citation">Enke and Thawornwong (<a href="#ref-enke2005use">2005</a>)</span>, <span class="citation">Zhang and Wu (<a href="#ref-zhang2009stock">2009</a>)</span>, <span class="citation">Guresen, Kayakutlu, and Daim (<a href="#ref-guresen2011using">2011</a>)</span>, <span class="citation">Krauss, Do, and Huck (<a href="#ref-krauss2017deep">2017</a>)</span>, <span class="citation">Fischer and Krauss (<a href="#ref-fischer2018deep">2018</a>)</span> and <span class="citation">Aldridge and Avellaneda (<a href="#ref-aldridge2019neural">2019</a>)</span>.<a href="#fn13" class="footnote-ref" id="fnref13"><sup>13</sup></a> This list is very far from exhaustive. More recent studies on neural networks include:</p>
 <ul>
 <li><span class="citation">Feng, Polson, and Xu (<a href="#ref-feng2019deep">2019</a>)</span> use neural network to find factors that are the best at explaining the cross-section of stock returns.<br />
 </li>
-<li><p><span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span> map firm attributes and macro-economic variables into future returns. This creates a strong predictive tool that is able to forecast future returns very accurately.</p></li>
-<li><p><span class="citation">Luyang Chen, Pelger, and Zhu (<a href="#ref-chen2019deep">2019</a>)</span> estimate the pricing kernel with a complex neural network structure including a generative adversarial network. This again gives crucial information on the structure of expected stock returns and can be used for portfolio construction (by building an accurate maximum Sharpe ratio policy).</p></li>
+<li><span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2018</a>)</span> map firm attributes and macro-economic variables into future returns. This creates a strong predictive tool that is able to forecast future returns very accurately.<br />
+</li>
+<li><span class="citation">Luyang Chen, Pelger, and Zhu (<a href="#ref-chen2019deep">2019</a>)</span> estimate the pricing kernel with a complex neural network structure including a generative adversarial network. This again gives crucial information on the structure of expected stock returns and can be used for portfolio construction (by building an accurate maximum Sharpe ratio policy).</li>
 </ul>
 <div id="the-original-perceptron" class="section level2">
 <h2><span class="header-section-number">8.1</span> The original perceptron</h2>
@@ -673,7 +673,7 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb75-4" data-line-number="4">NN_test_features &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(testing_sample, features) <span class="op">%&gt;%</span><span class="st">      </span><span class="co"># Testing features</span></a>
 <a class="sourceLine" id="cb75-5" data-line-number="5"><span class="st">    </span><span class="kw">as.matrix</span>()                                                      <span class="co"># Matrix = important</span></a>
 <a class="sourceLine" id="cb75-6" data-line-number="6">NN_test_labels &lt;-<span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd                             <span class="co"># Testing labels</span></a></code></pre></div>
-
+<p></p>
 <p>In Keras, the training of neural networks is performed through three steps:</p>
 <ol style="list-style-type: decimal">
 <li>Defining the structure/architecture of the network;<br />
@@ -690,7 +690,7 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb76-5" data-line-number="5"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">16</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="dt">input_shape =</span> <span class="kw">ncol</span>(NN_train_features)) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb76-6" data-line-number="6"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">8</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb76-7" data-line-number="7"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>) <span class="co"># No activation means linear activation: f(x) = x.</span></a></code></pre></div>
-
+<p></p>
 <p>The definition of the structure is very intuitive and uses the <em>sequential</em> syntax in which one input is iteratively transformed by a layer until the last iteration which gives the output. Each layer depends on two parameters: the number of layers and the activation function that is applied to the output of the layer. One important point is the input_shape parameter for the first layer. It is required for the first layer and is equal to the number of features. For the subsequent layers, the input_shape is dictated by the number of units of the previous layer; hence it is not required. The activations that are currently available are listed on <a href="https://keras.io/activations/" class="uri">https://keras.io/activations/</a>.</p>
 
 <div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb77-1" data-line-number="1">model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(                             <span class="co"># Model specification</span></a>
@@ -702,17 +702,17 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <pre><code>## _________________________________________________________________________________________________________________________________
 ## Layer (type)                                              Output Shape                                       Param #             
 ## =================================================================================================================================
-## dense_18 (Dense)                                          (None, 16)                                         1504                
+## dense_36 (Dense)                                          (None, 16)                                         1504                
 ## _________________________________________________________________________________________________________________________________
-## dense_19 (Dense)                                          (None, 8)                                          136                 
+## dense_37 (Dense)                                          (None, 8)                                          136                 
 ## _________________________________________________________________________________________________________________________________
-## dense_20 (Dense)                                          (None, 1)                                          9                   
+## dense_38 (Dense)                                          (None, 1)                                          9                   
 ## =================================================================================================================================
 ## Total params: 1,649
 ## Trainable params: 1,649
 ## Non-trainable params: 0
 ## _________________________________________________________________________________________________________________________________</code></pre>
-
+<p></p>
 <p>The summary of the model lists the layers in their order from input to output (forward pass). Because we are working with 93 features, the number of parameters for the first layer (16 units) is 93 plus one (for the bias) multiplied by 16, which makes 1504. For the second layer, the number of inputs is equal to the size of the output from the previous layer (16). Hence given the the second layer has 8 units, the total number of parameters is (16+1)*8 = 136.</p>
 <p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>: some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross entropy, see Equation <a href="NN.html#eq:crossentropy">(8.5)</a>). The RMS propragation optimizer is the classical mini-batch backpropagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
 <p>The final stage fits the model to the data and requires some additional training parameters:</p>
@@ -730,15 +730,15 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 FIGURE 8.6: Output from a trained neural network (regression task)
 </p>
 </div>
-
+<p></p>
 <p>In keras, the plot of the trained model shows four different curves (shown here in Figure <a href="NN.html#fig:NN3">8.6</a>). The top graph displays the improvement (or lack thereof) in loss as the number of epochs increases. Usually, the algorithm starts by learning rapidly and then converges to a point where any additional epoch does not improve. In the example above, this point arrives rather quickly because it is hard to notice any gain beyond the fourth epoch. The two colors show the performance on the two samples: the training sample and the testing sample. By construction, the loss will always improve (even marginally) on the training sample. When the impact is negligible on the testing sample (the curve is flat, as is the case here), the model fails to generalize out-of-sample: the gains obtained by training on the original sample do not translate to gains on previously unseen data, thus, the model seems to be learning noise.</p>
 <p>The second graph shows the same behavior but computed using the metric function. The correlation (in absolute terms) between the two curves (loss and metric) is usually high. If one of them is flat, the other should be as well.</p>
 <p>In order to obtain the parameters of the model, the user can call get_weights(model)<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a> We do not execute the code here because the size of the output is much too large as their are thousands of weights.</p>
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5384714</code></pre>
-
+<pre><code>## [1] 0.5431432</code></pre>
+<p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
 <div id="classification-example" class="section level3">
@@ -748,7 +748,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb82-1" data-line-number="1"><span class="kw">library</span>(dummies)                                            <span class="co"># Package for one-hot encoding</span></a>
 <a class="sourceLine" id="cb82-2" data-line-number="2">NN_train_labels_C &lt;-<span class="st"> </span>training_sample<span class="op">$</span>R1M_Usd_C <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">dummy</span>()  <span class="co"># One-hot encoding of the label</span></a>
 <a class="sourceLine" id="cb82-3" data-line-number="3">NN_test_labels_C &lt;-<span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">dummy</span>()    <span class="co"># One-hot encoding of the label</span></a></code></pre></div>
-
+<p></p>
 <p>The labels NN_train_labels_C and NN_test_labels_C have two columns: the first flags the instances with above median return and the second flags those with below median returns. Note that we do not alter the feature variables: they remain unchanged. Below, we set the structure of the networks with many additional features compared to the first one.</p>
 
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb83-1" data-line-number="1">model_C &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()</a>
@@ -762,7 +762,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <a class="sourceLine" id="cb83-9" data-line-number="9">                <span class="dt">bias_initializer =</span> <span class="kw">initializer_constant</span>(<span class="fl">0.2</span>),  <span class="co"># Initialization of biases</span></a>
 <a class="sourceLine" id="cb83-10" data-line-number="10">                <span class="dt">kernel_regularizer =</span> <span class="kw">regularizer_l2</span>(<span class="fl">0.01</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Penalization of weights </span></a>
 <a class="sourceLine" id="cb83-11" data-line-number="11"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">2</span>, <span class="dt">activation =</span> <span class="st">&#39;softmax&#39;</span>)             <span class="co"># Softmax for categorical output</span></a></code></pre></div>
-
+<p></p>
 <p>Before we start commenting on the many options used above, we highlight that keras models, unlike many R variables, are mutable objects. This means that any piping %&gt;% after calling a model will alter it. Hence, successive trainings do not start from scratch but from the result of the previous training.</p>
 <p>First, the options used above and below were chosen as illustrative examples and do not serve to particularly improve the quality of the model. The first change compared to Section <a href="NN.html#regression-example">8.4.1</a> are the activation functions. The first two are simply new cases while the third one (for the output layer) is imperative. Indeed, since the goal is classification, the dimension of the output must be equal to the number of categories of the labels. The activation that yields a multivariate is the softmax function. Note that we must also specify the number of classes (categories) in the terminal layer.</p>
 <p>The second major innovation are options pertaining to parameters. One family of options deals with the initialization of weights and biases. In keras, weights are referred to as the ‘kernel’. The list of initializers is quite long and we suggest the interest reader has a look at the keras reference (<a href="https://keras.io/initializers/" class="uri">https://keras.io/initializers/</a>). Most of them are random, but some of them are constant.</p>
@@ -781,19 +781,19 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <pre><code>## _________________________________________________________________________________________________________________________________
 ## Layer (type)                                              Output Shape                                       Param #             
 ## =================================================================================================================================
-## dense_21 (Dense)                                          (None, 16)                                         1504                
+## dense_39 (Dense)                                          (None, 16)                                         1504                
 ## _________________________________________________________________________________________________________________________________
-## dropout_1 (Dropout)                                       (None, 16)                                         0                   
+## dropout_2 (Dropout)                                       (None, 16)                                         0                   
 ## _________________________________________________________________________________________________________________________________
-## dense_22 (Dense)                                          (None, 8)                                          136                 
+## dense_40 (Dense)                                          (None, 8)                                          136                 
 ## _________________________________________________________________________________________________________________________________
-## dense_23 (Dense)                                          (None, 2)                                          18                  
+## dense_41 (Dense)                                          (None, 2)                                          18                  
 ## =================================================================================================================================
 ## Total params: 1,658
 ## Trainable params: 1,658
 ## Non-trainable params: 0
 ## _________________________________________________________________________________________________________________________________</code></pre>
-
+<p></p>
 <p>Here again, many changes have been made: all levels have been revised. The loss is now the crossentropy. Since we work with two categories, we resort to a specific choice (binary crossentropy) but the more general form is categorical_crossentropy and works for any number of classes (strictly above 1). The optimizer is also different and allows for several parameters and we refer to <span class="citation">Kingma and Ba (<a href="#ref-kingma2014adam">2014</a>)</span>. Simply put, the two beta parameters control decay rates for exponentially-weighted moving averages used in the update of weights. The two averages are estimates for the first and second moment of the gradient and can be exploited to increase the speed of learning. The performance metric in the above chunk is the categorical accuracy. In multiclass classification, the accuracy is defined as the average accuracy over all classes and all predictions. Since a prediction for one instance is a vector of weights, the ‘terminal’ prediction is the class that is associated with the largest weight. The accuracy then measures the proportion of times when the prediction is equal to the realized value.</p>
 <p>Finally, we proceed with the training of the model.</p>
 
@@ -819,7 +819,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 FIGURE 8.7: Output from a trained neural network (classification task) with early stopping
 </p>
 </div>
-
+<p></p>
 <p>There is only one major difference here compared to the previous training call. In keras, callbacks are functions that can be used at given stages of the learning process. In the above example, we use one such function to stop the algorithm when no progress has been made for some time.</p>
 <p>When datasets are large, the training can be long, especially when batch sizes are small and/or the number of epochs is high. It is not guaranteed that going to the full number of epochs is useful, as the loss or metric functions may be plateauing much sooner. Hence, can be very convenient to stop the process if no improvement is achieved during a specified time frame. We set the number of epochs to 20, but the process will likely stop before that.</p>
 <p>In the above code, the improvement is focused on validation accuracy (“val_acc”; one alternative is “val_loss”). The min_delta value sets the minimum improvement that needs to be attained for the algorithm to continue. Therefore, unless the validation accuracy gains 0.001 points at each epoch, the training will stop. Nevertheless, some flexibility is introduced via the patience parameter, which in our case asserts that the hatling decision is made only after three consecutive epochs with no improvement. In the option, the verbose parameter dictates the amount of comments that is made by the function. For simplicity, we do not want any comments, hence this value is set to zero.</p>
@@ -878,7 +878,7 @@ In compact form, this gives
 <a class="sourceLine" id="cb87-6" data-line-number="6">nb_feats &lt;-<span class="st"> </span><span class="kw">length</span>(features)                             <span class="co"># Nb features</span></a>
 <a class="sourceLine" id="cb87-7" data-line-number="7">nb_dates_train &lt;-<span class="st"> </span><span class="kw">nrow</span>(training_sample) <span class="op">/</span><span class="st"> </span>nb_stocks      <span class="co"># Nb training dates (size of sample)</span></a>
 <a class="sourceLine" id="cb87-8" data-line-number="8">nb_dates_test &lt;-<span class="st"> </span><span class="kw">nrow</span>(testing_sample) <span class="op">/</span><span class="st"> </span>nb_stocks        <span class="co"># Nb testing dates</span></a></code></pre></div>
-
+<p></p>
 <p>Then, we construct the variables we will pass as arguments. We recall that the data file was ordered first by stocks and then by date (see Section <a href="notdata.html#dataset">2.2</a>).
 </p>
 <div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1">train_features_rnn &lt;-<span class="st"> </span><span class="kw">array</span>(NN_train_features,           <span class="co"># Formats the training data into array</span></a>
@@ -891,7 +891,7 @@ In compact form, this gives
 <a class="sourceLine" id="cb88-8" data-line-number="8"><span class="st">    </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_train, nb_stocks, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))</a>
 <a class="sourceLine" id="cb88-9" data-line-number="9">test_labels_rnn &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(NN_test_labels) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb88-10" data-line-number="10"><span class="st">    </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_test, nb_stocks, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))</a></code></pre></div>
-
+<p></p>
 <p>Finally, we move towards the training part. For simplicity, we only consider a simple RNN with only one layer. The structure is outlined below. In terms of recurrence structure, we pick a Gated Recurrent Unit.</p>
 
 <div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">model_RNN &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -907,7 +907,7 @@ In compact form, this gives
 <a class="sourceLine" id="cb89-11" data-line-number="11">    <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),                   <span class="co"># Backprop</span></a>
 <a class="sourceLine" id="cb89-12" data-line-number="12">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)                 <span class="co"># Output metric MAE</span></a>
 <a class="sourceLine" id="cb89-13" data-line-number="13">)</a></code></pre></div>
-
+<p></p>
 <p>There are many options available for recurrent layers. For GRUs, we refer to the keras documentation <a href="https://keras.rstudio.com/reference/layer_gru.html" class="uri">https://keras.rstudio.com/reference/layer_gru.html</a>. We comment briefly on the option return_sequences which we activate. In many cases, the output is simply the terminal value of the sequence. If we do not require all of the sequence to be returned, we will face a problem in the dimensionality because the label is indeed a full sequence.
 Once the structure is determined, we can move forward to the training stage.</p>
 
@@ -923,7 +923,7 @@ Once the structure is determined, we can move forward to the training stage.</p>
 FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 </p>
 </div>
-
+<p></p>
 <p>Compared to our previous models, the major difference both in the ouptut (the graph on Figure <a href="NN.html#fig:RNN2">8.9</a>) and the input (the code) is the absence of validation (or testing) data. One reason for that is because keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.</p>
 
 <div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">new_model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -935,13 +935,13 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 <a class="sourceLine" id="cb91-7" data-line-number="7">              <span class="dt">return_sequences =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Passing last state to next batch</span></a>
 <a class="sourceLine" id="cb91-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>)                              <span class="co"># Output dimension</span></a>
 <a class="sourceLine" id="cb91-9" data-line-number="9">new_model <span class="op">%&gt;%</span><span class="st"> </span>keras<span class="op">::</span><span class="kw">set_weights</span>(keras<span class="op">::</span><span class="kw">get_weights</span>(model_RNN))</a></code></pre></div>
-
+<p></p>
 <p>Finally, once the new model is ready - and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.</p>
 
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5004729</code></pre>
-
+<pre><code>## [1] 0.498524</code></pre>
+<p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
 </div>
@@ -1016,6 +1016,9 @@ However, in many ML tournaments in the 2010 decade, neural networks have often b
 </div>
 <h3><span class="header-section-number">C</span> References</h3>
 <div id="refs" class="references">
+<div id="ref-aldridge2019neural">
+<p>Aldridge, Irene, and Marco Avellaneda. 2019. “Neural Networks in Finance: Design and Performance.” <em>Journal of Financial Data Science</em> 1 (4): 39–62.</p>
+</div>
 <div id="ref-anderson2000talking">
 <p>Anderson, James A, and Edward Rosenfeld. 2000. <em>Talking Nets: An Oral History of Neural Networks</em>. MIT Press.</p>
 </div>
@@ -1120,6 +1123,9 @@ However, in many ML tournaments in the 2010 decade, neural networks have often b
 </div>
 <div id="ref-kingma2014adam">
 <p>Kingma, Diederik P, and Jimmy Ba. 2014. “Adam: A Method for Stochastic Optimization.” <em>arXiv Preprint</em>, no. 1412.6980.</p>
+</div>
+<div id="ref-krauss2017deep">
+<p>Krauss, Christopher, Xuan Anh Do, and Nicolas Huck. 2017. “Deep Neural Networks, Gradient-Boosted Trees, Random Forests: Statistical Arbitrage on the S&amp;P 500.” <em>European Journal of Operational Research</em> 259 (2): 689–702.</p>
 </div>
 <div id="ref-loreggia2016deep">
 <p>Loreggia, Andrea, Yuri Malitsky, Horst Samulowitz, and Vijay Saraswat. 2016. “Deep Learning for Algorithm Portfolios.” In <em>Proceedings of the Thirtieth Aaai Conference on Artificial Intelligence</em>, 1280–6. AAAI Press.</p>
