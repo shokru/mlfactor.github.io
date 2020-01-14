@@ -157,7 +157,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
-<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#momentum-and-timing"><i class="fa fa-check"></i><b>4.4</b> Momentum and timing</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+</ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The link with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
 <li class="chapter" data-level="4.5.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.5.2</b> Explicit connexions with asset pricing models</a></li>
@@ -182,7 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Handling persistence</a></li>
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
-<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macro-economic-variables"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -436,7 +439,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Often, it is tempting to supply all predictors to a ML-fueled predictive engine. That may not be a good idea when some predictors are highly correlated. To illustrate this, the simplest example is a regression on two variables with zero mean and covariance and precisions matrices:
 <span class="math display">\[\boldsymbol{\Sigma}=\textbf{X}&#39;\textbf{X}=\begin{bmatrix} 1 &amp; \rho \\ \rho &amp; 1 \end{bmatrix},  \quad \boldsymbol{\Sigma}^{-1}=\frac{1}{1-\rho^2}\begin{bmatrix} 1 &amp; -\rho \\ -\rho &amp; 1 \end{bmatrix}.\]</span>
 When the covariance/correlation <span class="math inline">\(\rho\)</span> increase towards 1, the scaling denominator in <span class="math inline">\(\boldsymbol{\Sigma}\)</span> goes to zero and the formula <span class="math inline">\(\hat{\boldsymbol{\beta}}=\boldsymbol{\Sigma}^{-1}\textbf{X}&#39;\textbf{y}\)</span> implies that one coefficient will be highly positive and one highly negative. The regression creates a spurious arbitrage between the two variables. Of course, this is very inefficient a yields disastrous results out-of-sample.</p>
-<p>We illustrate what happens when many variables are used in the regression below (Table <a href="unsup.html#tab:regbroom">16.1</a>). One elucidation of the aforementioned phenomenon comes from the variables Mkt_Cap_12M_Usd and Mkt_Cap_6M_Usd, which have a correlation of 99.6% in the training sample. Both are singled out as highly significant but their signs are contradictory. Moreover, the magnitude of their coefficients are very close (0.21 versus 0.18) so that their net effect cancels out. Naturally, providing the regression with only one of these two input would have been wiser.</p>
+<p>We illustrate what happens when many variables are used in the regression below (Table <a href="#tab:regbroom"><strong>??</strong></a>). One elucidation of the aforementioned phenomenon comes from the variables Mkt_Cap_12M_Usd and Mkt_Cap_6M_Usd, which have a correlation of 99.6% in the training sample. Both are singled out as highly significant but their signs are contradictory. Moreover, the magnitude of their coefficients are very close (0.21 versus 0.18) so that their net effect cancels out. Naturally, providing the regression with only one of these two input would have been wiser.</p>
 
 <div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="kw">library</span>(broom)                                  <span class="co"># Package for clean regression output </span></a>
 <a class="sourceLine" id="cb198-2" data-line-number="2">training_sample <span class="op">%&gt;%</span><span class="st">    </span></a>
@@ -446,339 +449,8 @@ When the covariance/correlation <span class="math inline">\(\rho\)</span> increa
 <a class="sourceLine" id="cb198-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(<span class="kw">abs</span>(statistic) <span class="op">&gt;</span><span class="st"> </span><span class="dv">3</span>)  <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Keep significant predictors only</span></a>
 <a class="sourceLine" id="cb198-7" data-line-number="7"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb198-8" data-line-number="8">                 <span class="dt">caption =</span> <span class="st">&quot;Significant predictors in the training sample.&quot;</span>) </a></code></pre></div>
-<table>
-<caption>
-<span id="tab:regbroom">TABLE 16.1: </span>Significant predictors in the training sample.
-</caption>
-<thead>
-<tr>
-<th style="text-align:left;">
-term
-</th>
-<th style="text-align:right;">
-estimate
-</th>
-<th style="text-align:right;">
-std.error
-</th>
-<th style="text-align:right;">
-statistic
-</th>
-<th style="text-align:right;">
-p.value
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">
-(Intercept)
-</td>
-<td style="text-align:right;">
-0.0405741
-</td>
-<td style="text-align:right;">
-0.0053427
-</td>
-<td style="text-align:right;">
-7.594323
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ebitda_Margin
-</td>
-<td style="text-align:right;">
-0.0132374
-</td>
-<td style="text-align:right;">
-0.0034927
-</td>
-<td style="text-align:right;">
-3.789999
-</td>
-<td style="text-align:right;">
-0.0001507
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ev_Ebitda
-</td>
-<td style="text-align:right;">
-0.0068144
-</td>
-<td style="text-align:right;">
-0.0022563
-</td>
-<td style="text-align:right;">
-3.020213
-</td>
-<td style="text-align:right;">
-0.0025263
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fa_Ci
-</td>
-<td style="text-align:right;">
-0.0072308
-</td>
-<td style="text-align:right;">
-0.0023465
-</td>
-<td style="text-align:right;">
-3.081471
-</td>
-<td style="text-align:right;">
-0.0020601
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fcf_Bv
-</td>
-<td style="text-align:right;">
-0.0250538
-</td>
-<td style="text-align:right;">
-0.0051314
-</td>
-<td style="text-align:right;">
-4.882465
-</td>
-<td style="text-align:right;">
-0.0000010
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Fcf_Yld
-</td>
-<td style="text-align:right;">
--0.0158930
-</td>
-<td style="text-align:right;">
-0.0037359
-</td>
-<td style="text-align:right;">
--4.254126
-</td>
-<td style="text-align:right;">
-0.0000210
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mkt_Cap_12M_Usd
-</td>
-<td style="text-align:right;">
-0.2047383
-</td>
-<td style="text-align:right;">
-0.0274320
-</td>
-<td style="text-align:right;">
-7.463476
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mkt_Cap_6M_Usd
-</td>
-<td style="text-align:right;">
--0.1797795
-</td>
-<td style="text-align:right;">
-0.0459390
-</td>
-<td style="text-align:right;">
--3.913443
-</td>
-<td style="text-align:right;">
-0.0000910
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mom_5M_Usd
-</td>
-<td style="text-align:right;">
--0.0186690
-</td>
-<td style="text-align:right;">
-0.0044313
-</td>
-<td style="text-align:right;">
--4.212972
-</td>
-<td style="text-align:right;">
-0.0000252
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Mom_Sharp_11M_Usd
-</td>
-<td style="text-align:right;">
-0.0178174
-</td>
-<td style="text-align:right;">
-0.0046948
-</td>
-<td style="text-align:right;">
-3.795131
-</td>
-<td style="text-align:right;">
-0.0001476
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ni
-</td>
-<td style="text-align:right;">
-0.0154609
-</td>
-<td style="text-align:right;">
-0.0044966
-</td>
-<td style="text-align:right;">
-3.438361
-</td>
-<td style="text-align:right;">
-0.0005854
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ni_Avail_Margin
-</td>
-<td style="text-align:right;">
-0.0118135
-</td>
-<td style="text-align:right;">
-0.0038614
-</td>
-<td style="text-align:right;">
-3.059359
-</td>
-<td style="text-align:right;">
-0.0022184
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Ocf_Bv
-</td>
-<td style="text-align:right;">
--0.0198113
-</td>
-<td style="text-align:right;">
-0.0052939
-</td>
-<td style="text-align:right;">
--3.742277
-</td>
-<td style="text-align:right;">
-0.0001824
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pb
-</td>
-<td style="text-align:right;">
--0.0178971
-</td>
-<td style="text-align:right;">
-0.0031285
-</td>
-<td style="text-align:right;">
--5.720637
-</td>
-<td style="text-align:right;">
-0.0000000
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Pe
-</td>
-<td style="text-align:right;">
--0.0089908
-</td>
-<td style="text-align:right;">
-0.0023539
-</td>
-<td style="text-align:right;">
--3.819565
-</td>
-<td style="text-align:right;">
-0.0001337
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Sales_Ps
-</td>
-<td style="text-align:right;">
--0.0157856
-</td>
-<td style="text-align:right;">
-0.0046278
-</td>
-<td style="text-align:right;">
--3.411062
-</td>
-<td style="text-align:right;">
-0.0006472
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Vol1Y_Usd
-</td>
-<td style="text-align:right;">
-0.0114250
-</td>
-<td style="text-align:right;">
-0.0027923
-</td>
-<td style="text-align:right;">
-4.091628
-</td>
-<td style="text-align:right;">
-0.0000429
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Vol3Y_Usd
-</td>
-<td style="text-align:right;">
-0.0084587
-</td>
-<td style="text-align:right;">
-0.0027952
-</td>
-<td style="text-align:right;">
-3.026169
-</td>
-<td style="text-align:right;">
-0.0024771
-</td>
-</tr>
-</tbody>
-</table>
 
+<p></p>
 <p>In fact, since there are several indicators for the market capitalization and maybe only one would suffice, but it is not obvious to tell which one is the best choice.</p>
 <p>In the remainder of the chapter, we present two approaches that help reduce the number of predictors:<br />
 - the first one aims at creating new variables that are uncorrelated with each other. Low correlation is favorable from an algorithmic point of view, but the new variables lack interpretability;<br />
@@ -841,7 +513,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 ## Ocf              0.53294744  0.19588990  0.18503939  0.23437100 -0.35759553 -0.049015486 -0.676866120
 ## Pb               0.15241340  0.58080620 -0.22104807 -0.68213576  0.30866476 -0.038674594 -0.168799297
 ## Vol1Y_Usd       -0.40688963  0.38113933  0.28216181  0.15541056 -0.06157461 -0.762587677  0.008632062</code></pre>
-
+<p></p>
 <p>The rotation gives the matrix <span class="math inline">\(\textbf{P}\)</span>: it’s the tool that changes the base. The first row of the output indicates the standard deviation of each new factor (column). Each factor is indicated via a PC index (principal component). Often, the first PC loads positively on all initial columns: a convex weighted average of all features is expected to carry a lot of information. In the above example, it is almost the case, with the exception of volatility, which has a negative coefficient in the first PC.</p>
 <p>Sometimes, it can be useful to visualize the way the principal components are builts. We show one popular representation that is used for two factors (usually the first two).</p>
 
@@ -852,7 +524,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 <a class="sourceLine" id="cb201-5" data-line-number="5">             <span class="dt">repel =</span> <span class="ot">TRUE</span>                <span class="co"># Avoid text overlapping</span></a>
 <a class="sourceLine" id="cb201-6" data-line-number="6">)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/pca2-1.png" width="330px" height="200px" style="display: block; margin: auto;" /></p>
-
+<p></p>
 <p>The plot shows that no initial factor has negative signs for the first two principal components. Volatility is negative for the first one and earnings per share and dividend yield are negative for the second. The numbers indicated along the axes are the proportion of explained variance of each PC. Compared to the figures in the first line of the output, the numbers are squared and then divided by the total sum of squares.</p>
 <p>Once the rotation is known, it is possible to select a subsample of the transformed data. From the original 7 features, it is easy to pick just 4.</p>
 
@@ -869,7 +541,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 ## [4,] 0.5445359 0.5335619 -0.08833864 0.2281793
 ## [5,] 0.5672644 0.5339749 -0.06092424 0.2320938
 ## [6,] 0.5871306 0.6420126 -0.44566482 0.3075399</code></pre>
-
+<p></p>
 <p>These 4 factors can then be used as orthogonal features in any ML engine. The fact that the features are uncorrelated is undoubtedly an asset. But the price of this convenience is high: the features are no longer immediately interpretable. De-correlating the predictors adds yet another layer of “<em>blackbox-ing</em>” in the algorithm.</p>
 </div>
 <div id="ae" class="section level3">
@@ -907,7 +579,7 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 <a class="sourceLine" id="cb204-7" data-line-number="7">decoder &lt;-<span class="st"> </span>encoder <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Then, from encoder, decode</span></a>
 <a class="sourceLine" id="cb204-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">32</span>, <span class="dt">activation =</span> <span class="st">&quot;sigmoid&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb204-9" data-line-number="9"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">7</span>)       <span class="co"># the original sample has 7 features</span></a></code></pre></div>
-
+<p></p>
 <p>In the training part, we optimize the MSE and use an Adam update of the weights (see Section <a href="NN.html#backprop">8.2.3</a>).</p>
 
 <div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1">ae_model &lt;-<span class="st"> </span><span class="kw">keras_model</span>(<span class="dt">inputs =</span> input_layer, <span class="dt">outputs =</span> decoder) <span class="co"># Builds the model</span></a>
@@ -917,7 +589,7 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 <a class="sourceLine" id="cb205-5" data-line-number="5">    <span class="dt">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</a>
 <a class="sourceLine" id="cb205-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)</a>
 <a class="sourceLine" id="cb205-7" data-line-number="7">)</a></code></pre></div>
-
+<p></p>
 <p>Finally, we are ready to train the data onto itself!</p>
 
 <div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb206-1" data-line-number="1">fit_ae &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span></a>
@@ -934,11 +606,11 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 FIGURE 16.1: Output from the training of an auto-encoder.
 </p>
 </div>
-
+<p></p>
 <p>In order to get the details of all weights and biases, the syntax is the following.</p>
 
 <div class="sourceCode" id="cb207"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb207-1" data-line-number="1">ae_weights &lt;-<span class="st"> </span>ae_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">get_weights</span>()</a></code></pre></div>
-
+<p></p>
 <p>Retrieving the encoder and processing the data into the compressed format is just a matter of matrix manipulation (see exercise below).</p>
 </div>
 </div>
@@ -997,7 +669,7 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 ## 18 Roc                                  4
 ## 19 Roce                                 4
 ## 20 Roe                                  4</code></pre>
-
+<p></p>
 <p>We single out the fourth cluster which is composed mainly of accounting ratios related to the profitability of firms. Given these 10 clusters, we can build a much smaller group of features that can then be fed to the predictive engines described in Chapters <a href="lasso.html#lasso">6</a> to <a href="bayes.html#bayes">10</a>. The representative of a cluster can be the member that is closest to the center, or simply the center itself. This pre-processing step can nonetheless cause problems in the forecasting phase. Typically, it requires that the training data be also clustered.</p>
 </div>
 <div id="nearest-neighbors" class="section level2">
@@ -1030,11 +702,11 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 <a class="sourceLine" id="cb210-6" data-line-number="6"><span class="st">              </span>dplyr<span class="op">::</span><span class="kw">select</span>(features)</a>
 <a class="sourceLine" id="cb210-7" data-line-number="7">neighbors &lt;-<span class="st"> </span><span class="kw">get.knnx</span>(<span class="dt">data =</span> knn_sample, <span class="dt">query =</span> knn_target, <span class="dt">k =</span> <span class="dv">30</span>) </a>
 <a class="sourceLine" id="cb210-8" data-line-number="8">neighbors<span class="op">$</span>nn.index                                   <span class="co"># Indices of the k nearest neighbors</span></a></code></pre></div>
-<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19] [,20] [,21] [,22]
-## [1,]  905  876  730  548 1036  501  335  117  789    54   618   130   342   360   673   153   265   858   830   286  1150   166
-##      [,23] [,24] [,25] [,26] [,27] [,28] [,29] [,30]
-## [1,]   946   192   340   162   951   376   785     2</code></pre>
-
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15] [,16] [,17] [,18] [,19] [,20]
+## [1,]  905  876  730  548 1036  501  335  117  789    54   618   130   342   360   673   153   265   858   830   286
+##      [,21] [,22] [,23] [,24] [,25] [,26] [,27] [,28] [,29] [,30]
+## [1,]  1150   166   946   192   340   162   951   376   785     2</code></pre>
+<p></p>
 <p>Once the neighbors and distances are known, we can compute a prediction for the return of the target stock. We use the function <span class="math inline">\(h(z)=e^{-z}\)</span> for the weighting of instances (via the distances).</p>
 
 <div class="sourceCode" id="cb212"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb212-1" data-line-number="1">knn_labels &lt;-<span class="st"> </span>knn_data[neighbors<span class="op">$</span>nn.index,] <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd)    <span class="co"># y values for the neighbors</span></a>
@@ -1046,7 +718,7 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 ##   R1M_Usd
 ##     &lt;dbl&gt;
 ## 1   0.089</code></pre>
-
+<p></p>
 <p>The prediction is neither very good, nor very bad (the sign is correct!). However, note that this example cannot be used for predictive purposes because we use data from 2006-12-31 to predict a return at the same date. In order to avoid the forward looking bias, the knn_sample variable should be chosen from a prior point in time.</p>
 <p>The above computations are fast (a handful of seconds at most), but hold for only one asset. In a <span class="math inline">\(k\)</span>-NN exercise each stock gets a customed prediction and the set of neighbors must be re-assessed each time. This is particularly costly in a backtest, especially when several parameters can be tested (<span class="math inline">\(k\)</span>, <span class="math inline">\(a\)</span> in the weighting function <span class="math inline">\(h(z)=e^{-az}\)</span>).</p>
 </div>

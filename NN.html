@@ -157,7 +157,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
-<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#momentum-and-timing"><i class="fa fa-check"></i><b>4.4</b> Momentum and timing</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+</ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The link with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
 <li class="chapter" data-level="4.5.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.5.2</b> Explicit connexions with asset pricing models</a></li>
@@ -182,7 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Handling persistence</a></li>
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
-<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macro-economic-variables"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -656,7 +659,7 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <li>non-negativity constraint: all weights must be positive or zero.</li>
 </ul>
 <p>Lastly, another (somewhat exotic) way to reduce the risk of overfitting is simply to reduce the size (number of parameters) of the model. <span class="citation">Srivastava et al. (<a href="#ref-srivastava2014dropout">2014</a>)</span> propose to omit units during training (hence the term ‘<strong>dropout</strong>’). The weights of randomly chosen units are set to zero during training. All links from and to the unit are ignored, which mechanically shrinks the network. In the testing phase, all units are back, but the values (weights) must be scaled to account for the missing activations during the training phase.</p>
-<p>The interested reader can check the advice compiled in <span class="citation">Bengio (<a href="#ref-bengio2012practical">2012</a>)</span> for further tips on how to configure neural networks.</p>
+<p>The interested reader can check the advice compiled in <span class="citation">Bengio (<a href="#ref-bengio2012practical">2012</a>)</span> and <span class="citation">Smith (<a href="#ref-smith2018disciplined">2018</a>)</span> for further tips on how to configure neural networks.</p>
 </div>
 </div>
 <div id="code-samples-and-comments-for-vanilla-mlp" class="section level2">
@@ -699,19 +702,19 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb77-4" data-line-number="4">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)         <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb77-5" data-line-number="5">)</a>
 <a class="sourceLine" id="cb77-6" data-line-number="6"><span class="kw">summary</span>(model)                                 <span class="co"># Model architecture</span></a></code></pre></div>
-<pre><code>## _________________________________________________________________________________________________________________________________
-## Layer (type)                                              Output Shape                                       Param #             
-## =================================================================================================================================
-## dense_36 (Dense)                                          (None, 16)                                         1504                
-## _________________________________________________________________________________________________________________________________
-## dense_37 (Dense)                                          (None, 8)                                          136                 
-## _________________________________________________________________________________________________________________________________
-## dense_38 (Dense)                                          (None, 1)                                          9                   
-## =================================================================================================================================
+<pre><code>## ________________________________________________________________________________________________________________________
+## Layer (type)                                          Output Shape                                    Param #           
+## ========================================================================================================================
+## dense_18 (Dense)                                      (None, 16)                                      1504              
+## ________________________________________________________________________________________________________________________
+## dense_19 (Dense)                                      (None, 8)                                       136               
+## ________________________________________________________________________________________________________________________
+## dense_20 (Dense)                                      (None, 1)                                       9                 
+## ========================================================================================================================
 ## Total params: 1,649
 ## Trainable params: 1,649
 ## Non-trainable params: 0
-## _________________________________________________________________________________________________________________________________</code></pre>
+## ________________________________________________________________________________________________________________________</code></pre>
 <p></p>
 <p>The summary of the model lists the layers in their order from input to output (forward pass). Because we are working with 93 features, the number of parameters for the first layer (16 units) is 93 plus one (for the bias) multiplied by 16, which makes 1504. For the second layer, the number of inputs is equal to the size of the output from the previous layer (16). Hence given the the second layer has 8 units, the total number of parameters is (16+1)*8 = 136.</p>
 <p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>: some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross entropy, see Equation <a href="NN.html#eq:crossentropy">(8.5)</a>). The RMS propragation optimizer is the classical mini-batch backpropagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
@@ -737,7 +740,7 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5431432</code></pre>
+<pre><code>## [1] 0.4763987</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -778,21 +781,21 @@ FIGURE 8.6: Output from a trained neural network (regression task)
 <a class="sourceLine" id="cb84-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;categorical_accuracy&#39;</span>)            <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb84-7" data-line-number="7">)</a>
 <a class="sourceLine" id="cb84-8" data-line-number="8"><span class="kw">summary</span>(model_C)                                   <span class="co"># Model structure</span></a></code></pre></div>
-<pre><code>## _________________________________________________________________________________________________________________________________
-## Layer (type)                                              Output Shape                                       Param #             
-## =================================================================================================================================
-## dense_39 (Dense)                                          (None, 16)                                         1504                
-## _________________________________________________________________________________________________________________________________
-## dropout_2 (Dropout)                                       (None, 16)                                         0                   
-## _________________________________________________________________________________________________________________________________
-## dense_40 (Dense)                                          (None, 8)                                          136                 
-## _________________________________________________________________________________________________________________________________
-## dense_41 (Dense)                                          (None, 2)                                          18                  
-## =================================================================================================================================
+<pre><code>## ________________________________________________________________________________________________________________________
+## Layer (type)                                          Output Shape                                    Param #           
+## ========================================================================================================================
+## dense_21 (Dense)                                      (None, 16)                                      1504              
+## ________________________________________________________________________________________________________________________
+## dropout_1 (Dropout)                                   (None, 16)                                      0                 
+## ________________________________________________________________________________________________________________________
+## dense_22 (Dense)                                      (None, 8)                                       136               
+## ________________________________________________________________________________________________________________________
+## dense_23 (Dense)                                      (None, 2)                                       18                
+## ========================================================================================================================
 ## Total params: 1,658
 ## Trainable params: 1,658
 ## Non-trainable params: 0
-## _________________________________________________________________________________________________________________________________</code></pre>
+## ________________________________________________________________________________________________________________________</code></pre>
 <p></p>
 <p>Here again, many changes have been made: all levels have been revised. The loss is now the crossentropy. Since we work with two categories, we resort to a specific choice (binary crossentropy) but the more general form is categorical_crossentropy and works for any number of classes (strictly above 1). The optimizer is also different and allows for several parameters and we refer to <span class="citation">Kingma and Ba (<a href="#ref-kingma2014adam">2014</a>)</span>. Simply put, the two beta parameters control decay rates for exponentially-weighted moving averages used in the update of weights. The two averages are estimates for the first and second moment of the gradient and can be exploited to increase the speed of learning. The performance metric in the above chunk is the categorical accuracy. In multiclass classification, the accuracy is defined as the average accuracy over all classes and all predictions. Since a prediction for one instance is a vector of weights, the ‘terminal’ prediction is the class that is associated with the largest weight. The accuracy then measures the proportion of times when the prediction is equal to the realized value.</p>
 <p>Finally, we proceed with the training of the model.</p>
@@ -940,7 +943,7 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task)
 
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.498524</code></pre>
+<pre><code>## [1] 0.4953858</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
@@ -1153,6 +1156,9 @@ However, in many ML tournaments in the 2010 decade, neural networks have often b
 </div>
 <div id="ref-rosenblatt1958perceptron">
 <p>Rosenblatt, Frank. 1958. “The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.” <em>Psychological Review</em> 65 (6): 386.</p>
+</div>
+<div id="ref-smith2018disciplined">
+<p>Smith, Leslie N. 2018. “A Disciplined Approach to Neural Network Hyper-Parameters: Part 1–Learning Rate, Batch Size, Momentum, and Weight Decay.” <em>arXiv Preprint</em>, no. 1803.09820.</p>
 </div>
 <div id="ref-srivastava2014dropout">
 <p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>Journal of Machine Learning Research</em> 15 (1): 1929–58.</p>

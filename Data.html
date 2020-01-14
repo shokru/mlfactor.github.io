@@ -157,7 +157,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
-<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#momentum-and-timing"><i class="fa fa-check"></i><b>4.4</b> Momentum and timing</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+</ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The link with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
 <li class="chapter" data-level="4.5.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.5.2</b> Explicit connexions with asset pricing models</a></li>
@@ -182,7 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Handling persistence</a></li>
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
-<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macro-economic-variables"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -768,7 +771,7 @@ These two properties are desirable. The first reduces the risk of fitting to sma
 <p>In some cases (e.g., insufficient number of features), it is possible to consider ratios or products between features. Accounting ratios like price-to-book, book-to-market, debt-to-equity are examples of functions of raw features that make sense. The gains brought by a larger spectrum of features are not obvious. The risk of overfitting increases, just like in a simple linear regression adding variables mechanically increases the <span class="math inline">\(R^2\)</span>. The choices must make sense, economically.</p>
 <p>Another way to increase the feature space (mentioned above) is to consider variations. Variations in sentiment, variations in book-to-market ratio, etc., can be relevant predictors because sometimes, the change is more important than the level. In this case, a new predictor is <span class="math inline">\(\breve{x}_{t,n}^{(k)}=x_{t,n}^{(k)}-x_{t-1,n}^{(k)}\)</span>.</p>
 </div>
-<div id="macro-economic-variables" class="section level3">
+<div id="macrovar" class="section level3">
 <h3><span class="header-section-number">5.7.2</span> Macro-economic variables</h3>
 <p>Finally, we discuss a very important topic. The data should never be seperated from the context it comes from (its environment). In classical financial terms, this means that a particular model is likely to depend on the overarching situation which is often proxied by macro-economic indicators. One way to take this into account at the data level is simply to multiply the feature by a exogenous indicator <span class="math inline">\(z_{t}\)</span> and in this case, the new predictor is
 <span class="math display" id="eq:macrocond">\[\begin{equation}
@@ -878,7 +881,8 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 <ol style="list-style-type: decimal">
 <li>The federal reserve of Saint Louis (<a href="https://fred.stlouisfed.org" class="uri">https://fred.stlouisfed.org</a>) hosts thousands of time-series of economic indicators that can serve as conditioning variables. Pick one, and apply formula <a href="Data.html#eq:macrocond">(5.3)</a> to expand the number of predictors. If need be, use the function defined above.<br />
 </li>
-<li>Create a new categorical label based on formulae <a href="Data.html#eq:condvix">(5.4)</a> and <a href="Data.html#eq:catlabel">(5.2)</a>. The time-series of the VIX can also be retrieve from the federal reserve’s website: <a href="https://fred.stlouisfed.org/series/VIXCLS" class="uri">https://fred.stlouisfed.org/series/VIXCLS</a>.</li>
+<li>Create a new categorical label based on formulae <a href="Data.html#eq:condvix">(5.4)</a> and <a href="Data.html#eq:catlabel">(5.2)</a>. The time-series of the VIX can also be retrieve from the federal reserve’s website: <a href="https://fred.stlouisfed.org/series/VIXCLS" class="uri">https://fred.stlouisfed.org/series/VIXCLS</a>.<br />
+</li>
 <li>Plot the histogram of the R12M_Usd variable. Clearly, some outliers are present. Identify the stock with highest value for this variable and determine if the value can be correct or not.</li>
 </ol>
 
