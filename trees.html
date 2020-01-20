@@ -650,7 +650,7 @@ where the left part is the average number of votes based on the <span class="mat
 <p>We can then assess the proportion of correct (binary) guesses.
 </p>
 <div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb58-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF_C, testing_sample) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4977923</code></pre>
+<pre><code>## [1] 0.4984475</code></pre>
 <p></p>
 <p>The accuracy is disappointing. There are two potential explanations for this (beyond the possibility of very different patterns in the training and testing sets). The first one is the sample size, which may be too small. The original training set has more than 200,000 observations, hence we retain only one in 10 in the above training specification. We are thus probably sideline relevant information and the cost can be heavy. The second reason is the number of predictors, which is set to 30, i.e., one third of the total at our disposal. Unfortunately, this leaves room for the algorithm to pick less pertinent predictors. The default numbers of predictors chosen by the routines are <span class="math inline">\(\sqrt{p}\)</span> and <span class="math inline">\(p/3\)</span> for classification and regression tasks, respectively. Here <span class="math inline">\(p\)</span> is the total number of features.</p>
 </div>

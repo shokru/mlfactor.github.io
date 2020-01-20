@@ -492,13 +492,16 @@ This process is called diagonalization (see Chapter 7 in <span class="citation">
 <div id="pca" class="section level3">
 <h3><span class="header-section-number">16.2.2</span> PCA</h3>
 <p>The goal of PCA is to build a dataset <span class="math inline">\(\tilde{\textbf{X}}\)</span> that has fewer columns but that keeps as much information compared to the original one, <span class="math inline">\(\textbf{X}\)</span>. The key notion is the change of base, which is a linear transformation of <span class="math inline">\(\textbf{X}\)</span> into <span class="math inline">\(\textbf{Y}\)</span>, a matrix with identical dimension, via
-<span class="math display">\[\textbf{Y}=\textbf{XP},\]</span>
+<span class="math display" id="eq:pca">\[\begin{equation}
+\tag{16.3}
+\textbf{Y}=\textbf{XP},
+\end{equation}\]</span>
 where <span class="math inline">\(P\)</span> is a <span class="math inline">\(K \times K\)</span> matrix. There are of course an infinite number of ways to transform <span class="math inline">\(\textbf{X}\)</span> into <span class="math inline">\(\textbf{Y}\)</span>, but two fundamental constraints help reduce the possibilities. The first constraint is that the columns of <span class="math inline">\(\textbf{Y}\)</span> be uncorrelated. Having uncorrelated features is desirable because they then all tell different stories and have zero redundancy. The second constraint is that the variance of the columns of <span class="math inline">\(\textbf{Y}\)</span> is highly concentrated. This means that a few factors (columns) will capture most of the explanatory power (signal) while most (the others) will consist predominantly of noise. All of this is coded in the covariance matrix of <span class="math inline">\(\textit{Y}\)</span>:<br />
 - the first condition imposes that the covariance matrix be diagonal;<br />
 - the second condition imposes that the diagonal elements, when ranked in decreasing magnitude, see their value decline (sharply if possible).</p>
 <p>The covariance matrix of <span class="math inline">\(\textbf{Y}\)</span> is
 <span class="math display" id="eq:covy">\[\begin{equation}
-\tag{16.3} 
+\tag{16.4} 
 \boldsymbol{\Sigma}_Y=\frac{1}{I-1}\textbf{Y}&#39;\textbf{Y}=\frac{1}{I-1}\textbf{P}&#39;\textbf{X}&#39;\textbf{XP}=\frac{1}{I-1}\textbf{P}&#39;\boldsymbol{\Sigma}_X\textbf{P}
 \end{equation}\]</span></p>
 <p>In this expression, we plug the decomposition <a href="unsup.html#eq:diagonaliz">(16.2)</a> of <span class="math inline">\(\boldsymbol{\Sigma}_X\)</span>:
@@ -561,6 +564,7 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 ## [6,] 0.5871306 0.6420126 -0.44566482 0.3075399</code></pre>
 <p></p>
 <p>These 4 factors can then be used as orthogonal features in any ML engine. The fact that the features are uncorrelated is undoubtedly an asset. But the price of this convenience is high: the features are no longer immediately interpretable. De-correlating the predictors adds yet another layer of “<em>blackbox-ing</em>” in the algorithm.</p>
+<p>PCA can also be used to estimate factor models. In Equation <a href="unsup.html#eq:pca">(16.3)</a>, it suffices to replace <span class="math inline">\(\textbf{Y}\)</span> with returns, <span class="math inline">\(\textbf{X}\)</span> with factor values and <span class="math inline">\(\textbf{P}\)</span> with factor loadings (see e.g. <span class="citation">Connor and Korajczyk (<a href="#ref-connor1988risk">1988</a>)</span> for an eraly reference). More recently, <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018estimating">n.d.</a>)</span> and <span class="citation">Lettau and Pelger (<a href="#ref-lettau2018factors">2018</a>)</span> propose a thorough analysis of PCA estimation techniques. They notably argue that first moments of returns are important and should be included in the objective function, alongside the optimization on the second moments.</p>
 </div>
 <div id="ae" class="section level3">
 <h3><span class="header-section-number">16.2.3</span> Autoencoders</h3>
@@ -568,18 +572,18 @@ thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get 
 <span class="math display">\[\textbf{Y}=\textbf{X}\textbf{P} \quad \text{and} \quad \textbf{X}=\textbf{YP}&#39;,\]</span>
 so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span class="math inline">\(\textbf{Y}\)</span>. This can be writen differently:
 <span class="math display" id="eq:pcascheme">\[\begin{equation}
-\tag{16.4}
+\tag{16.5}
 \textbf{X} \quad \overset{\text{encode via }\textbf{P}}{\longrightarrow} \quad \textbf{Y} \quad \overset{\text{decode via } \textbf{P}&#39;}{\longrightarrow} \quad \textbf{X}
 \end{equation}\]</span></p>
 <p>If we take the truncated version and seek a smaller output (with only <span class="math inline">\(K&#39;\)</span> columns), this gives:</p>
 <p><span class="math display" id="eq:pcaschem2">\[\begin{equation}
-\tag{16.5}
+\tag{16.6}
 \textbf{X}, \ (I\times K) \quad \overset{\text{encode via }\textbf{P}_{K&#39;}}{\longrightarrow} \quad \tilde{\textbf{X}}, \ (I \times K&#39;) \quad \overset{\text{decode via } \textbf{P}&#39;_{K&#39;}}{\longrightarrow} \quad \breve{\textbf{X}},\ (I \times K),
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\textbf{P}_{K&#39;}\)</span> is the restriction of <span class="math inline">\(\textbf{P}\)</span> to the <span class="math inline">\(K&#39;\)</span> columns that correspond to the factors with the largest variances. The dimensions of matrices are indicated inside the brackets. In this case, the recoding cannot recover <span class="math inline">\(\textbf{P}\)</span> exactly but only an approximation, which we write <span class="math inline">\(\breve{\textbf{X}}\)</span>. This approximation is coded with less information, hence this new data <span class="math inline">\(\breve{\textbf{X}}\)</span> is compressed and provides a parcimonious representation of the original sample <span class="math inline">\(\textbf{X}\)</span>.</p>
 <p>An autoencodeur generalizes this concept to nonlinear coding functions. Simple linear autoencoders are linked to latent factor models (see Proposition 1 in  for the case of single layer autoencoders.) The scheme is the following
 <span class="math display" id="eq:aescheme2">\[\begin{equation}
-\tag{16.6}
+\tag{16.7}
 \textbf{X},\ (I\times K) \quad \overset{\text{encode via } N} {\longrightarrow} \quad \tilde{\textbf{X}}=N(\textbf{X}), \ (I \times K&#39;) \quad \overset{\text{decode via } N&#39;}{\longrightarrow} \quad \breve{\textbf{X}}=N&#39;(\tilde{\textbf{X}}), \ (I \times K),
 \end{equation}\]</span></p>
 <p>where the encoding and decoding functions <span class="math inline">\(N\)</span> and <span class="math inline">\(N&#39;\)</span> are often taken to be neural networks. The term <strong>auto-encoder</strong> comes from the fact that the target output, which we often write <span class="math inline">\(\textbf{Y}\)</span> is the original sample <span class="math inline">\(\textbf{X}\)</span>. Thus, the algorithm seek to determine the function <span class="math inline">\(N\)</span> that minimizes the distance (to be defined) between <span class="math inline">\(\textbf{X}\)</span> and the output value <span class="math inline">\(\breve{\textbf{X}}\)</span>. The encoder generates an alternative representation of <span class="math inline">\(\textbf{X}\)</span> while the decoder tries to recode it back to its original values. Naturally, the intermediate (coded) version <span class="math inline">\(\tilde{\textbf{X}}\)</span> is targeted to have a smaller dimension compared to <span class="math inline">\(\textbf{X}\)</span>.</p>
@@ -637,7 +641,7 @@ FIGURE 16.2: Output from the training of an auto-encoder.
 <p>The second family of unsupervised tools pertains to clustering. Features are grouped into homogeneous families of predictors. It is then possible to single out one among the group (or to create a synthetic average of all of them). Mechanically, the number of predictors is reduced.</p>
 <p>The principle is simple: among a group of variables (the reasoning would be the same for observations in the other dimension) <span class="math inline">\(\textbf{x}_{\{1 \le j \le J\}}\)</span>, find the combination of <span class="math inline">\(k&lt;J\)</span> groups that minimize
 <span class="math display" id="eq:kmeans">\[\begin{equation}
-\tag{16.7}
+\tag{16.8}
 \sum_{i=1}^k\sum_{\textbf{x}\in S_i}||\textbf{x}-\textbf{m}_i||^2,
 \end{equation}\]</span>
 where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usually taken to be the Euclidean <span class="math inline">\(l^2\)</span>-norm. The <span class="math inline">\(S_i\)</span> are the groups and the minimization is run on the whole set of groups <span class="math inline">\(\textbf{S}\)</span>. The <span class="math inline">\(\textbf{m}_i\)</span> are the group means (also called centroids or barycenters): <span class="math inline">\(\textbf{m}_i=(\text{card}(S_i))^{-1}\sum_{\textbf{x}\in S_i}\textbf{x}\)</span>.</p>
@@ -646,7 +650,7 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 <ol start="0" style="list-style-type: decimal">
 <li>Start with a (possibly random) partition of <span class="math inline">\(k\)</span> clusters.<br />
 </li>
-<li>For each cluster, compute the optimal mean values <span class="math inline">\(\textbf{m}_i^*\)</span> that minimizes expression <a href="unsup.html#eq:kmeans">(16.7)</a>. This is a simple quadratic program.<br />
+<li>For each cluster, compute the optimal mean values <span class="math inline">\(\textbf{m}_i^*\)</span> that minimizes expression <a href="unsup.html#eq:kmeans">(16.8)</a>. This is a simple quadratic program.<br />
 </li>
 <li>Given the optimal centers <span class="math inline">\(\textbf{m}_i^*\)</span>, reassign the points <span class="math inline">\(\textbf{x}_i\)</span> so that they are all the closest to their center.<br />
 </li>
@@ -696,10 +700,10 @@ where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usua
 <p>In what follows, we seek to find neighbors of one particular instance <span class="math inline">\(\textbf{x}_i\)</span> (a <span class="math inline">\(K\)</span>-dimensional row vector). Note that there is a major difference with the previous section: the clustering is intended at the observation level (row) and not at the predictor level (column).</p>
 <p>Given a dataset with the same (corresponding) columns <span class="math inline">\(\textbf{X}_{i,k}\)</span>, the neighbors are defined via a similarity measure (or distance)
 <span class="math display" id="eq:D">\[\begin{equation}
-\tag{16.8}
+\tag{16.9}
 D(\textbf{x}_j,\textbf{x}_i)=\sum_{k=1}^Kc_k d_k(x_{j,k},x_{i,k}),
 \end{equation}\]</span>
-where the distances functions <span class="math inline">\(d_k\)</span> can operate on various data types (numerical, categorical, etc.). For numerical values, <span class="math inline">\(d_k(x_{j,k},x_{i,k})=(x_{j,k}-x_{i,k})^2\)</span> or <span class="math inline">\(d_k(x_{j,k},x_{i,k})=|x_{j,k}-x_{i,k}|\)</span>. For categorical values, we refer to the exhaustive survey by <span class="citation">Boriah, Chandola, and Kumar (<a href="#ref-boriah2008similarity">2008</a>)</span> which lists 14 possible measures. Finally the <span class="math inline">\(c_k\)</span> in Equation <a href="unsup.html#eq:D">(16.8)</a> allow some flexbility by weighting features. This is useful because both raw values (<span class="math inline">\(x_{i,k}\)</span> versus <span class="math inline">\(x_{i,k&#39;}\)</span>) or measure outputs (<span class="math inline">\(d_k\)</span> versus <span class="math inline">\(d_{k&#39;}\)</span>) can have different scales.</p>
+where the distances functions <span class="math inline">\(d_k\)</span> can operate on various data types (numerical, categorical, etc.). For numerical values, <span class="math inline">\(d_k(x_{j,k},x_{i,k})=(x_{j,k}-x_{i,k})^2\)</span> or <span class="math inline">\(d_k(x_{j,k},x_{i,k})=|x_{j,k}-x_{i,k}|\)</span>. For categorical values, we refer to the exhaustive survey by <span class="citation">Boriah, Chandola, and Kumar (<a href="#ref-boriah2008similarity">2008</a>)</span> which lists 14 possible measures. Finally the <span class="math inline">\(c_k\)</span> in Equation <a href="unsup.html#eq:D">(16.9)</a> allow some flexbility by weighting features. This is useful because both raw values (<span class="math inline">\(x_{i,k}\)</span> versus <span class="math inline">\(x_{i,k&#39;}\)</span>) or measure outputs (<span class="math inline">\(d_k\)</span> versus <span class="math inline">\(d_{k&#39;}\)</span>) can have different scales.</p>
 <p>Once the distances are computed over the whole sample, they are ranked using indices <span class="math inline">\(l_1^i, \dots, l_I^i\)</span>:
 <span class="math display">\[D\left(\textbf{x}_{l_1^i},\textbf{x}_i\right) \le D\left(\textbf{x}_{l_2^i},\textbf{x}_i\right) \le \dots, \le D\left(\textbf{x}_{l_I^i},\textbf{x}_i\right)\]</span></p>
 <p>The nearest neighbors are those indexed by <span class="math inline">\(l_m^i\)</span> for <span class="math inline">\(m=1,\dots,k\)</span>. We leave out the case when there are problematic equalities of the type <span class="math inline">\(D\left(\textbf{x}_{l_m^i},\textbf{x}_i\right)=D\left(\textbf{x}_{l_{m+1}^i},\textbf{x}_i\right)\)</span> for the sake of simplicity and because they rarely occur in practice as long as there are sufficiently many numerical predictors.</p>
@@ -761,11 +765,20 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 <div id="ref-boriah2008similarity">
 <p>Boriah, Shyam, Varun Chandola, and Vipin Kumar. 2008. “Similarity Measures for Categorical Data: A Comparative Evaluation.” In <em>Proceedings of the 2008 Siam International Conference on Data Mining</em>, 243–54.</p>
 </div>
+<div id="ref-connor1988risk">
+<p>Connor, Gregory, and Robert A Korajczyk. 1988. “Risk and Return in an Equilibrium Apt: Application of a New Test Methodology.” <em>Journal of Financial Economics</em> 21 (2): 255–89.</p>
+</div>
 <div id="ref-ghosh2006optimum">
 <p>Ghosh, Anil K. 2006. “On Optimum Choice of K in Nearest Neighbor Classification.” <em>Computational Statistics &amp; Data Analysis</em> 50 (11): 3113–23.</p>
 </div>
 <div id="ref-hall2008choice">
 <p>Hall, Peter, Byeong U Park, Richard J Samworth, and others. 2008. “Choice of Neighbor Order in Nearest-Neighbor Classification.” <em>Annals of Statistics</em> 36 (5): 2135–52.</p>
+</div>
+<div id="ref-lettau2018factors">
+<p>Lettau, Martin, and Markus Pelger. 2018. “Factors That Fit the Time Series and Cross-Section of Stock Returns.” <em>SSRN Working Paper</em> 3211106.</p>
+</div>
+<div id="ref-lettau2018estimating">
+<p>Lettau, Martin, and Markus Pelger. n.d. “Estimating Latent Asset-Pricing Factors.” <em>Journal of Econometrics</em> XXX: XXX–XXX.</p>
 </div>
 <div id="ref-meyer2000matrix">
 <p>Meyer, Carl D. 2000. <em>Matrix Analysis and Applied Linear Algebra</em>. Vol. 71. SIAM.</p>

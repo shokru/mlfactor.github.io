@@ -776,6 +776,39 @@ FIGURE B.5: Performance of elasticnet across parameter values.
 </div>
 <div id="chapter-9" class="section level2">
 <h2><span class="header-section-number">B.6</span> Chapter 9</h2>
+<p>Since we are going to reproduce a similar analysis several times, let’s simplify the task with 2 tips. First, by using default parameter values that will be passed as common arguments to the <em>svm</em> function. Second, by creating a custom function that computes the MSE. Third, by resorting to functional calculus via the <em>map</em> function from the <em>purrr</em> package.</p>
+
+<div class="sourceCode" id="cb255"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb255-1" data-line-number="1">mse &lt;-<span class="st"> </span><span class="cf">function</span>(fit, features, label){             <span class="co"># MSE function</span></a>
+<a class="sourceLine" id="cb255-2" data-line-number="2">    <span class="kw">return</span>(<span class="kw">mean</span>((<span class="kw">predict</span>(fit, features)<span class="op">-</span>label)<span class="op">^</span><span class="dv">2</span>))</a>
+<a class="sourceLine" id="cb255-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb255-4" data-line-number="4">par_list &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">y =</span> train_label_xgb[<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>],     <span class="co"># From Tree chapter</span></a>
+<a class="sourceLine" id="cb255-5" data-line-number="5">                 <span class="dt">x =</span> train_features_xgb[<span class="dv">1</span><span class="op">:</span><span class="dv">10000</span>,],</a>
+<a class="sourceLine" id="cb255-6" data-line-number="6">                 <span class="dt">type =</span> <span class="st">&quot;eps-regression&quot;</span>,</a>
+<a class="sourceLine" id="cb255-7" data-line-number="7">                 <span class="dt">epsilon =</span> <span class="fl">0.1</span>,                    <span class="co"># Width of strip for errors</span></a>
+<a class="sourceLine" id="cb255-8" data-line-number="8">                 <span class="dt">gamma =</span> <span class="fl">0.5</span>,                      <span class="co"># Constant in the radial kernel </span></a>
+<a class="sourceLine" id="cb255-9" data-line-number="9">                 <span class="dt">cost =</span> <span class="fl">0.1</span>)</a>
+<a class="sourceLine" id="cb255-10" data-line-number="10">svm_par &lt;-<span class="st"> </span><span class="cf">function</span>(kernel, par_list){             <span class="co"># Function for SVM fit automation</span></a>
+<a class="sourceLine" id="cb255-11" data-line-number="11">    <span class="kw">require</span>(e1071)</a>
+<a class="sourceLine" id="cb255-12" data-line-number="12">    <span class="kw">return</span>(<span class="kw">do.call</span>(svm, <span class="kw">c</span>(<span class="dt">kernel =</span> kernel, par_list))) </a>
+<a class="sourceLine" id="cb255-13" data-line-number="13">}</a>
+<a class="sourceLine" id="cb255-14" data-line-number="14">kernels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;linear&quot;</span>, <span class="st">&quot;radial&quot;</span>, <span class="st">&quot;polynomial&quot;</span>, <span class="st">&quot;sigmoid&quot;</span>) <span class="co"># Kernels</span></a>
+<a class="sourceLine" id="cb255-15" data-line-number="15">fit_svm_par &lt;-<span class="st"> </span><span class="kw">map</span>(kernels, svm_par, <span class="dt">par_list =</span> par_list) <span class="co"># SVM models</span></a>
+<a class="sourceLine" id="cb255-16" data-line-number="16"><span class="kw">map</span>(fit_svm_par, mse,                                     <span class="co"># MSEs</span></a>
+<a class="sourceLine" id="cb255-17" data-line-number="17">    <span class="dt">features =</span> test_feat_short,                           <span class="co"># From SVM chapter </span></a>
+<a class="sourceLine" id="cb255-18" data-line-number="18">    <span class="dt">label =</span> testing_sample<span class="op">$</span>R1M_Usd)</a></code></pre></div>
+<pre><code>## [[1]]
+## [1] 0.03849786
+## 
+## [[2]]
+## [1] 0.03924576
+## 
+## [[3]]
+## [1] 0.03951328
+## 
+## [[4]]
+## [1] 334.8173</code></pre>
+<p></p>
+<p>The first two kernels yield the best fit while the last one should be avoided.</p>
 </div>
 <div id="chapter-12" class="section level2">
 <h2><span class="header-section-number">B.7</span> Chapter 12</h2>
