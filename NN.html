@@ -699,15 +699,15 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb77-4" data-line-number="4">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)         <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb77-5" data-line-number="5">)</a>
 <a class="sourceLine" id="cb77-6" data-line-number="6"><span class="kw">summary</span>(model)                                 <span class="co"># Model architecture</span></a></code></pre></div>
-<pre><code>## Model: &quot;sequential_12&quot;
+<pre><code>## Model: &quot;sequential_6&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_40 (Dense)                        (None, 16)                          1504          
+## dense_20 (Dense)                        (None, 16)                          1504          
 ## __________________________________________________________________________________________
-## dense_41 (Dense)                        (None, 8)                           136           
+## dense_21 (Dense)                        (None, 8)                           136           
 ## __________________________________________________________________________________________
-## dense_42 (Dense)                        (None, 1)                           9             
+## dense_22 (Dense)                        (None, 1)                           9             
 ## ==========================================================================================
 ## Total params: 1,649
 ## Trainable params: 1,649
@@ -738,7 +738,7 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5377877</code></pre>
+<pre><code>## [1] 0.5432857</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -779,17 +779,17 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <a class="sourceLine" id="cb84-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;categorical_accuracy&#39;</span>)            <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb84-7" data-line-number="7">)</a>
 <a class="sourceLine" id="cb84-8" data-line-number="8"><span class="kw">summary</span>(model_C)                                   <span class="co"># Model structure</span></a></code></pre></div>
-<pre><code>## Model: &quot;sequential_13&quot;
+<pre><code>## Model: &quot;sequential_7&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_43 (Dense)                        (None, 16)                          1504          
+## dense_23 (Dense)                        (None, 16)                          1504          
 ## __________________________________________________________________________________________
-## dropout_2 (Dropout)                     (None, 16)                          0             
+## dropout_1 (Dropout)                     (None, 16)                          0             
 ## __________________________________________________________________________________________
-## dense_44 (Dense)                        (None, 8)                           136           
+## dense_24 (Dense)                        (None, 8)                           136           
 ## __________________________________________________________________________________________
-## dense_45 (Dense)                        (None, 2)                           18            
+## dense_25 (Dense)                        (None, 2)                           18            
 ## ==========================================================================================
 ## Total params: 1,658
 ## Trainable params: 1,658
@@ -942,7 +942,7 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task).
 
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.497349</code></pre>
+<pre><code>## [1] 0.5026654</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
