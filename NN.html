@@ -185,6 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
 <li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.3" data-path="Data.html"><a href="Data.html#active-learning"><i class="fa fa-check"></i><b>5.7.3</b> Active learning</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -359,10 +360,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-yet-another-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: yet another illustration</a></li>
 <li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
 <li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
-<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
@@ -409,7 +409,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.1</b> Advanced weighting function</a></li>
 <li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.2</b> Functional programming in the backtest</a></li>
 </ul></li>
-<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.9</b> Chapter 17</a></li>
+<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-16"><i class="fa fa-check"></i><b>B.9</b> Chapter 16</a></li>
+<li class="chapter" data-level="B.10" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.10</b> Chapter 17</a></li>
 </ul></li>
 </ul>
 
@@ -656,7 +657,7 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <li>non-negativity constraint: all weights must be positive or zero.</li>
 </ul>
 <p>Lastly, another (somewhat exotic) way to reduce the risk of overfitting is simply to reduce the size (number of parameters) of the model. <span class="citation">Srivastava et al. (<a href="#ref-srivastava2014dropout">2014</a>)</span> propose to omit units during training (hence the term ‘<strong>dropout</strong>’). The weights of randomly chosen units are set to zero during training. All links from and to the unit are ignored, which mechanically shrinks the network. In the testing phase, all units are back, but the values (weights) must be scaled to account for the missing activations during the training phase.</p>
-<p>The interested reader can check the advice compiled in <span class="citation">Bengio (<a href="#ref-bengio2012practical">2012</a>)</span> and <span class="citation">Smith (<a href="#ref-smith2018disciplined">2018</a>)</span> for further tips on how to configure neural networks.</p>
+<p>The interested reader can check the advice compiled in <span class="citation">Bengio (<a href="#ref-bengio2012practical">2012</a>)</span> and <span class="citation">Smith (<a href="#ref-smith2018disciplined">2018</a>)</span> for further tips on how to configure neural networks. A paper dedicated to hyperparameter tuning for stock return prediction is <span class="citation">Lee (<a href="#ref-lee2020hyperparameter">2020</a>)</span>.</p>
 </div>
 </div>
 <div id="code-samples-and-comments-for-vanilla-mlp" class="section level2">
@@ -738,7 +739,7 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5432857</code></pre>
+<pre><code>## [1] 0.5117081</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -942,7 +943,7 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task).
 
 <div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5026654</code></pre>
+<pre><code>## [1] 0.4970194</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
@@ -1142,6 +1143,9 @@ FIGURE 8.12: Scheme of the autoencoder pricing model.
 </div>
 <div id="ref-krauss2017deep">
 <p>Krauss, Christopher, Xuan Anh Do, and Nicolas Huck. 2017. “Deep Neural Networks, Gradient-Boosted Trees, Random Forests: Statistical Arbitrage on the S&amp;P 500.” <em>European Journal of Operational Research</em> 259 (2): 689–702.</p>
+</div>
+<div id="ref-lee2020hyperparameter">
+<p>Lee, Sang Il. 2020. “Hyperparameter Optimization for Forecasting Stock Returns.” <em>arXiv Preprint</em>, no. 2001.10278.</p>
 </div>
 <div id="ref-loreggia2016deep">
 <p>Loreggia, Andrea, Yuri Malitsky, Horst Samulowitz, and Vijay Saraswat. 2016. “Deep Learning for Algorithm Portfolios.” In <em>Proceedings of the Thirtieth Aaai Conference on Artificial Intelligence</em>, 1280–6. AAAI Press.</p>

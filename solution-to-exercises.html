@@ -185,6 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
 <li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.3" data-path="Data.html"><a href="Data.html#active-learning"><i class="fa fa-check"></i><b>5.7.3</b> Active learning</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -359,10 +360,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-yet-another-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: yet another illustration</a></li>
 <li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
 <li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
-<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
@@ -409,7 +409,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.1</b> Advanced weighting function</a></li>
 <li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.2</b> Functional programming in the backtest</a></li>
 </ul></li>
-<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.9</b> Chapter 17</a></li>
+<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-16"><i class="fa fa-check"></i><b>B.9</b> Chapter 16</a></li>
+<li class="chapter" data-level="B.10" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.10</b> Chapter 17</a></li>
 </ul></li>
 </ul>
 
@@ -775,7 +776,7 @@ FIGURE B.9: Sample (complex) tree.
 <p>Finally, we ask for the structure of the model, and train it.</p>
 
 <div class="sourceCode" id="cb254"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb254-1" data-line-number="1"><span class="kw">summary</span>(model_ae)                      <span class="co"># See model details / architecture</span></a></code></pre></div>
-<pre><code>## Model: &quot;model_4&quot;
+<pre><code>## Model: &quot;model_5&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                 Output Shape        Param #    Connected to                  
 ## ==========================================================================================
@@ -910,7 +911,7 @@ FIGURE B.9: Sample (complex) tree.
 <p>Lastly, we can train and evaluate.</p>
 
 <div class="sourceCode" id="cb265"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb265-1" data-line-number="1"><span class="kw">summary</span>(model_ens)                      <span class="co"># See model details / architecture</span></a></code></pre></div>
-<pre><code>## Model: &quot;model_5&quot;
+<pre><code>## Model: &quot;model_6&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                 Output Shape        Param #    Connected to                  
 ## ==========================================================================================
@@ -1059,37 +1060,65 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>Each element of backtest is a list with two components: the portfolio weights and the returns. To access the data easily, functions like <em>melt</em> from the package <em>reshape2</em> are useful.</p>
 </div>
 </div>
+<div id="chapter-16" class="section level2">
+<h2><span class="header-section-number">B.9</span> Chapter 16</h2>
+<p>We recycle the AE model trained in Chapter <a href="unsup.html#unsup">16</a>. Strangely, building smaller models (encoder) from larger ones (AE) requires to save and then reload the weights. This creates an external file, which we call “ae_weights”. We can check that the output does have 4 columns (compressed) instead of 7 (original data).</p>
+
+<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb278-1" data-line-number="1"><span class="kw">save_model_weights_hdf5</span>(<span class="dt">object =</span> ae_model,<span class="dt">filepath =</span><span class="st">&quot;ae_weights.hdf5&quot;</span>, <span class="dt">overwrite =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb278-2" data-line-number="2">encoder_model &lt;-<span class="st"> </span><span class="kw">keras_model</span>(<span class="dt">inputs =</span> input_layer, <span class="dt">outputs =</span> encoder)</a>
+<a class="sourceLine" id="cb278-3" data-line-number="3">encoder_model <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb278-4" data-line-number="4"><span class="st">    </span><span class="kw">load_model_weights_hdf5</span>(<span class="dt">filepath =</span> <span class="st">&quot;ae_weights.hdf5&quot;</span>,<span class="dt">skip_mismatch =</span> <span class="ot">TRUE</span>,<span class="dt">by_name =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb278-5" data-line-number="5">encoder_model <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(</a>
+<a class="sourceLine" id="cb278-6" data-line-number="6">    <span class="dt">loss =</span> <span class="st">&#39;mean_squared_error&#39;</span>,</a>
+<a class="sourceLine" id="cb278-7" data-line-number="7">    <span class="dt">optimizer =</span> <span class="st">&#39;adam&#39;</span>,</a>
+<a class="sourceLine" id="cb278-8" data-line-number="8">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)</a>
+<a class="sourceLine" id="cb278-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb278-10" data-line-number="10">encoder_model <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb278-11" data-line-number="11"><span class="st">  </span>keras<span class="op">::</span><span class="kw">predict_on_batch</span>(<span class="dt">x =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb278-12" data-line-number="12"><span class="st">                              </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb278-13" data-line-number="13"><span class="st">                              </span><span class="kw">as.matrix</span>()) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb278-14" data-line-number="14"><span class="st">    </span><span class="kw">head</span>(<span class="dv">5</span>)</a></code></pre></div>
+<pre><code>## tf.Tensor(
+## [[-0.46749437 -0.58781374 -0.37098286  0.7200568 ]
+##  [-0.5000085  -0.59186834 -0.38608485  0.7121291 ]
+##  [-0.45690358 -0.5570187  -0.33300397  0.72716814]
+##  [-0.45160607 -0.5485327  -0.32374427  0.7300292 ]
+##  [-0.4428093  -0.53940517 -0.3184347   0.7353397 ]], shape=(5, 4), dtype=float32)</code></pre>
+<p></p>
+
+<p></p>
+</div>
 <div id="chapter-17" class="section level2">
-<h2><span class="header-section-number">B.9</span> Chapter 17</h2>
+<h2><span class="header-section-number">B.10</span> Chapter 17</h2>
 <p>All we need to do is change the rho coefficient in the code of Chapter <a href="RL.html#RL">17</a>.</p>
 
-<div class="sourceCode" id="cb278"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb278-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)                                                 <span class="co"># Fixing the random seed</span></a>
-<a class="sourceLine" id="cb278-2" data-line-number="2">n_sample &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">5</span>                                             <span class="co"># Number of samples to be generated</span></a>
-<a class="sourceLine" id="cb278-3" data-line-number="3">rho &lt;-<span class="st"> </span>(<span class="op">-</span><span class="fl">0.8</span>)                                                <span class="co"># Autoregressive parameter</span></a>
-<a class="sourceLine" id="cb278-4" data-line-number="4">sd &lt;-<span class="st"> </span><span class="fl">0.4</span>                                                    <span class="co"># Std. dev. of noise</span></a>
-<a class="sourceLine" id="cb278-5" data-line-number="5">a &lt;-<span class="st"> </span><span class="fl">0.06</span> <span class="op">*</span><span class="st"> </span>rho                                              <span class="co"># Scaled mean of returns</span></a>
-<a class="sourceLine" id="cb278-6" data-line-number="6">data_RL3 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">returns =</span> a<span class="op">/</span>rho <span class="op">+</span><span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n =</span> n_sample, <span class="co"># Returns via AR(1) simulation</span></a>
-<a class="sourceLine" id="cb278-7" data-line-number="7">                                               <span class="kw">list</span>(<span class="dt">ar =</span> rho),       </a>
-<a class="sourceLine" id="cb278-8" data-line-number="8">                                               <span class="dt">sd =</span> sd),</a>
-<a class="sourceLine" id="cb278-9" data-line-number="9">                   <span class="dt">action =</span> <span class="kw">round</span>(<span class="kw">runif</span>(n_sample)<span class="op">*</span><span class="dv">4</span>)<span class="op">/</span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Random action (portfolio)</span></a>
-<a class="sourceLine" id="cb278-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">new_state =</span> <span class="kw">if_else</span>(returns <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;neg&quot;</span>, <span class="st">&quot;pos&quot;</span>),   <span class="co"># Coding of state</span></a>
-<a class="sourceLine" id="cb278-11" data-line-number="11">           <span class="dt">reward =</span> returns <span class="op">*</span><span class="st"> </span>action,                        <span class="co"># Reward = portfolio return</span></a>
-<a class="sourceLine" id="cb278-12" data-line-number="12">           <span class="dt">state =</span> <span class="kw">lag</span>(new_state),                           <span class="co"># Next state</span></a>
-<a class="sourceLine" id="cb278-13" data-line-number="13">           <span class="dt">action =</span> <span class="kw">as.character</span>(action)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb278-14" data-line-number="14"><span class="st">    </span><span class="kw">na.omit</span>()                                                <span class="co"># Remove one missing state</span></a></code></pre></div>
+<div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb280-1" data-line-number="1"><span class="kw">set.seed</span>(<span class="dv">42</span>)                                                 <span class="co"># Fixing the random seed</span></a>
+<a class="sourceLine" id="cb280-2" data-line-number="2">n_sample &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">5</span>                                             <span class="co"># Number of samples to be generated</span></a>
+<a class="sourceLine" id="cb280-3" data-line-number="3">rho &lt;-<span class="st"> </span>(<span class="op">-</span><span class="fl">0.8</span>)                                                <span class="co"># Autoregressive parameter</span></a>
+<a class="sourceLine" id="cb280-4" data-line-number="4">sd &lt;-<span class="st"> </span><span class="fl">0.4</span>                                                    <span class="co"># Std. dev. of noise</span></a>
+<a class="sourceLine" id="cb280-5" data-line-number="5">a &lt;-<span class="st"> </span><span class="fl">0.06</span> <span class="op">*</span><span class="st"> </span>rho                                              <span class="co"># Scaled mean of returns</span></a>
+<a class="sourceLine" id="cb280-6" data-line-number="6">data_RL3 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">returns =</span> a<span class="op">/</span>rho <span class="op">+</span><span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n =</span> n_sample, <span class="co"># Returns via AR(1) simulation</span></a>
+<a class="sourceLine" id="cb280-7" data-line-number="7">                                               <span class="kw">list</span>(<span class="dt">ar =</span> rho),       </a>
+<a class="sourceLine" id="cb280-8" data-line-number="8">                                               <span class="dt">sd =</span> sd),</a>
+<a class="sourceLine" id="cb280-9" data-line-number="9">                   <span class="dt">action =</span> <span class="kw">round</span>(<span class="kw">runif</span>(n_sample)<span class="op">*</span><span class="dv">4</span>)<span class="op">/</span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Random action (portfolio)</span></a>
+<a class="sourceLine" id="cb280-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">new_state =</span> <span class="kw">if_else</span>(returns <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;neg&quot;</span>, <span class="st">&quot;pos&quot;</span>),   <span class="co"># Coding of state</span></a>
+<a class="sourceLine" id="cb280-11" data-line-number="11">           <span class="dt">reward =</span> returns <span class="op">*</span><span class="st"> </span>action,                        <span class="co"># Reward = portfolio return</span></a>
+<a class="sourceLine" id="cb280-12" data-line-number="12">           <span class="dt">state =</span> <span class="kw">lag</span>(new_state),                           <span class="co"># Next state</span></a>
+<a class="sourceLine" id="cb280-13" data-line-number="13">           <span class="dt">action =</span> <span class="kw">as.character</span>(action)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb280-14" data-line-number="14"><span class="st">    </span><span class="kw">na.omit</span>()                                                <span class="co"># Remove one missing state</span></a></code></pre></div>
 <p></p>
 <p>The learning can then proceed.</p>
 
-<div class="sourceCode" id="cb279"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb279-1" data-line-number="1">control &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>,                        <span class="co"># Learning rate</span></a>
-<a class="sourceLine" id="cb279-2" data-line-number="2">                <span class="dt">gamma =</span> <span class="fl">0.7</span>,                        <span class="co"># Discount factor for rewards</span></a>
-<a class="sourceLine" id="cb279-3" data-line-number="3">                <span class="dt">epsilon =</span> <span class="fl">0.1</span>)                      <span class="co"># Exploration rate</span></a>
-<a class="sourceLine" id="cb279-4" data-line-number="4">fit_RL3 &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(data_RL3,          <span class="co"># Main RL function</span></a>
-<a class="sourceLine" id="cb279-5" data-line-number="5">                                 <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
-<a class="sourceLine" id="cb279-6" data-line-number="6">                                 <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
-<a class="sourceLine" id="cb279-7" data-line-number="7">                                 <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
-<a class="sourceLine" id="cb279-8" data-line-number="8">                                 <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
-<a class="sourceLine" id="cb279-9" data-line-number="9">                                 <span class="dt">control =</span> control)</a>
-<a class="sourceLine" id="cb279-10" data-line-number="10"><span class="kw">print</span>(fit_RL3)   <span class="co"># Show the output</span></a></code></pre></div>
+<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb281-1" data-line-number="1">control &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>,                        <span class="co"># Learning rate</span></a>
+<a class="sourceLine" id="cb281-2" data-line-number="2">                <span class="dt">gamma =</span> <span class="fl">0.7</span>,                        <span class="co"># Discount factor for rewards</span></a>
+<a class="sourceLine" id="cb281-3" data-line-number="3">                <span class="dt">epsilon =</span> <span class="fl">0.1</span>)                      <span class="co"># Exploration rate</span></a>
+<a class="sourceLine" id="cb281-4" data-line-number="4">fit_RL3 &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(data_RL3,          <span class="co"># Main RL function</span></a>
+<a class="sourceLine" id="cb281-5" data-line-number="5">                                 <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
+<a class="sourceLine" id="cb281-6" data-line-number="6">                                 <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
+<a class="sourceLine" id="cb281-7" data-line-number="7">                                 <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
+<a class="sourceLine" id="cb281-8" data-line-number="8">                                 <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
+<a class="sourceLine" id="cb281-9" data-line-number="9">                                 <span class="dt">control =</span> control)</a>
+<a class="sourceLine" id="cb281-10" data-line-number="10"><span class="kw">print</span>(fit_RL3)   <span class="co"># Show the output</span></a></code></pre></div>
 <pre><code>## State-Action function Q
 ##          0.25         0         1      0.75       0.5
 ## neg 0.7107268 0.5971710 1.4662416 0.9535698 0.8069591
@@ -1105,38 +1134,38 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>In this case, the constantly switching feature of the return process changes the outcome. The negative state is associated with large profits when the portfolio is fully invested while the positive state has the best average reward when the agent refrains from investing.</p>
 <p>For the second exercise, the trick is to define all possible actions, that is all combinations (+1,0-1) for the two assets on all dates. We recycle the data from Chapter <a href="RL.html#RL">17</a>.</p>
 
-<div class="sourceCode" id="cb281"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb281-1" data-line-number="1">pos_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)                              <span class="co"># Possible alloc. to asset 1</span></a>
-<a class="sourceLine" id="cb281-2" data-line-number="2">pos_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)                              <span class="co"># Possible alloc. to asset 3</span></a>
-<a class="sourceLine" id="cb281-3" data-line-number="3">pos &lt;-<span class="st"> </span><span class="kw">expand_grid</span>(pos_<span class="dv">3</span>, pos_<span class="dv">4</span>)                <span class="co"># All combinations</span></a>
-<a class="sourceLine" id="cb281-4" data-line-number="4">pos &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(pos, <span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pos))         <span class="co"># Adding combination id</span></a>
-<a class="sourceLine" id="cb281-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb281-6" data-line-number="6">ret_pb_RL &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(<span class="dt">r3 =</span> return_<span class="dv">3</span>, <span class="dt">r4 =</span> return_<span class="dv">4</span>, <span class="co"># Returns &amp; P/B dataframe</span></a>
-<a class="sourceLine" id="cb281-7" data-line-number="7">                       <span class="dt">pb3 =</span> pb_<span class="dv">3</span>, <span class="dt">pb4 =</span> pb_<span class="dv">4</span>) </a>
-<a class="sourceLine" id="cb281-8" data-line-number="8">data_RL4 &lt;-<span class="st"> </span><span class="kw">sapply</span>(ret_pb_RL,                        <span class="co"># Combining return &amp; positions</span></a>
-<a class="sourceLine" id="cb281-9" data-line-number="9">                   rep.int, </a>
-<a class="sourceLine" id="cb281-10" data-line-number="10">                   <span class="dt">times =</span> <span class="kw">nrow</span>(pos)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb281-11" data-line-number="11"><span class="st">    </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb281-12" data-line-number="12"><span class="st">    </span><span class="kw">bind_cols</span>(<span class="dt">id =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pos), <span class="dv">1</span>, <span class="dt">each =</span> <span class="kw">length</span>(return_<span class="dv">3</span>))) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb281-13" data-line-number="13"><span class="st">    </span><span class="kw">left_join</span>(pos) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb281-14" data-line-number="14"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">action =</span> <span class="kw">paste</span>(pos_<span class="dv">3</span>, pos_<span class="dv">4</span>),            <span class="co"># Uniting actions</span></a>
-<a class="sourceLine" id="cb281-15" data-line-number="15">           <span class="dt">pb3 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb3),                    <span class="co"># Simplifying states</span></a>
-<a class="sourceLine" id="cb281-16" data-line-number="16">           <span class="dt">pb4 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb4),                    <span class="co"># Simplifying states</span></a>
-<a class="sourceLine" id="cb281-17" data-line-number="17">           <span class="dt">state =</span> <span class="kw">paste</span>(pb3, pb4),                 <span class="co"># Uniting states</span></a>
-<a class="sourceLine" id="cb281-18" data-line-number="18">           <span class="dt">reward =</span> pos_<span class="dv">3</span><span class="op">*</span>r3 <span class="op">+</span><span class="st"> </span>pos_<span class="dv">4</span><span class="op">*</span>r4,            <span class="co"># Computing rewards</span></a>
-<a class="sourceLine" id="cb281-19" data-line-number="19">           <span class="dt">new_state =</span> <span class="kw">lead</span>(state)) <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Infer new state</span></a>
-<a class="sourceLine" id="cb281-20" data-line-number="20"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>pb3, <span class="op">-</span>pb4, <span class="op">-</span>pos_<span class="dv">3</span>,          <span class="co"># Remove superfluous vars.</span></a>
-<a class="sourceLine" id="cb281-21" data-line-number="21">                  <span class="op">-</span>pos_<span class="dv">4</span>, <span class="op">-</span>r3, <span class="op">-</span>r4) </a></code></pre></div>
+<div class="sourceCode" id="cb283"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb283-1" data-line-number="1">pos_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)                              <span class="co"># Possible alloc. to asset 1</span></a>
+<a class="sourceLine" id="cb283-2" data-line-number="2">pos_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">1</span>)                              <span class="co"># Possible alloc. to asset 3</span></a>
+<a class="sourceLine" id="cb283-3" data-line-number="3">pos &lt;-<span class="st"> </span><span class="kw">expand_grid</span>(pos_<span class="dv">3</span>, pos_<span class="dv">4</span>)                <span class="co"># All combinations</span></a>
+<a class="sourceLine" id="cb283-4" data-line-number="4">pos &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(pos, <span class="dt">id =</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pos))         <span class="co"># Adding combination id</span></a>
+<a class="sourceLine" id="cb283-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb283-6" data-line-number="6">ret_pb_RL &lt;-<span class="st"> </span><span class="kw">bind_cols</span>(<span class="dt">r3 =</span> return_<span class="dv">3</span>, <span class="dt">r4 =</span> return_<span class="dv">4</span>, <span class="co"># Returns &amp; P/B dataframe</span></a>
+<a class="sourceLine" id="cb283-7" data-line-number="7">                       <span class="dt">pb3 =</span> pb_<span class="dv">3</span>, <span class="dt">pb4 =</span> pb_<span class="dv">4</span>) </a>
+<a class="sourceLine" id="cb283-8" data-line-number="8">data_RL4 &lt;-<span class="st"> </span><span class="kw">sapply</span>(ret_pb_RL,                        <span class="co"># Combining return &amp; positions</span></a>
+<a class="sourceLine" id="cb283-9" data-line-number="9">                   rep.int, </a>
+<a class="sourceLine" id="cb283-10" data-line-number="10">                   <span class="dt">times =</span> <span class="kw">nrow</span>(pos)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb283-11" data-line-number="11"><span class="st">    </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb283-12" data-line-number="12"><span class="st">    </span><span class="kw">bind_cols</span>(<span class="dt">id =</span> <span class="kw">rep</span>(<span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(pos), <span class="dv">1</span>, <span class="dt">each =</span> <span class="kw">length</span>(return_<span class="dv">3</span>))) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb283-13" data-line-number="13"><span class="st">    </span><span class="kw">left_join</span>(pos) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>id) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb283-14" data-line-number="14"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">action =</span> <span class="kw">paste</span>(pos_<span class="dv">3</span>, pos_<span class="dv">4</span>),            <span class="co"># Uniting actions</span></a>
+<a class="sourceLine" id="cb283-15" data-line-number="15">           <span class="dt">pb3 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb3),                    <span class="co"># Simplifying states</span></a>
+<a class="sourceLine" id="cb283-16" data-line-number="16">           <span class="dt">pb4 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb4),                    <span class="co"># Simplifying states</span></a>
+<a class="sourceLine" id="cb283-17" data-line-number="17">           <span class="dt">state =</span> <span class="kw">paste</span>(pb3, pb4),                 <span class="co"># Uniting states</span></a>
+<a class="sourceLine" id="cb283-18" data-line-number="18">           <span class="dt">reward =</span> pos_<span class="dv">3</span><span class="op">*</span>r3 <span class="op">+</span><span class="st"> </span>pos_<span class="dv">4</span><span class="op">*</span>r4,            <span class="co"># Computing rewards</span></a>
+<a class="sourceLine" id="cb283-19" data-line-number="19">           <span class="dt">new_state =</span> <span class="kw">lead</span>(state)) <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Infer new state</span></a>
+<a class="sourceLine" id="cb283-20" data-line-number="20"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>pb3, <span class="op">-</span>pb4, <span class="op">-</span>pos_<span class="dv">3</span>,          <span class="co"># Remove superfluous vars.</span></a>
+<a class="sourceLine" id="cb283-21" data-line-number="21">                  <span class="op">-</span>pos_<span class="dv">4</span>, <span class="op">-</span>r3, <span class="op">-</span>r4) </a></code></pre></div>
 <p></p>
 <p>We can the plug this data into the RL function.</p>
 
-<div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb282-1" data-line-number="1">fit_RL4 &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(data_RL4,           <span class="co"># Main RL function</span></a>
-<a class="sourceLine" id="cb282-2" data-line-number="2">                                 <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
-<a class="sourceLine" id="cb282-3" data-line-number="3">                                 <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
-<a class="sourceLine" id="cb282-4" data-line-number="4">                                 <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
-<a class="sourceLine" id="cb282-5" data-line-number="5">                                 <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
-<a class="sourceLine" id="cb282-6" data-line-number="6">                                 <span class="dt">control =</span> control)</a>
-<a class="sourceLine" id="cb282-7" data-line-number="7">fit_RL4<span class="op">$</span>Q &lt;-<span class="st"> </span><span class="kw">round</span>(fit_RL4<span class="op">$</span>Q, <span class="dv">3</span>) <span class="co"># Round the Q-matrix</span></a>
-<a class="sourceLine" id="cb282-8" data-line-number="8"><span class="kw">print</span>(fit_RL4)                   <span class="co"># Show the output </span></a></code></pre></div>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb284-1" data-line-number="1">fit_RL4 &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(data_RL4,           <span class="co"># Main RL function</span></a>
+<a class="sourceLine" id="cb284-2" data-line-number="2">                                 <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
+<a class="sourceLine" id="cb284-3" data-line-number="3">                                 <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
+<a class="sourceLine" id="cb284-4" data-line-number="4">                                 <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
+<a class="sourceLine" id="cb284-5" data-line-number="5">                                 <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
+<a class="sourceLine" id="cb284-6" data-line-number="6">                                 <span class="dt">control =</span> control)</a>
+<a class="sourceLine" id="cb284-7" data-line-number="7">fit_RL4<span class="op">$</span>Q &lt;-<span class="st"> </span><span class="kw">round</span>(fit_RL4<span class="op">$</span>Q, <span class="dv">3</span>) <span class="co"># Round the Q-matrix</span></a>
+<a class="sourceLine" id="cb284-8" data-line-number="8"><span class="kw">print</span>(fit_RL4)                   <span class="co"># Show the output </span></a></code></pre></div>
 <pre><code>## State-Action function Q
 ##        0 0    0 1  0 -1  -1 -1   -1 0   -1 1   1 -1    1 0    1 1
 ## X0.2 0.000  0.000 0.002 -0.017 -0.018 -0.020  0.023  0.025  0.024
@@ -1182,6 +1211,9 @@ FIGURE B.10: Learning an integrated ensemble.
 </div>
 <div>
 <p>———. 2019. “A Constrained Portfolio Trading System Using Particle Swarm Algorithm and Recurrent Reinforcement Learning.” <em>Expert Systems with Applications</em> 130: 145–56.</p>
+</div>
+<div>
+<p>Alti, Aydoğan, and Sheridan Titman. 2019. “A Dynamic Model of Characteristic-Based Return Predictability.” <em>Journal of Finance</em> 74 (6): 3187–3216.</p>
 </div>
 <div>
 <p>Ammann, Manuel, Guillaume Coqueret, and Jan-Philip Schade. 2016. “Characteristics-Based Portfolio Choice with Leverage Constraints.” <em>Journal of Banking &amp; Finance</em> 70: 23–37.</p>
@@ -1550,7 +1582,7 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>———. 2018. “The Economic Value of Firm-Specific News Sentiment.” <em>SSRN Working Paper</em> 3248925.</p>
 </div>
 <div>
-<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
+<p>Coqueret, Guillaume, and Tony Guida. 2020. “Training Trees on Tails with Applications to Portfolio Choice.” <em>Annals of Operations Research</em> XXX Forthcoming.</p>
 </div>
 <div>
 <p>Cornuejols, Antoine, Laurent Miclet, and Vincent Barra. 2018. <em>Apprentissage Artificiel: Deep Learning, Concepts et Algorithmes</em>. Eyrolles.</p>
@@ -1826,6 +1858,9 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>Green, Jeremiah, John RM Hand, and X Frank Zhang. 2013. “The Supraview of Return Predictive Signals.” <em>Review of Accounting Studies</em> 18 (3): 692–730.</p>
 </div>
 <div>
+<p>———. 2017. “The Characteristics That Provide Independent Information About Average Us Monthly Stock Returns.” <em>Review of Financial Studies</em> 30 (12): 4389–4436.</p>
+</div>
+<div>
 <p>Greene, William H. 2018. <em>Econometric Analysis, Eighth Edition</em>. Pearson Education.</p>
 </div>
 <div>
@@ -1865,6 +1900,9 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>Guyon, Isabelle, and André Elisseeff. 2003. “An Introduction to Variable and Feature Selection.” <em>Journal of Lachine Learning Research</em> 3 (Mar): 1157–82.</p>
 </div>
 <div>
+<p>Haddad, Valentin, Serhiy Kozak, and Shrihari Santosh. 2020. “Factor Timing.” <em>Review of Financial Studies</em> Forthcoming.</p>
+</div>
+<div>
 <p>Hahn, P Richard, Jared S Murray, and Carlos Carvalho. 2019. “Bayesian Regression Tree Models for Causal Inference: Regularization, Confounding, and Heterogeneous Effects.” <em>arXiv Preprint</em>, no. 1706.09523.</p>
 </div>
 <div>
@@ -1893,6 +1931,9 @@ FIGURE B.10: Learning an integrated ensemble.
 </div>
 <div>
 <p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
+</div>
+<div>
+<p>———. 2020. “Replication in Financial Economics.” <em>Critical Finance Review</em>, 1–9.</p>
 </div>
 <div>
 <p>Harvey, Campbell R, John C Liechty, Merrill W Liechty, and Peter Müller. 2010. “Portfolio Selection with Higher Moments.” <em>Quantitative Finance</em> 10 (5): 469–85.</p>
@@ -2000,7 +2041,7 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>Ilmanen, Antti, Ronen Israel, Tobias J Moskowitz, Ashwin K Thapar, and Franklin Wang. 2019. “Factor Premia and Factor Timing: A Century of Evidence.” <em>SSRN Working Paper</em> 3400998.</p>
 </div>
 <div>
-<p>Jacobs, Heiko, and Sebastian Müller. 2019. “Anomalies Across the Globe: Once Public, No Longer Existent?” <em>Journal of Financial Economics</em> XXX (XXX): XXX–XXX.</p>
+<p>Jacobs, Heiko, and Sebastian Müller. 2020. “Anomalies Across the Globe: Once Public, No Longer Existent?” <em>Journal of Financial Economics</em> 135 (1): 213–30.</p>
 </div>
 <div>
 <p>Jacobs, Robert A, Michael I Jordan, Steven J Nowlan, Geoffrey E Hinton, and others. 1991. “Adaptive Mixtures of Local Experts.” <em>Neural Computation</em> 3 (1): 79–87.</p>
@@ -2120,6 +2161,9 @@ FIGURE B.10: Learning an integrated ensemble.
 <p>Ledoit, Olivier, Michael Wolf, and Zhao Zhao. 2018. “Efficient Weighting: A More Powerful Test for Cross-Sectional Anomalies.” <em>SSRN Working Paper</em> 2881417.</p>
 </div>
 <div>
+<p>Lee, Sang Il. 2020. “Hyperparameter Optimization for Forecasting Stock Returns.” <em>arXiv Preprint</em>, no. 2001.10278.</p>
+</div>
+<div>
 <p>Legendre, Adrien Marie. 1805. <em>Nouvelles Méthodes Pour La détermination Des Orbites Des Comètes</em>. F. Didot.</p>
 </div>
 <div>
@@ -2145,6 +2189,9 @@ FIGURE B.10: Learning an integrated ensemble.
 </div>
 <div>
 <p>Lintner, John. 1965. “The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets.” <em>Review of Economics and Statistics</em> 47 (1): 13–37.</p>
+</div>
+<div>
+<p>Lioui, Abraham, and Andrea Tarelli. 2020. “Factor Investing for the Long Run.” <em>SSRN Working Paper</em> 3531946.</p>
 </div>
 <div>
 <p>Little, Roderick JA, and Donald B Rubin. 2014. <em>Statistical Analysis with Missing Data</em>. Vol. 333. John Wiley &amp; Sons.</p>
@@ -2568,6 +2615,9 @@ FIGURE B.10: Learning an integrated ensemble.
 </div>
 <div>
 <p>Zou, Hui, and Trevor Hastie. 2005. “Regularization and Variable Selection via the Elastic Net.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (2): 301–20.</p>
+</div>
+<div>
+<p>Zuckerman, Gregory. 2019. <em>The Man Who Solved the Market: How Jim Simons Launched the Quant Revolution</em>. Penguin Random House.</p>
 </div>
 </div>
 </div>

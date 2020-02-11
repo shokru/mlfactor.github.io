@@ -185,6 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
 <li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.3" data-path="Data.html"><a href="Data.html#active-learning"><i class="fa fa-check"></i><b>5.7.3</b> Active learning</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -359,10 +360,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-yet-another-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: yet another illustration</a></li>
 <li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
 <li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
-<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
@@ -409,7 +409,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.1</b> Advanced weighting function</a></li>
 <li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.2</b> Functional programming in the backtest</a></li>
 </ul></li>
-<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.9</b> Chapter 17</a></li>
+<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-16"><i class="fa fa-check"></i><b>B.9</b> Chapter 16</a></li>
+<li class="chapter" data-level="B.10" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.10</b> Chapter 17</a></li>
 </ul></li>
 </ul>
 
@@ -732,7 +733,7 @@ FIGURE 5.4:  Illustration of the triple barrier method.
 <div id="filtering-the-sample" class="section level3">
 <h3><span class="header-section-number">5.5.4</span> Filtering the sample</h3>
 <p>One of the main challenges in Machine Learning is to extract as much <strong>signal</strong> as possible. By signal, we mean patterns that will hold out-of-sample. Intuitively, it may seem reasonable to think that the more data we gather, the more signal we can extract. This is in fact false in all generality because more data also means more noise. Surprisingly, filtering the training samples can improve performance. This idea was for example implemented successfully in <span class="citation">Fu et al. (<a href="#ref-fu2018machine">2018</a>)</span>, <span class="citation">Guida and Coqueret (<a href="#ref-guida2019big">2018</a><a href="#ref-guida2019big">a</a>)</span> and <span class="citation">Guida and Coqueret (<a href="#ref-guida2018machine">2018</a><a href="#ref-guida2018machine">b</a>)</span>.</p>
-<p>In our paper <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2019</a>)</span>, we investigate why smaller samples may lead to superior out-of-sample accuracy for a particular type of ML algorithm: decision trees (see Chapter <a href="trees.html#trees">7</a>). We focus on a particular kind of filter: we exclude the labels (i.e., returns) that are not extreme and retain the 20% values that are the smallest and the 20% that are the largest (the bulk of the distribution is removed). In doing so, we alter the structure of trees in two ways:<br />
+<p>In our paper <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2020</a>)</span>, we investigate why smaller samples may lead to superior out-of-sample accuracy for a particular type of ML algorithm: decision trees (see Chapter <a href="trees.html#trees">7</a>). We focus on a particular kind of filter: we exclude the labels (i.e., returns) that are not extreme and retain the 20% values that are the smallest and the 20% that are the largest (the bulk of the distribution is removed). In doing so, we alter the structure of trees in two ways:<br />
 - when the splitting points are altered, they are always closer to the center of the distribution of the splitting variable (i.e., the resulting clusters are more balanced);<br />
 - the choice of splitting variables is (sometimes) pushed towards the features that have a monotonous impact on the label.<br />
 These two properties are desirable. The first reduces the risk of fitting to small groups of instances that may be spurious. The second gives more importance to features that appear globally more relevant in explaning the returns. However, the filtering must not be too intense. If, instead of retaining 20% of each tail of the predictor, we keep just 10%, then the loss in signal becomes too severe and the performance deteriorates.</p>
@@ -783,6 +784,20 @@ This technique is used by <span class="citation">Gu, Kelly, and Xiu (<a href="#r
 r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\text{VIX}_t\)</span> is the time-<span class="math inline">\(t\)</span> value of the VIX while <span class="math inline">\(\bar{\text{VIX}}\)</span> is some average or median value. When the VIX is above its average and risk seems to be increasing, the thresholds also increase. The parameter <span class="math inline">\(\delta\)</span> tunes the magnitude of the correction. In the above example, we assume <span class="math inline">\(r_-&lt;0&lt;r_+\)</span>.</p>
+</div>
+<div id="active-learning" class="section level3">
+<h3><span class="header-section-number">5.7.3</span> Active learning</h3>
+<p>We end this section with the notion of active learning. To the best of our knowledge, it is not widely used in quantitative investment, but the underlying concept is enlightening, hence we dedicate a few paragraphs to this notion for the sake of completeness.</p>
+<p>In general supervised learning, there is sometimes an asymmetry in the ability to gather features versus labels. For instance, it is free to have access to images, but the labelling of the content of the image (e.g., “a dog”, “a truck”, “a pizza”, etc.) is costly because it requires human annotation. In formal terms, <span class="math inline">\(\textbf{X}\)</span> is cheap but the corresponding <span class="math inline">\(\textbf{y}\)</span> is expensive.</p>
+<p>As is often the case when facing cost constraints, a evident solution is greed. Ahead of the usual learning process, a filter (often called <em>query</em>) is used to decide which data to label and train on (possibly in relationship with the ML algorithm). The labelling is performed by a so-called <em>oracle</em> (which/who knows the truth) - usually human. This technique that focuses on the most informative instances is referred to as <strong>active learning</strong>. We refer to the surveys <span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span> and <span class="citation">Settles (<a href="#ref-settles2012active">2012</a>)</span> for a detailed account of this field (which we briefly summarize below). The term <strong>active</strong> comes from the fact that the learner does not passively accept data samples but actively participates to the choices of items it learns from.</p>
+<p>One major dichotomy in active learning pertains to the data source <span class="math inline">\(\textbf{X}\)</span> on which the query is based. One obvious case is when the original sample <span class="math inline">\(\textbf{X}\)</span> is very large and not labelled and the learner asks for particular instances within this sample to be labelled. The second case is when the learner has the ability to simulate/generate its own values <span class="math inline">\(\textbf{x}_i\)</span>. This can sometimes be problematic if the oracle does not recognize the data that is generated by the machine. For instance, if the purpose is to label images of characters and numbers, the learner may generate shapes that do not correspond to any letter or digit: the oracle cannot label it.</p>
+<p>In active learning, one key question is: how does the learner choose the instances to be labelled? Heuristically, the answer is: by picking those obsrevations that maximize learning efficiency. In binary classification, a simple criterion is the probability of belonging to one particular class. If this probability is far from 0.5, then the algorithm will have no difficulty of picking one class (even though it can be wrong). The interesting case is when the probability is close to 0.5: the machine may hesitate for this particular instance. Thus, having the oracle label it is useful in this case because it helps the learner in a configuration it which it is undecided.</p>
+<p>Other methods seek to estimate the fit that can be obtained when including particular (new) instances in the training set - and then to optimize this fit. Recalling Section 3.1 in <span class="citation">Geman, Bienenstock, and Doursat (<a href="#ref-geman1992neural">1992</a>)</span> on the variance-bias tradeoff, we have, for a training dataset <span class="math inline">\(D\)</span> and one instance <span class="math inline">\(x\)</span> (we omit the bold font for simplicity),
+<span class="math display">\[\mathbb{E}\left[\left.(y-\hat{f}(x;D))^2\right|\{D,x\}\right]=\mathbb{E}\left[\left.\underbrace{(y-\mathbb{E}[y|x])^2}_{\text{indep. from }D\text{ and }\hat{f}} \right|\{D,x\} \right]+(\hat{f}(x;D)-\mathbb{E}[y|x])^2,\]</span>
+where the notation <span class="math inline">\(f(x;D)\)</span> is used to highlight the dependence between the model <span class="math inline">\(\hat{f}\)</span> and the dataset <span class="math inline">\(D\)</span>: the model has been trained on <span class="math inline">\(D\)</span>. The first term is irreducible, as it does not depend on <span class="math inline">\(\hat{f}\)</span>. Thus, only the second term is of interest. If we take the average of this quantity, taken over all possible values of <span class="math inline">\(D\)</span>:
+<span class="math display">\[\mathbb{E}_D\left[(\hat{f}(x;D)-\mathbb{E}[y|x])^2  \right]=\underbrace{\left(\mathbb{E}_D\left[\hat{f}(x;D)-\mathbb{E}[y|x]\right]\right)^2}_{\text{squared bias}} \ + \ \underbrace{\mathbb{E}_D\left[(\hat{f}(x,D)-\mathbb{E}_D[\hat{f}(x;D)])^2\right]}_{\text{variance}}\]</span>
+If this expression is not too complicated to compute, the learner can query the <span class="math inline">\(x\)</span> that minimizes the tradeoff. Thus, on average, this new instance will be the one that yields the best learning angle (as measured by the <span class="math inline">\(L^2\)</span> error). Beyond this approach (which is limited because it requires the oracle to label a possibly irrelevant instance), many other criteria exist for querying and we refer to Section 3 from <span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span> for an exhaustive list.</p>
+<p>One final question: is active learning applicable to factor investing? One straightfoward answer is that data cannot be annotated by human intervention. Thus, the learner cannot simulate its own instances and ask for corresponding labels. One possible option is to provide the learner with <span class="math inline">\(\textbf{X}\)</span> but not <span class="math inline">\(\textbf{y}\)</span> and keep only a queried subset of observations with the corresponding labels. In spirit, this is close to what is done in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2020</a>)</span> except that the query is not performed by a machine but by the human user. Indeed, it is shown in this paper that not all observations carry the same amount of signal. Instances with ‘average’ label values seem on average less informative compared to those with extreme label values.</p>
 </div>
 </div>
 <div id="additional-code-and-results" class="section level2">
@@ -907,7 +922,7 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 <p>Chen, Long, Zhi Da, and Richard Priestley. 2012. “Dividend Smoothing and Predictability.” <em>Management Science</em> 58 (10): 1834–53.</p>
 </div>
 <div id="ref-coqueret2019training">
-<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
+<p>Coqueret, Guillaume, and Tony Guida. 2020. “Training Trees on Tails with Applications to Portfolio Choice.” <em>Annals of Operations Research</em> XXX Forthcoming.</p>
 </div>
 <div id="ref-de2018advances">
 <p>De Prado, Marcos Lopez. 2018. <em>Advances in Financial Machine Learning</em>. John Wiley &amp; Sons.</p>
@@ -929,6 +944,9 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 </div>
 <div id="ref-garcia2009k">
 <p>Garcı'a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı'bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9). Elsevier: 1483–93.</p>
+</div>
+<div id="ref-geman1992neural">
+<p>Geman, Stuart, Elie Bienenstock, and René Doursat. 1992. “Neural Networks and the Bias/Variance Dilemma.” <em>Neural Computation</em> 4 (1): 1–58.</p>
 </div>
 <div id="ref-gong2015momentum">
 <p>Gong, Qiang, Ming Liu, and Qianqiu Liu. 2015. “Momentum Is Really Short-Term Momentum.” <em>Journal of Banking &amp; Finance</em> 50: 169–82.</p>
@@ -986,6 +1004,12 @@ In terms of <em>p</em>-<strong>value</strong> (last column), the first estimatio
 </div>
 <div id="ref-schafer1999multiple">
 <p>Schafer, Joseph L. 1999. “Multiple Imputation: A Primer.” <em>Statistical Methods in Medical Research</em> 8 (1): 3–15.</p>
+</div>
+<div id="ref-settles2009active">
+<p>Settles, Burr. 2009. “Active Learning Literature Survey.” University of Wisconsin-Madison Department of Computer Sciences.</p>
+</div>
+<div id="ref-settles2012active">
+<p>Settles, Burr. 2012. “Active Learning.” <em>Synthesis Lectures on Artificial Intelligence and Machine Learning</em> 6 (1): 1–114.</p>
 </div>
 <div id="ref-shah2014comparison">
 <p>Shah, Anoop D, Jonathan W Bartlett, James Carpenter, Owen Nicholas, and Harry Hemingway. 2014. “Comparison of Random Forest and Parametric Imputation Models for Imputing Missing Data Using Mice: A Caliber Study.” <em>American Journal of Epidemiology</em> 179 (6): 764–74.</p>

@@ -185,6 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
 <li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
 <li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+<li class="chapter" data-level="5.7.3" data-path="Data.html"><a href="Data.html#active-learning"><i class="fa fa-check"></i><b>5.7.3</b> Active learning</a></li>
 </ul></li>
 <li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
 <li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
@@ -359,10 +360,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
 </ul></li>
 <li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
-<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-yet-another-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: yet another illustration</a></li>
 <li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
 <li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
-<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
@@ -409,7 +409,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.1</b> Advanced weighting function</a></li>
 <li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.2</b> Functional programming in the backtest</a></li>
 </ul></li>
-<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.9</b> Chapter 17</a></li>
+<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-16"><i class="fa fa-check"></i><b>B.9</b> Chapter 16</a></li>
+<li class="chapter" data-level="B.10" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.10</b> Chapter 17</a></li>
 </ul></li>
 </ul>
 
@@ -665,7 +666,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <a class="sourceLine" id="cb166-12" data-line-number="12">portf_returns &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> Tt, <span class="dt">ncol =</span> nb_port)       <span class="co"># Initialize portfolio returns </span></a></code></pre></div>
 <p></p>
 <p>This first step is crucial, it lays the groundwork for the core of the backtest. We consider only two strategies: one ML-based and the EW (1/N) benchmark. The main (weighting) function will consist of these two components, but we define the sophisticated one in a dedicated wrapper. The ML-based weights are derived from XGBoost predictions with 80 trees, a learning rate of 0.3 and a maximum tree depth of 4. This makes the model complex but not exceedingly so. Once the predictions are obtained, the weighting scheme is simple: it is an EW portfolio over the best half of the stocks (those with above median prediction).</p>
-<p>In the function below, all parameters (e.g., the learning rate) are hard-coded. They can easily be passed in arguments next to the data inputs. One very important detail is that in contrast to the rest of the book, the label is the 12 month future return. The main reason for this is rooted in the discussion from Section <a href="Data.html#pers">5.6</a>. Also, to speed up the computations, we remove the bulk of the distribution of the labels and keep only the top 20% and bottom 20%, as is advised in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2019</a>)</span>. The filtering levels could be passed as arguments.</p>
+<p>In the function below, all parameters (e.g., the learning rate) are hard-coded. They can easily be passed in arguments next to the data inputs. One very important detail is that in contrast to the rest of the book, the label is the 12 month future return. The main reason for this is rooted in the discussion from Section <a href="Data.html#pers">5.6</a>. Also, to speed up the computations, we remove the bulk of the distribution of the labels and keep only the top 20% and bottom 20%, as is advised in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2020</a>)</span>. The filtering levels could be passed as arguments.</p>
 
 <div class="sourceCode" id="cb167"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb167-1" data-line-number="1">weights_xgb &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features){ </a>
 <a class="sourceLine" id="cb167-2" data-line-number="2">    train_features &lt;-<span class="st"> </span>train_data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()  <span class="co"># Indep. variable</span></a>
@@ -859,7 +860,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p>Coqueret, Guillaume. 2015. “Diversified Minimum-Variance Portfolios.” <em>Annals of Finance</em> 11 (2): 221–41.</p>
 </div>
 <div id="ref-coqueret2019training">
-<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
+<p>Coqueret, Guillaume, and Tony Guida. 2020. “Training Trees on Tails with Applications to Portfolio Choice.” <em>Annals of Operations Research</em> XXX Forthcoming.</p>
 </div>
 <div id="ref-cuchiero2016new">
 <p>Cuchiero, Christa, Irene Klein, and Josef Teichmann. 2016. “A New Perspective on the Fundamental Theorem of Asset Pricing for Large Financial Markets.” <em>Theory of Probability &amp; Its Applications</em> 60 (4): 561–79.</p>
