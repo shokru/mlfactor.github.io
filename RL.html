@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -612,22 +613,22 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 <p>The environment consists only in observing the past return <span class="math inline">\(r_t\)</span>. Since we seek to estimate the <span class="math inline">\(Q\)</span> function, we need to discretize this state variable. The simplest choice is to resort to a binary variable: equal to -1 (negative) if <span class="math inline">\(r_t&lt;0\)</span> and to +1 (positive) if <span class="math inline">\(r_t\ge 0\)</span>. The actions are summarized by the quantity invested in the risky asset. It can take 5 values: 0 (risk-free portfolio), 0.25, 0.5, 0.75 and 1 (fully invested in the risky asset). This is for instance the same choice as in <span class="citation">Pendharkar and Cusatis (<a href="#ref-pendharkar2018trading">2018</a>)</span>.</p>
 <p>The landscape of R libraries for RL is surprisingly sparse. We resort to the package <em>ReinforcementLearning</em> which has an intuitive implementation of <span class="math inline">\(Q\)</span>-learning (another option would be the <em>reinforcelearn</em> package). It requires a dataset with the usual inputs: state, action, reward and subsequent state. We start by simulating the returns: they drive the states and the rewards (portfolio returns). The actions are sampled randomly. Technically, the main function of the package requires that states and actions be of character type. The data is built in the chunk below.</p>
 
-<div class="sourceCode" id="cb217"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb217-1" data-line-number="1"><span class="kw">library</span>(ReinforcementLearning)                              <span class="co"># Package for RL</span></a>
-<a class="sourceLine" id="cb217-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">42</span>)                                                <span class="co"># Fixing the random seed</span></a>
-<a class="sourceLine" id="cb217-3" data-line-number="3">n_sample &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">5</span>                                            <span class="co"># Number of samples to be generated</span></a>
-<a class="sourceLine" id="cb217-4" data-line-number="4">rho &lt;-<span class="st"> </span><span class="fl">0.8</span>                                                  <span class="co"># Autoregressive parameter</span></a>
-<a class="sourceLine" id="cb217-5" data-line-number="5">sd &lt;-<span class="st"> </span><span class="fl">0.4</span>                                                   <span class="co"># Std. dev. of noise</span></a>
-<a class="sourceLine" id="cb217-6" data-line-number="6">a &lt;-<span class="st"> </span><span class="fl">0.06</span> <span class="op">*</span><span class="st"> </span>rho                                             <span class="co"># Scaled mean of returns</span></a>
-<a class="sourceLine" id="cb217-7" data-line-number="7">data_RL &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">returns =</span> a<span class="op">/</span>rho <span class="op">+</span><span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n =</span> n_sample, <span class="co"># Returns via AR(1) simulation</span></a>
-<a class="sourceLine" id="cb217-8" data-line-number="8">                                      <span class="kw">list</span>(<span class="dt">ar =</span> rho),       </a>
-<a class="sourceLine" id="cb217-9" data-line-number="9">                                      <span class="dt">sd =</span> sd),</a>
-<a class="sourceLine" id="cb217-10" data-line-number="10">                  <span class="dt">action =</span> <span class="kw">round</span>(<span class="kw">runif</span>(n_sample)<span class="op">*</span><span class="dv">4</span>)<span class="op">/</span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Random action (portfolio)</span></a>
-<a class="sourceLine" id="cb217-11" data-line-number="11"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">new_state =</span> <span class="kw">if_else</span>(returns <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;neg&quot;</span>, <span class="st">&quot;pos&quot;</span>),  <span class="co"># Coding of state</span></a>
-<a class="sourceLine" id="cb217-12" data-line-number="12">           <span class="dt">reward =</span> returns <span class="op">*</span><span class="st"> </span>action,                       <span class="co"># Reward = portfolio return</span></a>
-<a class="sourceLine" id="cb217-13" data-line-number="13">           <span class="dt">state =</span> <span class="kw">lag</span>(new_state),                          <span class="co"># Next state</span></a>
-<a class="sourceLine" id="cb217-14" data-line-number="14">           <span class="dt">action =</span> <span class="kw">as.character</span>(action)) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb217-15" data-line-number="15"><span class="st">    </span><span class="kw">na.omit</span>()                                               <span class="co"># Remove one missing state</span></a>
-<a class="sourceLine" id="cb217-16" data-line-number="16">data_RL <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()                                          <span class="co"># Show first lines</span></a></code></pre></div>
+<div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb218-1" data-line-number="1"><span class="kw">library</span>(ReinforcementLearning)                              <span class="co"># Package for RL</span></a>
+<a class="sourceLine" id="cb218-2" data-line-number="2"><span class="kw">set.seed</span>(<span class="dv">42</span>)                                                <span class="co"># Fixing the random seed</span></a>
+<a class="sourceLine" id="cb218-3" data-line-number="3">n_sample &lt;-<span class="st"> </span><span class="dv">10</span><span class="op">^</span><span class="dv">5</span>                                            <span class="co"># Number of samples to be generated</span></a>
+<a class="sourceLine" id="cb218-4" data-line-number="4">rho &lt;-<span class="st"> </span><span class="fl">0.8</span>                                                  <span class="co"># Autoregressive parameter</span></a>
+<a class="sourceLine" id="cb218-5" data-line-number="5">sd &lt;-<span class="st"> </span><span class="fl">0.4</span>                                                   <span class="co"># Std. dev. of noise</span></a>
+<a class="sourceLine" id="cb218-6" data-line-number="6">a &lt;-<span class="st"> </span><span class="fl">0.06</span> <span class="op">*</span><span class="st"> </span>rho                                             <span class="co"># Scaled mean of returns</span></a>
+<a class="sourceLine" id="cb218-7" data-line-number="7">data_RL &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">returns =</span> a<span class="op">/</span>rho <span class="op">+</span><span class="st"> </span><span class="kw">arima.sim</span>(<span class="dt">n =</span> n_sample, <span class="co"># Returns via AR(1) simulation</span></a>
+<a class="sourceLine" id="cb218-8" data-line-number="8">                                      <span class="kw">list</span>(<span class="dt">ar =</span> rho),       </a>
+<a class="sourceLine" id="cb218-9" data-line-number="9">                                      <span class="dt">sd =</span> sd),</a>
+<a class="sourceLine" id="cb218-10" data-line-number="10">                  <span class="dt">action =</span> <span class="kw">round</span>(<span class="kw">runif</span>(n_sample)<span class="op">*</span><span class="dv">4</span>)<span class="op">/</span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Random action (portfolio)</span></a>
+<a class="sourceLine" id="cb218-11" data-line-number="11"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">new_state =</span> <span class="kw">if_else</span>(returns <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span>, <span class="st">&quot;neg&quot;</span>, <span class="st">&quot;pos&quot;</span>),  <span class="co"># Coding of state</span></a>
+<a class="sourceLine" id="cb218-12" data-line-number="12">           <span class="dt">reward =</span> returns <span class="op">*</span><span class="st"> </span>action,                       <span class="co"># Reward = portfolio return</span></a>
+<a class="sourceLine" id="cb218-13" data-line-number="13">           <span class="dt">state =</span> <span class="kw">lag</span>(new_state),                          <span class="co"># Next state</span></a>
+<a class="sourceLine" id="cb218-14" data-line-number="14">           <span class="dt">action =</span> <span class="kw">as.character</span>(action)) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb218-15" data-line-number="15"><span class="st">    </span><span class="kw">na.omit</span>()                                               <span class="co"># Remove one missing state</span></a>
+<a class="sourceLine" id="cb218-16" data-line-number="16">data_RL <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">head</span>()                                          <span class="co"># Show first lines</span></a></code></pre></div>
 <pre><code>## # A tibble: 6 x 5
 ##   returns action new_state  reward state
 ##     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;
@@ -637,7 +638,7 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 ## 4   0.543 0.75   pos        0.407  pos  
 ## 5   0.202 0.75   pos        0.152  pos  
 ## 6   0.376 0.25   pos        0.0940 pos</code></pre>
-<p></p>
+
 <p>There are 3 parameters in the implementation of the <em>Q</em>-learning algorithm:</p>
 <ul>
 <li><span class="math inline">\(\gamma\)</span>, which is the learning rate in the updating Equation <a href="RL.html#eq:QLupdate">(17.8)</a>. In <em>ReinforcementLearning</em>, this is coded as <em>alpha</em>;<br />
@@ -646,17 +647,17 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 <li>and <span class="math inline">\(\epsilon\)</span>, which controls the rate of exploration versus exploitation (see Equation <a href="RL.html#eq:egreedy">(17.10)</a>).</li>
 </ul>
 
-<div class="sourceCode" id="cb219"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb219-1" data-line-number="1">control &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>,                       <span class="co"># Learning rate</span></a>
-<a class="sourceLine" id="cb219-2" data-line-number="2">                <span class="dt">gamma =</span> <span class="fl">0.7</span>,                       <span class="co"># Discount factor for rewards</span></a>
-<a class="sourceLine" id="cb219-3" data-line-number="3">                <span class="dt">epsilon =</span> <span class="fl">0.1</span>)                     <span class="co"># Exploration rate</span></a>
-<a class="sourceLine" id="cb219-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb219-5" data-line-number="5">fit_RL &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(data_RL,           <span class="co"># Main RL function</span></a>
-<a class="sourceLine" id="cb219-6" data-line-number="6">                               <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
-<a class="sourceLine" id="cb219-7" data-line-number="7">                               <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
-<a class="sourceLine" id="cb219-8" data-line-number="8">                               <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
-<a class="sourceLine" id="cb219-9" data-line-number="9">                               <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
-<a class="sourceLine" id="cb219-10" data-line-number="10">                               <span class="dt">control =</span> control)</a>
-<a class="sourceLine" id="cb219-11" data-line-number="11"><span class="kw">print</span>(fit_RL)   <span class="co"># Show the output</span></a></code></pre></div>
+<div class="sourceCode" id="cb220"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb220-1" data-line-number="1">control &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">alpha =</span> <span class="fl">0.1</span>,                       <span class="co"># Learning rate</span></a>
+<a class="sourceLine" id="cb220-2" data-line-number="2">                <span class="dt">gamma =</span> <span class="fl">0.7</span>,                       <span class="co"># Discount factor for rewards</span></a>
+<a class="sourceLine" id="cb220-3" data-line-number="3">                <span class="dt">epsilon =</span> <span class="fl">0.1</span>)                     <span class="co"># Exploration rate</span></a>
+<a class="sourceLine" id="cb220-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb220-5" data-line-number="5">fit_RL &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(data_RL,           <span class="co"># Main RL function</span></a>
+<a class="sourceLine" id="cb220-6" data-line-number="6">                               <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
+<a class="sourceLine" id="cb220-7" data-line-number="7">                               <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
+<a class="sourceLine" id="cb220-8" data-line-number="8">                               <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
+<a class="sourceLine" id="cb220-9" data-line-number="9">                               <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
+<a class="sourceLine" id="cb220-10" data-line-number="10">                               <span class="dt">control =</span> control)</a>
+<a class="sourceLine" id="cb220-11" data-line-number="11"><span class="kw">print</span>(fit_RL)   <span class="co"># Show the output</span></a></code></pre></div>
 <pre><code>## State-Action function Q
 ##          0.25         0         1      0.75      0.5
 ## neg 0.2473169 0.4216894 0.1509653 0.1734538 0.229004
@@ -668,7 +669,7 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 ## 
 ## Reward (last iteration)
 ## [1] 2588.659</code></pre>
-<p></p>
+
 <p>The output shows the <em>Q</em> function, which depends naturally both on states and actions. When the state is negative, large risky positions (action equal to 0.75 or 1.00) are associated with the smallest average rewards whereas small positions yield the highest average rewards. When the state is positive, the average rewards are the highest for the largest allocations. The rewards in both cases are almost a monotonic function of the proportion invested in the risky asset. Thus, the recommendation of the algorithm (i.e., the policy) is to be fully invested in a postive state and to refrain from investing in a negative state. Given the positive autocorrelation of the underlying process, this does make sense.</p>
 <p>Basically, the algorithm has simply learned that positive (<em>resp.</em> negative) returns are more likely to follow positive (<em>resp</em>. negative) returns. While this is somewhat reassuring, it is by no means impressive and much simpler tools would yield similar conclusions and guidance.</p>
 </div>
@@ -680,25 +681,25 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 - that only two assets are traded: those with stock_id equal to 3 and 4 - they both have 245 days of trading data.</p>
 <p>The construction of the dataset is unelegantly coded below.</p>
 
-<div class="sourceCode" id="cb221"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb221-1" data-line-number="1">return_<span class="dv">3</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(R1M_Usd)  <span class="co"># Return of asset 3</span></a>
-<a class="sourceLine" id="cb221-2" data-line-number="2">return_<span class="dv">4</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(R1M_Usd)  <span class="co"># Return of asset 4</span></a>
-<a class="sourceLine" id="cb221-3" data-line-number="3">pb_<span class="dv">3</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(Pb)           <span class="co"># P/B ratio of asset 3</span></a>
-<a class="sourceLine" id="cb221-4" data-line-number="4">pb_<span class="dv">4</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(Pb)           <span class="co"># P/B ratio of asset 4</span></a>
-<a class="sourceLine" id="cb221-5" data-line-number="5">action_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="kw">runif</span>(<span class="kw">length</span>(pb_<span class="dv">3</span>))<span class="op">*</span><span class="dv">3</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>                     <span class="co"># Action for asset 3 (random)</span></a>
-<a class="sourceLine" id="cb221-6" data-line-number="6">action_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="kw">runif</span>(<span class="kw">length</span>(pb_<span class="dv">4</span>))<span class="op">*</span><span class="dv">3</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>                     <span class="co"># Action for asset 4 (random)</span></a>
-<a class="sourceLine" id="cb221-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb221-8" data-line-number="8">RL_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(return_<span class="dv">3</span>, return_<span class="dv">4</span>,                            <span class="co"># Building the dataset</span></a>
-<a class="sourceLine" id="cb221-9" data-line-number="9">                  pb_<span class="dv">3</span>, pb_<span class="dv">4</span>,</a>
-<a class="sourceLine" id="cb221-10" data-line-number="10">                  action_<span class="dv">3</span>, action_<span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb221-11" data-line-number="11"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">action =</span> <span class="kw">paste</span>(action_<span class="dv">3</span>, action_<span class="dv">4</span>),                   <span class="co"># Uniting actions</span></a>
-<a class="sourceLine" id="cb221-12" data-line-number="12">           <span class="dt">pb_3 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb_<span class="dv">3</span>),                               <span class="co"># Simplifying states (P/B)</span></a>
-<a class="sourceLine" id="cb221-13" data-line-number="13">           <span class="dt">pb_4 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb_<span class="dv">4</span>),                               <span class="co"># Simplifying states (P/B)</span></a>
-<a class="sourceLine" id="cb221-14" data-line-number="14">           <span class="dt">state =</span> <span class="kw">paste</span>(pb_<span class="dv">3</span>, pb_<span class="dv">4</span>),                            <span class="co"># Uniting states</span></a>
-<a class="sourceLine" id="cb221-15" data-line-number="15">           <span class="dt">reward =</span> action_<span class="dv">3</span><span class="op">*</span>return_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>action_<span class="dv">4</span><span class="op">*</span>return_<span class="dv">4</span>,       <span class="co"># Computing rewards</span></a>
-<a class="sourceLine" id="cb221-16" data-line-number="16">           <span class="dt">new_state =</span> <span class="kw">lead</span>(state)) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Infer new state</span></a>
-<a class="sourceLine" id="cb221-17" data-line-number="17"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>pb_<span class="dv">3</span>, <span class="op">-</span>pb_<span class="dv">4</span>, <span class="op">-</span>action_<span class="dv">3</span>,                       <span class="co"># Remove superfluous vars.</span></a>
-<a class="sourceLine" id="cb221-18" data-line-number="18">                  <span class="op">-</span>action_<span class="dv">4</span>, <span class="op">-</span>return_<span class="dv">3</span>, <span class="op">-</span>return_<span class="dv">4</span>) </a>
-<a class="sourceLine" id="cb221-19" data-line-number="19"><span class="kw">head</span>(RL_data)                                                    <span class="co"># Showing the result</span></a></code></pre></div>
+<div class="sourceCode" id="cb222"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb222-1" data-line-number="1">return_<span class="dv">3</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(R1M_Usd)  <span class="co"># Return of asset 3</span></a>
+<a class="sourceLine" id="cb222-2" data-line-number="2">return_<span class="dv">4</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(R1M_Usd)  <span class="co"># Return of asset 4</span></a>
+<a class="sourceLine" id="cb222-3" data-line-number="3">pb_<span class="dv">3</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">3</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(Pb)           <span class="co"># P/B ratio of asset 3</span></a>
+<a class="sourceLine" id="cb222-4" data-line-number="4">pb_<span class="dv">4</span> &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">4</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(Pb)           <span class="co"># P/B ratio of asset 4</span></a>
+<a class="sourceLine" id="cb222-5" data-line-number="5">action_<span class="dv">3</span> &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="kw">runif</span>(<span class="kw">length</span>(pb_<span class="dv">3</span>))<span class="op">*</span><span class="dv">3</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>                     <span class="co"># Action for asset 3 (random)</span></a>
+<a class="sourceLine" id="cb222-6" data-line-number="6">action_<span class="dv">4</span> &lt;-<span class="st"> </span><span class="kw">floor</span>(<span class="kw">runif</span>(<span class="kw">length</span>(pb_<span class="dv">4</span>))<span class="op">*</span><span class="dv">3</span>) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>                     <span class="co"># Action for asset 4 (random)</span></a>
+<a class="sourceLine" id="cb222-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb222-8" data-line-number="8">RL_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(return_<span class="dv">3</span>, return_<span class="dv">4</span>,                            <span class="co"># Building the dataset</span></a>
+<a class="sourceLine" id="cb222-9" data-line-number="9">                  pb_<span class="dv">3</span>, pb_<span class="dv">4</span>,</a>
+<a class="sourceLine" id="cb222-10" data-line-number="10">                  action_<span class="dv">3</span>, action_<span class="dv">4</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb222-11" data-line-number="11"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">action =</span> <span class="kw">paste</span>(action_<span class="dv">3</span>, action_<span class="dv">4</span>),                   <span class="co"># Uniting actions</span></a>
+<a class="sourceLine" id="cb222-12" data-line-number="12">           <span class="dt">pb_3 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb_<span class="dv">3</span>),                               <span class="co"># Simplifying states (P/B)</span></a>
+<a class="sourceLine" id="cb222-13" data-line-number="13">           <span class="dt">pb_4 =</span> <span class="kw">round</span>(<span class="dv">5</span> <span class="op">*</span><span class="st"> </span>pb_<span class="dv">4</span>),                               <span class="co"># Simplifying states (P/B)</span></a>
+<a class="sourceLine" id="cb222-14" data-line-number="14">           <span class="dt">state =</span> <span class="kw">paste</span>(pb_<span class="dv">3</span>, pb_<span class="dv">4</span>),                            <span class="co"># Uniting states</span></a>
+<a class="sourceLine" id="cb222-15" data-line-number="15">           <span class="dt">reward =</span> action_<span class="dv">3</span><span class="op">*</span>return_<span class="dv">3</span> <span class="op">+</span><span class="st"> </span>action_<span class="dv">4</span><span class="op">*</span>return_<span class="dv">4</span>,       <span class="co"># Computing rewards</span></a>
+<a class="sourceLine" id="cb222-16" data-line-number="16">           <span class="dt">new_state =</span> <span class="kw">lead</span>(state)) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Infer new state</span></a>
+<a class="sourceLine" id="cb222-17" data-line-number="17"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>pb_<span class="dv">3</span>, <span class="op">-</span>pb_<span class="dv">4</span>, <span class="op">-</span>action_<span class="dv">3</span>,                       <span class="co"># Remove superfluous vars.</span></a>
+<a class="sourceLine" id="cb222-18" data-line-number="18">                  <span class="op">-</span>action_<span class="dv">4</span>, <span class="op">-</span>return_<span class="dv">3</span>, <span class="op">-</span>return_<span class="dv">4</span>) </a>
+<a class="sourceLine" id="cb222-19" data-line-number="19"><span class="kw">head</span>(RL_data)                                                    <span class="co"># Showing the result</span></a></code></pre></div>
 <pre><code>## # A tibble: 6 x 4
 ##   action state reward new_state
 ##   &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;    
@@ -708,18 +709,18 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 ## 4 0 -1   1 1    0.011 1 1      
 ## 5 -1 1   1 1   -0.036 1 1      
 ## 6 -1 -1  1 1   -0.056 1 1</code></pre>
-<p></p>
+
 <p>Actions and states have to be merged to yield all possible combinations. To simplify the states, we round 5 times the price-to-book ratios.</p>
 <p>We keep the same hyperparameters as in the previous example. Columns below stand for actions: the first (<span class="math inline">\(resp.\)</span> second) number notes the position in the first (<span class="math inline">\(resp.\)</span> second) asset. The rows correspond to states. The scaled P/R ratios are separated by a point (e.g., “X2.3” means that the first (<span class="math inline">\(resp.\)</span> second) asset has a scale P/B of 2 (<span class="math inline">\(resp.\)</span> 3).</p>
 
-<div class="sourceCode" id="cb223"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb223-1" data-line-number="1">fit_RL2 &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(RL_data,           <span class="co"># Main RL function</span></a>
-<a class="sourceLine" id="cb223-2" data-line-number="2">                               <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
-<a class="sourceLine" id="cb223-3" data-line-number="3">                               <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
-<a class="sourceLine" id="cb223-4" data-line-number="4">                               <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
-<a class="sourceLine" id="cb223-5" data-line-number="5">                               <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
-<a class="sourceLine" id="cb223-6" data-line-number="6">                               <span class="dt">control =</span> control)</a>
-<a class="sourceLine" id="cb223-7" data-line-number="7">fit_RL2<span class="op">$</span>Q &lt;-<span class="st"> </span><span class="kw">round</span>(fit_RL2<span class="op">$</span>Q, <span class="dv">3</span>) <span class="co"># Round the Q-matrix</span></a>
-<a class="sourceLine" id="cb223-8" data-line-number="8"><span class="kw">print</span>(fit_RL2)                   <span class="co"># Show the output </span></a></code></pre></div>
+<div class="sourceCode" id="cb224"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb224-1" data-line-number="1">fit_RL2 &lt;-<span class="st"> </span><span class="kw">ReinforcementLearning</span>(RL_data,           <span class="co"># Main RL function</span></a>
+<a class="sourceLine" id="cb224-2" data-line-number="2">                               <span class="dt">s =</span> <span class="st">&quot;state&quot;</span>, </a>
+<a class="sourceLine" id="cb224-3" data-line-number="3">                               <span class="dt">a =</span> <span class="st">&quot;action&quot;</span>, </a>
+<a class="sourceLine" id="cb224-4" data-line-number="4">                               <span class="dt">r =</span> <span class="st">&quot;reward&quot;</span>, </a>
+<a class="sourceLine" id="cb224-5" data-line-number="5">                               <span class="dt">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </a>
+<a class="sourceLine" id="cb224-6" data-line-number="6">                               <span class="dt">control =</span> control)</a>
+<a class="sourceLine" id="cb224-7" data-line-number="7">fit_RL2<span class="op">$</span>Q &lt;-<span class="st"> </span><span class="kw">round</span>(fit_RL2<span class="op">$</span>Q, <span class="dv">3</span>) <span class="co"># Round the Q-matrix</span></a>
+<a class="sourceLine" id="cb224-8" data-line-number="8"><span class="kw">print</span>(fit_RL2)                   <span class="co"># Show the output </span></a></code></pre></div>
 <pre><code>## State-Action function Q
 ##        0 0    0 1   0 -1  -1 -1   -1 0   -1 1   1 -1    1 0    1 1
 ## X0.2 0.000  0.000  0.000 -0.017  0.000  0.000  0.000  0.002  0.000
@@ -738,7 +739,7 @@ where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multino
 ## 
 ## Reward (last iteration)
 ## [1] -1.296</code></pre>
-<p></p>
+
 <p>The output show that there are many combinations of states and actions that are not spanned by the data. Some states seem to be more often represented (“X1.1”, “X2.1” and X2.2“), others, less (”X3.1&quot; and “X3.2”). It is hard to make any sense of the recommendations. Some states close “X0.1” and “X1.1” but the outcomes related to them are very different (buy and short versus hold and buy). Moreover, there is no coherence and no monotonicity in actions with respect to individual state values: low values of states can be associated to very different actions. The only seemingly robust pattern is the advice to sell the first asset when its scaled P/B ratio is high (values of 3 or 4). XXX???</p>
 <p>One reason why these conclusion do not appear trustworthy pertains to the data size. With only 200+ time points and 99 state-action pairs (11 times 9), this yields on average only two data points to compute the <span class="math inline">\(Q\)</span> function. This could be improved by testing more random actions, but the limits of the sample size would eventually (rapidly) be reached anyway. This is left as an exercise (see below).</p>
 </div>
