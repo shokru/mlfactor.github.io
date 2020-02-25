@@ -49,6 +49,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -238,7 +239,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="8" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>8</b> Neural networks</a><ul>
 <li class="chapter" data-level="8.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>8.1</b> The original perceptron</a></li>
-<li class="chapter" data-level="8.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron"><i class="fa fa-check"></i><b>8.2</b> Multilayer perceptron</a><ul>
+<li class="chapter" data-level="8.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron-mlp"><i class="fa fa-check"></i><b>8.2</b> Multilayer perceptron (MLP)</a><ul>
 <li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
 <li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
 <li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
@@ -406,8 +407,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="B.6" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-9"><i class="fa fa-check"></i><b>B.6</b> Chapter 9</a></li>
 <li class="chapter" data-level="B.7" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-12-ensemble-neural-network"><i class="fa fa-check"></i><b>B.7</b> Chapter 12: ensemble neural network</a></li>
 <li class="chapter" data-level="B.8" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-13"><i class="fa fa-check"></i><b>B.8</b> Chapter 13</a><ul>
-<li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.1</b> Advanced weighting function</a></li>
-<li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.2</b> Functional programming in the backtest</a></li>
+<li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#ew-portfolios-with-the-tidyverse"><i class="fa fa-check"></i><b>B.8.1</b> EW portfolios with the tidyverse</a></li>
+<li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.2</b> Advanced weighting function</a></li>
+<li class="chapter" data-level="B.8.3" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.3</b> Functional programming in the backtest</a></li>
 </ul></li>
 <li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-16"><i class="fa fa-check"></i><b>B.9</b> Chapter 16</a></li>
 <li class="chapter" data-level="B.10" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.10</b> Chapter 17</a></li>
@@ -460,7 +462,7 @@ Beyond first order moments, second order quantities (variances and covariances/c
 FIGURE 5.1: Boxplot of correlations with the 1M forward return / label.
 </p>
 </div>
-<p></p>
+
 <p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>):
 <span class="math display" id="eq:regfun">\[\begin{equation}
 \tag{5.1}
@@ -481,7 +483,7 @@ f(x)=\mathbb{E}[Y|X=x].
 FIGURE 5.2: Conditional expecations: average returns as smooth functions of features.
 </p>
 </div>
-<p></p>
+
 <p>The two variables have a close to monotonic impact on future returns. Returns, on average, decrease with market capitalization (thereby corroborating the so-called <em>size</em> effect). The reverse pattern is less pronounced for volatility: the curve is rather flat is the first half of volatility scores and progressively increases, especially over the last quintile of volatility values (thereby contradicting the low-vol anomaly).</p>
 <p>One important empirical property of features is <strong>autocorrelation</strong> (or absence thereof). A high level of autocorrelation for one predictors makes it plausible to use simple imputation techniques when some data points are missing. But autocorrelation is also important when moving towards prediction tasks and we discuss this issue shortly below in Section <a href="Data.html#pers">5.6</a>. In Figure <a href="Data.html#fig:histcorr">5.3</a>, we build the histogram of autocorrelations, computed stock by stock and feature by feature.</p>
 
@@ -498,7 +500,7 @@ FIGURE 5.2: Conditional expecations: average returns as smooth functions of feat
 FIGURE 5.3: Histogram of sample feature autocorrelations.
 </p>
 </div>
-<p></p>
+
 <p>Given the large number of values to evaluate, the above chunk is quite time-consuming. The output shows that predictors are highly autocorrelated: most of them have a first order autocorrelation above 0.80.</p>
 </div>
 <div id="missing-data" class="section level2">
@@ -700,7 +702,7 @@ FIGURE 5.4:  Illustration of the triple barrier method.
 <p>One of the main challenges in Machine Learning is to extract as much <strong>signal</strong> as possible. By signal, we mean patterns that will hold out-of-sample. Intuitively, it may seem reasonable to think that the more data we gather, the more signal we can extract. This is in fact false in all generality because more data also means more noise. Surprisingly, filtering the training samples can improve performance. This idea was for example implemented successfully in <span class="citation">Fu et al. (<a href="#ref-fu2018machine">2018</a>)</span>, <span class="citation">Guida and Coqueret (<a href="#ref-guida2019big">2018</a><a href="#ref-guida2019big">a</a>)</span> and <span class="citation">Guida and Coqueret (<a href="#ref-guida2018machine">2018</a><a href="#ref-guida2018machine">b</a>)</span>.</p>
 <p>In our paper <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2020</a>)</span>, we investigate why smaller samples may lead to superior out-of-sample accuracy for a particular type of ML algorithm: decision trees (see Chapter <a href="trees.html#trees">7</a>). We focus on a particular kind of filter: we exclude the labels (e.g., returns) that are not extreme and retain the 20% values that are the smallest and the 20% that are the largest (the bulk of the distribution is removed). In doing so, we alter the structure of trees in two ways:<br />
 - when the splitting points are altered, they are always closer to the center of the distribution of the splitting variable (i.e., the resulting clusters are more balanced and possibly more robust);<br />
-- the choice of splitting variables is (sometimes) pushed towards the features that have a monotonous impact on the label.<br />
+- the choice of splitting variables is (sometimes) pushed towards the features that have a monotonic impact on the label.<br />
 These two properties are desirable. The first reduces the risk of fitting to small groups of instances that may be spurious. The second gives more importance to features that appear globally more relevant in explaning the returns. However, the filtering must not be too intense. If, instead of retaining 20% of each tail of the predictor, we keep just 10%, then the loss in signal becomes too severe and the performance deteriorates.</p>
 </div>
 <div id="horizons" class="section level3">
@@ -776,7 +778,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <a class="sourceLine" id="cb24-3" data-line-number="3">data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length, <span class="dt">x =</span> x)   <span class="co"># Data framed into dataframe</span></a>
 <a class="sourceLine" id="cb24-4" data-line-number="4"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="co"># Plot</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/scale_ex-1.png" width="672" /></p>
-<p></p>
+
 <p>We define and plot the scaled variables below.</p>
 
 <div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">norm_unif &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
@@ -798,12 +800,12 @@ If this expression is not too complicated to compute, the learner can query the 
 <a class="sourceLine" id="cb25-17" data-line-number="17"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
 <a class="sourceLine" id="cb25-18" data-line-number="18"><span class="st">    </span><span class="kw">facet_grid</span>(Type<span class="op">~</span>.)          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm-1.png" width="672" /></p>
-<p></p>
+
 <p>Finally, we look at the histogram of the newly created variables.</p>
 
 <div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm_dist-1.png" width="672" /></p>
-<p></p>
+
 <p>With respect to shape, the green and red distributions are close to the original one. It is only the support that changes: the min/max rescaling ensures all values lie in the <span class="math inline">\([0,1]\)</span> interval. In both cases, the smallest values (on the left) display a spike in distribution. By construction, this spike disappears under the uniformisation: the points are evenly distributed over the unit interval.</p>
 </div>
 <div id="impact-of-rescaling-toy-example" class="section level3">
@@ -824,8 +826,216 @@ If this expression is not too complicated to compute, the learner can query the 
 <a class="sourceLine" id="cb27-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap_0_1 =</span> <span class="kw">norm_0_1</span>(cap), <span class="dt">cap_u =</span> <span class="kw">norm_unif</span>(cap))</a>
 <a class="sourceLine" id="cb27-13" data-line-number="13">knitr<span class="op">::</span><span class="kw">kable</span>(data_toy, <span class="dt">digits =</span> <span class="dv">3</span>,                  <span class="co"># Display the data</span></a>
 <a class="sourceLine" id="cb27-14" data-line-number="14">             <span class="dt">caption =</span> <span class="st">&quot;Sample data for a toy example.&quot;</span>)   </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:fakedata">TABLE 5.1: </span>Sample data for a toy example.
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+firm
+</th>
+<th style="text-align:right;">
+date
+</th>
+<th style="text-align:right;">
+cap
+</th>
+<th style="text-align:right;">
+return
+</th>
+<th style="text-align:right;">
+cap_0_1
+</th>
+<th style="text-align:right;">
+cap_u
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+0.364
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-0.06
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.765
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+</tbody>
+</table>
 
-<p></p>
 <p>Let’s briefly comment on this synthetic data. We assume that dates are ordered chronologically and far away: each date stands for a year or the beginning of a decade, but the (forward) returns are computed on a monthly basis. The first firm is hugely successful and multiplies its cap ten times over the periods. The second firms remains stable cap-wise, while the third one plummets. If we look at ‘local’ future returns, they are strongly negatively related to size for the first and third firms. For the second one, there is no clear pattern.</p>
 <p>Date-by-date, the analysis is fairly similar, though slightly nuanced.</p>
 <ol style="list-style-type: decimal">
@@ -842,15 +1052,134 @@ If this expression is not too complicated to compute, the learner can query the 
 <a class="sourceLine" id="cb28-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb28-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes </span></a>
 <a class="sourceLine" id="cb28-4" data-line-number="4"><span class="st">                 from min-max rescaling&#39;</span>) </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:datatoyreg">TABLE 5.2: </span>Regression output when the independent var. comes
+from min-max rescaling
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.0162778
+</td>
+<td style="text-align:right;">
+0.0137351
+</td>
+<td style="text-align:right;">
+1.185121
+</td>
+<td style="text-align:right;">
+0.2746390
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_0_1
+</td>
+<td style="text-align:right;">
+-0.0497032
+</td>
+<td style="text-align:right;">
+0.0213706
+</td>
+<td style="text-align:right;">
+-2.325777
+</td>
+<td style="text-align:right;">
+0.0529421
+</td>
+</tr>
+</tbody>
+</table>
 
-<p></p>
 
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_u, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Second regression (uniformised feature)</span></a>
 <a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">   </span></a>
 <a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes from uniformisation&#39;</span>)   </a></code></pre></div>
+<table>
+<caption>
+<span id="tab:datatoyreg2">TABLE 5.3: </span>Regression output when the independent var. comes from uniformisation
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.0198139
+</td>
+<td style="text-align:right;">
+3.028170
+</td>
+<td style="text-align:right;">
+0.0191640
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_u
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+<td style="text-align:right;">
+0.0275162
+</td>
+<td style="text-align:right;">
+-3.634219
+</td>
+<td style="text-align:right;">
+0.0083509
+</td>
+</tr>
+</tbody>
+</table>
 
-<p>
-In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="#tab:datatoyreg"><strong>??</strong></a>) while the second is below 1% (in Table <a href="#tab:datatoyreg2"><strong>??</strong></a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalisations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformised variables reduces dispersion and can help solve this problem.</p>
+<p>In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="Data.html#tab:datatoyreg">5.2</a>) while the second is below 1% (in Table <a href="Data.html#tab:datatoyreg2">5.3</a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalisations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformised variables reduces dispersion and can help solve this problem.</p>
 <p>Note that this is a <strong>double-edged sword</strong>: while it can help avoid <strong>false negatives</strong>, it can also lead to <strong>false positives</strong>.</p>
 </div>
 </div>
