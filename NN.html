@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
 <li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
-<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#simple-regressions"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
+<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#penreg"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
 <li class="chapter" data-level="6.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>6.1.2</b> Forms of penalizations</a></li>
 <li class="chapter" data-level="6.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>6.1.3</b> Illustrations</a></li>
 </ul></li>
@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>7</b> Tree-based methods</a><ul>
 <li class="chapter" data-level="7.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>7.1</b> Simple trees</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>7.1.1</b> Principle</a></li>
-<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#further-details-on-classification"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
+<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#treeclass"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
 <li class="chapter" data-level="7.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>7.1.3</b> Pruning criteria</a></li>
 <li class="chapter" data-level="7.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>7.1.4</b> Code and interpretation</a></li>
 </ul></li>
@@ -243,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
 <li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
 <li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
-<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification-1"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
+<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>8.3</b> How deep should we go? And other practical issues</a><ul>
 <li class="chapter" data-level="8.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>8.3.1</b> Architectural choices</a></li>
@@ -570,7 +570,7 @@ We can then proceed:</p>
 &amp;=\underbrace{D&#39;(\tilde{y}_i) \left(f^{(L+1)} \right)&#39;\left(v^{(L+1)}_{i,k}  \right)}_{\text{computed above!}} w^{(L+1)}_k (f^{(L)})&#39;(v_{i,k}^{(L)})  o^{(L-1)}_{i,j},
 \end{align}\]</span></p>
 <p>where as we show in the last line, one part of the derivative was already computed in the previous step (Equation <a href="NN.html#eq:backprop1">(8.3)</a>). Hence, we can recycle this number and only focus on the right part of the expression.</p>
-<p>The magic of the so-called backpropagation is that this will hold true for each step of the differentiation. When computing the gradient for weights and biases in layer <span class="math inline">\(l\)</span>, there will be two parts: one that can be recycled from previous layers and another, local part, which depends only on the values and activation function of the current layer. A nice illustration of this process is given by the Google developer team: <a href="https://google-developers.appspot.com/machine-learning/crash-course/backprop-scroll/" class="uri">https://google-developers.appspot.com/machine-learning/crash-course/backprop-scroll/</a></p>
+<p>The magic of the so-called backpropagation is that this will hold true for each step of the differentiation. When computing the gradient for weights and biases in layer <span class="math inline">\(l\)</span>, there will be two parts: one that can be recycled from previous layers and another, local part, which depends only on the values and activation function of the current layer. A nice illustration of this process is given by the Google developer team: playground.tensorflow.org</p>
 <p>When the data is formatted using tensors, it is possible to resort to vectorization so that the number of calls is limited to an order of the magnitude of the number of nodes (units) in the network.</p>
 <p>The backpropagation algorithm can be summarized as follows. Given a sample of points (possibly just one):</p>
 <ol style="list-style-type: decimal">
@@ -596,7 +596,7 @@ where <span class="math inline">\(t\)</span> is the index of the weight update. 
 - Adadelta (<span class="citation">Zeiler (<a href="#ref-zeiler2012adadelta">2012</a>)</span>) and Adam (<span class="citation">Kingma and Ba (<a href="#ref-kingma2014adam">2014</a>)</span>) combine the ideas of Adagrad and momentum.</p>
 <p>Lastly, in some degenerate case, some gradients may explode and push weights far from their optimal values. In order to avoid this phenomenon, learning libraries implement gradient clipping. The user specifies a maximum magnitude for gradients, usually expressed as a norm. Whenever the gradient surpasses this magnitude, it is rescaled to reach the authorized threshold. Thus, the direction remains the same, but the adjustment is smaller.</p>
 </div>
-<div id="further-details-on-classification-1" class="section level3">
+<div id="further-details-on-classification" class="section level3">
 <h3><span class="header-section-number">8.2.4</span> Further details on classification</h3>
 <p>In decision trees, the ultimate goal is to create homogeneous clusters, and the process to reach this goal was outlined in the previous chapter. For neural networks, things work differently because the objective is explicitly to minimize the error between the prediction <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> and a target label <span class="math inline">\(\textbf{y}_i\)</span>. Again, here <span class="math inline">\(\textbf{y}_i\)</span> is a vector full of zeros with only one <em>one</em> denoting the class of the instance.</p>
 <p>Facing a classification problem, the trick is to use an appropriate activation function at the very end of the network. The dimension of the terminal output of the network should be equal to <span class="math inline">\(J\)</span> (number of classes to predict), and if, for simplicity, we write <span class="math inline">\(\textbf{x}_i\)</span> for the values of this output, the most commonly used activation is the so-called <em>softmax</em> function:</p>
@@ -743,7 +743,7 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5451515</code></pre>
+<pre><code>## [1] 0.5266636</code></pre>
 
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -948,7 +948,7 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task).
 
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb93-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4989682</code></pre>
+<pre><code>## [1] 0.5009888</code></pre>
 
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>

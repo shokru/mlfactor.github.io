@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
 <li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
-<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#simple-regressions"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
+<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#penreg"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
 <li class="chapter" data-level="6.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>6.1.2</b> Forms of penalizations</a></li>
 <li class="chapter" data-level="6.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>6.1.3</b> Illustrations</a></li>
 </ul></li>
@@ -213,7 +213,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>7</b> Tree-based methods</a><ul>
 <li class="chapter" data-level="7.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>7.1</b> Simple trees</a><ul>
 <li class="chapter" data-level="7.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>7.1.1</b> Principle</a></li>
-<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#further-details-on-classification"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
+<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#treeclass"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
 <li class="chapter" data-level="7.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>7.1.3</b> Pruning criteria</a></li>
 <li class="chapter" data-level="7.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>7.1.4</b> Code and interpretation</a></li>
 </ul></li>
@@ -243,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
 <li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
 <li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
-<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification-1"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
+<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
 </ul></li>
 <li class="chapter" data-level="8.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>8.3</b> How deep should we go? And other practical issues</a><ul>
 <li class="chapter" data-level="8.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>8.3.1</b> Architectural choices</a></li>
@@ -439,7 +439,7 @@ The second application stems from a less known result which originates from <spa
 <p>Other examples of financial applications of penalization can be found in <span class="citation">d’Aspremont (<a href="#ref-d2011identifying">2011</a>)</span>, <span class="citation">Ban, El Karoui, and Lim (<a href="#ref-ban2016machine">2016</a>)</span> and <span class="citation">Kremer et al. (<a href="#ref-kremer2019sparse">2019</a>)</span>. In any case, the idea is the same as in the seminal paper <span class="citation">Tibshirani (<a href="#ref-tibshirani1996regression">1996</a>)</span>: standard (unconstrained) optimization programs may lead to noisy estimates, thus adding a structuring constraint helps remove some noise (at the cost of a possible bias). For instance, <span class="citation">Kremer et al. (<a href="#ref-kremer2019sparse">2019</a>)</span> use this concept to build more robust mean-variance (<span class="citation">Markowitz (<a href="#ref-markowitz1952portfolio">1952</a>)</span>) portfolios and <span class="citation">Freyberger, Neuhierl, and Weber (<a href="#ref-freyberger2020dissecting">2020</a>)</span> use it to single out the characteristics that <em>really</em> help explain the cross-section of equity returns.</p>
 <div id="penalised-regressions" class="section level2">
 <h2><span class="header-section-number">6.1</span> Penalised regressions</h2>
-<div id="simple-regressions" class="section level3">
+<div id="penreg" class="section level3">
 <h3><span class="header-section-number">6.1.1</span> Simple regressions</h3>
 <p>The ideas behind linear models are at least two centuries old (<span class="citation">Legendre (<a href="#ref-legendre1805nouvelles">1805</a>)</span> is an early reference on least squares optimization). Given a matrix of predictors <span class="math inline">\(\textbf{X}\)</span>, we seek to decompose the output vector <span class="math inline">\(\textbf{y}\)</span> as a linear function of the columns of <span class="math inline">\(\textbf{X}\)</span> (written <span class="math inline">\(\textbf{X}\boldsymbol{\beta}\)</span>) plus an error term <span class="math inline">\(\boldsymbol{\epsilon}\)</span>: <span class="math inline">\(\textbf{y}=\textbf{X}\boldsymbol{\beta}+\boldsymbol{\epsilon}\)</span>.</p>
 <p>The best choice of <span class="math inline">\(\boldsymbol{\beta}\)</span> is naturally the one that minimizes the error. For analytical tractability, it is the sum of squared errors that is minimized: <span class="math inline">\(L=\boldsymbol{\epsilon}&#39;\boldsymbol{\epsilon}=\sum_{i=1}^I\epsilon_i^2\)</span>. The loss <span class="math inline">\(L\)</span> is called the sum of squared residuals (SSR). In order to find the optimal <span class="math inline">\(\boldsymbol{\beta}\)</span>, it is imperative to differentiate this loss <span class="math inline">\(L\)</span> with respect to <span class="math inline">\(\boldsymbol{\beta}\)</span> because the first order condition requires that the gradient be equal to zero:
