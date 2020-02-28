@@ -49,7 +49,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -470,27 +469,27 @@ the following elements are usually extracted from the estimation of the <span cl
 and it is often rescaled so that the sum of <span class="math inline">\(I(k)\)</span> across all <span class="math inline">\(k\)</span> is equal to one. In this case, <span class="math inline">\(I(k)\)</span> measures the relative contribution of feature <span class="math inline">\(k\)</span> in the reduction of loss during the training. A variable with high importance will have a greater impact on predictions. Generally, these variables are those that are located close to the root of the tree.</p>
 <p>Below, we take a look at the results obtained from the tree-based models trained in Chapter <a href="trees.html#trees">7</a>. We start by recylcling the output from the three regression models we used. NOtice that each fitted output has its own structure and importance vectors have different names.</p>
 
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">tree_VI &lt;-<span class="st"> </span>fit_tree<span class="op">$</span>variable.importance  <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># VI from tree model</span></a>
-<a class="sourceLine" id="cb180-2" data-line-number="2"><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Transform in tibble </span></a>
-<a class="sourceLine" id="cb180-3" data-line-number="3"><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Feature&quot;</span>)                                   <span class="co"># Add feature column</span></a>
-<a class="sourceLine" id="cb180-4" data-line-number="4">RF_VI &lt;-<span class="st"> </span>fit_RF<span class="op">$</span>importance  <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># VI from random forest</span></a>
-<a class="sourceLine" id="cb180-5" data-line-number="5"><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Transform in tibble </span></a>
-<a class="sourceLine" id="cb180-6" data-line-number="6"><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Feature&quot;</span>)                                   <span class="co"># Add feature column</span></a>
-<a class="sourceLine" id="cb180-7" data-line-number="7">XGB_VI &lt;-<span class="st"> </span><span class="kw">xgb.importance</span>(<span class="dt">model =</span> fit_xgb)[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]                     <span class="co"># VI from boosted trees</span></a>
-<a class="sourceLine" id="cb180-8" data-line-number="8">VI_trees &lt;-<span class="st"> </span>tree_VI <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(RF_VI) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(XGB_VI)      <span class="co"># Aggregate the VIs</span></a>
-<a class="sourceLine" id="cb180-9" data-line-number="9"><span class="kw">colnames</span>(VI_trees)[<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>)                   <span class="co"># New column names</span></a>
-<a class="sourceLine" id="cb180-10" data-line-number="10">norm_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="kw">return</span>(x <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(x))}                           <span class="co"># Normalizing function</span></a>
-<a class="sourceLine" id="cb180-11" data-line-number="11">VI_trees <span class="op">%&gt;%</span><span class="st"> </span>na.omit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_if</span>(is.numeric,  norm_<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">         </span><span class="co"># Plotting sequence</span></a>
-<a class="sourceLine" id="cb180-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> model, <span class="dt">value =</span> value, <span class="op">-</span>Feature) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb180-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Feature, <span class="dt">y =</span> value, <span class="dt">fill =</span> model)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb180-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb179"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb179-1" data-line-number="1">tree_VI &lt;-<span class="st"> </span>fit_tree<span class="op">$</span>variable.importance  <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># VI from tree model</span></a>
+<a class="sourceLine" id="cb179-2" data-line-number="2"><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Transform in tibble </span></a>
+<a class="sourceLine" id="cb179-3" data-line-number="3"><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Feature&quot;</span>)                                   <span class="co"># Add feature column</span></a>
+<a class="sourceLine" id="cb179-4" data-line-number="4">RF_VI &lt;-<span class="st"> </span>fit_RF<span class="op">$</span>importance  <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># VI from random forest</span></a>
+<a class="sourceLine" id="cb179-5" data-line-number="5"><span class="st">    </span><span class="kw">as_tibble</span>(<span class="dt">rownames =</span> <span class="ot">NA</span>) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Transform in tibble </span></a>
+<a class="sourceLine" id="cb179-6" data-line-number="6"><span class="st">    </span><span class="kw">rownames_to_column</span>(<span class="st">&quot;Feature&quot;</span>)                                   <span class="co"># Add feature column</span></a>
+<a class="sourceLine" id="cb179-7" data-line-number="7">XGB_VI &lt;-<span class="st"> </span><span class="kw">xgb.importance</span>(<span class="dt">model =</span> fit_xgb)[,<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>]                     <span class="co"># VI from boosted trees</span></a>
+<a class="sourceLine" id="cb179-8" data-line-number="8">VI_trees &lt;-<span class="st"> </span>tree_VI <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(RF_VI) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">left_join</span>(XGB_VI)      <span class="co"># Aggregate the VIs</span></a>
+<a class="sourceLine" id="cb179-9" data-line-number="9"><span class="kw">colnames</span>(VI_trees)[<span class="dv">2</span><span class="op">:</span><span class="dv">4</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>)                   <span class="co"># New column names</span></a>
+<a class="sourceLine" id="cb179-10" data-line-number="10">norm_<span class="dv">1</span> &lt;-<span class="st"> </span><span class="cf">function</span>(x){<span class="kw">return</span>(x <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(x))}                           <span class="co"># Normalizing function</span></a>
+<a class="sourceLine" id="cb179-11" data-line-number="11">VI_trees <span class="op">%&gt;%</span><span class="st"> </span>na.omit <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_if</span>(is.numeric,  norm_<span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">         </span><span class="co"># Plotting sequence</span></a>
+<a class="sourceLine" id="cb179-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> model, <span class="dt">value =</span> value, <span class="op">-</span>Feature) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb179-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Feature, <span class="dt">y =</span> value, <span class="dt">fill =</span> model)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb179-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:VItrees"></span>
 <img src="ML_factor_files/figure-html/VItrees-1.png" alt="Variable importance for tree-based models" width="500px" />
 <p class="caption">
 FIGURE 14.1: Variable importance for tree-based models
 </p>
 </div>
-
+<p></p>
 <p>In the above code, tibbles are like dataframes (they are the v2.0 of dataframes so to speak).
 Given the way the graph is coded, Figure <a href="interp.html#fig:VItrees">14.1</a> is in fact misleading. Indeed, by construction, the simple tree model only has a small number of features with nonzero importance: in the above graph, there are only 3: capitalization, price-to-book and volatility. In contrast, because random forest and boosted trees are much more complex, they give some importance to many predictors. The graph shows the variables related to the simple tree model only. For scale reasons, the normalization is performed <em>after</em> the subset of features is chosen. We prefered to limit the number of features shown on the graph for obvious readability concerns.</p>
 <p>There are differences in the way the models rely on the features. For instance, the most important feature changes from a model to the other: the simple tree model gives the most importance to the price-to-book ratio, while the random forest bets more on volatility and boosted trees give more weight to capitalization.</p>
@@ -508,40 +507,40 @@ Given the way the graph is coded, Figure <a href="interp.html#fig:VItrees">14.1<
 </li>
 <li>Rank the variable importance of each feature, computed as a difference <span class="math inline">\(\text{VI}_k=l_k-l^*\)</span> or a ratio <span class="math inline">\(\text{VI}_k=l_k/l^*\)</span>.</li>
 </ol>
-<p>The above procedure is of course random and can be repeated so that the importances are averaged over several trials: this improve the stability of the results. This algorithm is implemented in the FeatureImp() function of the <em>iml</em> R package developed by the author of <span class="citation">Molnar (<a href="#ref-molnar2019interpretable">2019</a>)</span>.<br />
+<p>The above procedure is of course random and can be repeated so that the importances are averaged over several trials: this improve the stability of the results. This algorithm is implemented in the FeatureImp() function of the <em>iml</em> R package developed by the author of <span class="citation">Molnar (<a href="#ref-molnar2019interpretable">2019</a>)</span>. We also recommend the <em>vip</em> package, see <span class="citation">Greenwell and Boehmke (<a href="#ref-greenwell2020variable">n.d.</a>)</span>.<br />
 Below, we implement this algorithm manually so to speak for the features appearing on Figure <a href="interp.html#fig:VItrees">14.1</a>. We test this approach on ridge regressions and recycle the variables used in Chapter <a href="lasso.html#lasso">6</a>. We start by the first step: computing the loss on the original training sample.</p>
 
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">fit_ridge_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_train, y_penalized_train,                   <span class="co"># Trained model</span></a>
-<a class="sourceLine" id="cb181-2" data-line-number="2">                      <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) </a>
-<a class="sourceLine" id="cb181-3" data-line-number="3">l_star &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_<span class="dv">0</span>, x_penalized_train))<span class="op">^</span><span class="dv">2</span>) <span class="co"># Loss</span></a></code></pre></div>
-
+<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb180-1" data-line-number="1">fit_ridge_<span class="dv">0</span> &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_train, y_penalized_train,                   <span class="co"># Trained model</span></a>
+<a class="sourceLine" id="cb180-2" data-line-number="2">                      <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) </a>
+<a class="sourceLine" id="cb180-3" data-line-number="3">l_star &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_<span class="dv">0</span>, x_penalized_train))<span class="op">^</span><span class="dv">2</span>) <span class="co"># Loss</span></a></code></pre></div>
+<p></p>
 <p>Next, we evaluate the loss when each of the predictors have been sequentially shuffled. To reduce computation time, we only make one round of shuffling.</p>
 
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1">l &lt;-<span class="st"> </span><span class="kw">c</span>()                                                             <span class="co"># Initialize</span></a>
-<a class="sourceLine" id="cb182-2" data-line-number="2"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(VI_trees)){                                          <span class="co"># Loop on the features</span></a>
-<a class="sourceLine" id="cb182-3" data-line-number="3">    feat_name &lt;-<span class="st"> </span><span class="kw">as.character</span>(VI_trees[i,<span class="dv">1</span>])</a>
-<a class="sourceLine" id="cb182-4" data-line-number="4">    temp_data &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features)         <span class="co"># Temp feature matrix</span></a>
-<a class="sourceLine" id="cb182-5" data-line-number="5">    temp_data[, <span class="kw">which</span>(<span class="kw">colnames</span>(temp_data) <span class="op">==</span><span class="st"> </span>feat_name)] &lt;-<span class="st">          </span><span class="co"># Shuffles the values</span></a>
-<a class="sourceLine" id="cb182-6" data-line-number="6"><span class="st">        </span><span class="kw">sample</span>(temp_data[, <span class="kw">which</span>(<span class="kw">colnames</span>(temp_data) <span class="op">==</span><span class="st"> </span>feat_name)]</a>
-<a class="sourceLine" id="cb182-7" data-line-number="7">               <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(<span class="dv">1</span>), <span class="dt">replace =</span> <span class="ot">FALSE</span>)</a>
-<a class="sourceLine" id="cb182-8" data-line-number="8">    x_penalized_temp &lt;-<span class="st"> </span>temp_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                    <span class="co"># Predictors into matrix</span></a>
-<a class="sourceLine" id="cb182-9" data-line-number="9">    fit_ridge_temp &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_temp, y_penalized_train,    <span class="co"># Fits the model</span></a>
-<a class="sourceLine" id="cb182-10" data-line-number="10">                             <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) </a>
-<a class="sourceLine" id="cb182-11" data-line-number="11">    l[i] &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_temp, x_penalized_temp))<span class="op">^</span><span class="dv">2</span>) <span class="co"># = Loss</span></a>
-<a class="sourceLine" id="cb182-12" data-line-number="12">}</a></code></pre></div>
-
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb181-1" data-line-number="1">l &lt;-<span class="st"> </span><span class="kw">c</span>()                                                             <span class="co"># Initialize</span></a>
+<a class="sourceLine" id="cb181-2" data-line-number="2"><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(VI_trees)){                                          <span class="co"># Loop on the features</span></a>
+<a class="sourceLine" id="cb181-3" data-line-number="3">    feat_name &lt;-<span class="st"> </span><span class="kw">as.character</span>(VI_trees[i,<span class="dv">1</span>])</a>
+<a class="sourceLine" id="cb181-4" data-line-number="4">    temp_data &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features)         <span class="co"># Temp feature matrix</span></a>
+<a class="sourceLine" id="cb181-5" data-line-number="5">    temp_data[, <span class="kw">which</span>(<span class="kw">colnames</span>(temp_data) <span class="op">==</span><span class="st"> </span>feat_name)] &lt;-<span class="st">          </span><span class="co"># Shuffles the values</span></a>
+<a class="sourceLine" id="cb181-6" data-line-number="6"><span class="st">        </span><span class="kw">sample</span>(temp_data[, <span class="kw">which</span>(<span class="kw">colnames</span>(temp_data) <span class="op">==</span><span class="st"> </span>feat_name)]</a>
+<a class="sourceLine" id="cb181-7" data-line-number="7">               <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(<span class="dv">1</span>), <span class="dt">replace =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb181-8" data-line-number="8">    x_penalized_temp &lt;-<span class="st"> </span>temp_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                    <span class="co"># Predictors into matrix</span></a>
+<a class="sourceLine" id="cb181-9" data-line-number="9">    fit_ridge_temp &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_temp, y_penalized_train,    <span class="co"># Fits the model</span></a>
+<a class="sourceLine" id="cb181-10" data-line-number="10">                             <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) </a>
+<a class="sourceLine" id="cb181-11" data-line-number="11">    l[i] &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_temp, x_penalized_temp))<span class="op">^</span><span class="dv">2</span>) <span class="co"># = Loss</span></a>
+<a class="sourceLine" id="cb181-12" data-line-number="12">}</a></code></pre></div>
+<p></p>
 <p>Finally, we plot the results.</p>
 
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1"><span class="kw">data.frame</span>(<span class="dt">Feature =</span> VI_trees[,<span class="dv">1</span>], <span class="dt">loss =</span> l <span class="op">-</span><span class="st"> </span>l_star) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb183-2" data-line-number="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Feature, <span class="dt">y =</span> loss)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
-<a class="sourceLine" id="cb183-3" data-line-number="3"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb182-1" data-line-number="1"><span class="kw">data.frame</span>(<span class="dt">Feature =</span> VI_trees[,<span class="dv">1</span>], <span class="dt">loss =</span> l <span class="op">-</span><span class="st"> </span>l_star) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb182-2" data-line-number="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Feature, <span class="dt">y =</span> loss)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb182-3" data-line-number="3"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:VIglobal2"></span>
 <img src="ML_factor_files/figure-html/VIglobal2-1.png" alt="Variable importance for a ridge regression model." width="450px" />
 <p class="caption">
 FIGURE 14.2: Variable importance for a ridge regression model.
 </p>
 </div>
-
+<p></p>
 <p>The resulting importances are in line with thoses of the tree-based models: the most prominent variables are volatility-based, market capitalization-based, and the price-to-book ratio - these closely match the variables from Figure <a href="interp.html#fig:VItrees">14.1</a>. Note that in some cases (e.g., the share turnover), the score can even be negative, which means that the predictions are more accurate than the baseline model when the values of the predictor are shuffled!</p>
 </div>
 <div id="partial-dependence-plot" class="section level3">
@@ -559,20 +558,20 @@ FIGURE 14.2: Variable importance for a ridge regression model.
 \end{equation}\]</span>
 where <span class="math inline">\(\textbf{x}_{-k}^{(m)}\)</span> are independent samples of the non-<span class="math inline">\(k\)</span> features.</p>
 <p>Theoretically, PDPs could be computed for more than one feature at a time. In practice, this is only possible for two features (yielding a 3D surface) and is more computationally intense.</p>
-<p>We illustrate this concept below, using the dedicated package <em>iml</em> (interpretable machine learning). The model we seek to explain is the random forest built in Section <a href="trees.html#random-forests">7.2</a>. We recycle some variables used therein. We choose to test the impact of the price-to-book ratio on the outcome of the model.</p>
+<p>We illustrate this concept below, using the dedicated package <em>iml</em> (interpretable machine learning) - see also the <em>pdp</em> package documented in <span class="citation">Greenwell (<a href="#ref-greenwell2017pdp">2017</a>)</span>. The model we seek to explain is the random forest built in Section <a href="trees.html#random-forests">7.2</a>. We recycle some variables used therein. We choose to test the impact of the price-to-book ratio on the outcome of the model.</p>
 
-<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1"><span class="kw">library</span>(iml)                                         <span class="co"># One package for interpretability</span></a>
-<a class="sourceLine" id="cb184-2" data-line-number="2">mod_iml &lt;-<span class="st"> </span>Predictor<span class="op">$</span><span class="kw">new</span>(fit_RF,                     <span class="co"># This line encapsulates the objects</span></a>
-<a class="sourceLine" id="cb184-3" data-line-number="3">                         <span class="dt">data =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features))</a>
-<a class="sourceLine" id="cb184-4" data-line-number="4">pdp_PB =<span class="st"> </span>FeatureEffect<span class="op">$</span><span class="kw">new</span>(mod_iml, <span class="dt">feature =</span> <span class="st">&quot;Pb&quot;</span>)  <span class="co"># This line computes the PDP for p/b ratio</span></a>
-<a class="sourceLine" id="cb184-5" data-line-number="5"><span class="kw">plot</span>(pdp_PB)                                         <span class="co"># Plot the partial dependence.</span></a></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb183-1" data-line-number="1"><span class="kw">library</span>(iml)                                         <span class="co"># One package for interpretability</span></a>
+<a class="sourceLine" id="cb183-2" data-line-number="2">mod_iml &lt;-<span class="st"> </span>Predictor<span class="op">$</span><span class="kw">new</span>(fit_RF,                     <span class="co"># This line encapsulates the objects</span></a>
+<a class="sourceLine" id="cb183-3" data-line-number="3">                         <span class="dt">data =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features))</a>
+<a class="sourceLine" id="cb183-4" data-line-number="4">pdp_PB =<span class="st"> </span>FeatureEffect<span class="op">$</span><span class="kw">new</span>(mod_iml, <span class="dt">feature =</span> <span class="st">&quot;Pb&quot;</span>)  <span class="co"># This line computes the PDP for p/b ratio</span></a>
+<a class="sourceLine" id="cb183-5" data-line-number="5"><span class="kw">plot</span>(pdp_PB)                                         <span class="co"># Plot the partial dependence.</span></a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:pdp"></span>
 <img src="ML_factor_files/figure-html/pdp-1.png" alt="Partial dependence plot for the price-to-book ratio on the random forest model" width="450px" />
 <p class="caption">
 FIGURE 14.3: Partial dependence plot for the price-to-book ratio on the random forest model
 </p>
 </div>
-
+<p></p>
 <p>The average impact of the price-to-book ratio on the predictions is decreasing. This was somewhat expected, given the conditional average of the dependent variable given the price-to-book ratio. This latter function is depicted in Figure <a href="trees.html#fig:rpart3mkt">7.3</a> and shows a behavior comparable to the above curve: strongly decreasing for small value of P/B and then relatively flat. When the price-to-book ratio is low, firms are undervalued. Hence their higher returns are in line with the <em>value</em> premium.</p>
 <p>Finally, we refer to <span class="citation">Zhao and Hastie (<a href="#ref-zhao2019causal">2019</a>)</span> for a theoretical discussion on the <em>causality</em> property of PDPs. Indeed, a deep look at the construction of the PDPs suggests that they could be interpreted as a causal representation of the feature on the model’s output.</p>
 </div>
@@ -614,32 +613,32 @@ FIGURE 14.4: Simplistic explanation of LIME: the explained instance is surrounde
 </ol>
 <p>We start with the first step. This time, we work with a boosted tree model.</p>
 
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1"><span class="kw">library</span>(lime)                              <span class="co"># Package for LIME interpretation</span></a>
-<a class="sourceLine" id="cb185-2" data-line-number="2">params_xgb &lt;-<span class="st"> </span><span class="kw">list</span>(                        <span class="co"># Parameters of the boosted tree</span></a>
-<a class="sourceLine" id="cb185-3" data-line-number="3">    <span class="dt">max_depth =</span> <span class="dv">5</span>,                         <span class="co"># Max depth of each tree</span></a>
-<a class="sourceLine" id="cb185-4" data-line-number="4">    <span class="dt">eta =</span> <span class="fl">0.5</span>,                             <span class="co"># Learning rate </span></a>
-<a class="sourceLine" id="cb185-5" data-line-number="5">    <span class="dt">gamma =</span> <span class="fl">0.1</span>,                           <span class="co"># Penalization</span></a>
-<a class="sourceLine" id="cb185-6" data-line-number="6">    <span class="dt">colsample_bytree =</span> <span class="dv">1</span>,                  <span class="co"># Proportion of predictors to be sampled (1 = all)</span></a>
-<a class="sourceLine" id="cb185-7" data-line-number="7">    <span class="dt">min_child_weight =</span> <span class="dv">10</span>,                 <span class="co"># Min number of instances in each node</span></a>
-<a class="sourceLine" id="cb185-8" data-line-number="8">    <span class="dt">subsample =</span> <span class="dv">1</span>)                         <span class="co"># Proportion of instance to be sampled (1 = all)</span></a>
-<a class="sourceLine" id="cb185-9" data-line-number="9">xgb_model &lt;-<span class="st"> </span><span class="kw">xgb.train</span>(params_xgb,         <span class="co"># Training of the model</span></a>
-<a class="sourceLine" id="cb185-10" data-line-number="10">                       train_matrix_xgb,   <span class="co"># Training data</span></a>
-<a class="sourceLine" id="cb185-11" data-line-number="11">                       <span class="dt">nrounds =</span> <span class="dv">10</span>)       <span class="co"># Number of trees</span></a></code></pre></div>
-
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb184-1" data-line-number="1"><span class="kw">library</span>(lime)                              <span class="co"># Package for LIME interpretation</span></a>
+<a class="sourceLine" id="cb184-2" data-line-number="2">params_xgb &lt;-<span class="st"> </span><span class="kw">list</span>(                        <span class="co"># Parameters of the boosted tree</span></a>
+<a class="sourceLine" id="cb184-3" data-line-number="3">    <span class="dt">max_depth =</span> <span class="dv">5</span>,                         <span class="co"># Max depth of each tree</span></a>
+<a class="sourceLine" id="cb184-4" data-line-number="4">    <span class="dt">eta =</span> <span class="fl">0.5</span>,                             <span class="co"># Learning rate </span></a>
+<a class="sourceLine" id="cb184-5" data-line-number="5">    <span class="dt">gamma =</span> <span class="fl">0.1</span>,                           <span class="co"># Penalization</span></a>
+<a class="sourceLine" id="cb184-6" data-line-number="6">    <span class="dt">colsample_bytree =</span> <span class="dv">1</span>,                  <span class="co"># Proportion of predictors to be sampled (1 = all)</span></a>
+<a class="sourceLine" id="cb184-7" data-line-number="7">    <span class="dt">min_child_weight =</span> <span class="dv">10</span>,                 <span class="co"># Min number of instances in each node</span></a>
+<a class="sourceLine" id="cb184-8" data-line-number="8">    <span class="dt">subsample =</span> <span class="dv">1</span>)                         <span class="co"># Proportion of instance to be sampled (1 = all)</span></a>
+<a class="sourceLine" id="cb184-9" data-line-number="9">xgb_model &lt;-<span class="st"> </span><span class="kw">xgb.train</span>(params_xgb,         <span class="co"># Training of the model</span></a>
+<a class="sourceLine" id="cb184-10" data-line-number="10">                       train_matrix_xgb,   <span class="co"># Training data</span></a>
+<a class="sourceLine" id="cb184-11" data-line-number="11">                       <span class="dt">nrounds =</span> <span class="dv">10</span>)       <span class="co"># Number of trees</span></a></code></pre></div>
+<p></p>
 <p>Then, we head on to steps two and three. As underlined above, we resort to the lime() and explain() functions.</p>
 
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">explainer &lt;-<span class="st"> </span><span class="kw">lime</span>(training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short), xgb_model) <span class="co"># Step 2.</span></a>
-<a class="sourceLine" id="cb186-2" data-line-number="2">explanation &lt;-<span class="st"> </span><span class="kw">explain</span>(<span class="dt">x =</span> training_sample <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Step 3.</span></a>
-<a class="sourceLine" id="cb186-3" data-line-number="3"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb186-4" data-line-number="4"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>),           <span class="co"># First two instances in train_sample </span></a>
-<a class="sourceLine" id="cb186-5" data-line-number="5">                       <span class="dt">explainer =</span> explainer,           <span class="co"># Explainer variable created above </span></a>
-<a class="sourceLine" id="cb186-6" data-line-number="6">                       <span class="dt">n_permutations =</span> <span class="dv">900</span>,            <span class="co"># Nb samples for loss function</span></a>
-<a class="sourceLine" id="cb186-7" data-line-number="7">                       <span class="dt">dist_fun =</span> <span class="st">&quot;euclidean&quot;</span>,          <span class="co"># Dist.func. &quot;gower&quot; is one alternative</span></a>
-<a class="sourceLine" id="cb186-8" data-line-number="8">                       <span class="dt">n_features =</span> <span class="dv">6</span>                   <span class="co"># Nb of features shown (important ones)</span></a>
-<a class="sourceLine" id="cb186-9" data-line-number="9">)</a>
-<a class="sourceLine" id="cb186-10" data-line-number="10"><span class="kw">plot_features</span>(explanation, <span class="dt">ncol =</span> <span class="dv">1</span>)                    <span class="co"># Visual display</span></a></code></pre></div>
+<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb185-1" data-line-number="1">explainer &lt;-<span class="st"> </span><span class="kw">lime</span>(training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short), xgb_model) <span class="co"># Step 2.</span></a>
+<a class="sourceLine" id="cb185-2" data-line-number="2">explanation &lt;-<span class="st"> </span><span class="kw">explain</span>(<span class="dt">x =</span> training_sample <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Step 3.</span></a>
+<a class="sourceLine" id="cb185-3" data-line-number="3"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb185-4" data-line-number="4"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">slice</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">2</span>),           <span class="co"># First two instances in train_sample </span></a>
+<a class="sourceLine" id="cb185-5" data-line-number="5">                       <span class="dt">explainer =</span> explainer,           <span class="co"># Explainer variable created above </span></a>
+<a class="sourceLine" id="cb185-6" data-line-number="6">                       <span class="dt">n_permutations =</span> <span class="dv">900</span>,            <span class="co"># Nb samples for loss function</span></a>
+<a class="sourceLine" id="cb185-7" data-line-number="7">                       <span class="dt">dist_fun =</span> <span class="st">&quot;euclidean&quot;</span>,          <span class="co"># Dist.func. &quot;gower&quot; is one alternative</span></a>
+<a class="sourceLine" id="cb185-8" data-line-number="8">                       <span class="dt">n_features =</span> <span class="dv">6</span>                   <span class="co"># Nb of features shown (important ones)</span></a>
+<a class="sourceLine" id="cb185-9" data-line-number="9">)</a>
+<a class="sourceLine" id="cb185-10" data-line-number="10"><span class="kw">plot_features</span>(explanation, <span class="dt">ncol =</span> <span class="dv">1</span>)                    <span class="co"># Visual display</span></a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/lime1-1.png" width="450px" style="display: block; margin: auto;" /></p>
-
+<p></p>
 <p>In each graph (one graph corresponds to the explanation around one instance), there are two types of information: the sign of the impact and the magnitude of the impact. The sign is revealed with the color (positive in blue, negative in red) and the magnitude is shown with the size of the rectangles.</p>
 <p>The values to the left of the graphs show the ranges of the features with which the local approximations were computed.</p>
 <p>Lastly, we briefly discuss the choice of distance function chosen in the code. It is used to evaluate the discrepancy between the true instance and a simulated one to weight the prediction of the sampled instance. Our dataset comprises only numerical data, hence the Euclidean distance is a natural choice:</p>
@@ -665,33 +664,33 @@ Extensions of Shapley values for interpretability are studied in <span class="ci
 Second, instances are analyzed one at a time.</p>
 <p>We start by fitting a random forest model.</p>
 
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">fit_RF_short &lt;-<span class="st"> </span><span class="kw">randomForest</span>(R1M_Usd <span class="op">~</span>.,    <span class="co"># Same formula as for simple trees!</span></a>
-<a class="sourceLine" id="cb187-2" data-line-number="2">                 <span class="dt">data =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(features_short), <span class="st">&quot;R1M_Usd&quot;</span>),  </a>
-<a class="sourceLine" id="cb187-3" data-line-number="3">                 <span class="dt">sampsize =</span> <span class="dv">10000</span>,          <span class="co"># Size of (random) sample for each tree</span></a>
-<a class="sourceLine" id="cb187-4" data-line-number="4">                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></a>
-<a class="sourceLine" id="cb187-5" data-line-number="5">                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></a>
-<a class="sourceLine" id="cb187-6" data-line-number="6">                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Nb of random trees</span></a>
-<a class="sourceLine" id="cb187-7" data-line-number="7">                 <span class="dt">mtry =</span> <span class="dv">4</span>                   <span class="co"># Nb of predictive variables for each tree</span></a>
-<a class="sourceLine" id="cb187-8" data-line-number="8">    )</a></code></pre></div>
-
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">fit_RF_short &lt;-<span class="st"> </span><span class="kw">randomForest</span>(R1M_Usd <span class="op">~</span>.,    <span class="co"># Same formula as for simple trees!</span></a>
+<a class="sourceLine" id="cb186-2" data-line-number="2">                 <span class="dt">data =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(features_short), <span class="st">&quot;R1M_Usd&quot;</span>),  </a>
+<a class="sourceLine" id="cb186-3" data-line-number="3">                 <span class="dt">sampsize =</span> <span class="dv">10000</span>,          <span class="co"># Size of (random) sample for each tree</span></a>
+<a class="sourceLine" id="cb186-4" data-line-number="4">                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></a>
+<a class="sourceLine" id="cb186-5" data-line-number="5">                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></a>
+<a class="sourceLine" id="cb186-6" data-line-number="6">                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Nb of random trees</span></a>
+<a class="sourceLine" id="cb186-7" data-line-number="7">                 <span class="dt">mtry =</span> <span class="dv">4</span>                   <span class="co"># Nb of predictive variables for each tree</span></a>
+<a class="sourceLine" id="cb186-8" data-line-number="8">    )</a></code></pre></div>
+<p></p>
 <p>We can then analyze the behavior of the model around the first instance of the training sample.</p>
 
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1">predictor &lt;-<span class="st"> </span>Predictor<span class="op">$</span><span class="kw">new</span>(fit_RF_short,    <span class="co"># This wraps the model &amp; data</span></a>
-<a class="sourceLine" id="cb188-2" data-line-number="2">                          <span class="dt">data =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short), </a>
-<a class="sourceLine" id="cb188-3" data-line-number="3">                          <span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd)</a>
-<a class="sourceLine" id="cb188-4" data-line-number="4">shapley &lt;-<span class="st"> </span>Shapley<span class="op">$</span><span class="kw">new</span>(predictor,                        <span class="co"># Compute the Shapley values...</span></a>
-<a class="sourceLine" id="cb188-5" data-line-number="5">                       <span class="dt">x.interest =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb188-6" data-line-number="6"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb188-7" data-line-number="7"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">slice</span>(<span class="dv">1</span>))              <span class="co"># On the first instance</span></a>
-<a class="sourceLine" id="cb188-8" data-line-number="8"><span class="kw">plot</span>(shapley) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dv">1500</span>) <span class="op">+</span><span class="st">                      </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb188-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()          </a></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1">predictor &lt;-<span class="st"> </span>Predictor<span class="op">$</span><span class="kw">new</span>(fit_RF_short,    <span class="co"># This wraps the model &amp; data</span></a>
+<a class="sourceLine" id="cb187-2" data-line-number="2">                          <span class="dt">data =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short), </a>
+<a class="sourceLine" id="cb187-3" data-line-number="3">                          <span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd)</a>
+<a class="sourceLine" id="cb187-4" data-line-number="4">shapley &lt;-<span class="st"> </span>Shapley<span class="op">$</span><span class="kw">new</span>(predictor,                        <span class="co"># Compute the Shapley values...</span></a>
+<a class="sourceLine" id="cb187-5" data-line-number="5">                       <span class="dt">x.interest =</span> training_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb187-6" data-line-number="6"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb187-7" data-line-number="7"><span class="st">                           </span>dplyr<span class="op">::</span><span class="kw">slice</span>(<span class="dv">1</span>))              <span class="co"># On the first instance</span></a>
+<a class="sourceLine" id="cb187-8" data-line-number="8"><span class="kw">plot</span>(shapley) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dv">1500</span>) <span class="op">+</span><span class="st">                      </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb187-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">angle =</span> <span class="dv">35</span>, <span class="dt">hjust =</span> <span class="dv">1</span>)) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>()          </a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:shapley"></span>
 <img src="ML_factor_files/figure-html/shapley-1.png" alt="Illustration of the Shapley method." width="450px" />
 <p class="caption">
 FIGURE 14.5: Illustration of the Shapley method.
 </p>
 </div>
-
+<p></p>
 <p>In the output, we again obtain the two crucial insights: <strong>sign</strong> of the impact of the feature and <strong>relative importance</strong> (compared to other features).</p>
 </div>
 <div id="breakdown" class="section level3">
@@ -709,31 +708,31 @@ FIGURE 14.5: Illustration of the Shapley method.
 <p>The visualization makes that very easy to see (as in Figure <a href="interp.html#fig:breakdown">14.6</a> below).</p>
 <p>In order to illustrate one implementation of breakdown, we train a random forest on a limited number of features, as shown below. This will increase the readability of the output of the breakdown.</p>
 
-<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1">formula_short &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;R1M_Usd ~&quot;</span>, <span class="kw">paste</span>(features_short, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)) <span class="co">#  Model </span></a>
-<a class="sourceLine" id="cb189-2" data-line-number="2">formula_short &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula_short)                                   <span class="co">#  Formula format</span></a>
-<a class="sourceLine" id="cb189-3" data-line-number="3">fit_RF_short &lt;-<span class="st"> </span><span class="kw">randomForest</span>(formula_short, <span class="co"># Same formula as before</span></a>
-<a class="sourceLine" id="cb189-4" data-line-number="4">                 <span class="dt">data =</span> dplyr<span class="op">::</span><span class="kw">select</span>(training_sample, <span class="kw">c</span>(features_short, <span class="st">&quot;R1M_Usd&quot;</span>)),  </a>
-<a class="sourceLine" id="cb189-5" data-line-number="5">                 <span class="dt">sampsize =</span> <span class="dv">10000</span>,          <span class="co"># Size of (random) sample for each tree</span></a>
-<a class="sourceLine" id="cb189-6" data-line-number="6">                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></a>
-<a class="sourceLine" id="cb189-7" data-line-number="7">                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></a>
-<a class="sourceLine" id="cb189-8" data-line-number="8">                 <span class="dt">ntree =</span> <span class="dv">12</span>,                <span class="co"># Nb of random trees</span></a>
-<a class="sourceLine" id="cb189-9" data-line-number="9">                 <span class="dt">mtry =</span> <span class="dv">5</span>                   <span class="co"># Nb of predictive variables for each tree</span></a>
-<a class="sourceLine" id="cb189-10" data-line-number="10">    )</a></code></pre></div>
-
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb188-1" data-line-number="1">formula_short &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;R1M_Usd ~&quot;</span>, <span class="kw">paste</span>(features_short, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)) <span class="co">#  Model </span></a>
+<a class="sourceLine" id="cb188-2" data-line-number="2">formula_short &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula_short)                                   <span class="co">#  Formula format</span></a>
+<a class="sourceLine" id="cb188-3" data-line-number="3">fit_RF_short &lt;-<span class="st"> </span><span class="kw">randomForest</span>(formula_short, <span class="co"># Same formula as before</span></a>
+<a class="sourceLine" id="cb188-4" data-line-number="4">                 <span class="dt">data =</span> dplyr<span class="op">::</span><span class="kw">select</span>(training_sample, <span class="kw">c</span>(features_short, <span class="st">&quot;R1M_Usd&quot;</span>)),  </a>
+<a class="sourceLine" id="cb188-5" data-line-number="5">                 <span class="dt">sampsize =</span> <span class="dv">10000</span>,          <span class="co"># Size of (random) sample for each tree</span></a>
+<a class="sourceLine" id="cb188-6" data-line-number="6">                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></a>
+<a class="sourceLine" id="cb188-7" data-line-number="7">                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></a>
+<a class="sourceLine" id="cb188-8" data-line-number="8">                 <span class="dt">ntree =</span> <span class="dv">12</span>,                <span class="co"># Nb of random trees</span></a>
+<a class="sourceLine" id="cb188-9" data-line-number="9">                 <span class="dt">mtry =</span> <span class="dv">5</span>                   <span class="co"># Nb of predictive variables for each tree</span></a>
+<a class="sourceLine" id="cb188-10" data-line-number="10">    )</a></code></pre></div>
+<p></p>
 <p>Once the model is trained, the syntax for the breakdown of predictions is very simple.</p>
 
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1"><span class="kw">library</span>(breakDown)</a>
-<a class="sourceLine" id="cb190-2" data-line-number="2">explain_break &lt;-<span class="st"> </span><span class="kw">broken</span>(fit_RF_short, </a>
-<a class="sourceLine" id="cb190-3" data-line-number="3">                        data_ml[<span class="dv">6</span>,] <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short),</a>
-<a class="sourceLine" id="cb190-4" data-line-number="4">                        <span class="dt">data =</span> data_ml <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short))</a>
-<a class="sourceLine" id="cb190-5" data-line-number="5"><span class="kw">plot</span>(explain_break) </a></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1"><span class="kw">library</span>(breakDown)</a>
+<a class="sourceLine" id="cb189-2" data-line-number="2">explain_break &lt;-<span class="st"> </span><span class="kw">broken</span>(fit_RF_short, </a>
+<a class="sourceLine" id="cb189-3" data-line-number="3">                        data_ml[<span class="dv">6</span>,] <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short),</a>
+<a class="sourceLine" id="cb189-4" data-line-number="4">                        <span class="dt">data =</span> data_ml <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short))</a>
+<a class="sourceLine" id="cb189-5" data-line-number="5"><span class="kw">plot</span>(explain_break) </a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:breakdown"></span>
 <img src="ML_factor_files/figure-html/breakdown-1.png" alt="Example of a breakdown output." width="500px" />
 <p class="caption">
 FIGURE 14.6: Example of a breakdown output.
 </p>
 </div>
-
+<p></p>
 <p>The graphical output is intuitively interpreted. The grey bar is the prediction of the model at the chosen instance. Green bars signal a positive contribution and the yellowish rectangles show the variables with negative impact. The relative sizes indicate the importance of each feature.</p>
 
 </div>
@@ -752,6 +751,12 @@ FIGURE 14.6: Example of a breakdown output.
 </div>
 <div id="ref-gower1971general">
 <p>Gower, John C. 1971. “A General Coefficient of Similarity and Some of Its Properties.” <em>Biometrics</em>, 857–71.</p>
+</div>
+<div id="ref-greenwell2017pdp">
+<p>Greenwell, Brandon M. 2017. “Pdp: An R Package for Constructing Partial Dependence Plots.” <em>R Journal</em> 9 (1): 421–36.</p>
+</div>
+<div id="ref-greenwell2020variable">
+<p>Greenwell, Brandon M, and Bradley C Boehmke. n.d. “Variable Importance Plots: An Introduction to the Vip Package.” <em>R Journal</em>.</p>
 </div>
 <div id="ref-hall2019introduction">
 <p>Hall, Patrick, and Navdeep Gill. 2019. <em>An Introduction to Machine Learning Interpretability-Second Edition</em>. O’Reilly.</p>

@@ -49,7 +49,6 @@
 
 
 
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -514,7 +513,7 @@ which is the solved as
 <a class="sourceLine" id="cb30-3" data-line-number="3">x_penalized &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Predictors</span></a>
 <a class="sourceLine" id="cb30-4" data-line-number="4"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>() </a>
 <a class="sourceLine" id="cb30-5" data-line-number="5">fit_lasso &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized, y_penalized, <span class="dt">alpha =</span> <span class="dv">1</span>)    <span class="co"># Model alpha = 1: LASSO</span></a></code></pre></div>
-
+<p></p>
 <p>Once the coefficients are computed, they require some wrangling before plotting. Also, there are too many of them, so we only plot a subset of them.</p>
 
 <div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb31-1" data-line-number="1">lasso_res &lt;-<span class="st"> </span><span class="kw">summary</span>(fit_lasso<span class="op">$</span>beta)                        <span class="co"># Extract LASSO coefs</span></a>
@@ -531,7 +530,7 @@ which is the solved as
 FIGURE 6.2: LASSO model. The dependent variable is the 1 month ahead return.
 </p>
 </div>
-
+<p></p>
 <p>The graph plots the evolution of coefficients as the penalization intensity, <span class="math inline">\(\lambda\)</span>, increases. For some characteristics, like Ebit_Ta (in orange), the convergence to zero is rapid. Other variables resist the penalization longer, like Mkt_Cap_3M_Usd, which is the last one to vanish. Essentially, this means that at the first order, this variable is an important driver of future 1 month returns - in our sample. Moreover, the negative sign of its coefficient are a confirmation (again, in this sample) of the size anomaly, according to which small firms experience higher future returns compared to their larger counterparts.</p>
 <p>Next, we turn to ridge regressions.</p>
 
@@ -551,7 +550,7 @@ FIGURE 6.2: LASSO model. The dependent variable is the 1 month ahead return.
 FIGURE 6.3: Ridge regression. The dependent variable is the 1 month ahead return.
 </p>
 </div>
-
+<p></p>
 <p>In Figure <a href="lasso.html#fig:sparseridge">6.3</a>, the convergence to zero is much smoother. We underline that the x-axis (penalization intensities) have a log-scale. This allows to see the early patterns (close to zero, to the left) more clearly. As in the previous figure, the Mkt_Cap_3M_Usd predictor clearly dominates, with again large negative coefficients. Nonetheless, as <span class="math inline">\(\lambda\)</span> increases, its domination over the other predictor fades.</p>
 <p>By definition, the elasticnet will produce curves that behave like a blend of the two above approaches. Nonetheless, as long as <span class="math inline">\(\alpha &gt;0\)</span>, the selective property of the LASSO will be preserved: some features will see their coefficients shrink rapidly to zero. In fact, the strength of the LASSO is such that a balanced mix of the two penalization is not reached at <span class="math inline">\(\alpha = 1/2\)</span>, but rather at a much smaller value (possibly below 0.1).</p>
 </div>
@@ -633,7 +632,7 @@ The introduction of the penalization norms is the new ingredient, compared to th
 <a class="sourceLine" id="cb33-5" data-line-number="5">nb_port &lt;-<span class="st"> </span><span class="dv">3</span>                                                         <span class="co"># Nb of portfolios/strats.</span></a>
 <a class="sourceLine" id="cb33-6" data-line-number="6">portf_weights &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim =</span> <span class="kw">c</span>(Tt, nb_port, <span class="kw">ncol</span>(returns) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))   <span class="co"># Initial portf. weights</span></a>
 <a class="sourceLine" id="cb33-7" data-line-number="7">portf_returns &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> Tt, <span class="dt">ncol =</span> nb_port)                <span class="co"># Initial portf. returns </span></a></code></pre></div>
-
+<p></p>
 <p>Next, because it is the purpose of this section, we isolate the computation of the weights of sparse-hedging portfolios. In the case of minimum variance portfolios, when <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>, the weight in asset 1 will simply be the sum of all terms in Equation <a href="lasso.html#eq:sparsehedgeeq2">(6.13)</a> and the other weights have similar forms.</p>
 
 <div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1">weights_sparsehedge &lt;-<span class="st"> </span><span class="cf">function</span>(returns, alpha, lambda){  <span class="co"># The parameters are defined here</span></a>
@@ -647,7 +646,7 @@ The introduction of the penalization norms is the new ingredient, compared to th
 <a class="sourceLine" id="cb34-9" data-line-number="9">    }</a>
 <a class="sourceLine" id="cb34-10" data-line-number="10">    <span class="kw">return</span>(w <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w))                                    <span class="co"># Normalisation of weights</span></a>
 <a class="sourceLine" id="cb34-11" data-line-number="11">}</a></code></pre></div>
-
+<p></p>
 <p>In order to benchmark our strategy, we define a meta-weighting function that embeds three strategies: the EW benchmarks (1), the classical GMV (2) and the sparse-hedging minimum variance (3). For the GMV, since there are much more assets than dates, the covariance matrix is singular. Thus, we have a small heuristic shrinkage term. For a more rigorous treatment of this technique, ce refer to the original article <span class="citation">Ledoit and Wolf (<a href="#ref-ledoit2004well">2004</a>)</span> and to the recent improvements mentioned in <span class="citation">Ledoit and Wolf (<a href="#ref-ledoit2017nonlinear">2017</a>)</span>. In short, we use <span class="math inline">\(\hat{\boldsymbol{\Sigma}}=\boldsymbol{\Sigma}_S+\delta \boldsymbol{I}\)</span> for some small constant <span class="math inline">\(\delta\)</span> (equal to 0.001 in the code below).</p>
 
 <div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1">weights_multi &lt;-<span class="st"> </span><span class="cf">function</span>(returns,j, alpha, lambda){</a>
@@ -664,7 +663,7 @@ The introduction of the penalization norms is the new ingredient, compared to th
 <a class="sourceLine" id="cb35-12" data-line-number="12">        w &lt;-<span class="st"> </span><span class="kw">weights_sparsehedge</span>(returns, alpha, lambda)</a>
 <a class="sourceLine" id="cb35-13" data-line-number="13">    }</a>
 <a class="sourceLine" id="cb35-14" data-line-number="14">}</a></code></pre></div>
-
+<p></p>
 <p>Finally, we proceed to the backtesting loop. Given the number of assets, the execution of the loop takes a few minutes. At the end of the loop, we compute the standard deviation of portfolio returns (monthly volatility). This is the key indicator as minimum variance seeks to minimize this particular metric.</p>
 
 <div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1"><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(t_oos)){                                                 <span class="co"># Loop = rebal. dates</span></a>
@@ -684,7 +683,7 @@ The introduction of the penalization norms is the new ingredient, compared to th
 <a class="sourceLine" id="cb36-15" data-line-number="15"><span class="kw">apply</span>(portf_returns, <span class="dv">2</span>, sd)                        <span class="co"># Portfolio volatilities (monthly scale)</span></a></code></pre></div>
 <pre><code>##         EW         MV     Sparse 
 ## 0.04180422 0.03350424 0.02672169</code></pre>
-
+<p></p>
 <p>The aim of the sparse hedging restrictions is to provide a better estimate of the covariance structure of assets so that the estimation of minimum variance portfolio weights is more accurate. From the above exercise, we see that the monthly volatility is indeed reduced when building covariance matrices based on sparse hedging relationships. This is not the case if we use the shrunk sample covariance matrix because there is probably too much noise in the estimates of correlations between assets. Working with daily returns would likely improve the quality of the estimates. But the above backtest shows that the penalized methodology performs well even when the number of observations (dates) is small compared to the number of assets.</p>
 </div>
 </div>
@@ -710,7 +709,7 @@ will be a relatively reliable proxy of future performance.</p>
 <a class="sourceLine" id="cb38-3" data-line-number="3"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                  </a>
 <a class="sourceLine" id="cb38-4" data-line-number="4">fit_pen_pred &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_train, y_penalized_train, <span class="co"># Model</span></a>
 <a class="sourceLine" id="cb38-5" data-line-number="5">                       <span class="dt">alpha =</span> <span class="fl">0.1</span>, <span class="dt">lambda =</span> <span class="fl">0.1</span>)</a></code></pre></div>
-
+<p></p>
 <p>We then report two key performance measures: the mean squared error and the hit ratio, which is the proportion of times that the prediction guesses the sign of the return correctly. A detailed account of metrics is given later in the book (Chapter <a href="backtest.html#backtest">13</a>).</p>
 
 <div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb39-1" data-line-number="1">x_penalized_test &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Predictors</span></a>
@@ -719,7 +718,7 @@ will be a relatively reliable proxy of future performance.</p>
 <pre><code>## [1] 0.03699696</code></pre>
 <div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb41-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_pen_pred, x_penalized_test) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5460346</code></pre>
-
+<p></p>
 <p>From an investor’s standpoint, the MSE (or even the mean absolute error) are hard to interpret because it is complicated to map them mentally into some intuitive financial indicator. In this perspective, the hit ratio is more natural. It tells the proportion of correct signs achieved by the predictions. If the investor is long in positive signals and short in negative ones, the hit ratio indicates the proportion of ‘correct’ bets (the positions that go in the expected direction). A natural threshold is 50% but because of transaction costs, 51% of accurate forecasts probably won’t be profitable. The figure 0.5460346 can be deemed a relatively good hit ratio, though not a very impressive one.</p>
 </div>
 </div>
