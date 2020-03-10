@@ -432,6 +432,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Introduction</h1>
+<p>Conclusions often echo introductions. This chapter was completed at the very end of the writing of the book. Its second part outlines principles that are probably more relevant than the sum of technical details covered subsequently. When stuck with disappointing results, we advise the reader to take a step away from the algorithm and come back to this section to get a broader perspective of some of the issues in predictive modelling.</p>
 <div id="context" class="section level2">
 <h2><span class="header-section-number">3.1</span> Context</h2>
 <p>The blossoming of machine learning in factor investing has it source at the confluence of three favorable developments: data availability, computational capacity, and economic groundings.</p>
@@ -455,11 +456,20 @@ FIGURE 3.1: Simplified workflow in portfolio construction.
 </div>
 <div id="machine-learning-is-no-magic-wand" class="section level2">
 <h2><span class="header-section-number">3.3</span> Machine Learning is no Magic Wand</h2>
-<p>By definition, the curse of predictions is that they rely on past data to infer patterns about subsequent fluctuations. The more or less explicit hope of any forecaster is that the past will turn out to be a good approximation of the future. Needless to say, this is a pious wish: in general, predictions fare badly. Surprisingly, this does not depend much on the sophistication of the econometric tool. In fact, heuristic guesses are often hard to beat.</p>
-<p>Hard to translate computer vision or textual ML into financial predictions.</p>
-<p>To illustrate this sad truth, the baseline algorithms that we detail in chapters <a href="lasso.html#lasso">6</a> to <a href="NN.html#NN">8</a> yield at best mediocre results.</p>
-<p>The attentive reader will have noticed that…</p>
-<p><strong>TO BE COMPLETED</strong>.</p>
+<p>By definition, the curse of predictions is that they rely on <strong>past</strong> data to infer patterns about <strong>subsequent</strong> fluctuations. The more or less explicit hope of any forecaster is that the past will turn out to be a good approximation of the future. Needless to say, this is a pious wish: in general, predictions fare badly. Surprisingly, this does not depend much on the sophistication of the econometric tool. In fact, heuristic guesses are often hard to beat.</p>
+<!--Hard to translate computer vision or textual ML into financial predictions. -->
+<p>To illustrate this sad truth, the baseline algorithms that we detail in chapters <a href="lasso.html#lasso">6</a> to <a href="NN.html#NN">8</a> yield at best mediocre results. This is done on purpose. This forces the reader to understand that blindly feeding data and parameters to a coded function will seldom suffice to reach satisfactory out-of-sample accuracy.</p>
+<p>Below, we sum up some key points that we have learned through our exploratory journey in financial ML.</p>
+<ul>
+<li>The first point is that <strong>causality</strong> is key. If one is able to identify <span class="math inline">\(X \rightarrow y\)</span>, where <span class="math inline">\(y\)</span> are expected returns, then the problem is solved. Unfortunately, causality is incredibly hard to uncover.<br />
+</li>
+<li>Thus, researchers have most of the time to make do with simple <strong>correlation</strong> patterns, which are far less informative and robust.<br />
+</li>
+<li>Relatedly, financial datasets are extremely noisy. It is a daunting task to <strong>extract signals</strong> out of them. <strong>No-arbitrage</strong> reasonings imply that if a simple pattern yielded durable profits, it would mechanically and rapidly vanish.<br />
+</li>
+<li>The no-free lunch theorem of <span class="citation">Wolpert (<a href="#ref-wolpert1992connection">1992</a><a href="#ref-wolpert1992connection">a</a>)</span> imposes that the analyst formulates views on the model. This is why economic or <strong>econometric framing</strong> is key. The assumptions and choices that are made regarding both the dependent variables and the explanatory features are decisive. As a corollary: data is key. The inputs given to the models are probably much more important than the choice of the model itself.</li>
+<li>to maximize out-of-sample efficiency, the right question is probably a paraphrase of Jeff Bezos: what’s not going to change? <strong>Persistent</strong> series are more likely to unveil enduring patterns.</li>
+</ul>
 
 </div>
 </div>
@@ -482,6 +492,9 @@ FIGURE 3.1: Simplified workflow in portfolio construction.
 </div>
 <div id="ref-white1988economic">
 <p>White, Halbert. 1988. “Economic Prediction Using Neural Networks: The Case of Ibm Daily Stock Returns.”</p>
+</div>
+<div id="ref-wolpert1992connection">
+<p>Wolpert, David H. 1992a. “On the Connection Between in-Sample Testing and Generalization Error.” <em>Complex Systems</em> 6 (1): 47.</p>
 </div>
 <div id="ref-zuckerman2019man">
 <p>Zuckerman, Gregory. 2019. <em>The Man Who Solved the Market: How Jim Simons Launched the Quant Revolution</em>. Penguin Random House.</p>

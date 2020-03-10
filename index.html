@@ -433,7 +433,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Machine Learning for Factor Investing</h1>
 <p class="author"><em>Guillaume Coqueret and Tony Guida</em></p>
-<p class="date"><em>2020-03-08 PRELIMINARY &amp; INCOMPLETE</em></p>
+<p class="date"><em>2020-03-10 PRELIMINARY &amp; INCOMPLETE</em></p>
 </div>
 <div id="preface" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Preface</h1>
@@ -493,9 +493,185 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
 <h2><span class="header-section-number">1.6</span> Coding instructions</h2>
 <p>One of the purposes of the book is to propose a large scale tutorial of ML applications in financial predictions and portfolio selection. Thus, one keyword is <strong>REPRODUCIBILITY</strong>! In order to duplicate our results (up to possible randomness in some learning algorithms), you will need running versions of R and RStudio on your computer. The best books to learn R are also often freely available online. A short list can be found here <a href="https://rstudio.com/resources/books/" class="uri">https://rstudio.com/resources/books/</a>. The monograph <em>R for Data Science</em> is probably the most crucial.</p>
 <p>In terms of coding requirements, we rely heavily on the <strong>tidyverse</strong>, which is a collection of <strong>packages</strong> (or libraries). The three packages we use most are <strong>dplyr</strong> which implements simple data manipulations (filter, select, arrange), <strong>tidyr</strong> which formats data in a tidy fashion, and <strong>ggplot</strong>, for graphical outputs.</p>
-<p>A list of the packages we use can be found below. Packages with a star need to be installed via <em>bioconductor</em>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Packages with a plus <span class="math inline">\(^+\)</span> need to be installed <strong>manually</strong>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
-
-<p>Of all of these packages (or collections thereof), the <strong>tidyverse</strong> and <strong>lubridate</strong> are compulsory in almost all sections of the book. To install a new package in R, just type install.packages(“name_of_the_package”) in the console. Sometimes, because of function name conflicts (especially with the select() function), we use the syntax package::function() to make sure the function call is from the right source. The exact version of the packages used to compile the book are listed in the “<em>renv.lock</em>” file available on the book’s GitHub web page <a href="https://github.com/shokru/mlfactor.github.io" class="uri">https://github.com/shokru/mlfactor.github.io</a>.</p>
+<p>A list of the packages we use can be found in Table <a href="preface.html#tab:packages">1.1</a> below. Packages with a star need to be installed via <em>bioconductor</em>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Packages with a plus <span class="math inline">\(^+\)</span> need to be installed <strong>manually</strong>.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<table>
+<caption><span id="tab:packages">TABLE 1.1: </span> List of all packages used in the book.</caption>
+<thead>
+<tr class="header">
+<th align="left"><em>Package</em></th>
+<th align="left">Purpose</th>
+<th align="center">Chapter(s)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><em>adabag</em></td>
+<td align="left">Boosted trees</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="left"><em>BART</em></td>
+<td align="left">Bayesian additive trees</td>
+<td align="center">10</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>broom</em></td>
+<td align="left">Tidy regression output</td>
+<td align="center">5</td>
+</tr>
+<tr class="even">
+<td align="left"><em>CAM</em><span class="math inline">\(^+\)</span></td>
+<td align="left">Causal Additive Models</td>
+<td align="center">15</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>caTools</em></td>
+<td align="left">AUC curves</td>
+<td align="center">11</td>
+</tr>
+<tr class="even">
+<td align="left"><em>CausalImpact</em></td>
+<td align="left">Causal inference with structural time-series</td>
+<td align="center">15</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>cowplot</em></td>
+<td align="left">Stacking plots</td>
+<td align="center">13</td>
+</tr>
+<tr class="even">
+<td align="left"><em>breakDown</em></td>
+<td align="left">Breakdown interpretability</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>dummies</em></td>
+<td align="left">One-hot encoding</td>
+<td align="center">8</td>
+</tr>
+<tr class="even">
+<td align="left"><em>e1071</em></td>
+<td align="left">Support Vector Machines</td>
+<td align="center">9</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>factoextra</em></td>
+<td align="left">PCA visualization</td>
+<td align="center">16</td>
+</tr>
+<tr class="even">
+<td align="left"><em>forecast</em></td>
+<td align="left">Autocorrelation function</td>
+<td align="center">4</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>FNN</em></td>
+<td align="left">Nearest Neighbors detection</td>
+<td align="center">16</td>
+</tr>
+<tr class="even">
+<td align="left"><em>ggpubr</em></td>
+<td align="left">Combining plots</td>
+<td align="center">11</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>glmnet</em></td>
+<td align="left">Penalized regressions</td>
+<td align="center">6</td>
+</tr>
+<tr class="even">
+<td align="left"><em>iml</em></td>
+<td align="left">Interpretability tools</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>keras</em></td>
+<td align="left">Neural networks</td>
+<td align="center">8</td>
+</tr>
+<tr class="even">
+<td align="left"><em>lime</em></td>
+<td align="left">Interpretability</td>
+<td align="center">14</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>lmtest</em></td>
+<td align="left">Granger causality</td>
+<td align="center">15</td>
+</tr>
+<tr class="even">
+<td align="left"><em>lubridate</em></td>
+<td align="left">Handling dates</td>
+<td align="center">All (or many)</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>naivebayes</em></td>
+<td align="left">Naive Bayes classifier</td>
+<td align="center">10</td>
+</tr>
+<tr class="even">
+<td align="left"><em>pcalg</em></td>
+<td align="left">Causal graphs</td>
+<td align="center">15</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>quadprog</em></td>
+<td align="left">Quadratic programming</td>
+<td align="center">12</td>
+</tr>
+<tr class="even">
+<td align="left"><em>quantmod</em></td>
+<td align="left">Data extraction</td>
+<td align="center">4, 12</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>randomForest</em></td>
+<td align="left">Random forests</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="left"><em>rBayesianOptimization</em></td>
+<td align="left">Bayesian hyperparameter tuning</td>
+<td align="center">11</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>ReinforcementLearning</em></td>
+<td align="left">Reinforcement Learning</td>
+<td align="center">17</td>
+</tr>
+<tr class="even">
+<td align="left"><em>Rgraphviz</em><span class="math inline">\(^*\)</span></td>
+<td align="left">Causal graphs</td>
+<td align="center">15</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>rpart</em> and <em>rpart.plot</em></td>
+<td align="left">Simple decision trees</td>
+<td align="center">7</td>
+</tr>
+<tr class="even">
+<td align="left"><em>spBayes</em></td>
+<td align="left">Bayesian linear regression</td>
+<td align="center">10</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>tidyverse</em></td>
+<td align="left">Environment for data science, data wrangling</td>
+<td align="center">All</td>
+</tr>
+<tr class="even">
+<td align="left"><em>xgboost</em></td>
+<td align="left">Boosted trees</td>
+<td align="center">7</td>
+</tr>
+<tr class="odd">
+<td align="left"><em>xtable</em></td>
+<td align="left">Table formatting</td>
+<td align="center">4</td>
+</tr>
+</tbody>
+</table>
+<p>Of all of these packages (or collections thereof), the <strong>tidyverse</strong> and <strong>lubridate</strong> are compulsory in almost all sections of the book. To install a new package in R, just type install.packages(“name_of_the_package”) in the console. Sometimes, because of function name conflicts (especially with the select() function), we use the syntax package::function() to make sure the function call is from the right source. The exact version of the packages used to compile the book are listed in the “<em>renv.lock</em>” file available on the book’s GitHub web page <a href="https://github.com/shokru/mlfactor.github.io" class="uri">https://github.com/shokru/mlfactor.github.io</a>. One minor comment: while the functions <em>gather()</em> and <em>spread()</em> from the <em>dplyr</em> package have been superseded by <em>pivot_longer()</em> and <em>pivot_wider()</em>, we still use them because of their much more compact syntax.</p>
 <p>As much as we could, we created short <strong>code chunks</strong> and commented each line whenever we felt it was useful. Comments are displayed at the end of a row and preceded with a single hastag #.</p>
 <p>The book is constructed as a very big notebook, thus results are often presented below code chunks. They can be graphs or tables. Sometimes, they are simple numbers are are preceded with two hashtags ##. The example below illustrates this formatting.</p>
 
