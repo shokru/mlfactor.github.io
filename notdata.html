@@ -491,7 +491,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ## 5        1 2000-05-31         0.4         0.42        0.4            0.2 
 ## 6        1 2000-06-30         0.41        0.47        0.42           0.21</code></pre>
 <p></p>
-<p>The data has 99 columns and 268336 rows. The first two columns indicate the stock identifier and the date. The points are sampled at the monthly frequency. As is always the case in practice, the number of assets changes with time: it is shown in Figure <a href="notdata.html#fig:nbassets">2.1</a>.</p>
+<p>The data has 99 columns and 268336 rows. The first two columns indicate the stock identifier and the date. The next 93 columns are features (see Table <a href="data-description.html#tab:appendix1">A.1</a> in the Appendix for details). The last four columns are the labels. The points are sampled at the monthly frequency. As is always the case in practice, the number of assets changes with time: it is shown in Figure <a href="notdata.html#fig:nbassets">2.1</a>.</p>
 
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">data_ml  <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Group by date</span></a>
@@ -509,8 +509,8 @@ FIGURE 2.1: Number of assets through time.
 <p>There are four immediate <strong>labels</strong> in the dataset: R1M_Usd, R3M_Usd, R6M_Usd and R12M_Usd, which correspond to the 1 month, 3 month, 6 month and 12 month future/forward returns of the stocks. The returns are <strong>total returns</strong>, that is, they incorporate potential <strong>dividend</strong> payments over the considered periods. This is a better proxy of financial gain compared to price returns only. We refer to the analysis of <span class="citation">Hartzmark and Solomon (<a href="#ref-hartzmark2019dividend">2019</a>)</span> for a study on the impact of decoupling price returns and dividends. These labels are located in the last 4 columns of the dataset. We provide their descriptive statistics below.</p>
 
 <p></p>
-<p>In anticipation for future models, we keep the name of the predictors in memory. In addition, we also keep a much shorter list of predictors.
-</p>
+<p>In anticipation for future models, we keep the name of the predictors in memory. In addition, we also keep a much shorter list of predictors.</p>
+
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">features &lt;-<span class="st"> </span><span class="kw">colnames</span>(data_ml[<span class="dv">3</span><span class="op">:</span><span class="dv">95</span>]) <span class="co"># Keep the feature&#39;s column names (hard-coded, beware!)</span></a>
 <a class="sourceLine" id="cb6-2" data-line-number="2">features_short &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Div_Yld&quot;</span>, <span class="st">&quot;Eps&quot;</span>, <span class="st">&quot;Mkt_Cap_12M_Usd&quot;</span>, <span class="st">&quot;Mom_11M_Usd&quot;</span>, </a>
 <a class="sourceLine" id="cb6-3" data-line-number="3">                    <span class="st">&quot;Ocf&quot;</span>, <span class="st">&quot;Pb&quot;</span>, <span class="st">&quot;Vol1Y_Usd&quot;</span>)</a></code></pre></div>
