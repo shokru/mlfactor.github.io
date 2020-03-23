@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-22" />
+<meta name="date" content="2020-03-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -462,16 +462,16 @@ FIGURE B.1: The value factor: annual returns.
 </p>
 <div class="sourceCode" id="cb229"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb229-1" data-line-number="1">returns_m &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb229-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                            </span></a>
-<a class="sourceLine" id="cb229-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Creates the sort</span></a>
-<a class="sourceLine" id="cb229-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, growth) <span class="op">%&gt;%</span><span class="st">                                     </span><span class="co"># Analyze by date &amp; sort</span></a>
-<a class="sourceLine" id="cb229-5" data-line-number="5"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Compute average return</span></a>
-<a class="sourceLine" id="cb229-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> growth, <span class="dt">value =</span> ret) <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Pivot to wide matrix format</span></a>
+<a class="sourceLine" id="cb229-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">growth =</span> Pb <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(Pb)) <span class="op">%&gt;%</span><span class="st">                         </span><span class="co"># Creates the sort</span></a>
+<a class="sourceLine" id="cb229-4" data-line-number="4"><span class="st">    </span><span class="kw">group_by</span>(date, growth) <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Analyze by date &amp; sort</span></a>
+<a class="sourceLine" id="cb229-5" data-line-number="5"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb229-6" data-line-number="6"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> growth, <span class="dt">value =</span> ret) <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Pivot to wide matrix format</span></a>
 <a class="sourceLine" id="cb229-7" data-line-number="7"><span class="st">    </span><span class="kw">ungroup</span>()</a>
-<a class="sourceLine" id="cb229-8" data-line-number="8"><span class="kw">colnames</span>(returns_m)[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;growth&quot;</span>)                     <span class="co"># Changing column names</span></a>
+<a class="sourceLine" id="cb229-8" data-line-number="8"><span class="kw">colnames</span>(returns_m)[<span class="dv">2</span><span class="op">:</span><span class="dv">3</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;growth&quot;</span>)                 <span class="co"># Changing column names</span></a>
 <a class="sourceLine" id="cb229-9" data-line-number="9">returns_m <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb229-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>value),                             <span class="co"># From returns to portf. values</span></a>
+<a class="sourceLine" id="cb229-10" data-line-number="10"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">value =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>value),                           <span class="co"># From returns to portf. values</span></a>
 <a class="sourceLine" id="cb229-11" data-line-number="11">           <span class="dt">growth =</span> <span class="kw">cumprod</span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>growth)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb229-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> portfolio, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Back in tidy format</span></a>
+<a class="sourceLine" id="cb229-12" data-line-number="12"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> portfolio, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Back in tidy format</span></a>
 <a class="sourceLine" id="cb229-13" data-line-number="13"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> portfolio)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st">     </span><span class="co"># Plot!  </span></a>
 <a class="sourceLine" id="cb229-14" data-line-number="14"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.8</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex41"></span>
@@ -783,7 +783,7 @@ FIGURE B.9: Sample (complex) tree.
 <p>Finally, we ask for the structure of the model, and train it.</p>
 
 <div class="sourceCode" id="cb257"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb257-1" data-line-number="1"><span class="kw">summary</span>(model_ae)                      <span class="co"># See model details / architecture</span></a></code></pre></div>
-<pre><code>## Model: &quot;model_17&quot;
+<pre><code>## Model: &quot;model_5&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                 Output Shape        Param #    Connected to                  
 ## ==========================================================================================
@@ -874,7 +874,7 @@ FIGURE B.9: Sample (complex) tree.
 <a class="sourceLine" id="cb264-2" data-line-number="2">                      <span class="dt">eta =</span> <span class="fl">0.3</span>,                          <span class="co"># Learning rate</span></a>
 <a class="sourceLine" id="cb264-3" data-line-number="3">                      <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,           <span class="co"># Objective function</span></a>
 <a class="sourceLine" id="cb264-4" data-line-number="4">                      <span class="dt">max_depth =</span> <span class="dv">4</span>,                      <span class="co"># Maximum depth of trees</span></a>
-<a class="sourceLine" id="cb264-5" data-line-number="5">                      <span class="dt">nrounds =</span> <span class="dv">60</span>                        <span class="co"># Number of trees used (rather low here)</span></a>
+<a class="sourceLine" id="cb264-5" data-line-number="5">                      <span class="dt">nrounds =</span> <span class="dv">60</span>                        <span class="co"># Number of trees used (bit low here)</span></a>
 <a class="sourceLine" id="cb264-6" data-line-number="6">)</a>
 <a class="sourceLine" id="cb264-7" data-line-number="7"><span class="kw">mean</span>(<span class="kw">predict</span>(xgb_full, xgb_test) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
 <pre><code>## [1] 0.5017377</code></pre>
@@ -887,11 +887,11 @@ FIGURE B.9: Sample (complex) tree.
 <h2><span class="header-section-number">B.7</span> Chapter 12: ensemble neural network</h2>
 <p>First, we create the three feature sets. The first set gets all multiples of 3 between 3 and 93. The second one, the same indices, minus one and the third one, the initial indices minus two.</p>
 
-<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb266-1" data-line-number="1">feat_train_<span class="dv">1</span> &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)]) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># First set of features</span></a>
+<div class="sourceCode" id="cb266"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb266-1" data-line-number="1">feat_train_<span class="dv">1</span> &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)]) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># First set of feats</span></a>
 <a class="sourceLine" id="cb266-2" data-line-number="2"><span class="st">    </span><span class="kw">as.matrix</span>() </a>
-<a class="sourceLine" id="cb266-3" data-line-number="3">feat_train_<span class="dv">2</span> &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)<span class="op">-</span><span class="dv">1</span>]) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Second set of features</span></a>
+<a class="sourceLine" id="cb266-3" data-line-number="3">feat_train_<span class="dv">2</span> &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)<span class="op">-</span><span class="dv">1</span>]) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Second set of feats</span></a>
 <a class="sourceLine" id="cb266-4" data-line-number="4"><span class="st">    </span><span class="kw">as.matrix</span>() </a>
-<a class="sourceLine" id="cb266-5" data-line-number="5">feat_train_<span class="dv">3</span> &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)<span class="op">-</span><span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Third set of features</span></a>
+<a class="sourceLine" id="cb266-5" data-line-number="5">feat_train_<span class="dv">3</span> &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)<span class="op">-</span><span class="dv">2</span>]) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Third set of feats</span></a>
 <a class="sourceLine" id="cb266-6" data-line-number="6"><span class="st">    </span><span class="kw">as.matrix</span>() </a>
 <a class="sourceLine" id="cb266-7" data-line-number="7">feat_test_<span class="dv">1</span> &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features[<span class="dv">3</span><span class="op">*</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">31</span>)]) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Test features 1</span></a>
 <a class="sourceLine" id="cb266-8" data-line-number="8"><span class="st">    </span><span class="kw">as.matrix</span>() </a>
@@ -928,7 +928,7 @@ FIGURE B.9: Sample (complex) tree.
 <p>Lastly, we can train and evaluate.</p>
 
 <div class="sourceCode" id="cb268"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb268-1" data-line-number="1"><span class="kw">summary</span>(model_ens)                      <span class="co"># See model details / architecture</span></a></code></pre></div>
-<pre><code>## Model: &quot;model_18&quot;
+<pre><code>## Model: &quot;model_6&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                 Output Shape        Param #    Connected to                  
 ## ==========================================================================================
@@ -944,17 +944,17 @@ FIGURE B.9: Sample (complex) tree.
 ## __________________________________________________________________________________________
 ## layer_3 (Dense)              (None, 8)           256        third_input[0][0]             
 ## __________________________________________________________________________________________
-## dense_102 (Dense)            (None, 2)           18         layer_1[0][0]                 
+## dense_39 (Dense)             (None, 2)           18         layer_1[0][0]                 
 ## __________________________________________________________________________________________
-## dense_103 (Dense)            (None, 2)           18         layer_2[0][0]                 
+## dense_40 (Dense)             (None, 2)           18         layer_2[0][0]                 
 ## __________________________________________________________________________________________
-## dense_104 (Dense)            (None, 2)           18         layer_3[0][0]                 
+## dense_41 (Dense)             (None, 2)           18         layer_3[0][0]                 
 ## __________________________________________________________________________________________
-## concatenate_4 (Concatenate)  (None, 6)           0          dense_102[0][0]               
-##                                                             dense_103[0][0]               
-##                                                             dense_104[0][0]               
+## concatenate_1 (Concatenate)  (None, 6)           0          dense_39[0][0]                
+##                                                             dense_40[0][0]                
+##                                                             dense_41[0][0]                
 ## __________________________________________________________________________________________
-## main_output (Dense)          (None, 2)           14         concatenate_4[0][0]           
+## main_output (Dense)          (None, 2)           14         concatenate_1[0][0]           
 ## ==========================================================================================
 ## Total params: 836
 ## Trainable params: 836
@@ -1115,11 +1115,11 @@ FIGURE B.10: Learning an integrated ensemble.
 <a class="sourceLine" id="cb282-13" data-line-number="13"><span class="st">                              </span><span class="kw">as.matrix</span>()) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb282-14" data-line-number="14"><span class="st">    </span><span class="kw">head</span>(<span class="dv">5</span>)</a></code></pre></div>
 <pre><code>## tf.Tensor(
-## [[ 0.5156472  -0.09605893  0.24942565  0.8553128 ]
-##  [ 0.5301423  -0.09065106  0.2602869   0.8313545 ]
-##  [ 0.4980232  -0.0709233   0.29365695  0.8520574 ]
-##  [ 0.49527857 -0.06776677  0.30468768  0.8579642 ]
-##  [ 0.49189702 -0.06571139  0.3138981   0.87703997]], shape=(5, 4), dtype=float32)</code></pre>
+## [[ 1.0977066   0.73536634 -0.134143   -0.23254944]
+##  [ 1.1143945   0.7385053  -0.12986033 -0.19641213]
+##  [ 1.0870532   0.7393564  -0.1472653  -0.22546804]
+##  [ 1.0842133   0.7415846  -0.15058485 -0.22582345]
+##  [ 1.0783774   0.7435816  -0.1527504  -0.22739509]], shape=(5, 4), dtype=float32)</code></pre>
 <p></p>
 
 <p></p>

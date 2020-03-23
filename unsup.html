@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-22" />
+<meta name="date" content="2020-03-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -494,11 +494,11 @@ where <span class="math inline">\(\textbf{U}\)</span> (<span class="math inline"
 \tag{16.2} 
 \textbf{X}=\textbf{Q}\textbf{DQ}&#39;.
 \end{equation}\]</span>
-This process is called diagonalization (see Chapter 7 in <span class="citation">Meyer (<a href="#ref-meyer2000matrix">2000</a>)</span>) and conveniently applies to covariance matrices.</p>
+This process is called <strong>diagonalization</strong> (see Chapter 7 in <span class="citation">Meyer (<a href="#ref-meyer2000matrix">2000</a>)</span>) and conveniently applies to covariance matrices.</p>
 </div>
 <div id="pca" class="section level3">
 <h3><span class="header-section-number">16.2.2</span> PCA</h3>
-<p>The goal of PCA is to build a dataset <span class="math inline">\(\tilde{\textbf{X}}\)</span> that has fewer columns but that keeps as much information compared to the original one, <span class="math inline">\(\textbf{X}\)</span>. The key notion is the change of base, which is a linear transformation of <span class="math inline">\(\textbf{X}\)</span> into <span class="math inline">\(\textbf{Z}\)</span>, a matrix with identical dimension, via
+<p>The goal of PCA is to build a dataset <span class="math inline">\(\tilde{\textbf{X}}\)</span> that has fewer columns but that keeps as much information as possible when compressing the original one, <span class="math inline">\(\textbf{X}\)</span>. The key notion is the <strong>change of base</strong>, which is a linear transformation of <span class="math inline">\(\textbf{X}\)</span> into <span class="math inline">\(\textbf{Z}\)</span>, a matrix with identical dimension, via
 <span class="math display" id="eq:pca">\[\begin{equation}
 \tag{16.3}
 \textbf{Z}=\textbf{XP},
@@ -589,7 +589,7 @@ so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span cl
 \textbf{X}, \ (I\times K) \quad \overset{\text{encode via }\textbf{P}_{K&#39;}}{\longrightarrow} \quad \tilde{\textbf{X}}, \ (I \times K&#39;) \quad \overset{\text{decode via } \textbf{P}&#39;_{K&#39;}}{\longrightarrow} \quad \breve{\textbf{X}},\ (I \times K),
 \end{equation}\]</span></p>
 <p>where <span class="math inline">\(\textbf{P}_{K&#39;}\)</span> is the restriction of <span class="math inline">\(\textbf{P}\)</span> to the <span class="math inline">\(K&#39;\)</span> columns that correspond to the factors with the largest variances. The dimensions of matrices are indicated inside the brackets. In this case, the recoding cannot recover <span class="math inline">\(\textbf{P}\)</span> exactly but only an approximation, which we write <span class="math inline">\(\breve{\textbf{X}}\)</span>. This approximation is coded with less information, hence this new data <span class="math inline">\(\breve{\textbf{X}}\)</span> is compressed and provides a parcimonious representation of the original sample <span class="math inline">\(\textbf{X}\)</span>.</p>
-<p>An autoencodeur generalizes this concept to nonlinear coding functions. Simple linear autoencoders are linked to latent factor models (see Proposition 1 in  for the case of single layer autoencoders.) The scheme is the following
+<p>An autoencodeur generalizes this concept to <strong>nonlinear</strong> coding functions. Simple linear autoencoders are linked to latent factor models (see Proposition 1 in  for the case of single layer autoencoders.) The scheme is the following
 <span class="math display" id="eq:aescheme2">\[\begin{equation}
 \tag{16.7}
 \textbf{X},\ (I\times K) \quad \overset{\text{encode via } N} {\longrightarrow} \quad \tilde{\textbf{X}}=N(\textbf{X}), \ (I \times K&#39;) \quad \overset{\text{decode via } N&#39;}{\longrightarrow} \quad \breve{\textbf{X}}=N&#39;(\tilde{\textbf{X}}), \ (I \times K),
@@ -728,9 +728,9 @@ where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the
 <p></p>
 <p>Once the neighbors and distances are known, we can compute a prediction for the return of the target stock. We use the function <span class="math inline">\(h(z)=e^{-z}\)</span> for the weighting of instances (via the distances).</p>
 
-<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" data-line-number="1">knn_labels &lt;-<span class="st"> </span>knn_data[neighbors<span class="op">$</span>nn.index,] <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># y values for neighbors</span></a>
+<div class="sourceCode" id="cb216"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb216-1" data-line-number="1">knn_labels &lt;-<span class="st"> </span>knn_data[neighbors<span class="op">$</span>nn.index,] <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># y values for neighbs</span></a>
 <a class="sourceLine" id="cb216-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd)    </a>
-<a class="sourceLine" id="cb216-3" data-line-number="3"><span class="kw">sum</span>(knn_labels <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist)))  <span class="co"># Pred. for k(z)=exp(-z)</span></a></code></pre></div>
+<a class="sourceLine" id="cb216-3" data-line-number="3"><span class="kw">sum</span>(knn_labels <span class="op">*</span><span class="st"> </span><span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist) <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(<span class="kw">exp</span>(<span class="op">-</span>neighbors<span class="op">$</span>nn.dist)))  <span class="co"># Pred. w. k(z)=exp(-z)</span></a></code></pre></div>
 <pre><code>## [1] 0.003042282</code></pre>
 <div class="sourceCode" id="cb218"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb218-1" data-line-number="1"><span class="kw">filter</span>(knn_data, stock_id <span class="op">==</span><span class="st"> </span><span class="dv">13</span>) <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># True y </span></a>
 <a class="sourceLine" id="cb218-2" data-line-number="2"><span class="st">              </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd)</a></code></pre></div>
