@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-23" />
+<meta name="date" content="2020-03-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
 </ul></li>
-<li class="part"><span><b>II Part II: Common algorithms</b></span></li>
+<li class="part"><span><b>II Part II: Common supervised algorithms</b></span></li>
 <li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
 <li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
 <li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#penreg"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
@@ -256,6 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
 <li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
 <li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+<li class="chapter" data-level="8.4.3" data-path="NN.html"><a href="NN.html#custloss"><i class="fa fa-check"></i><b>8.4.3</b> Custom losses</a></li>
 </ul></li>
 <li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
 <li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
@@ -439,14 +440,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="header">
 <h1 class="title">Machine Learning for Factor Investing</h1>
 <p class="author"><em>Guillaume Coqueret and Tony Guida</em></p>
-<p class="date"><em>2020-03-23</em></p>
+<p class="date"><em>2020-03-25</em></p>
 </div>
 <div id="preface" class="section level1">
 <h1><span class="header-section-number">Chapter 1</span> Preface</h1>
-<p>This book is about advanced techniques applied to <strong>investment strategies</strong> that are built on <strong>firm characteristics</strong>. The content is threefold. First, we try to simply explain the ideas behind most mainstream machine learning algorithms used in asset allocation. Second, we mention a wide range of academic references for the readers who wish to push a little further. Finally, we provide hands-on <strong>R</strong> code samples that show how to apply the concepts and tools on a realistic dataset which we share to encourage reproducibility.</p>
+<p>This book is intended to cover some advanced modelling techniques applied to equity <strong>investment strategies</strong> that are built on <strong>firm characteristics</strong>. The content is threefold. First, we try to simply explain the ideas behind most mainstream machine learning algorithms that are used in asset allocation. Second, we mention a wide range of academic references for the readers who wish to push a little further. Finally, we provide hands-on <strong>R</strong> code samples that show how to apply the concepts and tools on a realistic dataset which we share to encourage <strong>reproducibility</strong>.</p>
 <div id="what-this-book-is-not-about" class="section level2">
 <h2><span class="header-section-number">1.1</span> What this book is not about</h2>
-<p>This book deals with machine learning (ML) tools and their applications in factor investing. Factor investing is a subfield of the discipline that encompasses asset allocation, quantitative trading and wealth management. Its premise is that differences in the returns of firms can be explained by the characteristics of these firms. Thus, it departs from traditional analyses which rely on price data only, like classical portfolio theory à la <span class="citation">Markowitz (<a href="#ref-markowitz1952portfolio">1952</a>)</span>, or high frequency trading. For a general and broad treatment of Machine Learning in Finance, we refer to <span class="citation">Dixon, Halperin, and Bilokon (<a href="#ref-dixon2020machine">2020</a>)</span>.</p>
+<p>This book deals with machine learning (ML) tools and their applications in factor investing. Factor investing is a subfield of a large discipline that encompasses asset allocation, quantitative trading and wealth management. Its premise is that differences in the returns of firms can be explained by the characteristics of these firms. Thus, it departs from traditional analyses which rely on price and volume data only, like classical portfolio theory à la <span class="citation">Markowitz (<a href="#ref-markowitz1952portfolio">1952</a>)</span>, or high frequency trading. For a general and broad treatment of Machine Learning in Finance, we refer to <span class="citation">Dixon, Halperin, and Bilokon (<a href="#ref-dixon2020machine">2020</a>)</span>.</p>
 <p>The topics we discuss are related to other themes that will not be covered in the monograph. These themes include:</p>
 <ul>
 <li>Applications of ML in <strong>other financial fields</strong>, such as <strong>fraud detection</strong> or <strong>credit scoring</strong>. We refer to <span class="citation">Ngai et al. (<a href="#ref-ngai2011application">2011</a>)</span> and <span class="citation">Baesens, Van Vlasselaer, and Verbeke (<a href="#ref-baesens2015fraud">2015</a>)</span> for general purpose fraud detection, to <span class="citation">Bhattacharyya et al. (<a href="#ref-bhattacharyya2011data">2011</a>)</span> for a focus on credit cards and to <span class="citation">Ravisankar et al. (<a href="#ref-ravisankar2011detection">2011</a>)</span> and <span class="citation">Abbasi et al. (<a href="#ref-abbasi2012metafraud">2012</a>)</span> for studies on fraudulent financial reporting. On the topic of credit scoring, <span class="citation">Wang et al. (<a href="#ref-wang2011comparative">2011</a>)</span> and <span class="citation">Brown and Mues (<a href="#ref-brown2012experimental">2012</a>)</span> provide overviews of methods and some empirical results. Also, we do not cover ML algorithms for data sampled at higher (daily or intraday) frequencies (microstructure models, limit order book). The chapter from <span class="citation">Kearns and Nevmyvaka (<a href="#ref-kearns2013machine">2013</a>)</span> and the recent paper by <span class="citation">Sirignano and Cont (<a href="#ref-sirignano2019universal">2019</a>)</span> are good introductions on this topic.<br />
@@ -679,7 +680,7 @@ The fact is that <strong>R</strong> has a <strong>lot</strong> to offer as well.
 </table>
 <p>Of all of these packages (or collections thereof), the <strong>tidyverse</strong> and <strong>lubridate</strong> are compulsory in almost all sections of the book. To install a new package in R, just type install.packages(“name_of_the_package”) in the console. Sometimes, because of function name conflicts (especially with the select() function), we use the syntax package::function() to make sure the function call is from the right source. The exact version of the packages used to compile the book are listed in the “<em>renv.lock</em>” file available on the book’s GitHub web page <a href="https://github.com/shokru/mlfactor.github.io" class="uri">https://github.com/shokru/mlfactor.github.io</a>. One minor comment: while the functions <em>gather()</em> and <em>spread()</em> from the <em>dplyr</em> package have been superseded by <em>pivot_longer()</em> and <em>pivot_wider()</em>, we still use them because of their much more compact syntax.</p>
 <p>As much as we could, we created short <strong>code chunks</strong> and commented each line whenever we felt it was useful. Comments are displayed at the end of a row and preceded with a single hastag #.</p>
-<p>The book is constructed as a very big notebook, thus results are often presented below code chunks. They can be graphs or tables. Sometimes, they are simple numbers are are preceded with two hashtags ##. The example below illustrates this formatting.</p>
+<p>The book is constructed as a very big notebook, thus results are often presented below code chunks. They can be graphs or tables. Sometimes, they are simple numbers and are preceded with two hashtags ##. The example below illustrates this formatting.</p>
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="dv">1</span><span class="op">+</span><span class="dv">2</span> <span class="co"># Example</span></a></code></pre></div>
 <pre><code>## [1] 3</code></pre>

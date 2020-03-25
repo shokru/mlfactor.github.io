@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-23" />
+<meta name="date" content="2020-03-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
 </ul></li>
-<li class="part"><span><b>II Part II: Common algorithms</b></span></li>
+<li class="part"><span><b>II Part II: Common supervised algorithms</b></span></li>
 <li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
 <li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
 <li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#penreg"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
@@ -256,6 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
 <li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
 <li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+<li class="chapter" data-level="8.4.3" data-path="NN.html"><a href="NN.html#custloss"><i class="fa fa-check"></i><b>8.4.3</b> Custom losses</a></li>
 </ul></li>
 <li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
 <li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
@@ -438,25 +439,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="intro" class="section level1">
 <h1><span class="header-section-number">Chapter 3</span> Introduction</h1>
-<p>Conclusions often echo introductions. This chapter was completed at the very end of the writing of the book. Its second part outlines principles that are probably more relevant than the sum of technical details covered subsequently. When stuck with disappointing results, we advise the reader to take a step away from the algorithm and come back to this section to get a broader perspective of some of the issues in predictive modelling.</p>
+<p>Conclusions often echo introductions. This chapter was completed at the very end of the writing of the book. Its outlines principles and ideas that are probably more relevant than the sum of technical details covered subsequently. When stuck with disappointing results, we advise the reader to take a step away from the algorithm and come back to this section to get a broader perspective of some of the issues in predictive modelling.</p>
 <div id="context" class="section level2">
 <h2><span class="header-section-number">3.1</span> Context</h2>
 <p>The blossoming of machine learning in factor investing has it source at the confluence of three favorable developments: data availability, computational capacity, and economic groundings.</p>
 <p>First, the <strong>data</strong>. Nowadays, classical providers, such as Bloomberg and Reuters have seen their playing field invaded by niche players and aggregation platforms.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> In addition, high-frequency data and derivative quotes have become mainstream. Hence, firm-specific attributes are easy and often cheap to compile. This means that the size of <span class="math inline">\(\mathbf{X}\)</span> in <a href="intro.html#eq:ML">(3.1)</a> is now sufficiently large to be plugged into ML algorithms. The order of magnitude (in 2019) that can be reached is the following: a few hundred monthly observations over several thousand stocks (US listed at least) covering a few hundred attributes. This makes a dataset of dozens of millions of points. While it is a reasonably high figure, we highlight that the chronological depth is probably the weak point and will remain so for decades to come because accounting figures are only released on a quarterly basis. Needless to say that this drawback does not hold for high-frequency strategies.</p>
 <p>Second, <strong>computational power</strong>, both through hardware and software. Storage and processing speed are no technical hurdles anymore and models can even be run on the cloud thanks to services hosted by major actors (Amazon, Microsoft, IBM and Google) and by smaller players (Rackspace, Techila). On the software side, open source has become the norm, funded by corporations (TensorFlow &amp; Keras by Google, Pytorch by Facebook, h2o, etc.), universities (Scikit-Learn by INRIA, NLPCore by Stanford, NLTK by UPenn) and small groups of researchers (caret, xgboost, tidymodels to list but a pair of frameworks). Consequently, ML is no longer the private turf of a handful of expert computer scientists, but is on the contrary <strong>accessible</strong> to anyone willing to learn and code.</p>
 <p>Finally, <strong>economic framing</strong>. Machine learning applications in finance were initially introduced by computer scientists and information system experts (e.g., <span class="citation">Braun and Chandler (<a href="#ref-braun1987predicting">1987</a>)</span>, <span class="citation">White (<a href="#ref-white1988economic">1988</a>)</span>) and exploited shortly after by academics in financial economics (<span class="citation">Bansal and Viswanathan (<a href="#ref-bansal1993no">1993</a>)</span>), and hedge funds (see, e.g., <span class="citation">Zuckerman (<a href="#ref-zuckerman2019man">2019</a>)</span>). Nonlinear relationships then became more mainstream in asset pricing (<span class="citation">Freeman and Tse (<a href="#ref-freeman1992nonlinear">1992</a>)</span>, <span class="citation">Bansal, Hsieh, and Viswanathan (<a href="#ref-bansal1993new">1993</a>)</span>). These contributions started to pave the way for the more brute-force approaches that have blossomed since the 2010 decade and which are mentioned throughout the book.</p>
-<p>In the synthetic proposal of <span class="citation">R. Arnott, Harvey, and Markowitz (<a href="#ref-arnott2019backtesting">2019</a>)</span>, the first piece of advice is to rely on a model that makes sense economically. While we agree with this stance, the only assumption that we make in this book is that future returns depend on firm characteristics. The relationship between these features and performance is largely unknown and probably time-varying. This is why ML can be useful: to detect some hidden patterns beyond the documented asset pricing anomalies and to train dynamically to adapt to changing market conditions.</p>
-<p><span class="math display" id="eq:ML">\[\begin{equation}
-\mathbf{y}=f(\mathbf{X})+\mathbf{\epsilon}
-\tag{3.1}
-\end{equation}\]</span></p>
+<p>In the synthetic proposal of <span class="citation">R. Arnott, Harvey, and Markowitz (<a href="#ref-arnott2019backtesting">2019</a>)</span>, the first piece of advice is to rely on a model that makes sense economically. We agree with this stance, and the only assumption that we make in this book is that future returns depend on firm characteristics. The relationship between these features and performance is largely unknown and probably time-varying. This is why ML can be useful: to detect some hidden patterns beyond the documented asset pricing anomalies. Moreover, dynamic training allows to adapt to changing market conditions.</p>
 </div>
 <div id="portfolio-construction-the-workflow" class="section level2">
 <h2><span class="header-section-number">3.2</span> Portfolio construction: the workflow</h2>
+<p>In this book, we mostly resort to supervised learning to predict returns in the cross-section. The baseline equation in supervised learning,</p>
+<p><span class="math display" id="eq:ML">\[\begin{equation}
+\mathbf{y}=f(\mathbf{X})+\mathbf{\epsilon},
+\tag{3.1}
+\end{equation}\]</span></p>
+<p>is translated in financial terms as</p>
+<p><span class="math display" id="eq:MLfin">\[\begin{equation}
+\mathbf{r}_{t+1,n}=f(\mathbf{x}_{t,n})+\mathbf{\epsilon}_{t+1,n},
+\tag{3.2}
+\end{equation}\]</span>
+where <span class="math inline">\(f(\mathbf{x}_{t,n})\)</span> can be viewed as the <strong>expected return</strong> for time <span class="math inline">\(t+1\)</span> computed at time <span class="math inline">\(t\)</span>, that is, <span class="math inline">\(\mathbb{E}_t[r_{t+1,n}]\)</span>. Note that the model is <strong>common to all assets</strong> (<span class="math inline">\(f\)</span> is not indexed by <span class="math inline">\(n\)</span>), thus it shares similarity with panel approaches.</p>
+<p>Building accurate predictions requires to pay attention to <strong>all</strong> terms in the above equation. Chronologically, the first step is to gather data and to process it (see Chapter <a href="Data.html#Data">5</a>). To the best of our knowledge, the only consensus is that, on the <span class="math inline">\(\textbf{x}\)</span> side, the features should include classical predictors reported in the literature: market capitalization, accounting ratios, risk measures, momentum proxies (see Chapter <a href="factor.html#factor">4</a>). For the dependent variable, many researchers and practitioners work with monthly returns, but other maturities may perform better out-of-sample.</p>
+<p>While it is tempting to believe that the most crucial part is the choice of <span class="math inline">\(f\)</span> (it is the most sophisticated, mathematically), we believe that the choice and engineering of inputs, that is, the variables, are at least as important. The usual modelling families for <span class="math inline">\(f\)</span> are covered in Chapters <a href="lasso.html#lasso">6</a> to <a href="bayes.html#bayes">10</a>. Finally, the errors <span class="math inline">\(\mathbf{\epsilon}_{t+1,n}\)</span> are often overlooked. People consider that vanilla quadratic programming is the best way to go (the most common for sure!), thus the mainstream objective is to minimize squared errors. In fact, other options may be wiser choices (see for instance Section <a href="NN.html#custloss">8.4.3</a>).</p>
+<p>Even if the overall process, depicted in Figure <a href="intro.html#fig:figscheme2">3.1</a>, seems very sequential, it is more judicious to conceive it as <strong>integrated</strong>. All steps are intertwined and each part should not be dealt with independently from the others. The global framing of the problem is essential, from the choice of predictors, to the family of algorithms, not to mention the portfolio weighting schemes (see Chapter <a href="backtest.html#backtest">13</a> for the latter).</p>
 <div class="figure" style="text-align: center"><span id="fig:figscheme2"></span>
-<img src="images/scheme2.png" alt="Simplified workflow in portfolio construction." width="794" />
+<img src="images/scheme2.png" alt="Simplified workflow in ML-based portfolio construction." width="794" />
 <p class="caption">
-FIGURE 3.1: Simplified workflow in portfolio construction.
+FIGURE 3.1: Simplified workflow in ML-based portfolio construction.
 </p>
 </div>
 </div>
@@ -464,7 +475,7 @@ FIGURE 3.1: Simplified workflow in portfolio construction.
 <h2><span class="header-section-number">3.3</span> Machine Learning is no Magic Wand</h2>
 <p>By definition, the curse of predictions is that they rely on <strong>past</strong> data to infer patterns about <strong>subsequent</strong> fluctuations. The more or less explicit hope of any forecaster is that the past will turn out to be a good approximation of the future. Needless to say, this is a pious wish: in general, predictions fare badly. Surprisingly, this does not depend much on the sophistication of the econometric tool. In fact, heuristic guesses are often hard to beat.</p>
 <!--Hard to translate computer vision or textual ML into financial predictions. -->
-<p>To illustrate this sad truth, the baseline algorithms that we detail in chapters <a href="lasso.html#lasso">6</a> to <a href="NN.html#NN">8</a> yield at best mediocre results. This is done on purpose. This forces the reader to understand that blindly feeding data and parameters to a coded function will seldom suffice to reach satisfactory out-of-sample accuracy.</p>
+<p>To illustrate this sad truth, the baseline algorithms that we detail in chapters <a href="lasso.html#lasso">6</a> to <a href="NN.html#NN">8</a> yield at best mediocre results. This is done <strong>on purpose</strong>. This forces the reader to understand that blindly feeding data and parameters to a coded function will seldom suffice to reach satisfactory out-of-sample accuracy.</p>
 <p>Below, we sum up some key points that we have learned through our exploratory journey in financial ML.</p>
 <ul>
 <li>The first point is that <strong>causality</strong> is key. If one is able to identify <span class="math inline">\(X \rightarrow y\)</span>, where <span class="math inline">\(y\)</span> are expected returns, then the problem is solved. Unfortunately, causality is incredibly hard to uncover.<br />
@@ -473,9 +484,13 @@ FIGURE 3.1: Simplified workflow in portfolio construction.
 </li>
 <li>Relatedly, financial datasets are extremely noisy. It is a daunting task to <strong>extract signals</strong> out of them. <strong>No-arbitrage</strong> reasonings imply that if a simple pattern yielded durable profits, it would mechanically and rapidly vanish.<br />
 </li>
-<li>The no-free lunch theorem of <span class="citation">Wolpert (<a href="#ref-wolpert1992connection">1992</a><a href="#ref-wolpert1992connection">a</a>)</span> imposes that the analyst formulates views on the model. This is why economic or <strong>econometric framing</strong> is key. The assumptions and choices that are made regarding both the dependent variables and the explanatory features are decisive. As a corollary: data is key. The inputs given to the models are probably much more important than the choice of the model itself.</li>
-<li>to maximize out-of-sample efficiency, the right question is probably a paraphrase of Jeff Bezos: what’s not going to change? <strong>Persistent</strong> series are more likely to unveil enduring patterns.</li>
+<li>The no-free lunch theorem of <span class="citation">Wolpert (<a href="#ref-wolpert1992connection">1992</a><a href="#ref-wolpert1992connection">a</a>)</span> imposes that the analyst formulates views on the model. This is why economic or <strong>econometric framing</strong> is key. The assumptions and choices that are made regarding both the dependent variables and the explanatory features are decisive. As a corollary: data is key. The inputs given to the models are probably much more important than the choice of the model itself.<br />
+</li>
+<li>To maximize out-of-sample efficiency, the right question is probably a paraphrase of Jeff Bezos: what’s not going to change? <strong>Persistent</strong> series are more likely to unveil enduring patterns.<br />
+</li>
+<li>Everybody makes mistakes. Errors in loops or variable indexing are part of the journey.</li>
 </ul>
+<p>To conclude, we remind the reader of this obvious truth: nothing will ever replace <strong>practice</strong>. Gathering and cleaning data, coding backtests, tuning ML models, testing weighting schemes, making mistakes, starting all over again: these are all absolutely indispensable steps and tasks that must be repeated indefinitely. There is no sustitute to experience.</p>
 
 </div>
 </div>

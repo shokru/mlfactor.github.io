@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-23" />
+<meta name="date" content="2020-03-25" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -196,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
 </ul></li>
-<li class="part"><span><b>II Part II: Common algorithms</b></span></li>
+<li class="part"><span><b>II Part II: Common supervised algorithms</b></span></li>
 <li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
 <li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
 <li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#penreg"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
@@ -256,6 +256,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
 <li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
 <li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+<li class="chapter" data-level="8.4.3" data-path="NN.html"><a href="NN.html#custloss"><i class="fa fa-check"></i><b>8.4.3</b> Custom losses</a></li>
 </ul></li>
 <li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
 <li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
@@ -708,15 +709,15 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <a class="sourceLine" id="cb77-4" data-line-number="4">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)         <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb77-5" data-line-number="5">)</a>
 <a class="sourceLine" id="cb77-6" data-line-number="6"><span class="kw">summary</span>(model)                                 <span class="co"># Model architecture</span></a></code></pre></div>
-<pre><code>## Model: &quot;sequential_6&quot;
+<pre><code>## Model: &quot;sequential_7&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_21 (Dense)                        (None, 16)                          1504          
+## dense_24 (Dense)                        (None, 16)                          1504          
 ## __________________________________________________________________________________________
-## dense_22 (Dense)                        (None, 8)                           136           
+## dense_25 (Dense)                        (None, 8)                           136           
 ## __________________________________________________________________________________________
-## dense_23 (Dense)                        (None, 1)                           9             
+## dense_26 (Dense)                        (None, 1)                           9             
 ## ==========================================================================================
 ## Total params: 1,649
 ## Trainable params: 1,649
@@ -748,7 +749,7 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb80-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5453082</code></pre>
+<pre><code>## [1] 0.5449379</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -789,17 +790,17 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <a class="sourceLine" id="cb84-6" data-line-number="6">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;categorical_accuracy&#39;</span>)            <span class="co"># Output metric</span></a>
 <a class="sourceLine" id="cb84-7" data-line-number="7">)</a>
 <a class="sourceLine" id="cb84-8" data-line-number="8"><span class="kw">summary</span>(model_C)                                   <span class="co"># Model structure</span></a></code></pre></div>
-<pre><code>## Model: &quot;sequential_7&quot;
+<pre><code>## Model: &quot;sequential_8&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_24 (Dense)                        (None, 16)                          1504          
+## dense_27 (Dense)                        (None, 16)                          1504          
 ## __________________________________________________________________________________________
 ## dropout_1 (Dropout)                     (None, 16)                          0             
 ## __________________________________________________________________________________________
-## dense_25 (Dense)                        (None, 8)                           136           
+## dense_28 (Dense)                        (None, 8)                           136           
 ## __________________________________________________________________________________________
-## dense_26 (Dense)                        (None, 2)                           18            
+## dense_29 (Dense)                        (None, 2)                           18            
 ## ==========================================================================================
 ## Total params: 1,658
 ## Trainable params: 1,658
@@ -836,6 +837,45 @@ FIGURE 8.7: Output from a trained neural network (classification task) with earl
 <p>When datasets are large, the training can be long, especially when batch sizes are small and/or the number of epochs is high. It is not guaranteed that going to the full number of epochs is useful, as the loss or metric functions may be plateauing much sooner. Hence, it can be very convenient to stop the process if no improvement is achieved during a specified time frame. We set the number of epochs to 20, but the process will likely stop before that.</p>
 <p>In the above code, the improvement is focused on validation accuracy (“val_acc”; one alternative is “val_loss”). The min_delta value sets the minimum improvement that needs to be attained for the algorithm to continue. Therefore, unless the validation accuracy gains 0.001 points at each epoch, the training will stop. Nevertheless, some flexibility is introduced via the patience parameter, which in our case asserts that the hatling decision is made only after three consecutive epochs with no improvement. In the option, the verbose parameter dictates the amount of comments that is made by the function. For simplicity, we do not want any comments, hence this value is set to zero.</p>
 <p>In Figure <a href="NN.html#fig:NN3C">8.7</a>, the two graphs yield very different curves. One reason for that is the scale of the second graph. The range of accuracies is very narrow. Any change in this range does not represent much variation overall. The pattern is relatively clear on the training sample: the loss decreases while the accuracy improves. Unfortunately, this does not translate to the testing sample which indicates that the model does not generalize well out-of-sample.</p>
+</div>
+<div id="custloss" class="section level3">
+<h3><span class="header-section-number">8.4.3</span> Custom losses</h3>
+<p>In keras, it is possible to define user-specified loss functions. This may be interesting in some cases. For instance, the quadratic error has three terms <span class="math inline">\(y_i^2\)</span>, <span class="math inline">\(\tilde{y}_i^2\)</span> and <span class="math inline">\(-2y_i\tilde{y}_i\)</span>. In practice, it can make sense to focus on the latter term because it is the most essential: we do want predictions and realized values to have the same sign! Below we show how to optimize on this simple (product) function in keras. We start with a simple architecture.</p>
+
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">model_custom &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>()</a>
+<a class="sourceLine" id="cb87-2" data-line-number="2">model_custom <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># This defines the structure of the network, i.e. how layers are organized</span></a>
+<a class="sourceLine" id="cb87-3" data-line-number="3"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">16</span>, <span class="dt">activation =</span> <span class="st">&#39;relu&#39;</span>, <span class="dt">input_shape =</span> <span class="kw">ncol</span>(NN_train_features)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb87-4" data-line-number="4"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">8</span>, <span class="dt">activation =</span> <span class="st">&#39;sigmoid&#39;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb87-5" data-line-number="5"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>) <span class="co"># No activation means linear activation: f(x) = x.</span></a></code></pre></div>
+<p></p>
+<p>Then we code the loss function and integrate it to the model. The important trick is to resort to functions that are specific to the library (the k_<em>functions</em>). Instead to coding the product, we code the covariance between realized and predicted values. Since we week to maximize it, the loss is <em>minus</em> the covariance.</p>
+
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1">custom_loss &lt;-<span class="st"> </span><span class="cf">function</span>(y, f){   <span class="co"># Defines the loss</span></a>
+<a class="sourceLine" id="cb88-2" data-line-number="2">      <span class="kw">return</span>(<span class="op">-</span><span class="kw">k_sum</span>((y <span class="op">-</span><span class="st"> </span><span class="kw">k_mean</span>(y)) <span class="op">*</span><span class="st"> </span>(f <span class="op">-</span><span class="st"> </span><span class="kw">k_mean</span>(f))))</a>
+<a class="sourceLine" id="cb88-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb88-4" data-line-number="4">model_custom <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(                                                 <span class="co"># Model specification</span></a>
+<a class="sourceLine" id="cb88-5" data-line-number="5">    <span class="dt">loss =</span>  <span class="cf">function</span>(y_true, y_pred) <span class="kw">custom_loss</span>(y_true, y_pred),  <span class="co"># New loss function!</span></a>
+<a class="sourceLine" id="cb88-6" data-line-number="6">    <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),                               <span class="co"># Optim method </span></a>
+<a class="sourceLine" id="cb88-7" data-line-number="7">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)                             <span class="co"># Output metric</span></a>
+<a class="sourceLine" id="cb88-8" data-line-number="8">)</a></code></pre></div>
+<p></p>
+<p>Finally, we are ready to train and briefly evalute the performance of the model.</p>
+
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">fit_NN_cust &lt;-<span class="st"> </span>model_custom <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb89-2" data-line-number="2"><span class="st">    </span><span class="kw">fit</span>(NN_train_features,                                       <span class="co"># Training features</span></a>
+<a class="sourceLine" id="cb89-3" data-line-number="3">        NN_train_labels,                                         <span class="co"># Training labels</span></a>
+<a class="sourceLine" id="cb89-4" data-line-number="4">        <span class="dt">epochs =</span> <span class="dv">10</span>, <span class="dt">batch_size =</span> <span class="dv">512</span>,                           <span class="co"># Training parameters</span></a>
+<a class="sourceLine" id="cb89-5" data-line-number="5">        <span class="dt">validation_data =</span> <span class="kw">list</span>(NN_test_features, NN_test_labels) <span class="co"># Test data</span></a>
+<a class="sourceLine" id="cb89-6" data-line-number="6">) </a>
+<a class="sourceLine" id="cb89-7" data-line-number="7"><span class="kw">plot</span>(fit_NN_cust)   </a></code></pre></div>
+<p><img src="ML_factor_files/figure-html/NN2cust-1.png" width="672" /></p>
+<p></p>
+<p>Both curves go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns.</p>
+
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model_custom, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
+<pre><code>## [1] 0.4645055</code></pre>
+<p></p>
+<p>The outcome is incredibly underwhelming. There are possibly many reasons for that. One of them is arguably that the model should be dynamic and not static (see Chapter <a href="backtest.html#backtest">13</a>).</p>
 </div>
 </div>
 <div id="recurrent-networks" class="section level2">
@@ -883,53 +923,53 @@ In compact form, this gives
 <p>For simplicity and in order to reduce computation times, we will use the same subset of stocks as that from Section <a href="lasso.html#sparseex">6.2.2</a>. This yields a perfectly rectangular dataset in which all dates have the same number of observations.</p>
 <p>First, we create some new, intermediate variables.
 </p>
-<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb87-1" data-line-number="1">data_rnn &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Dedicated dataset</span></a>
-<a class="sourceLine" id="cb87-2" data-line-number="2"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">%in%</span><span class="st"> </span>stock_ids_short)</a>
-<a class="sourceLine" id="cb87-3" data-line-number="3">training_sample_rnn &lt;-<span class="st"> </span><span class="kw">filter</span>(data_rnn, date <span class="op">&lt;</span><span class="st"> </span>separation_date)</a>
-<a class="sourceLine" id="cb87-4" data-line-number="4">testing_sample_rnn &lt;-<span class="st"> </span><span class="kw">filter</span>(data_rnn, date <span class="op">&gt;</span><span class="st"> </span>separation_date)</a>
-<a class="sourceLine" id="cb87-5" data-line-number="5">nb_stocks &lt;-<span class="st"> </span><span class="kw">length</span>(stock_ids_short)                     <span class="co"># Nb stocks </span></a>
-<a class="sourceLine" id="cb87-6" data-line-number="6">nb_feats &lt;-<span class="st"> </span><span class="kw">length</span>(features)                             <span class="co"># Nb features</span></a>
-<a class="sourceLine" id="cb87-7" data-line-number="7">nb_dates_train &lt;-<span class="st"> </span><span class="kw">nrow</span>(training_sample) <span class="op">/</span><span class="st"> </span>nb_stocks      <span class="co"># Nb training dates (size of sample)</span></a>
-<a class="sourceLine" id="cb87-8" data-line-number="8">nb_dates_test &lt;-<span class="st"> </span><span class="kw">nrow</span>(testing_sample) <span class="op">/</span><span class="st"> </span>nb_stocks        <span class="co"># Nb testing dates</span></a></code></pre></div>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">data_rnn &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                  </span><span class="co"># Dedicated dataset</span></a>
+<a class="sourceLine" id="cb92-2" data-line-number="2"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">%in%</span><span class="st"> </span>stock_ids_short)</a>
+<a class="sourceLine" id="cb92-3" data-line-number="3">training_sample_rnn &lt;-<span class="st"> </span><span class="kw">filter</span>(data_rnn, date <span class="op">&lt;</span><span class="st"> </span>separation_date)</a>
+<a class="sourceLine" id="cb92-4" data-line-number="4">testing_sample_rnn &lt;-<span class="st"> </span><span class="kw">filter</span>(data_rnn, date <span class="op">&gt;</span><span class="st"> </span>separation_date)</a>
+<a class="sourceLine" id="cb92-5" data-line-number="5">nb_stocks &lt;-<span class="st"> </span><span class="kw">length</span>(stock_ids_short)                     <span class="co"># Nb stocks </span></a>
+<a class="sourceLine" id="cb92-6" data-line-number="6">nb_feats &lt;-<span class="st"> </span><span class="kw">length</span>(features)                             <span class="co"># Nb features</span></a>
+<a class="sourceLine" id="cb92-7" data-line-number="7">nb_dates_train &lt;-<span class="st"> </span><span class="kw">nrow</span>(training_sample) <span class="op">/</span><span class="st"> </span>nb_stocks      <span class="co"># Nb training dates (size of sample)</span></a>
+<a class="sourceLine" id="cb92-8" data-line-number="8">nb_dates_test &lt;-<span class="st"> </span><span class="kw">nrow</span>(testing_sample) <span class="op">/</span><span class="st"> </span>nb_stocks        <span class="co"># Nb testing dates</span></a></code></pre></div>
 <p></p>
 <p>Then, we construct the variables we will pass as arguments. We recall that the data file was ordered first by stocks and then by date (see Section <a href="notdata.html#dataset">2.2</a>).
 </p>
-<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb88-1" data-line-number="1">train_features_rnn &lt;-<span class="st"> </span><span class="kw">array</span>(NN_train_features,           <span class="co"># Formats the training data into array</span></a>
-<a class="sourceLine" id="cb88-2" data-line-number="2">                            <span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_train, nb_stocks, nb_feats)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Tricky order</span></a>
-<a class="sourceLine" id="cb88-3" data-line-number="3"><span class="st">    </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))                                      <span class="co"># The order is: stock, date, feature </span></a>
-<a class="sourceLine" id="cb88-4" data-line-number="4">test_features_rnn &lt;-<span class="st"> </span><span class="kw">array</span>(NN_test_features,             <span class="co"># Formats the testing data into array</span></a>
-<a class="sourceLine" id="cb88-5" data-line-number="5">                            <span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_test, nb_stocks, nb_feats)) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Tricky order</span></a>
-<a class="sourceLine" id="cb88-6" data-line-number="6"><span class="st">    </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))                                      <span class="co"># The order is: stock, date, feature </span></a>
-<a class="sourceLine" id="cb88-7" data-line-number="7">train_labels_rnn &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(NN_train_labels) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb88-8" data-line-number="8"><span class="st">    </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_train, nb_stocks, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))</a>
-<a class="sourceLine" id="cb88-9" data-line-number="9">test_labels_rnn &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(NN_test_labels) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb88-10" data-line-number="10"><span class="st">    </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_test, nb_stocks, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb93-1" data-line-number="1">train_features_rnn &lt;-<span class="st"> </span><span class="kw">array</span>(NN_train_features,           <span class="co"># Formats the training data into array</span></a>
+<a class="sourceLine" id="cb93-2" data-line-number="2">                            <span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_train, nb_stocks, nb_feats)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Tricky order</span></a>
+<a class="sourceLine" id="cb93-3" data-line-number="3"><span class="st">    </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))                                      <span class="co"># The order is: stock, date, feature </span></a>
+<a class="sourceLine" id="cb93-4" data-line-number="4">test_features_rnn &lt;-<span class="st"> </span><span class="kw">array</span>(NN_test_features,             <span class="co"># Formats the testing data into array</span></a>
+<a class="sourceLine" id="cb93-5" data-line-number="5">                            <span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_test, nb_stocks, nb_feats)) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Tricky order</span></a>
+<a class="sourceLine" id="cb93-6" data-line-number="6"><span class="st">    </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))                                      <span class="co"># The order is: stock, date, feature </span></a>
+<a class="sourceLine" id="cb93-7" data-line-number="7">train_labels_rnn &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(NN_train_labels) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb93-8" data-line-number="8"><span class="st">    </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_train, nb_stocks, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))</a>
+<a class="sourceLine" id="cb93-9" data-line-number="9">test_labels_rnn &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(NN_test_labels) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb93-10" data-line-number="10"><span class="st">    </span><span class="kw">array</span>(<span class="dt">dim =</span> <span class="kw">c</span>(nb_dates_test, nb_stocks, <span class="dv">1</span>)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">aperm</span>(<span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">3</span>))</a></code></pre></div>
 <p></p>
 <p>Finally, we move towards the training part. For simplicity, we only consider a simple RNN with only one layer. The structure is outlined below. In terms of recurrence structure, we pick a Gated Recurrent Unit.</p>
 
-<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb89-1" data-line-number="1">model_RNN &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb89-2" data-line-number="2"><span class="st">    </span><span class="kw">layer_gru</span>(<span class="dt">units =</span> <span class="dv">16</span>,                              <span class="co"># Nb units in hidden layer</span></a>
-<a class="sourceLine" id="cb89-3" data-line-number="3">              <span class="dt">batch_input_shape =</span> <span class="kw">c</span>(nb_stocks,         <span class="co"># Dimensions = tricky part!</span></a>
-<a class="sourceLine" id="cb89-4" data-line-number="4">                                    nb_dates_train, </a>
-<a class="sourceLine" id="cb89-5" data-line-number="5">                                    nb_feats), </a>
-<a class="sourceLine" id="cb89-6" data-line-number="6">              <span class="dt">activation =</span> <span class="st">&#39;tanh&#39;</span>,                     <span class="co"># Activation function</span></a>
-<a class="sourceLine" id="cb89-7" data-line-number="7">              <span class="dt">return_sequences =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Return all the sequence</span></a>
-<a class="sourceLine" id="cb89-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>)                             <span class="co"># Final aggregation layer</span></a>
-<a class="sourceLine" id="cb89-9" data-line-number="9">model_RNN <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(</a>
-<a class="sourceLine" id="cb89-10" data-line-number="10">    <span class="dt">loss =</span> <span class="st">&#39;mean_squared_error&#39;</span>,                       <span class="co"># Loss = quadratic</span></a>
-<a class="sourceLine" id="cb89-11" data-line-number="11">    <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),                   <span class="co"># Backprop</span></a>
-<a class="sourceLine" id="cb89-12" data-line-number="12">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)                 <span class="co"># Output metric MAE</span></a>
-<a class="sourceLine" id="cb89-13" data-line-number="13">)</a></code></pre></div>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb94-1" data-line-number="1">model_RNN &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb94-2" data-line-number="2"><span class="st">    </span><span class="kw">layer_gru</span>(<span class="dt">units =</span> <span class="dv">16</span>,                              <span class="co"># Nb units in hidden layer</span></a>
+<a class="sourceLine" id="cb94-3" data-line-number="3">              <span class="dt">batch_input_shape =</span> <span class="kw">c</span>(nb_stocks,         <span class="co"># Dimensions = tricky part!</span></a>
+<a class="sourceLine" id="cb94-4" data-line-number="4">                                    nb_dates_train, </a>
+<a class="sourceLine" id="cb94-5" data-line-number="5">                                    nb_feats), </a>
+<a class="sourceLine" id="cb94-6" data-line-number="6">              <span class="dt">activation =</span> <span class="st">&#39;tanh&#39;</span>,                     <span class="co"># Activation function</span></a>
+<a class="sourceLine" id="cb94-7" data-line-number="7">              <span class="dt">return_sequences =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Return all the sequence</span></a>
+<a class="sourceLine" id="cb94-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>)                             <span class="co"># Final aggregation layer</span></a>
+<a class="sourceLine" id="cb94-9" data-line-number="9">model_RNN <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(</a>
+<a class="sourceLine" id="cb94-10" data-line-number="10">    <span class="dt">loss =</span> <span class="st">&#39;mean_squared_error&#39;</span>,                       <span class="co"># Loss = quadratic</span></a>
+<a class="sourceLine" id="cb94-11" data-line-number="11">    <span class="dt">optimizer =</span> <span class="kw">optimizer_rmsprop</span>(),                   <span class="co"># Backprop</span></a>
+<a class="sourceLine" id="cb94-12" data-line-number="12">    <span class="dt">metrics =</span> <span class="kw">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)                 <span class="co"># Output metric MAE</span></a>
+<a class="sourceLine" id="cb94-13" data-line-number="13">)</a></code></pre></div>
 <p></p>
 <p>There are many options available for recurrent layers. For GRUs, we refer to the keras documentation <a href="https://keras.rstudio.com/reference/layer_gru.html" class="uri">https://keras.rstudio.com/reference/layer_gru.html</a>. We comment briefly on the option return_sequences which we activate. In many cases, the output is simply the terminal value of the sequence. If we do not require all of the sequence to be returned, we will face a problem in the dimensionality because the label is indeed a full sequence.
 Once the structure is determined, we can move forward to the training stage.</p>
 
-<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb90-1" data-line-number="1">fit_RNN &lt;-<span class="st"> </span>model_RNN <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(train_features_rnn,   <span class="co"># Training features        </span></a>
-<a class="sourceLine" id="cb90-2" data-line-number="2">                  train_labels_rnn,                <span class="co"># Training labels</span></a>
-<a class="sourceLine" id="cb90-3" data-line-number="3">                  <span class="dt">epochs =</span> <span class="dv">10</span>,                     <span class="co"># Number of rounds</span></a>
-<a class="sourceLine" id="cb90-4" data-line-number="4">                  <span class="dt">batch_size =</span> nb_stocks,          <span class="co"># Length of sequences</span></a>
-<a class="sourceLine" id="cb90-5" data-line-number="5">                  <span class="dt">verbose =</span> <span class="dv">0</span>)                     <span class="co"># No comments</span></a>
-<a class="sourceLine" id="cb90-6" data-line-number="6"><span class="kw">plot</span>(fit_RNN)</a></code></pre></div>
+<div class="sourceCode" id="cb95"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb95-1" data-line-number="1">fit_RNN &lt;-<span class="st"> </span>model_RNN <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">fit</span>(train_features_rnn,   <span class="co"># Training features        </span></a>
+<a class="sourceLine" id="cb95-2" data-line-number="2">                  train_labels_rnn,                <span class="co"># Training labels</span></a>
+<a class="sourceLine" id="cb95-3" data-line-number="3">                  <span class="dt">epochs =</span> <span class="dv">10</span>,                     <span class="co"># Number of rounds</span></a>
+<a class="sourceLine" id="cb95-4" data-line-number="4">                  <span class="dt">batch_size =</span> nb_stocks,          <span class="co"># Length of sequences</span></a>
+<a class="sourceLine" id="cb95-5" data-line-number="5">                  <span class="dt">verbose =</span> <span class="dv">0</span>)                     <span class="co"># No comments</span></a>
+<a class="sourceLine" id="cb95-6" data-line-number="6"><span class="kw">plot</span>(fit_RNN)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:RNN2"></span>
 <img src="ML_factor_files/figure-html/RNN2-1.png" alt="Output from a trained recurrent neural network (regression task)." width="300px" />
 <p class="caption">
@@ -939,21 +979,21 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task).
 <p></p>
 <p>Compared to our previous models, the major difference both in the ouptut (the graph on Figure <a href="NN.html#fig:RNN2">8.9</a>) and the input (the code) is the absence of validation (or testing) data. One reason for that is because keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.</p>
 
-<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1">new_model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb91-2" data-line-number="2"><span class="st">    </span><span class="kw">layer_gru</span>(<span class="dt">units =</span> <span class="dv">16</span>, </a>
-<a class="sourceLine" id="cb91-3" data-line-number="3">              <span class="dt">batch_input_shape =</span> <span class="kw">c</span>(nb_stocks,          <span class="co"># New dimensions</span></a>
-<a class="sourceLine" id="cb91-4" data-line-number="4">                                    nb_dates_test, </a>
-<a class="sourceLine" id="cb91-5" data-line-number="5">                                    nb_feats), </a>
-<a class="sourceLine" id="cb91-6" data-line-number="6">              <span class="dt">activation =</span> <span class="st">&#39;tanh&#39;</span>,                      <span class="co"># Activation function</span></a>
-<a class="sourceLine" id="cb91-7" data-line-number="7">              <span class="dt">return_sequences =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Passing last state to next batch</span></a>
-<a class="sourceLine" id="cb91-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>)                              <span class="co"># Output dimension</span></a>
-<a class="sourceLine" id="cb91-9" data-line-number="9">new_model <span class="op">%&gt;%</span><span class="st"> </span>keras<span class="op">::</span><span class="kw">set_weights</span>(keras<span class="op">::</span><span class="kw">get_weights</span>(model_RNN))</a></code></pre></div>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb96-1" data-line-number="1">new_model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb96-2" data-line-number="2"><span class="st">    </span><span class="kw">layer_gru</span>(<span class="dt">units =</span> <span class="dv">16</span>, </a>
+<a class="sourceLine" id="cb96-3" data-line-number="3">              <span class="dt">batch_input_shape =</span> <span class="kw">c</span>(nb_stocks,          <span class="co"># New dimensions</span></a>
+<a class="sourceLine" id="cb96-4" data-line-number="4">                                    nb_dates_test, </a>
+<a class="sourceLine" id="cb96-5" data-line-number="5">                                    nb_feats), </a>
+<a class="sourceLine" id="cb96-6" data-line-number="6">              <span class="dt">activation =</span> <span class="st">&#39;tanh&#39;</span>,                      <span class="co"># Activation function</span></a>
+<a class="sourceLine" id="cb96-7" data-line-number="7">              <span class="dt">return_sequences =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st">              </span><span class="co"># Passing last state to next batch</span></a>
+<a class="sourceLine" id="cb96-8" data-line-number="8"><span class="st">    </span><span class="kw">layer_dense</span>(<span class="dt">units =</span> <span class="dv">1</span>)                              <span class="co"># Output dimension</span></a>
+<a class="sourceLine" id="cb96-9" data-line-number="9">new_model <span class="op">%&gt;%</span><span class="st"> </span>keras<span class="op">::</span><span class="kw">set_weights</span>(keras<span class="op">::</span><span class="kw">get_weights</span>(model_RNN))</a></code></pre></div>
 <p></p>
 <p>Finally, once the new model is ready - and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.</p>
 
-<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb92-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
-<a class="sourceLine" id="cb92-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4981514</code></pre>
+<div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
+<a class="sourceLine" id="cb97-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
+<pre><code>## [1] 0.4967041</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 </div>
