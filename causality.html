@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-25" />
+<meta name="date" content="2020-03-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -350,9 +350,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>IV Part IV: Further important topics</b></span></li>
 <li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
 <li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
-<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
-<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
-<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#simple-models-as-surrogates."><i class="fa fa-check"></i><b>14.1.1</b> Simple models as surrogates.</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.3</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.4" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.4</b> Partial dependence plot</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
@@ -460,18 +461,18 @@ where for simplicity, it is assumed that both processes have zero mean. The usua
 <p>Statistically, under the null hypothesis, <span class="math inline">\(b_1=\dots=b_m=0\)</span> (<em>resp.</em> <span class="math inline">\(c_1=\dots=c_m=0\)</span>), which can be tested using the usual Fischer distribution. Obviously, the linear restriction can be dismissed but the tests are then much more complex. The main financial article in this direction is <span class="citation">Hiemstra and Jones (<a href="#ref-hiemstra1994testing">1994</a>)</span>.</p>
 <p>There are many R packages that embed Granger causality functionalities. One of the most widespread is <em>lmtest</em> so we work with it below. The syntax is incredibly simple. The <em>order</em> is the maximum lag <span class="math inline">\(m\)</span> in the above equation. We test if market capitalization averaged over the past 6 months Granger-causes 1 month ahead returns for one particular stock (the first in the sample).</p>
 
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb196-1" data-line-number="1"><span class="kw">library</span>(lmtest)</a>
-<a class="sourceLine" id="cb196-2" data-line-number="2">x_granger &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># X variable =...</span></a>
-<a class="sourceLine" id="cb196-3" data-line-number="3"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># ... stock nb 1</span></a>
-<a class="sourceLine" id="cb196-4" data-line-number="4"><span class="st">    </span><span class="kw">pull</span>(Mkt_Cap_6M_Usd)         <span class="co"># ... &amp; Market cap</span></a>
-<a class="sourceLine" id="cb196-5" data-line-number="5">y_granger &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Y variable = ...</span></a>
-<a class="sourceLine" id="cb196-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># ... stock nb 1</span></a>
-<a class="sourceLine" id="cb196-7" data-line-number="7"><span class="st">    </span><span class="kw">pull</span>(R1M_Usd)                <span class="co"># ... &amp; 1M return</span></a>
-<a class="sourceLine" id="cb196-8" data-line-number="8">fit_granger &lt;-<span class="st"> </span><span class="kw">grangertest</span>(x_granger,                       <span class="co"># X variable</span></a>
-<a class="sourceLine" id="cb196-9" data-line-number="9">                           y_granger,                       <span class="co"># Y variable</span></a>
-<a class="sourceLine" id="cb196-10" data-line-number="10">                           <span class="dt">order =</span> <span class="dv">6</span>,                       <span class="co"># Maximmum lag</span></a>
-<a class="sourceLine" id="cb196-11" data-line-number="11">                           <span class="dt">na.action =</span> na.omit)             <span class="co"># What to do with missing data</span></a>
-<a class="sourceLine" id="cb196-12" data-line-number="12">fit_granger</a></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb197-1" data-line-number="1"><span class="kw">library</span>(lmtest)</a>
+<a class="sourceLine" id="cb197-2" data-line-number="2">x_granger &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># X variable =...</span></a>
+<a class="sourceLine" id="cb197-3" data-line-number="3"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># ... stock nb 1</span></a>
+<a class="sourceLine" id="cb197-4" data-line-number="4"><span class="st">    </span><span class="kw">pull</span>(Mkt_Cap_6M_Usd)         <span class="co"># ... &amp; Market cap</span></a>
+<a class="sourceLine" id="cb197-5" data-line-number="5">y_granger &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Y variable = ...</span></a>
+<a class="sourceLine" id="cb197-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="dv">1</span>) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># ... stock nb 1</span></a>
+<a class="sourceLine" id="cb197-7" data-line-number="7"><span class="st">    </span><span class="kw">pull</span>(R1M_Usd)                <span class="co"># ... &amp; 1M return</span></a>
+<a class="sourceLine" id="cb197-8" data-line-number="8">fit_granger &lt;-<span class="st"> </span><span class="kw">grangertest</span>(x_granger,                       <span class="co"># X variable</span></a>
+<a class="sourceLine" id="cb197-9" data-line-number="9">                           y_granger,                       <span class="co"># Y variable</span></a>
+<a class="sourceLine" id="cb197-10" data-line-number="10">                           <span class="dt">order =</span> <span class="dv">6</span>,                       <span class="co"># Maximmum lag</span></a>
+<a class="sourceLine" id="cb197-11" data-line-number="11">                           <span class="dt">na.action =</span> na.omit)             <span class="co"># What to do with missing data</span></a>
+<a class="sourceLine" id="cb197-12" data-line-number="12">fit_granger</a></code></pre></div>
 <pre><code>## Granger causality test
 ## 
 ## Model 1: y_granger ~ Lags(y_granger, 1:6) + Lags(x_granger, 1:6)
@@ -531,10 +532,10 @@ X_j=\sum_{k\in \text{pa}_D(j)}f_{j,k}\left(\textbf{X}_{k}  \right)+\epsilon_j,
 <p>where the nonlinear effect of each variable is cumulative, hence the term ‘<em>additive</em>’. Note that there is no time index there. In contrast to Granger causality, there is no natural ordering. Such models are very complex and hard to estimate. The details can be found in <span class="citation">Bühlmann et al. (<a href="#ref-buhlmann2014cam">2014</a>)</span>. Fortunately, the authors have developed an R package that determines the DAG <span class="math inline">\(D\)</span>.</p>
 <p>Below, we build the adjacency matrix pertaining to the small set of predictor variables plus the 1 month ahead return (on the training sample). We use the <em>CAM</em> package which has a very simple syntax.<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a></p>
 
-<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb198-1" data-line-number="1"><span class="kw">library</span>(CAM)                <span class="co"># Activate the package</span></a>
-<a class="sourceLine" id="cb198-2" data-line-number="2">data_caus &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;R1M_Usd&quot;</span>, features_short))</a>
-<a class="sourceLine" id="cb198-3" data-line-number="3">fit_cam &lt;-<span class="st"> </span><span class="kw">CAM</span>(data_caus)   <span class="co"># The main function</span></a>
-<a class="sourceLine" id="cb198-4" data-line-number="4">fit_cam<span class="op">$</span>Adj                 <span class="co"># Showing the adjacency matrix</span></a></code></pre></div>
+<div class="sourceCode" id="cb199"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb199-1" data-line-number="1"><span class="kw">library</span>(CAM)                <span class="co"># Activate the package</span></a>
+<a class="sourceLine" id="cb199-2" data-line-number="2">data_caus &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;R1M_Usd&quot;</span>, features_short))</a>
+<a class="sourceLine" id="cb199-3" data-line-number="3">fit_cam &lt;-<span class="st"> </span><span class="kw">CAM</span>(data_caus)   <span class="co"># The main function</span></a>
+<a class="sourceLine" id="cb199-4" data-line-number="4">fit_cam<span class="op">$</span>Adj                 <span class="co"># Showing the adjacency matrix</span></a></code></pre></div>
 <pre><code>## 8 x 8 sparse Matrix of class &quot;dgCMatrix&quot;
 ##                     
 ## [1,] . 1 1 1 1 1 1 1
@@ -549,12 +550,12 @@ X_j=\sum_{k\in \text{pa}_D(j)}f_{j,k}\left(\textbf{X}_{k}  \right)+\epsilon_j,
 <p>The matrix is not too sparse, which means that a the model has uncovered many relationships between the variables within the sample. Sadly, none are in the direction that are of interest for the prediction task that we seek. Indeed, the first variable is the one we want to predict and its column is empty. However, its row is full, which indicates the reverse effect: future returns cause the predictors values, which may seem rather counter-intuitive, given the nature of features.</p>
 <p>For the sake of completeness, we also provide an implementation of the <em>pcalg</em> package (<span class="citation">Kalisch et al. (<a href="#ref-kalisch2012causal">2012</a>)</span>).<a href="#fn26" class="footnote-ref" id="fnref26"><sup>26</sup></a> Below, an estimation via the so-called PC (named after its authors <strong>P</strong>eter Spirtes and <strong>C</strong>lark Glymour) is performed. The details of the algorithm is out of the scope of the book and the interested reader can have a look at Section 5.4 of <span class="citation">Spirtes et al. (<a href="#ref-spirtes2000causation">2000</a>)</span> or Section 2 from <span class="citation">Kalisch et al. (<a href="#ref-kalisch2012causal">2012</a>)</span> for more information on this subject. We use the <em>Rgraphviz</em> package available at <a href="https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html" class="uri">https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html</a>.</p>
 
-<div class="sourceCode" id="cb200"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb200-1" data-line-number="1"><span class="kw">library</span>(pcalg)                                             <span class="co"># Load packages</span></a>
-<a class="sourceLine" id="cb200-2" data-line-number="2"><span class="kw">library</span>(Rgraphviz)</a>
-<a class="sourceLine" id="cb200-3" data-line-number="3">est_caus &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">C =</span> <span class="kw">cor</span>(data_caus),  <span class="dt">n =</span> <span class="kw">nrow</span>(data_caus)) <span class="co"># Compute correlations</span></a>
-<a class="sourceLine" id="cb200-4" data-line-number="4">pc.fit &lt;-<span class="st"> </span><span class="kw">pc</span>(est_caus, <span class="dt">indepTest =</span> gaussCItest,            <span class="co"># Estimate model</span></a>
-<a class="sourceLine" id="cb200-5" data-line-number="5">             <span class="dt">p =</span> <span class="kw">ncol</span>(data_caus),<span class="dt">alpha =</span> <span class="fl">0.01</span>)</a>
-<a class="sourceLine" id="cb200-6" data-line-number="6"><span class="kw">iplotPC</span>(pc.fit)                                            <span class="co"># Plot model</span></a></code></pre></div>
+<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1"><span class="kw">library</span>(pcalg)                                             <span class="co"># Load packages</span></a>
+<a class="sourceLine" id="cb201-2" data-line-number="2"><span class="kw">library</span>(Rgraphviz)</a>
+<a class="sourceLine" id="cb201-3" data-line-number="3">est_caus &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">C =</span> <span class="kw">cor</span>(data_caus),  <span class="dt">n =</span> <span class="kw">nrow</span>(data_caus)) <span class="co"># Compute correlations</span></a>
+<a class="sourceLine" id="cb201-4" data-line-number="4">pc.fit &lt;-<span class="st"> </span><span class="kw">pc</span>(est_caus, <span class="dt">indepTest =</span> gaussCItest,            <span class="co"># Estimate model</span></a>
+<a class="sourceLine" id="cb201-5" data-line-number="5">             <span class="dt">p =</span> <span class="kw">ncol</span>(data_caus),<span class="dt">alpha =</span> <span class="fl">0.01</span>)</a>
+<a class="sourceLine" id="cb201-6" data-line-number="6"><span class="kw">iplotPC</span>(pc.fit)                                            <span class="co"># Plot model</span></a></code></pre></div>
 <div class="figure"><span id="fig:pcalg"></span>
 <img src="ML_factor_files/figure-html/pcalg-1.png" alt="Representation of a directed graph." width="624" />
 <p class="caption">
@@ -575,14 +576,14 @@ y_t&amp;=\textbf{Z}_t&#39;\boldsymbol{\alpha}_t+\epsilon_t \\
 <p>The goal of <span class="citation">Brodersen et al. (<a href="#ref-brodersen2015inferring">2015</a>)</span> is to detect causal impacts via regime changes. They estimate the above model over a given training period and then predict the model’s response on some test set. If the aggregate (summed/integrated) error between the realized versus predicted values is significant (based on some statistical test), then the authors conclude that the breaking point is relevant. Originally, the aim of the approach is to quantify the effect of an intervention by looking at how a model trained before the intervention behaves after the intervention.</p>
 <p>Below, we test if the 100<span class="math inline">\(^{th}\)</span> date point in the sample (April 2008) is a turning point. Arguably, this date belongs to the time span of the subprime financial crisis. We use the <em>CausalImpact</em> package which uses the <em>bsts</em> library (Bayesian structural time series).</p>
 
-<div class="sourceCode" id="cb201"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb201-1" data-line-number="1"><span class="kw">library</span>(CausalImpact)</a>
-<a class="sourceLine" id="cb201-2" data-line-number="2">stock1_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)          <span class="co"># Data of first stock</span></a>
-<a class="sourceLine" id="cb201-3" data-line-number="3">struct_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y =</span> stock1_data<span class="op">$</span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Combine label...</span></a>
-<a class="sourceLine" id="cb201-4" data-line-number="4"><span class="st">    </span><span class="kw">cbind</span>(stock1_data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short))  <span class="co"># ... and features</span></a>
-<a class="sourceLine" id="cb201-5" data-line-number="5">pre.period &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">100</span>)                                    <span class="co"># Pre-break period (pre-2008)</span></a>
-<a class="sourceLine" id="cb201-6" data-line-number="6">post.period &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">101</span>,<span class="dv">200</span>)                                 <span class="co"># Post-break period</span></a>
-<a class="sourceLine" id="cb201-7" data-line-number="7">impact &lt;-<span class="st"> </span><span class="kw">CausalImpact</span>(<span class="kw">zoo</span>(struct_data), pre.period, post.period)</a>
-<a class="sourceLine" id="cb201-8" data-line-number="8"><span class="kw">summary</span>(impact)</a></code></pre></div>
+<div class="sourceCode" id="cb202"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb202-1" data-line-number="1"><span class="kw">library</span>(CausalImpact)</a>
+<a class="sourceLine" id="cb202-2" data-line-number="2">stock1_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(stock_id <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)          <span class="co"># Data of first stock</span></a>
+<a class="sourceLine" id="cb202-3" data-line-number="3">struct_data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">y =</span> stock1_data<span class="op">$</span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Combine label...</span></a>
+<a class="sourceLine" id="cb202-4" data-line-number="4"><span class="st">    </span><span class="kw">cbind</span>(stock1_data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short))  <span class="co"># ... and features</span></a>
+<a class="sourceLine" id="cb202-5" data-line-number="5">pre.period &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">100</span>)                                    <span class="co"># Pre-break period (pre-2008)</span></a>
+<a class="sourceLine" id="cb202-6" data-line-number="6">post.period &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">101</span>,<span class="dv">200</span>)                                 <span class="co"># Post-break period</span></a>
+<a class="sourceLine" id="cb202-7" data-line-number="7">impact &lt;-<span class="st"> </span><span class="kw">CausalImpact</span>(<span class="kw">zoo</span>(struct_data), pre.period, post.period)</a>
+<a class="sourceLine" id="cb202-8" data-line-number="8"><span class="kw">summary</span>(impact)</a></code></pre></div>
 <pre><code>## Posterior inference {CausalImpact}
 ## 
 ##                          Average           Cumulative     
@@ -600,8 +601,8 @@ y_t&amp;=\textbf{Z}_t&#39;\boldsymbol{\alpha}_t+\epsilon_t \\
 ## Posterior prob. of a causal effect:  82%
 ## 
 ## For more details, type: summary(impact, &quot;report&quot;)</code></pre>
-<div class="sourceCode" id="cb203"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb203-1" data-line-number="1"><span class="co">#summary(impact, &quot;report&quot;)                                # Get the full report (see below)</span></a>
-<a class="sourceLine" id="cb203-2" data-line-number="2"><span class="kw">plot</span>(impact)</a></code></pre></div>
+<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" data-line-number="1"><span class="co">#summary(impact, &quot;report&quot;)                                # Get the full report (see below)</span></a>
+<a class="sourceLine" id="cb204-2" data-line-number="2"><span class="kw">plot</span>(impact)</a></code></pre></div>
 <p><img src="ML_factor_files/figure-html/structbay-1.png" width="672" /></p>
 <p></p>
 <p>Below, we copy-paste the report generated by the function (obtained by the commented line in the above code). The conclusions do not support a marked effect of the crisis on the model probably because the signs of the error in the post period constantly change sign..</p>
@@ -638,11 +639,11 @@ In matrix terms, <span class="math inline">\(L=(\textbf{y}-\textbf{Xb})&#39;\tex
 <p>Stationarity is a key notion in financial econometrics: it is much easier to characterize a phenomenon with distributional properties that remain the same through time (this makes them possible to capture). Sadly, the distribution of returns is not stationary: both the mean and the variance of returns change along cycles.</p>
 <p>Below, we illustrate this fact by computing the average monthly return for all calendar years in the whole dataset.</p>
 
-<div class="sourceCode" id="cb204"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb204-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb204-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">          </span><span class="co"># Create a year variable</span></a>
-<a class="sourceLine" id="cb204-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Group by year</span></a>
-<a class="sourceLine" id="cb204-4" data-line-number="4"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">avg_ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Compute average return</span></a>
-<a class="sourceLine" id="cb204-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_ret)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb205-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">          </span><span class="co"># Create a year variable</span></a>
+<a class="sourceLine" id="cb205-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Group by year</span></a>
+<a class="sourceLine" id="cb205-4" data-line-number="4"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">avg_ret =</span> <span class="kw">mean</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Compute average return</span></a>
+<a class="sourceLine" id="cb205-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_ret)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:statplot"></span>
 <img src="ML_factor_files/figure-html/statplot-1.png" alt="Average monthly return on a yearly basis." width="350px" />
 <p class="caption">
@@ -653,16 +654,16 @@ FIGURE 15.3: Average monthly return on a yearly basis.
 <p>These changes in the mean are also accompanied by variations in the second moment (variance/volatility). This effect, known as volatility clustering has been widely documented ever since the theoretical breakthrough of <span class="citation">Engle (<a href="#ref-engle1982autoregressive">1982</a>)</span> (and even well before). We refer for instance to <span class="citation">Cont (<a href="#ref-cont2007volatility">2007</a>)</span> for more details on this topic. For the computation of realized volatility in R, we strongly recommend Chapter 4 in <span class="citation">Regenstein (<a href="#ref-regenstein2018reproducible">2018</a>)</span>.</p>
 <p>In terms of machine learning models, this is also true. Below, we estimate a pure characteristic regression with one predictor, the market capitalization averaged over the past 6 months (<span class="math inline">\(r_{t+1,n}=\alpha+\beta x_{t,n}^{\text{cap}}+\epsilon_{t+1,n}\)</span>). The label is the 6 month forward return and the estimation is performed over every calendar year.</p>
 
-<div class="sourceCode" id="cb205"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb205-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb205-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Create a year variable</span></a>
-<a class="sourceLine" id="cb205-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># Group by year</span></a>
-<a class="sourceLine" id="cb205-4" data-line-number="4"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">beta_cap =</span> <span class="kw">lm</span>(R6M_Usd <span class="op">~</span><span class="st"> </span>Mkt_Cap_6M_Usd) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Perform regression</span></a>
-<a class="sourceLine" id="cb205-5" data-line-number="5"><span class="st">                  </span><span class="kw">coef</span>() <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Extract coefs</span></a>
-<a class="sourceLine" id="cb205-6" data-line-number="6"><span class="st">                  </span><span class="kw">t</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Transpose</span></a>
-<a class="sourceLine" id="cb205-7" data-line-number="7"><span class="st">                  </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Format into df</span></a>
-<a class="sourceLine" id="cb205-8" data-line-number="8"><span class="st">                  </span><span class="kw">pull</span>(Mkt_Cap_6M_Usd)) <span class="op">%&gt;%</span><span class="st">                 </span><span class="co"># Pull coef (remove intercept)</span></a>
-<a class="sourceLine" id="cb205-9" data-line-number="9"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> beta_cap)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st">      </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb205-10" data-line-number="10"><span class="st">    </span><span class="kw">theme_grey</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb206"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb206-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb206-2" data-line-number="2"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">year =</span> <span class="kw">year</span>(date)) <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Create a year variable</span></a>
+<a class="sourceLine" id="cb206-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(year) <span class="op">%&gt;%</span><span class="st">                                      </span><span class="co"># Group by year</span></a>
+<a class="sourceLine" id="cb206-4" data-line-number="4"><span class="st">    </span><span class="kw">summarize</span>(<span class="dt">beta_cap =</span> <span class="kw">lm</span>(R6M_Usd <span class="op">~</span><span class="st"> </span>Mkt_Cap_6M_Usd) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Perform regression</span></a>
+<a class="sourceLine" id="cb206-5" data-line-number="5"><span class="st">                  </span><span class="kw">coef</span>() <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Extract coefs</span></a>
+<a class="sourceLine" id="cb206-6" data-line-number="6"><span class="st">                  </span><span class="kw">t</span>() <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Transpose</span></a>
+<a class="sourceLine" id="cb206-7" data-line-number="7"><span class="st">                  </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Format into df</span></a>
+<a class="sourceLine" id="cb206-8" data-line-number="8"><span class="st">                  </span><span class="kw">pull</span>(Mkt_Cap_6M_Usd)) <span class="op">%&gt;%</span><span class="st">                 </span><span class="co"># Pull coef (remove intercept)</span></a>
+<a class="sourceLine" id="cb206-9" data-line-number="9"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> beta_cap)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_col</span>() <span class="op">+</span><span class="st">      </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb206-10" data-line-number="10"><span class="st">    </span><span class="kw">theme_grey</span>()</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:conceptdriftemp"></span>
 <img src="ML_factor_files/figure-html/conceptdriftemp-1.png" alt="Variations in betas with respect to 6 month market capitalization" width="350px" />
 <p class="caption">
@@ -726,7 +727,10 @@ where <span class="math inline">\(m\)</span> is the number of assets and <span c
 <p>An important and elegant result in the theory was proven by <span class="citation">Ben-David et al. (<a href="#ref-ben2010theory">2010</a>)</span> in the case of binary classification. We state it below. We consider <span class="math inline">\(f\)</span> and <span class="math inline">\(h\)</span> two classifiers with values in <span class="math inline">\(\{0,1 \}\)</span>. The average error between the two over the domain <span class="math inline">\(S\)</span> is defined by
 <span class="math display">\[\epsilon_S(f,h)=\mathbb{E}_S[|f(\textbf{x})-h(\textbf{x})|].\]</span>
 Then,
-<span class="math display">\[\epsilon_T(f_T,h)\le \epsilon_S(f_S,h)+\underbrace{2 \sup_B|P_S(B)-P_T(B)|}_{\text{ difference between domains }} + \underbrace{ \min\left(\mathbb{E}_S[|f_S(\textbf{x})-f_T(\textbf{x})|],\mathbb{E}_T[|f_S(\textbf{x})-f_T(\textbf{x})|]\right)}_{\text{difference between the two learning tasks}},\]</span></p>
+<span class="math display">\[\begin{equation}
+\small
+\epsilon_T(f_T,h)\le \epsilon_S(f_S,h)+\underbrace{2 \sup_B|P_S(B)-P_T(B)|}_{\text{ difference between domains }} + \underbrace{ \min\left(\mathbb{E}_S[|f_S(\textbf{x})-f_T(\textbf{x})|],\mathbb{E}_T[|f_S(\textbf{x})-f_T(\textbf{x})|]\right)}_{\text{difference between the two learning tasks}}, \nonumber
+\end{equation}\]</span></p>
 <p>where <span class="math inline">\(P_S\)</span> and <span class="math inline">\(P_T\)</span> denote the distribution of the two domains. The above inequality is a bound on the generalization performance of <span class="math inline">\(h\)</span>. If we take <span class="math inline">\(f_S\)</span> to be the best possible classifier for <span class="math inline">\(S\)</span> and <span class="math inline">\(f_T\)</span> the best for <span class="math inline">\(T\)</span>, then the error generated by <span class="math inline">\(h\)</span> in <span class="math inline">\(T\)</span> is smaller than the sum of three components:<br />
 - the error in the <span class="math inline">\(S\)</span> space;<br />
 - the distance between the two domains (by how much the data space has shifted);<br />

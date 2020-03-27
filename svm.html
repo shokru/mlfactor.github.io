@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-25" />
+<meta name="date" content="2020-03-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -350,9 +350,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>IV Part IV: Further important topics</b></span></li>
 <li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
 <li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
-<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
-<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
-<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#simple-models-as-surrogates."><i class="fa fa-check"></i><b>14.1.1</b> Simple models as surrogates.</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.3</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.4" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.4</b> Partial dependence plot</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
@@ -451,7 +452,7 @@ FIGURE 9.1: Diagram of binary classification with support vectors
 </div>
 <p>A model consists of two weights <span class="math inline">\(\textbf{w}=(w_1,w_2)\)</span> that load on the variables and create a natural linear separation in the plane. In the example above, we show three separations. The red one is not a good classifier because there are circles and squares above and beneath it. The blue line is a good classifier: all circles are to its left and all squares to its right. Likewise, the green line achieves a perfect classification score. Yet, there is a notable difference between the two.</p>
 <p>The grey star at the top of the graph is a mystery point and given its location, if the data pattern holds, it should be a circle. The blue model fails to recognize it as such while the green one succeeds. The interesting features of the scheme are those that we have not mentioned yet, that is, the grey dotted lines. These lines represent the no-man’s land in which no observation falls when the green model is enforced. In this area, each strip above and below the green line can be viewed as a margin of error for the model. Typically, the grey star is located inside this margin.</p>
-<p>The two margins are computed as the parallel lines that maximize the distance between the model and the closest points that are correctly classified (on both sides). These points are called support vectors, which justifies the name of the technique. Obviously, the green model has a greater margin than the blue one. The core idea of SVMs is to maximize the margin, under the constraint that the classifier does not make any mistake. Said differently, SVMs try to pick the most robust model among all those that yield a correct classification.</p>
+<p>The two margins are computed as the parallel lines that maximize the distance between the model and the closest points that are correctly classified (on both sides). These points are called <strong>support vectors</strong>, which justifies the name of the technique. Obviously, the green model has a greater margin than the blue one. The core idea of SVMs is to maximize the margin, under the constraint that the classifier does not make any mistake. Said differently, SVMs try to pick the most robust model among all those that yield a correct classification.</p>
 <p>More formally, if we numerically define circles as +1 and squares as -1, any ‘good’ linear model is expected to satisfy:
 <span class="math display" id="eq:svm0">\[\begin{equation}
 \tag{9.1}
@@ -460,7 +461,7 @@ FIGURE 9.1: Diagram of binary classification with support vectors
 \sum_{k=1}^Kw_kx_{i,k}+b \le -1 &amp; \text{ when } y_i=-1,
 \end{array}\right.
 \end{equation}\]</span></p>
-<p>which can be summarized in compact form <span class="math inline">\(y_i \times \left(\sum_{k=1}^K w_kx_{i,k}+b \right)\ge 1\)</span>. Now, the margin between the green model and a support vector on the dashed grey line is equal to <span class="math inline">\(||\textbf{w}||^{-1}=\left(\sum_{k=1}^Kw_k^2\right)^{-1/2}\)</span>. This value comes from the fact that the distance between a point <span class="math inline">\((x_0,y_0)\)</span> and a line parametrized by <span class="math inline">\(ax+by+c=0\)</span> is equal to <span class="math inline">\(d=\frac{|ax_0+by_0+c|}{\sqrt{a^2+b^2}}\)</span>. In hte case of the model defined above <a href="svm.html#eq:svm0">(9.1)</a>, the numerator is equal to 1 and the norm is that of <span class="math inline">\(\textbf{w}\)</span>. Thus, the final problem is the following:</p>
+<p>which can be summarized in compact form <span class="math inline">\(y_i \times \left(\sum_{k=1}^K w_kx_{i,k}+b \right)\ge 1\)</span>. Now, the margin between the green model and a support vector on the dashed grey line is equal to <span class="math inline">\(||\textbf{w}||^{-1}=\left(\sum_{k=1}^Kw_k^2\right)^{-1/2}\)</span>. This value comes from the fact that the distance between a point <span class="math inline">\((x_0,y_0)\)</span> and a line parametrized by <span class="math inline">\(ax+by+c=0\)</span> is equal to <span class="math inline">\(d=\frac{|ax_0+by_0+c|}{\sqrt{a^2+b^2}}\)</span>. In the case of the model defined above <a href="svm.html#eq:svm0">(9.1)</a>, the numerator is equal to 1 and the norm is that of <span class="math inline">\(\textbf{w}\)</span>. Thus, the final problem is the following:</p>
 <p><span class="math display" id="eq:svm1">\[\begin{equation}
 \tag{9.2}
 \underset{\textbf{w}, b}{\text{argmin}} \ \frac{1}{2} ||\textbf{w}||^2 \ \text{ s.t. } y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)\ge 1.
@@ -514,7 +515,7 @@ FIGURE 9.3: Examples of nonlinear kernels.
 &amp;  y_i-\sum_{k=1}^Kw_k\phi(x_{i,k})-b \le \epsilon+\xi_i^* \\
 &amp;\xi_i,\xi_i^*\ge 0, \ \forall i  ,
 \end{align}\]</span></p>
-<p>and it is illustrated in Figure <a href="svm.html#fig:svmscheme3">9.4</a>. The user specifies a margin <span class="math inline">\(\epsilon\)</span> and the model will try to find the linear (up to kernel transformation) relationship between the labels <span class="math inline">\(y_i\)</span> and the input <span class="math inline">\(\textbf{x}_i\)</span>. Just as in the classification task, if the data points are inside the strip, the slack variables <span class="math inline">\(\xi_i\)</span> and <span class="math inline">\(\xi_i^*\)</span> are set to zero. When the points violate the threshold, the objective function (first line of the code) is penalized. Note that setting a large <span class="math inline">\(\epsilon\)</span> leaves room for more error. Once the model has been trained, a prediction for <span class="math inline">\(\textbf{x}_j\)</span> is simply <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span>.</p>
+<p>and it is illustrated in Figure <a href="svm.html#fig:svmscheme3">9.4</a>. The user specifies a <strong>margin</strong> <span class="math inline">\(\epsilon\)</span> and the model will try to find the linear (up to kernel transformation) relationship between the labels <span class="math inline">\(y_i\)</span> and the input <span class="math inline">\(\textbf{x}_i\)</span>. Just as in the classification task, if the data points are inside the strip, the slack variables <span class="math inline">\(\xi_i\)</span> and <span class="math inline">\(\xi_i^*\)</span> are set to zero. When the points violate the threshold, the objective function (first line of the code) is penalized. Note that setting a large <span class="math inline">\(\epsilon\)</span> leaves room for more error. Once the model has been trained, a prediction for <span class="math inline">\(\textbf{x}_j\)</span> is simply <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:svmscheme3"></span>
 <img src="images/svm3.png" alt="Diagram of regression SVM." width="500px" />
 <p class="caption">

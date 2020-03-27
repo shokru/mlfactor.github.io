@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-25" />
+<meta name="date" content="2020-03-27" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -350,9 +350,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="part"><span><b>IV Part IV: Further important topics</b></span></li>
 <li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
 <li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
-<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
-<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
-<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#simple-models-as-surrogates."><i class="fa fa-check"></i><b>14.1.1</b> Simple models as surrogates.</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.3</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.4" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.4</b> Partial dependence plot</a></li>
 </ul></li>
 <li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
 <li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
@@ -507,9 +508,9 @@ x_J^{m+1}&amp;= p(X_J|X_1=x_1^{m+1}, X_2=x_2^{m+1}, \dots, X_{J-1}=x_{J-1}^{m+1}
 <span class="math display">\[p(\boldsymbol{\epsilon}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\epsilon_i^2}{2\sigma^2}}.\]</span></p>
 <p>In a regression analysis, the data is given both by <span class="math inline">\(\textbf{y}\)</span> and by <span class="math inline">\(\textbf{X}\)</span>, hence both are reported in the notations. Simply acknowledging that <span class="math inline">\(\boldsymbol{\epsilon}=\textbf{y}-\textbf{Xb}\)</span>, we get
 <span class="math display" id="eq:linlike">\[\begin{align}
-p(\textbf{y},\textbf{X}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}\\
-=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\left(y_i-\textbf{x}_i&#39;\textbf{b}\right)^2}{2\sigma^2}}=(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\textbf{b}\right)&#39; \left(\textbf{y}-\textbf{X}\textbf{b}\right)}{2\sigma^2}} \nonumber \\ \tag{10.2}
-=\underbrace{(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}}_{\text{depends on } \sigma, \text{ not } \textbf{b}}\times \underbrace{e^{-\frac{(\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}}_{\text{ depends on both } \sigma, \text{ and } \textbf{b} }.
+p(\textbf{y},\textbf{X}|\textbf{b}, \sigma)&amp;=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}\\
+&amp;=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\left(y_i-\textbf{x}_i&#39;\textbf{b}\right)^2}{2\sigma^2}}=(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\textbf{b}\right)&#39; \left(\textbf{y}-\textbf{X}\textbf{b}\right)}{2\sigma^2}} \nonumber \\ \tag{10.2}
+&amp;=\underbrace{(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}}_{\text{depends on } \sigma, \text{ not } \textbf{b}}\times \underbrace{e^{-\frac{(\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}}_{\text{ depends on both } \sigma, \text{ and } \textbf{b} }.
 \end{align}\]</span>
 In the last line, the second term is a function of the difference <span class="math inline">\(\textbf{b}-\hat{\textbf{b}}\)</span>, where <span class="math inline">\(\hat{\textbf{b}}=(\textbf{X}&#39;\textbf{X})^{-1}\textbf{X}&#39;\textbf{y}\)</span>. This is not surprising: <span class="math inline">\(\hat{\textbf{b}}\)</span> is a natural benchmark for the mean of <span class="math inline">\(\textbf{b}\)</span>. Moreover introducing <span class="math inline">\(\hat{\textbf{b}}\)</span> yields a relatively simple form for the probability.</p>
 <p>The above expression is the frequentist (data-based) block of the posterior: the likelihood. If we want to obtain a tractable expression for the posterior, we need to find a prior component that has a form that will combine well with this likelihood. These forms are called <strong>conjugate priors</strong>. A natural candidate for the right part (that depends on both <strong>b</strong> and <span class="math inline">\(\sigma\)</span>) is the multivariate Gaussian density:
@@ -537,8 +538,8 @@ p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto
 \end{align*}\]</span>
 which can be rewritten
 <span class="math display">\[\begin{align*}
-p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto &amp; \sigma^{-I-k-2(1+a_0)} \\
-&amp;\times \exp\left(-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right) + (\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}}) + (\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)+b_0}{2\sigma^2} \right) .
+p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto  \sigma^{-I-k-2(1+a_0)} \\
+&amp;\times  \exp\left(-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)&#39; \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right) + (\textbf{b}-\hat{\textbf{b}})&#39;\textbf{X}&#39;\textbf{X}(\textbf{b}-\hat{\textbf{b}}) + (\textbf{b}-\textbf{b}_0)&#39;\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)+b_0}{2\sigma^2} \right) .
 \end{align*}\]</span></p>
 <p>The above expression is simply a quadratic form in <span class="math inline">\(\textbf{b}\)</span> and it can be rewritten after burdensome algebra in a much more compact manner:
 <span class="math display">\[\begin{equation}
@@ -792,7 +793,7 @@ FIGURE 10.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed 
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 27s
+## time: 28s
 ## trcnt,tecnt: 200,200</code></pre>
 <p></p>
 <p>Once the model is trained,<a href="#fn18" class="footnote-ref" id="fnref18"><sup>18</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>’.</p>
