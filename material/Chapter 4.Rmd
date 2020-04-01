@@ -1,0 +1,253 @@
+# Factor investing and asset pricing anomalies
+
+**NOTES TO USERS**:   
+- notebooks are by nature sequential. Chunks at the end depend on variables defined in the snippets at the beginning: don't forget to proceed in order!   
+- only the code is provided. For comments of methods & results, we refer to the book.   
+- please report errors!   
+
+**Step 0**: please make sure the dataset is in your working directory!
+
+The first step is to make sure the appropriate packages are installed.
+
+
+```{r, message = FALSE, warning = FALSE}
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(lubridate)){install.packages("lubridate")}
+if(!require(cowplot)){install.packages("cowplot")}
+if(!require(forecast)){install.packages("forecast")}
+```
+
+
+Next, we activate the relevant packages and load the data. 
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)                      # Activate the data science package
+library(lubridate)                      # Activate the date management package
+load("data_ml.RData")                   # Load the data
+data_ml <- data_ml %>% 
+    filter(date > "1999-12-31",         # Keep the date with sufficient data points
+           date < "2019-01-01") %>%
+    arrange(stock_id, date)             # Order the data
+```
+
+
+We also duplicate the last chunk in Chapter 2.
+
+
+```{r, message = FALSE, warning = FALSE}
+stock_ids <- levels(as.factor(data_ml$stock_id)) # A list of all stock_ids
+stock_days <- data_ml %>%                        # Compute the number of data points per stock
+    group_by(stock_id) %>% summarize(nb = n()) 
+stock_ids_short <- stock_ids[which(stock_days$nb == max(stock_days$nb))] # Stocks with full data
+returns <- data_ml %>%                           # Compute returns, in matrix format, in 3 steps:
+    filter(stock_id %in% stock_ids_short) %>%    # 1. Filtering the data
+    dplyr::select(date, stock_id, R1M_Usd) %>%   # 2. Keep returns along with dates & firm names
+    spread(key = stock_id, value = R1M_Usd)      # 3. Put in matrix shape 
+```
+
+
+In the code below, we compute size portfolios (equally weighted: above versus below the median capitalization). According to the size anomaly, the firms with below median market cap should earn higher returns on average. This is verified whenever the orange bar in the plot is above the blue one (it happens most of the time). 
+
+
+```{r, message = FALSE, warning = FALSE}
+data_ml %>%
+    group_by(date) %>%                                            
+    mutate(large = Mkt_Cap_12M_Usd > median(Mkt_Cap_12M_Usd)) %>% # Creates the cap sort
+    ungroup() %>%                                                 # Ungroup
+    mutate(year = lubridate::year(date)) %>%                      # Creates a year variable
+    group_by(year, large) %>%                                     # Analyze by year & cap
+    summarize(avg_return = mean(R1M_Usd)) %>%                     # Compute average return
+    ggplot(aes(x = year, y = avg_return, fill = large)) +         # Plot!
+    geom_col(position = "dodge") +                                # Bars side-to-side
+    theme(legend.position = c(0.8, 0.2)) +                        # Legend location
+    coord_fixed(124) + theme(legend.title=element_blank()) +      # x/y aspect ratio
+    scale_fill_manual(values=c("#F87E1F", "#0570EA"), name = "",  # Colors
+                      labels=c("Small", "Large"))  +
+    ylab("Average returns") + theme(legend.text=element_text(size=9)) 
+```
+
+
+Below, we import data from Ken French's data library. We will use it later on in the chapter.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(quantmod)                         # Package for data extraction
+min_date <- "1963-07-31"                  # Start date
+max_date <- "2020-05-28"                  # Stop date
+temp <- tempfile()
+KF_website <- "http://mba.tuck.dartmouth.edu/pages/faculty/ken.french/"
+KF_file <- "ftp/F-F_Research_Data_5_Factors_2x3_CSV.zip"
+link <- paste0(KF_website,KF_file)        # Link of the file
+download.file(link, temp, quiet = TRUE)   # Download!
+FF_factors <- read_csv(unz(temp, "F-F_Research_Data_5_Factors_2x3.CSV"), 
+                       skip = 3) %>%          # Check the number of lines to skip!
+    rename(date = X1, MKT_RF = `Mkt-RF`) %>%  # Change the name of the first column
+    mutate_at(vars(-date), as.numeric) %>%                 # Convert values to number
+    mutate(date = ymd(parse_date_time(date, "%Y%m"))) %>%  # Date in right format
+    mutate(date = rollback(date + months(1)))              # End of month date
+FF_factors <- FF_factors %>% mutate(MKT_RF = MKT_RF / 100, # Scale returns
+                                    SMB = SMB / 100,
+                                    HML = HML / 100,
+                                    RMW = RMW / 100,
+                                    CMA = CMA / 100,
+                                    RF = RF/100) %>%
+    filter(date >= min_date, date <= max_date)             # Finally, keep only recent points
+head(FF_factors)                
+```
+
+
+In the next figure, we plot the average monthly return aggregated over each calendar year for five common factors. 
+
+
+```{r, message = FALSE, warning = FALSE}
+FF_factors %>%
+    mutate(date = year(date)) %>%                       # Turn date into year
+    gather(key = factor, value = value, - date) %>%     # Put in tidy shape
+    group_by(date, factor) %>%                          # Group by year and factor
+    summarise(value = mean(value)) %>%                  # Compute average return
+    ggplot(aes(x = date, y = value, color = factor)) +  # Plot
+    geom_line() + coord_fixed(500)                      # Fix x/y ratio
+```
+
+
+Below, we perform Fama-French regressions on our sample. We start by the first pass: individual estimation of betas. We build a dedicated function (f) below and use some functional programming to automate the process.
+
+
+```{r, message = FALSE, warning = FALSE}
+nb_factors <- 5                                                     # Number of factors
+data_FM <- left_join(data_ml %>%                                    # Join the 2 datasets
+                         dplyr::select(date, stock_id, R1M_Usd) %>% # (with returns...
+                         filter(stock_id %in% stock_ids_short),     # ... over some stocks)
+                     FF_factors, 
+                     by = "date") %>% 
+    mutate(R1M_Usd = lag(R1M_Usd)) %>%                              # Lag returns
+    na.omit() %>%                                                   # Remove missing points
+    spread(key = stock_id, value = R1M_Usd)
+models <- lapply(paste0("`", stock_ids_short, 
+                        '` ~  MKT_RF + SMB + HML + RMW + CMA'),           # Model spec
+                 function(f){ lm(as.formula(f), data = data_FM,           # Call lm(.)
+                                 na.action="na.exclude") %>%       
+                         summary() %>%                                    # Gather the output
+                         "$"(coef) %>%                                    # Keep only coefs
+                         data.frame() %>%                                 # Convert to dataframe
+                         dplyr::select(Estimate)}                         # Keep the estimates
+                 )
+betas <- matrix(unlist(models), ncol = nb_factors + 1, byrow = T) %>%     # Extract the betas
+    data.frame(row.names = stock_ids_short)                               # Format: row names
+colnames(betas) <- c("Constant", "MKT_RF", "SMB", "HML", "RMW", "CMA")    # Format: col names
+head(betas %>% round(3))
+```
+
+
+In the table, *MKT_RF* is the market return minus the risk free rate. We then reformat these betas to prepare the second pass. Each line corresponds to one asset: the first 5 columns are the estimated factor loadings and the remaining ones are the asset returns (date by date).
+
+
+```{r, message = FALSE, warning = FALSE}
+loadings <- betas %>%                            # Start from loadings (betas)
+    dplyr::select(-Constant) %>%                 # Remove constant
+    data.frame()                                 # Convert to dataframe             
+ret <- returns %>%                               # Start from returns
+    dplyr::select(-date) %>%                     # Keep the returns only
+    data.frame(row.names = returns$date) %>%     # Set row names
+    t()                                          # Transpose
+FM_data <- cbind(loadings, ret)                  # Aggregate both
+head(FM_data[,1:8] %>% round(3))  
+```
+
+
+We observe that the values of the first column (market betas) revolve around one, which is what we would expect. 
+Finally, we are ready for the second round of regressions. 
+
+
+```{r, message = FALSE, warning = FALSE}
+models <- lapply(paste("`", returns$date, "`", ' ~  MKT_RF + SMB + HML + RMW + CMA', sep = ""),
+function(f){ lm(as.formula(f), data = FM_data) %>%                        # Call lm(.)
+                         summary() %>%                                    # Gather the output
+                         "$"(coef) %>%                                    # Keep only the coefs
+                         data.frame() %>%                                 # Convert to dataframe
+                         dplyr::select(Estimate)}                         # Keep only estimates
+                 )
+gammas <- matrix(unlist(models), ncol = nb_factors + 1, byrow = T) %>%    # Switch to dataframe
+    data.frame(row.names = returns$date)                                  # & set row names
+colnames(gammas) <- c("Constant", "MKT_RF", "SMB", "HML", "RMW", "CMA")   # Set col names
+head(gammas %>% round(3))
+```
+
+
+Visually, the estimated premia are also very volatile. We plot their estimated values for the market, SMB and HML factors.
+
+
+```{r, message = FALSE, warning = FALSE}
+gammas %>%                                                          # Take gammas:
+    dplyr::select(MKT_RF, SMB, HML) %>%                             # Select 3 factors
+    bind_cols(date = data_FM$date) %>%                              # Add date
+    gather(key = factor, value = gamma, -date) %>%                  # Put in tidy shape
+    ggplot(aes(x = date, y = gamma, color = factor)) +              # Plot
+    geom_line() + facet_grid( factor~. ) +                          # Lines & facets
+    scale_color_manual(values=c("#F87E1F", "#0570EA", "#F81F40")) + # Colors
+    coord_fixed(980)                                                # Fix x/y ratio
+```
+
+
+The chunk below tests factor competition: each factor is regressed against all other factors.
+
+
+```{r, message = FALSE, warning = FALSE}
+factors <- c("MKT_RF", "SMB", "HML", "RMW", "CMA")
+models <- lapply(paste(factors, ' ~  MKT_RF + SMB + HML + RMW + CMA-',factors),
+ function(f){ lm(as.formula(f), data = FF_factors) %>%               # Call lm(.)
+                         summary() %>%                               # Gather the output
+                         "$"(coef) %>%                               # Keep only the coefs
+                         data.frame() %>%                            # Convert to dataframe
+                         filter(rownames(.) == "(Intercept)") %>%    # Keep only the Intercept
+                         dplyr::select(Estimate,`Pr...t..`)}         # Keep the coef & p-value
+                 )
+alphas <- matrix(unlist(models), ncol = 2, byrow = T) %>%       # Switch from list to dataframe
+    data.frame(row.names = factors)
+# alphas # To see the alphas (optional)
+```
+
+
+We obtain the vector of $\alpha$ values from equation. Below, we format these figures along with $p$-value thresholds and export them in a summary table. The significance levels of coefficients is coded as follows: $0<(***)<0.001<(**)<0.01<(*)<0.05$. 
+
+
+```{r, message = FALSE, warning = FALSE}
+results <- matrix(NA, nrow = length(factors), ncol = length(factors) + 1)   # Coefs
+signif  <- matrix(NA, nrow = length(factors), ncol = length(factors) + 1)   # p-values
+for(j in 1:length(factors)){
+    form <- paste(factors[j],
+                  ' ~  MKT_RF + SMB + HML + RMW + CMA-',factors[j])         # Build model
+    fit <- lm(form, data = FF_factors) %>% summary()                        # Estimate model
+    coef <- fit$coefficients[,1]                                            # Keep coefficients
+    p_val <- fit$coefficients[,4]                                           # Keep p-values
+    results[j,-(j+1)] <- coef                                               # Fill matrix
+    signif[j,-(j+1)] <- p_val
+}
+signif[is.na(signif)] <- 1                                                  # Kick out NAs
+results <- results %>% round(3)  %>% data.frame()                           # Basic formatting
+results[signif<0.001] <- paste(results[signif<0.001]," (***)")              # 3 star signif
+results[signif>0.001&signif<0.01] <-                                        # 2 star signif
+    paste(results[signif>0.001&signif<0.01]," (**)")
+results[signif>0.01&signif<0.05] <-                                         # 1 star signif
+    paste(results[signif>0.01&signif<0.05]," (*)")     
+
+results <- cbind(as.character(factors), results)                            # Add dep. variable
+colnames(results) <- c("Dep. Variable","Intercept", factors)                # Add column names
+results
+```
+
+
+Finally, we turn to factor autocorrelations.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(cowplot)                   # For stacking plots
+library(forecast)                  # For autocorrelation function (more suited than acf)
+acf_SMB <- ggAcf(FF_factors$SMB, lag.max = 10) + labs(title = "")  # ACF SMB
+acf_HML <- ggAcf(FF_factors$HML, lag.max = 10) + labs(title = "")  # ACF HML
+acf_RMW <- ggAcf(FF_factors$RMW, lag.max = 10) + labs(title = "")  # ACF RMW
+acf_CMA <- ggAcf(FF_factors$CMA, lag.max = 10) + labs(title = "")  # ACF CMA
+plot_grid(acf_SMB, acf_HML, acf_RMW, acf_CMA,  # Plot
+          labels = c('SMB', 'HML', 'RMW', 'CMA')) 
+```

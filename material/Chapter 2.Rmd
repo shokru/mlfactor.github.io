@@ -1,0 +1,123 @@
+# Notations and data 
+
+**NOTES TO USERS**:   
+- notebooks are by nature sequential. Chunks at the end depend on variables defined in the snippets at the beginning: don't forget to proceed in order!   
+- only the code is provided. For comments of methods & results, we refer to the book.   
+- please report errors!   
+
+**Step 0**: please make sure the dataset is in your working directory!
+
+The first step is to make sure the appropriate packages are installed.
+
+
+```{r, message = FALSE, warning = FALSE}
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(lubridate)){install.packages("lubridate")}
+```
+
+
+Next, we activate the packages and load the data. 
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)                      # Activate the data science package
+library(lubridate)                      # Activate the date management package
+load("data_ml.RData")                   # Load the data
+data_ml <- data_ml %>% 
+    filter(date > "1999-12-31",         # Keep the date with sufficient data points
+           date < "2019-01-01") %>%
+    arrange(stock_id, date)             # Order the data
+data_ml[1:6, 1:6]                       # Sample values
+```
+
+
+Then, a first graph to check data availability through time.
+
+
+```{r nbassets, message = FALSE, warning = FALSE, cache = TRUE, size = "footnotesize", fig.cap="Number of assets through time.", fig.width=4, dpi = 150, fig.asp = 0.6, fig.align='center'}
+data_ml  %>% 
+    group_by(date) %>%                                   # Group by date
+    summarize(nb_assets = stock_id %>%                   # Count nb assets
+                  as.factor() %>% nlevels()) %>%
+    ggplot(aes(x = date, y = nb_assets)) + geom_col() +  # Plot
+    coord_fixed(3)
+```
+
+
+There are four immediate **labels** in the dataset: R1M_Usd, R3M_Usd, R6M_Usd and R12M_Usd, which correspond to the 1 month, 3 month, 6 month and 12 month future/forward returns of the stocks. The returns are **total returns**, that is, they incorporate potential **dividend** payments over the considered periods. This is a better proxy of financial gain compared to price returns only. We refer to the analysis of @hartzmark2019dividend for a study on the impact of decoupling price returns and dividends. These labels are located in the last 4 columns of the dataset. We provide their descriptive statistics below.
+
+
+```{r, message = FALSE, warning = FALSE}
+all_stats <- data_ml %>% 
+    dplyr::select(R1M_Usd, R3M_Usd, 
+                  R6M_Usd, R12M_Usd) %>%            # Select the labels
+    gather(key = Label, value = value) %>%          # Put them in tidy (column) format
+    group_by(Label) %>%                             # Group them
+    summarise(mean = mean(value),                   # Create the descriptive stats
+              sd = sd(value), 
+              min = min(value),
+              max = max(value))
+all_stats
+```
+
+
+In anticipation for future models, we keep the name of the predictors in memory. In addition, we also keep a much shorter list of predictors. 
+
+
+```{r, message = FALSE, warning = FALSE}
+features <- colnames(data_ml[3:95]) # Keep the feature's column names (hard-coded, beware!)
+features_short <- c("Div_Yld", "Eps", "Mkt_Cap_12M_Usd", "Mom_11M_Usd", 
+                    "Ocf", "Pb", "Vol1Y_Usd")
+```
+
+
+The predictors have been uniformized, that is: for any given feature and time point, the distribution is uniform. Given 1,207 stocks, the graph below cannot display a perfect rectangle.
+
+
+```{r datarectangle, message = FALSE, warning = FALSE, size = "footnotesize", fig.width = 4, fig.cap = "Distribution of the dividend yield feature on 2000-02-29.", fig.asp = 0.5, fig.align='center'}
+data_ml %>%
+    filter(date == "2000-02-29") %>%
+    ggplot(aes(x = Div_Yld)) + geom_histogram(bins = 100) + coord_fixed(0.03)
+```
+
+
+In order to be able to perform classification analyses, we create additional labels that are categorical. 
+
+
+```{r categodata, message = FALSE, warning = FALSE, size = "footnotesize"}
+data_ml <- data_ml %>% 
+    group_by(date) %>%                                   # Group by date
+    mutate(R1M_Usd_C = R1M_Usd > median(R1M_Usd),        # Create the categorical labels
+           R12M_Usd_C = R1M_Usd > median(R12M_Usd)) %>%
+    ungroup() %>%
+    mutate_if(is.logical, as.factor)
+```
+
+
+The new labels are binary: they are equal to 1 (true) if the original return is above that of the median return over the considered period and to 0 (false) if not. Hence, at each point in time, half of the sample equal to zero and the other half to one: some stocks overperforms and others underperform. 
+
+In machine learning, models are estimated on one portion of data (**training set**) and then tested on another portion of the data (**testing set**) to assess their quality. We split our sample accordingly.
+
+
+```{r samplesdata, message = FALSE, warning = FALSE, size = "footnotesize"}
+separation_date <- as.Date("2014-01-15")
+training_sample <- filter(data_ml, date < separation_date)
+testing_sample <- filter(data_ml, date >= separation_date)
+```
+
+
+We also keep in memory a few key variables, like the list of asset identifiers and a rectangular version of returns. For simplicity, in the computation of the latter, we shrink the investment universe to keep only the stocks for which we have the maximum number of points.
+
+
+```{r keyvars, message = FALSE, warning = FALSE, size = "footnotesize"}
+stock_ids <- levels(as.factor(data_ml$stock_id)) # A list of all stock_ids
+stock_days <- data_ml %>%                        # Compute the number of data points per stock
+    group_by(stock_id) %>% summarize(nb = n()) 
+stock_ids_short <- stock_ids[which(stock_days$nb == max(stock_days$nb))] # Stocks with full data
+returns <- data_ml %>%                           # Compute returns, in matrix format, in 3 steps:
+    filter(stock_id %in% stock_ids_short) %>%    # 1. Filtering the data
+    dplyr::select(date, stock_id, R1M_Usd) %>%   # 2. Keep returns along with dates & firm names
+    spread(key = stock_id, value = R1M_Usd)      # 3. Put in matrix shape 
+```
+
+
