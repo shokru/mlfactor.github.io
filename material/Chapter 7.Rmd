@@ -194,7 +194,7 @@ fit_adaboost_C <- adaboost(formula_C,                                     # Mode
 Finally, we evaluate the performance of the classifier.
 
 
-```{r, message = FALSE, warning = FALSE, cache = TRUE}
+```{r, message = FALSE, warning = FALSE}
 mean(testing_sample$R1M_Usd_C == predict(fit_adaboost_C, testing_sample)$class)
 ```
 
@@ -206,7 +206,7 @@ In this section, we train a model using the *XGBoost* library. Other options inc
 Moreover, because training times can be long, we shorten the training sample: we retain only the 40% most extreme observations (in terms of label values: top 20% and bottom 20%) and work with the small subset of features. 
 
 
-```{r xgbdata, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 train_features_xgb <- training_sample %>% 
     filter(R1M_Usd < quantile(R1M_Usd, 0.2) | 
                R1M_Usd > quantile(R1M_Usd, 0.8)) %>%            # Extreme values only!
@@ -227,7 +227,7 @@ The second (optional) step is to determine the monotonicity constraints that we 
 3. past annual returns (positive, because winners outperform losers under the momentum anomaly).  
 
 
-```{r, xgbmono, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 mono_const <- rep(0, length(features))                   # Initialize the vector
 mono_const[which(features == "Mkt_Cap_12M_Usd")] <- (-1) # Decreasing in market cap
 mono_const[which(features == "Pb")] <- (-1)              # Decreasing in price-to-book
@@ -238,7 +238,7 @@ mono_const[which(features == "Mom_11M_Usd")] <- 1        # Increasing in past re
 The third step is to train the model on the formatted training data. 
 
 
-```{r xgbtrain, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 fit_xgb <- xgb.train(data = train_matrix_xgb,     # Data source 
               eta = 0.3,                          # Learning rate
               objective = "reg:linear",           # Objective function
@@ -253,7 +253,7 @@ fit_xgb <- xgb.train(data = train_matrix_xgb,     # Data source
 
 Finally, we evaluate the performance of the model. Note that before that, a proper formatting of the testing sample is required.
 
-```{r xgbperf, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 xgb_test <- testing_sample %>%                                # Test sample => XGB format
     dplyr::select(features_short) %>% 
     as.matrix() 
@@ -263,7 +263,7 @@ mean(predict(fit_xgb, xgb_test) * testing_sample$R1M_Usd > 0) # Hit ratio
 
 The performance is comparable to those observed for other predictive tools. As a final exercise, we show one implementation of a classification task under XGBoost. Only the label changes. In XGBoost, labels must be coded with integer number, starting at zero exactly. In R, factors are numerically coded as integers numbers starting from one, hence the mapping is simple.
 
-```{r xgbdataC, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 train_label_C <- training_sample %>% 
     filter(R1M_Usd < quantile(R1M_Usd, 0.2) |          # Either low 20% returns 
                R1M_Usd > quantile(R1M_Usd, 0.8)) %>%   # Or top 20% returns
@@ -274,7 +274,7 @@ train_matrix_C <- xgb.DMatrix(data = train_features_xgb,
 
 When working with categories, the loss function is usually the softmax function.
 
-```{r xgbtrainC, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 fit_xgb_C <-  xgb.train(data = train_matrix_C,  # Data source (pipe input)
               eta = 0.8,                        # Learning rate
               objective = "multi:softmax",      # Objective function
@@ -287,13 +287,13 @@ fit_xgb_C <-  xgb.train(data = train_matrix_C,  # Data source (pipe input)
 
 We can then proceed to the assessment of the quality of the model. We adjust the prediction to the value of the true label and count the proportion of accurate forecasts.
 
-```{r xgbperfC, message = FALSE, warning = FALSE, size = "footnotesize"}
+```{r, message = FALSE, warning = FALSE}
 mean(predict(fit_xgb_C, xgb_test) + 1 == as.numeric(testing_sample$R1M_Usd_C)) # Hit ratio
 ```
 
 Finally, one last option is to resort to instance weighting.
 
-```{r instweights, message = FALSE, warning = FALSE, size = "footnotesize", eval = FALSE}
+```{r, message = FALSE, warning = FALSE}
 inst_weights <- runif(nrow(train_features_xgb))               # Random weights
 inst_weights <- inst_weights / sum(inst_weights)              # Normalization
 train_matrix_xgb <- xgb.DMatrix(data = train_features_xgb, 

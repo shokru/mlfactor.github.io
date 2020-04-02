@@ -1,0 +1,324 @@
+# Neural networks 
+
+**NOTES TO USERS**:   
+- notebooks are by nature sequential. Chunks at the end depend on variables defined in the snippets at the beginning: don't forget to proceed in order!   
+- only the code is provided. For comments of methods & results, we refer to the book.  
+- please report errors!   
+
+**Step 0**: please make sure the dataset is in your working directory!
+
+
+The first step is to make sure the appropriate packages are installed.
+
+
+```{r, message = FALSE, warning = FALSE}
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(lubridate)){install.packages("lubridate")}
+if(!require(keras)){install.packages("keras")}
+if(!require(dummies)){install.packages("dummies")}
+```
+
+
+Next, we activate the relevant packages and load the data. 
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)                      # Activate the data science package
+library(lubridate)                      # Activate the date management package
+load("data_ml.RData")                   # Load the data
+data_ml <- data_ml %>% 
+    filter(date > "1999-12-31",         # Keep the date with sufficient data points
+           date < "2019-01-01") %>%
+    arrange(stock_id, date)             # Order the data
+```
+
+
+We also copy/paste some chunks from Chapter 2.
+
+
+```{r, message = FALSE, warning = FALSE}
+stock_ids <- levels(as.factor(data_ml$stock_id)) # A list of all stock_ids
+stock_days <- data_ml %>%                        # Compute the number of data points per stock
+    group_by(stock_id) %>% summarize(nb = n()) 
+stock_ids_short <- stock_ids[which(stock_days$nb == max(stock_days$nb))] # Stocks with full data
+returns <- data_ml %>%                           # Compute returns, in matrix format, in 3 steps:
+    filter(stock_id %in% stock_ids_short) %>%    # 1. Filtering the data
+    dplyr::select(date, stock_id, R1M_Usd) %>%   # 2. Keep returns along with dates & firm names
+    spread(key = stock_id, value = R1M_Usd)      # 3. Put in matrix shape 
+features <- colnames(data_ml[3:95]) # Keep the feature's column names (hard-coded, beware!)
+features_short <- c("Div_Yld", "Eps", "Mkt_Cap_12M_Usd", "Mom_11M_Usd", 
+                    "Ocf", "Pb", "Vol1Y_Usd")
+data_ml <- data_ml %>% 
+    group_by(date) %>%                                   # Group by date
+    mutate(R1M_Usd_C = R1M_Usd > median(R1M_Usd),        # Create the categorical labels
+           R12M_Usd_C = R1M_Usd > median(R12M_Usd)) %>%
+    ungroup() %>%
+    mutate_if(is.logical, as.factor)
+separation_date <- as.Date("2014-01-15")
+training_sample <- filter(data_ml, date < separation_date)
+testing_sample <- filter(data_ml, date >= separation_date)
+```
+
+
+
+
+Before we head to the core of the NN, a short stage of data preparation is required. The data must be sorted into four parts which are the combination of two dichotomies: training versus testing and labels versus features. We define the corresponding variables below. For simplicity, the first example is a regression exercise. A classification task will be detailed below.
+
+```{r, message = FALSE, warning = FALSE}
+NN_train_features <- dplyr::select(training_sample, features) %>%    # Training features
+    as.matrix()                                                      # Matrix = important
+NN_train_labels <- training_sample$R1M_Usd                           # Training labels
+NN_test_features <- dplyr::select(testing_sample, features) %>%      # Testing features
+    as.matrix()                                                      # Matrix = important
+NN_test_labels <- testing_sample$R1M_Usd                             # Testing labels
+```
+
+
+Starting from now, we work with the package *keras* which is an adaptation of the Python framework of the same name. You must therefore have a recent version of Python installed and follow the steps detailed in https://keras.rstudio.com to set keras up.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(keras)
+# install_keras() # To complete installation
+model <- keras_model_sequential()
+model %>%   # This defines the structure of the network, i.e. how layers are organized
+    layer_dense(units = 16, activation = 'relu', input_shape = ncol(NN_train_features)) %>%
+    layer_dense(units = 8, activation = 'sigmoid') %>%
+    layer_dense(units = 1) # No activation means linear activation: f(x) = x.
+```
+
+
+Each layer depends on two parameters: the number of layers and the activation function that is applied to the output of the layer. One important point is the input_shape parameter for the first layer. It is required for the first layer and is equal to the number of features. For the subsequent layers, the input_shape is dictated by the number of units of the previous layer; hence it is not required. The activations that are currently available are listed on https://keras.io/activations/. 
+
+
+```{r, message = FALSE, warning = FALSE}
+model %>% compile(                             # Model specification
+    loss = 'mean_squared_error',               # Loss function
+    optimizer = optimizer_rmsprop(),           # Optimisation method (weight updating)
+    metrics = c('mean_absolute_error')         # Output metric
+)
+summary(model)                                 # Model architecture
+```
+
+
+The final stage fits the model to the data and requires some additional training parameters: 
+
+
+```{r, message = FALSE, warning = FALSE}
+fit_NN <- model %>% 
+    fit(NN_train_features,                                       # Training features
+        NN_train_labels,                                         # Training labels
+        epochs = 10, batch_size = 512,                           # Training parameters
+        validation_data = list(NN_test_features, NN_test_labels) # Test data
+) 
+plot(fit_NN)                                                     # Plot, evidently!
+```
+
+The batch size is quite arbitrary. For technical reasons pertaining to training on GPUs, these sizes are often powers of 2. 
+
+The prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.
+
+```{r, message = FALSE, warning = FALSE}
+mean(predict(model, NN_test_features) * NN_test_labels > 0) # Hit ratio
+```
+
+
+We pursue our exploration of neural networks with a much more detailed example. The aim is to carry out a classification task on the binary label R1M_Usd_C. Before we proceed, we need to format the label properly. To this purpose, we resort to one-hot encoding.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(dummies)                                            # Package for one-hot encoding
+NN_train_labels_C <- training_sample$R1M_Usd_C %>% dummy()  # One-hot encoding of the label
+NN_test_labels_C <- testing_sample$R1M_Usd_C %>% dummy()    # One-hot encoding of the label
+```
+
+
+The labels NN_train_labels_C and NN_test_labels_C have two columns: the first flags the instances with above median return and the second flags those with below median returns. Note that we do not alter the feature variables: they remain unchanged. Below, we set the structure of the networks with many additional features compared to the first one.
+
+
+```{r, message = FALSE, warning = FALSE}
+model_C <- keras_model_sequential()
+model_C %>%   # This defines the structure of the network, i.e. how layers are organized
+    layer_dense(units = 16, activation = 'tanh',               # Nb units & activation
+                input_shape = ncol(NN_train_features),         # Size of input
+                kernel_initializer = "random_normal",          # Initialization of weights
+                kernel_constraint = constraint_nonneg()) %>%   # Weights should be nonneg
+    layer_dropout(rate = 0.25) %>%                             # Dropping out 25% units
+    layer_dense(units = 8, activation = 'elu',                 # Nb units & activation
+                bias_initializer = initializer_constant(0.2),  # Initialization of biases
+                kernel_regularizer = regularizer_l2(0.01)) %>% # Penalization of weights 
+    layer_dense(units = 2, activation = 'softmax')             # Softmax for categorical output
+```
+ 
+
+The specification of the training is outlined below.
+
+```{r, message = FALSE, warning = FALSE}
+model_C %>% compile(                               # Model specification
+    loss = 'binary_crossentropy',                  # Loss function
+    optimizer = optimizer_adam(lr = 0.005,         # Optimisation method (weight updating)
+                               beta_1 = 0.9, 
+                               beta_2 = 0.95),        
+    metrics = c('categorical_accuracy')            # Output metric
+)
+summary(model_C)                                   # Model structure
+```
+
+
+Finally, we proceed with the training of the model.
+
+
+```{r, message = FALSE, warning = FALSE}
+fit_NN_C <- model_C %>% 
+    fit(NN_train_features,                                   # Training features
+        NN_train_labels_C,                                   # Training labels
+        epochs = 20, batch_size = 512,                       # Training parameters
+        validation_data = list(NN_test_features, 
+                               NN_test_labels_C),            # Test data
+        verbose = 0,                                         # No comments from algo
+        callbacks = list(
+            callback_early_stopping(monitor = "val_loss",    # Early stopping:
+                                    min_delta = 0.001,       # Improvement threshold
+                                    patience = 3,            # Nb epochs with no improvmt 
+                                    verbose = 0              # No warnings
+                                    )
+        )
+    )
+plot(fit_NN_C) 
+```
+
+There is only one major difference here compared to the previous training call. In keras, callbacks are functions that can be used at given stages of the learning process. In the above example, we use one such function to stop the algorithm when no progress has been made for some time. 
+
+Below, we show how to code a custom loss.
+
+
+```{r, message = FALSE, warning = FALSE}
+model_custom <- keras_model_sequential()
+model_custom %>%   # This defines the structure of the network, i.e. how layers are organized
+    layer_dense(units = 16, activation = 'relu', input_shape = ncol(NN_train_features)) %>%
+    layer_dense(units = 8, activation = 'sigmoid') %>%
+    layer_dense(units = 1) # No activation means linear activation: f(x) = x.
+```
+
+
+
+```{r, message = FALSE, warning = FALSE}
+custom_loss <- function(y, f){   # Defines the loss, we use gamma = 5
+      return(k_mean((f - k_mean(f))*(f - k_mean(f)))-5*k_mean((y - k_mean(y))*(f - k_mean(f))))
+}
+model_custom %>% compile(                                          # Model specification
+    loss =  function(y_true, y_pred) custom_loss(y_true, y_pred),  # New loss function!
+    optimizer = optimizer_rmsprop(),                               # Optim method 
+    metrics = c('mean_absolute_error')                             # Output metric
+)
+```
+
+Finally, we are ready to train and briefly evalute the performance of the model.
+
+```{r, message = FALSE, warning = FALSE}
+fit_NN_cust <- model_custom %>% 
+    fit(NN_train_features,                                       # Training features
+        NN_train_labels,                                         # Training labels
+        epochs = 10, batch_size = 512,                           # Training parameters
+        validation_data = list(NN_test_features, NN_test_labels) # Test data
+) 
+plot(fit_NN_cust)   
+```
+
+The curves may go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns. 
+
+```{r, message = FALSE, warning = FALSE}
+mean(predict(model_custom, NN_test_features) * NN_test_labels > 0) # Hit ratio
+```
+ 
+
+
+
+Next, we dive into recurrent networks.
+
+The dimensions  of variables are crucial. In keras, they are defined for RNNs as:
+
+1. The size of the batch. In our case, it will be the number of assets. Indeed, the recurrence relationship holds at the asset level, hence each asset will represent a new batch on which the model will learn.     
+2. The timesteps. In our case, it will simply be the number of dates.    
+3. The number of features. In our case, there is only one possible figure: the number of predictors.   
+
+First, we create some new, intermediate variables.
+```{r , message = FALSE, warning = FALSE}
+data_rnn <- data_ml %>%                                  # Dedicated dataset
+    filter(stock_id %in% stock_ids_short)
+training_sample_rnn <- filter(data_rnn, date < separation_date)
+testing_sample_rnn <- filter(data_rnn, date > separation_date)
+nb_stocks <- length(stock_ids_short)                     # Nb stocks 
+nb_feats <- length(features)                             # Nb features
+nb_dates_train <- nrow(training_sample) / nb_stocks      # Nb training dates (size of sample)
+nb_dates_test <- nrow(testing_sample) / nb_stocks        # Nb testing dates
+```
+
+Then, we construct the variables we will pass as arguments. We recall that the data file was ordered first by stocks and then by date (see Section \@ref(dataset)).
+
+```{r, message = FALSE, warning = FALSE}
+train_features_rnn <- array(NN_train_features,           # Formats the training data into array
+                            dim = c(nb_dates_train, nb_stocks, nb_feats)) %>% # Tricky order
+    aperm(c(2,1,3))                                      # The order is: stock, date, feature 
+test_features_rnn <- array(NN_test_features,             # Formats the testing data into array
+                            dim = c(nb_dates_test, nb_stocks, nb_feats)) %>%  # Tricky order
+    aperm(c(2,1,3))                                      # The order is: stock, date, feature 
+train_labels_rnn <- as.matrix(NN_train_labels) %>% 
+    array(dim = c(nb_dates_train, nb_stocks, 1)) %>% aperm(c(2,1,3))
+test_labels_rnn <- as.matrix(NN_test_labels) %>% 
+    array(dim = c(nb_dates_test, nb_stocks, 1)) %>% aperm(c(2,1,3))
+```
+
+Finally, we move towards the training part. For simplicity, we only consider a simple RNN with only one layer. The structure is outlined below. In terms of recurrence structure, we pick a Gated Recurrent Unit. 
+
+```{r, message = FALSE, warning = FALSE}
+model_RNN <- keras_model_sequential() %>% 
+    layer_gru(units = 16,                              # Nb units in hidden layer
+              batch_input_shape = c(nb_stocks,         # Dimensions = tricky part!
+                                    nb_dates_train, 
+                                    nb_feats), 
+              activation = 'tanh',                     # Activation function
+              return_sequences = TRUE) %>%             # Return all the sequence
+    layer_dense(units = 1)                             # Final aggregation layer
+model_RNN %>% compile(
+    loss = 'mean_squared_error',                       # Loss = quadratic
+    optimizer = optimizer_rmsprop(),                   # Backprop
+    metrics = c('mean_absolute_error')                 # Output metric MAE
+)
+```
+
+There are many options available for recurrent layers. For GRUs, we refer to the keras documentation https://keras.rstudio.com/reference/layer_gru.html. We comment briefly on the option return_sequences which we activate. In many cases, the output is simply the terminal value of the sequence. If we do not require all of the sequence to be returned, we will face a problem in the dimensionality because the label is indeed a full sequence.
+Once the structure is determined, we can move forward to the training stage.
+
+```{r, message = FALSE, warning = FALSE}
+fit_RNN <- model_RNN %>% fit(train_features_rnn,   # Training features        
+                  train_labels_rnn,                # Training labels
+                  epochs = 10,                     # Number of rounds
+                  batch_size = nb_stocks,          # Length of sequences
+                  verbose = 0)                     # No comments
+plot(fit_RNN)
+```
+
+Compared to our previous models, the major difference both in the ouptut and the input (the code) is the absence of validation (or testing) data. One reason for that is because keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.
+
+```{r, message = FALSE, warning = FALSE}
+new_model <- keras_model_sequential() %>% 
+    layer_gru(units = 16, 
+              batch_input_shape = c(nb_stocks,          # New dimensions
+                                    nb_dates_test, 
+                                    nb_feats), 
+              activation = 'tanh',                      # Activation function
+              return_sequences = TRUE) %>%              # Passing last state to next batch
+    layer_dense(units = 1)                              # Output dimension
+new_model %>% keras::set_weights(keras::get_weights(model_RNN))
+```
+
+Finally, once the new model is ready - and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.
+
+```{r, message = FALSE, warning = FALSE}
+pred_rnn <- predict(new_model, test_features_rnn, batch_size = nb_stocks) # Predictions
+mean(c(t(as.matrix(pred_rnn))) * test_labels_rnn > 0)           # Hit ratio
+```
+
+(not that great)
+
