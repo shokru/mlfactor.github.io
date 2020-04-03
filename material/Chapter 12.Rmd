@@ -1,0 +1,433 @@
+# Ensemble models 
+
+
+
+**NOTES TO USERS**:   
+- notebooks are by nature sequential. Chunks at the end depend on variables defined in the snippets at the beginning: don't forget to proceed in order!   
+- only the code is provided. For comments of methods & results, we refer to the book.   
+- please report errors!    
+- don't forget: models are not optimized and variables are probably not optimally chosen, so *performance is often disappointing*.    
+
+**Step 0**: please make sure the dataset is in your working directory!
+
+
+The first step is to make sure the required packages are installed.
+
+
+```{r, message = FALSE, warning = FALSE}
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(lubridate)){install.packages("lubridate")}
+if(!require(caTools)){install.packages("caTools")}
+if(!require(randomForest)){install.packages("randomForest")}
+if(!require(rpart)){install.packages(c("rpart","rpart.plot"))}
+if(!require(glmnet)){install.packages("glmnet")}
+if(!require(xgboost)){install.packages("xgboost")}
+if(!require(keras)){install.packages("keras")}
+if(!require(quadprog)){install.packages("quadprog")}
+if(!require(lubridate)){install.packages("lubridate")}
+if(!require(quantmod)){install.packages("quantmod")}
+```
+
+
+Next, we activate the relevant packages and load the data. 
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)                      # Activate the data science package
+library(lubridate)                      # Activate the date management package
+load("data_ml.RData")                   # Load the data
+data_ml <- data_ml %>% 
+    filter(date > "1999-12-31",         # Keep the date with sufficient data points
+           date < "2019-01-01") %>%
+    arrange(stock_id, date)             # Order the data
+```
+
+
+We also copy/paste & aggregate some chunks from Chapter 2.
+
+
+```{r, message = FALSE, warning = FALSE}
+stock_ids <- levels(as.factor(data_ml$stock_id)) # A list of all stock_ids
+stock_days <- data_ml %>%                        # Compute the number of data points per stock
+    group_by(stock_id) %>% summarize(nb = n()) 
+stock_ids_short <- stock_ids[which(stock_days$nb == max(stock_days$nb))] # Stocks with full data
+returns <- data_ml %>%                           # Compute returns, in matrix format, in 3 steps:
+    filter(stock_id %in% stock_ids_short) %>%    # 1. Filtering the data
+    dplyr::select(date, stock_id, R1M_Usd) %>%   # 2. Keep returns along with dates & firm names
+    spread(key = stock_id, value = R1M_Usd)      # 3. Put in matrix shape 
+features <- colnames(data_ml[3:95]) # Keep the feature's column names (hard-coded, beware!)
+features_short <- c("Div_Yld", "Eps", "Mkt_Cap_12M_Usd", "Mom_11M_Usd", 
+                    "Ocf", "Pb", "Vol1Y_Usd")
+data_ml <- data_ml %>% 
+    group_by(date) %>%                                   # Group by date
+    mutate(R1M_Usd_C = R1M_Usd > median(R1M_Usd),        # Create the categorical labels
+           R12M_Usd_C = R1M_Usd > median(R12M_Usd)) %>%
+    ungroup() %>%
+    mutate_if(is.logical, as.factor)
+separation_date <- as.Date("2014-01-15")
+training_sample <- filter(data_ml, date < separation_date)
+testing_sample <- filter(data_ml, date >= separation_date)
+```
+
+
+Ensemble models require several models as inputs. Thus, we need to rebuild five models created in the previous chapters. This is going to take some code and some time. Strangely, for clarity, we gather all of it in just one (too) big chunk.
+
+
+```{r, message = FALSE, warning = FALSE}
+# First model
+library(glmnet)
+y_penalized_train <- training_sample$R1M_Usd                 # Dependent variable
+x_penalized_train <- training_sample %>%                     # Predictors
+    dplyr::select(all_of(features_short)) %>% as.matrix()                  
+fit_pen_pred <- glmnet(x_penalized_train, y_penalized_train, # Model
+                       alpha = 0.1, lambda = 0.1)
+x_penalized_test <- testing_sample %>%                                     # Predictors
+    dplyr::select(one_of(features)) %>% as.matrix()      
+# Second model
+library(rpart)
+formula <- paste("R1M_Usd ~", paste(features, collapse = " + ")) # Defines the model 
+formula <- as.formula(formula)                                   # Forcing formula object
+fit_tree <- rpart(formula,
+             data = data_ml,     # Data source: full sample
+             minbucket = 3500,   # Min nb of obs required in each terminal node (leaf)
+             minsplit = 8000,    # Min nb of obs required to continue splitting
+             cp = 0.0001,        # Precision: smaller = more leaves
+             maxdepth = 3        # Maximum depth (i.e. tree levels)
+             ) 
+# Third model
+library(randomForest) 
+set.seed(42)                                # Sets the random seed
+fit_RF <- randomForest(formula,             # Same formula as for simple trees!
+                 data = training_sample,    # Data source: training sample
+                 sampsize = 10000,          # Size of (random) sample for each tree
+                 replace = FALSE,           # Is the sampling done with replacement?
+                 nodesize = 250,            # Minimum size of terminal cluster
+                 ntree = 40,                # Nb of random trees
+                 mtry = 30                  # Nb of predictive variables for each tree
+    )
+# Fourth model
+library(xgboost)
+train_features_xgb <- training_sample %>% 
+    filter(R1M_Usd < quantile(R1M_Usd, 0.2) | 
+               R1M_Usd > quantile(R1M_Usd, 0.8)) %>%            # Extreme values only!
+    dplyr::select(features_short) %>% as.matrix()               # Independent variable
+train_label_xgb <- training_sample %>%
+    filter(R1M_Usd < quantile(R1M_Usd, 0.2) | 
+               R1M_Usd > quantile(R1M_Usd, 0.8)) %>%
+    dplyr::select(R1M_Usd) %>% as.matrix()                      # Dependent variable
+train_matrix_xgb <- xgb.DMatrix(data = train_features_xgb, 
+                                label = train_label_xgb)        # XGB format!
+mono_const <- rep(0, length(features))                   # Initialize the vector
+mono_const[which(features == "Mkt_Cap_12M_Usd")] <- (-1) # Decreasing in market cap
+mono_const[which(features == "Pb")] <- (-1)              # Decreasing in price-to-book
+mono_const[which(features == "Mom_11M_Usd")] <- 1        # Increasing in past return
+fit_xgb <- xgb.train(data = train_matrix_xgb,     # Data source 
+              eta = 0.3,                          # Learning rate
+              objective = "reg:linear",           # Objective function
+              max_depth = 4,                      # Maximum depth of trees
+              lambda = 1,                         # Penalisation of leaf values
+              gamma = 0.1,                        # Penalisation of number of leaves
+              nrounds = 30,                       # Number of trees used (rather low here)
+              monotone_constraints = mono_const,  # Monotonicity constraints
+              verbose = 0                         # No comment from the algo 
+    )
+xgb_test <- testing_sample %>%                                # Test sample => XGB format
+    dplyr::select(features_short) %>% 
+    as.matrix() 
+# Fifth model
+library(keras)
+NN_train_features <- dplyr::select(training_sample, features) %>%    # Training features
+    as.matrix()                                                      # Matrix = important
+NN_train_labels <- training_sample$R1M_Usd                           # Training labels
+NN_test_features <- dplyr::select(testing_sample, features) %>%      # Testing features
+    as.matrix()                                                      # Matrix = important
+NN_test_labels <- testing_sample$R1M_Usd                             # Testing labels
+model <- keras_model_sequential()
+model %>%   # This defines the structure of the network, i.e. how layers are organized
+    layer_dense(units = 16, activation = 'relu', input_shape = ncol(NN_train_features)) %>%
+    layer_dense(units = 8, activation = 'sigmoid') %>%
+    layer_dense(units = 1) # No activation means linear activation: f(x) = x.
+model %>% compile(                             # Model specification
+    loss = 'mean_squared_error',               # Loss function
+    optimizer = optimizer_rmsprop(),           # Optimisation method (weight updating)
+    metrics = c('mean_absolute_error')         # Output metric
+)
+fit_NN <- model %>% 
+    fit(NN_train_features,                                       # Training features
+        NN_train_labels,                                         # Training labels
+        epochs = 10, batch_size = 512,                           # Training parameters
+        validation_data = list(NN_test_features, NN_test_labels) # Test data
+) 
+```
+
+
+Then, we can move on to the aggregation.
+
+
+```{r, message = FALSE, warning = FALSE}
+err_pen_train <- predict(fit_pen_pred, x_penalized_train) - training_sample$R1M_Usd  # Reg.
+err_tree_train <- predict(fit_tree, training_sample) - training_sample$R1M_Usd       # Tree
+err_RF_train <- predict(fit_RF, training_sample) - training_sample$R1M_Usd           # RF
+err_XGB_train <- predict(fit_xgb, train_matrix_xgb) - training_sample$R1M_Usd        # XGBoost
+err_NN_train <- predict(model, NN_train_features) - training_sample$R1M_Usd          # NN
+E <- cbind(err_pen_train, err_tree_train, err_RF_train, err_XGB_train, err_NN_train) # E matrix
+colnames(E) <- c("Pen_reg", "Tree", "RF", "XGB", "NN")                               # Col. names
+cor(E)                                                                               # Cor. mat.
+```
+
+
+As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. 
+
+
+```{r, message = FALSE, warning = FALSE}
+apply(abs(E), 2, mean) # Mean absolute error or columns of E 
+```
+
+
+The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non constrained) weights for the combination of models. 
+
+
+```{r, message = FALSE, warning = FALSE}
+w_ensemble <- solve(t(E) %*% E) %*% rep(1,5)                             # Optimal weights
+w_ensemble <- w_ensemble / sum(w_ensemble)
+w_ensemble
+```
+
+
+Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and 'short' a few models in order to compensate.
+
+Note that the weights are of course computed with **training errors**. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.
+
+
+```{r, message = FALSE, warning = FALSE}
+err_pen_test <- predict(fit_pen_pred, x_penalized_test) - testing_sample$R1M_Usd     # Reg.
+err_tree_test <- predict(fit_tree, testing_sample) - testing_sample$R1M_Usd          # Tree
+err_RF_test <- predict(fit_RF, testing_sample) - testing_sample$R1M_Usd              # RF
+err_XGB_test <- predict(fit_xgb, xgb_test) - testing_sample$R1M_Usd                  # XGBoost
+err_NN_test <- predict(model, NN_test_features) - testing_sample$R1M_Usd             # NN
+E_test <- cbind(err_pen_test, err_tree_test, err_RF_test, err_XGB_test, err_NN_test) # E matrix
+colnames(E_test) <- c("Pen_reg", "Tree", "RF", "XGB", "NN")
+apply(abs(E_test), 2, mean)             # Mean absolute error or columns of E 
+```
+
+
+The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.
+
+
+```{r, message = FALSE, warning = FALSE}
+err_EW_test <- apply(E_test, 1, mean)  # Equally weighted combination
+mean(abs(err_EW_test))
+```
+
+
+Because the errors are very correlated, the equally-weighted combination of forecasts yields an average error which lies 'in the middle' of individual errors. The diversification benefits are too small. Let us now test the 'optimal' combination.
+
+
+```{r, message = FALSE, warning = FALSE}
+err_opt_test <- E_test %*% w_ensemble   # Optimal unconstrained combination
+mean(abs(err_opt_test))
+```
+
+
+Again, the result is disappointing because of the lack of diversification across models. The correlations between errors are high not only on the training sample, but also on the testing sample, as shown below.
+
+
+```{r, message = FALSE, warning = FALSE}
+cor(E_test)
+```
+
+
+The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of @breiman1996stacked using the *quadprog* package. If we write $\mathbf{\Sigma}$ for the covariance matrix of errors, we seek
+$$\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}'\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}'\mathbf{w}=1, \quad w_i\ge 0,$$
+The constraints will be handled as:
+
+$$\mathbf{A} \mathbf{w}= \begin{bmatrix} 
+1 & 1 & 1 \\
+1 & 0 & 0\\
+0 & 1 & 0 \\
+0 & 0 & 1
+\end{bmatrix} \mathbf{w} \hspace{9mm} \text{ compared to} \hspace{9mm} \mathbf{b}=\begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix},  $$
+
+where the first line will be an equality (weights sum to one) and the last three will be inequalities (weights are all positive).
+
+
+```{r, message = FALSE, warning = FALSE}
+library(quadprog)                       # Package for quadratic programming
+Sigma <- t(E) %*% E                     # Unscaled covariance matrix
+nb_mods <- nrow(Sigma)                  # Number of models
+w_const <- solve.QP(Dmat = Sigma,       # D matrix =  Sigma
+              dvec = rep(0, nb_mods),   # Zero vector
+              Amat = rbind(rep(1, nb_mods), diag(nb_mods)) %>% t(), # A matrix for constraints
+              bvec = c(1,rep(0, nb_mods)),                          # b vector for constraints
+              meq = 1                   # 1 line of equality constraints, others = inequalities
+              )
+w_const$solution %>% round(3)           # Solution
+```
+
+
+Compared to the unconstrained solution, the weights are sparse and concentrated in one or two models, usually those with small training sample errors. 
+
+
+Below, we turn to stacked ensembles. The overarching layer is a neural network.
+
+
+```{r, message = FALSE, warning = FALSE}
+model_stack <- keras_model_sequential()
+model_stack %>%   # This defines the structure of the network, i.e. how layers are organized
+    layer_dense(units = 8, activation = 'relu', input_shape = nb_mods) %>%
+    layer_dense(units = 4, activation = 'tanh') %>%
+    layer_dense(units = 1) 
+```
+
+
+The configuration is very simple. We do not include any optional arguments and hence the model is likely to overfit. As we seek to predict returns, the loss function is the standard $L^2$ norm.
+
+
+```{r, message = FALSE, warning = FALSE}
+model_stack %>% compile(                       # Model specification
+    loss = 'mean_squared_error',               # Loss function
+    optimizer = optimizer_rmsprop(),           # Optimisation method (weight updating)
+    metrics = c('mean_absolute_error')         # Output metric
+)
+summary(model_stack)                           # Model architecture
+```
+
+
+
+```{r, message = FALSE, warning = FALSE}
+y_tilde <- E + matrix(rep(training_sample$R1M_Usd, nb_mods), ncol = nb_mods)    # Train predictions
+y_test <- E_test + matrix(rep(testing_sample$R1M_Usd, nb_mods), ncol = nb_mods) # Testing
+fit_NN_stack <- model_stack %>% fit(y_tilde,                                  # Train features
+                     training_sample$R1M_Usd,                                 # Train labels
+                     epochs = 12, batch_size = 512,                           # Train parameters
+                     validation_data = list(y_test,                           # Test features
+                                            testing_sample$R1M_Usd)           # Test labels
+)
+plot(fit_NN_stack)                                                            # Plot, evidently!
+```
+
+
+One alternative outside the perimeter of ensembles is to train simple trees on a set of macroeconomic indicators. We test this idea below, using aggregate data from the Federal Reserve of Saint Louis. A simple downloading function is available in the *quantmod* package. We download and format the data in the next chunk. CPIAUCSL is a code for consumer price index and T10Y2YM is a code for the term spread (10Y minus 2Y).
+
+
+```{r, message = FALSE, warning = FALSE}
+library(quantmod)                                     # Package that extracts the data
+library(lubridate)                                    # Package for date management
+getSymbols("CPIAUCSL", src = "FRED")                  # FRED is the Fed of St Louis
+getSymbols("T10Y2YM", src = "FRED") 
+cpi <- fortify(CPIAUCSL) %>% 
+    mutate (inflation = CPIAUCSL / lag(CPIAUCSL) - 1) # Inflation via Consumer Price Index
+ts <- fortify(T10Y2YM)                                # Term spread (10Y minus 2Y rates)
+colnames(ts)[2] <- "termspread"                       # To make things clear
+ens_data <- testing_sample %>%                        # Creating aggregate dataset
+    dplyr::select(date) %>% 
+    cbind(err_NN_test) %>%
+    mutate(Index = make_date(year = lubridate::year(date),  # Change date to first day of month
+                             month = lubridate::month(date), 
+                             day = 1)) %>% 
+    left_join(cpi) %>%                                # Add CPI to the dataset
+    left_join(ts)                                     # Add termspread
+head(ens_data)                                        # Show first lines
+```
+
+We can now build a tree that tries to explain the accuracy of models as a function of macro variables.
+
+```{r, message = FALSE, warning = FALSE,}
+library(rpart.plot)     # Load package for tree plotting
+fit_ens <- rpart(abs(err_NN_test) ~ inflation + termspread, # Tree model
+                 data = ens_data,
+                 cp = 0.001)                                # Complexity parameter (size of tree)
+rpart.plot(fit_ens)                                         # Plot tree
+```
+
+
+
+Finally, we train four models on four different years to see if this help reduce the inter-model correlations. This process is a bit lengthy because the samples and models need to be all redefined. We start by creating the four training samples. The third model works on the small subset of features, hence the sample is smaller.
+
+```{r, message = FALSE, warning = FALSE}
+training_sample_2007 <- training_sample %>% 
+    filter(date > "2006-12-31", date < "2008-01-01")
+training_sample_2009 <- training_sample %>% 
+    filter(date > "2008-12-31", date < "2010-01-01")
+training_sample_2011 <- training_sample %>% 
+    dplyr::select(c("date",features_short, "R1M_Usd")) %>%
+    filter(date > "2010-12-31", date < "2012-01-01")
+training_sample_2013 <- training_sample %>% 
+    filter(date > "2012-12-31", date < "2014-01-01")
+```
+
+Then, we proceed to the training of the models. The syntaxes are those used in the previous chapters, nothing new here. We start with a penalized regression. In all predictions below, the original testing sample is used *for all models*.
+
+```{r, message = FALSE, warning = FALSE}
+y_ens_2007 <- training_sample_2007$R1M_Usd                                       # Dep. variable
+x_ens_2007 <- training_sample_2007 %>%                                           # Predictors
+    dplyr::select(features) %>% as.matrix() 
+fit_ens_2007 <- glmnet(x_ens_2007, y_ens_2007, alpha = 0.1, lambda = 0.1)        # Model
+err_ens_2007 <- predict(fit_ens_2007, x_penalized_test) - testing_sample$R1M_Usd # Prediction errors
+```
+
+We continue with a random forest.
+
+```{r, message = FALSE, warning = FALSE}
+fit_ens_2009 <- randomForest(formula,            # Same formula as for simple trees!
+                 data = training_sample_2009,    # Data source: 2011 training sample
+                 sampsize = 4000,                # Size of (random) sample for each tree
+                 replace = FALSE,                # Is the sampling done with replacement?
+                 nodesize = 100,                 # Minimum size of terminal cluster
+                 ntree = 40,                     # Nb of random trees
+                 mtry = 30                       # Nb of predictive variables for each tree
+    )
+err_ens_2009 <- predict(fit_ens_2009, testing_sample) - testing_sample$R1M_Usd # Prediction errors
+```
+
+The third model is a boosted tree.
+
+```{r, message = FALSE, warning = FALSE}
+train_features_2011 <- training_sample_2011 %>% 
+    dplyr::select(features_short) %>% as.matrix()               # Independent variable
+train_label_2011 <- training_sample_2011 %>%
+    dplyr::select(R1M_Usd) %>% as.matrix()                      # Dependent variable
+train_matrix_2011 <- xgb.DMatrix(data = train_features_2011, 
+                                label = train_label_2011)       # XGB format!
+fit_ens_2011 <- xgb.train(data = train_matrix_2011,             # Data source 
+              eta = 0.4,                                        # Learning rate
+              objective = "reg:linear",                         # Objective function
+              max_depth = 4,                                    # Maximum depth of trees
+              nrounds = 18                                      # Number of trees used
+    )
+err_ens_2011 <- predict(fit_ens_2011, xgb_test) -  testing_sample$R1M_Usd # Prediction errors
+```
+
+Finally, the last model is a simple neural network.
+
+```{r, message = FALSE, warning = FALSE}
+NN_features_2013 <- dplyr::select(training_sample_2013, features) %>% 
+    as.matrix()      # Matrix format is important
+NN_labels_2013 <- training_sample_2013$R1M_Usd
+model_ens_2013 <- keras_model_sequential()
+model_ens_2013 %>%   # This defines the structure of the network, i.e. how layers are organized
+    layer_dense(units = 16, activation = 'relu', input_shape = ncol(NN_features_2013)) %>%
+    layer_dense(units = 8, activation = 'tanh') %>%
+    layer_dense(units = 1) 
+model_ens_2013 %>% compile(                    # Model specification
+    loss = 'mean_squared_error',               # Loss function
+    optimizer = optimizer_rmsprop(),           # Optimisation method (weight updating)
+    metrics = c('mean_absolute_error')         # Output metric
+)
+model_ens_2013 %>% fit(NN_features_2013,                        # Training features
+                       NN_labels_2013,                          # Training labels
+                       epochs = 9, batch_size = 128             # Training parameters
+)
+err_ens_2013 <- predict(model_ens_2013, NN_test_features) - testing_sample$R1M_Usd
+```
+
+Endowed with the errors of the four models, we can compute their correlation matrix.
+
+```{r, message = FALSE, warning = FALSE}
+E_subtraining <- tibble(err_ens_2007,
+                        err_ens_2009,
+                        err_ens_2011,
+                        err_ens_2013)
+cor(E_subtraining)
+```
+
