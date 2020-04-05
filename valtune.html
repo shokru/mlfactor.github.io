@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -274,7 +274,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>9.1</b> SVM for classification</a></li>
 <li class="chapter" data-level="9.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>9.2</b> SVM for regression</a></li>
 <li class="chapter" data-level="9.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>9.3</b> Practice</a></li>
-<li class="chapter" data-level="9.4" data-path="svm.html"><a href="svm.html#coding-exercises-3"><i class="fa fa-check"></i><b>9.4</b> Coding exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>10</b> Bayesian methods</a><ul>
 <li class="chapter" data-level="10.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>10.1</b> The Bayesian framework</a></li>
@@ -345,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
 </ul></li>
 <li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
-<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-4"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-3"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>IV Further important topics</b></span></li>
 <li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
@@ -521,13 +520,13 @@ FIGURE 11.2: Stylized ROC curves.
 <p>An algorithm with a ROC curve above the 45° angle is performing better than an average classifier. Indeed, the curve can be seen as a tradeoff between benefits (probability of detecting good strategies on the <span class="math inline">\(y\)</span> axis) minus costs (odds of selecting the wrong assets on the <span class="math inline">\(x\)</span> axis). Hence being above the 45° is paramount. The best possible classifier has a ROC curve that goes from point (0,0) to point (0,1) to point (1,1). At point (0,1), fallout is null, hence there are no false positives, and recall is equal to one so that there are also no false negatives: the model is always right. The opposite is true: at point (1,0), the model is always wrong.</p>
 <p>Below, we use a particular package (<em>caTools</em>) to compute a ROC curve for a given set of predictions on the testing sample.</p>
 
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(caTools)){<span class="kw">install.packages</span>(<span class="st">&quot;caTools&quot;</span>)}</a></code></pre></div>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(caTools)){<span class="kw">install.packages</span>(<span class="st">&quot;caTools&quot;</span>)}</a></code></pre></div>
 <p></p>
 
-<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb116-1" data-line-number="1"><span class="kw">library</span>(caTools)  <span class="co"># Package for AUC computation</span></a>
-<a class="sourceLine" id="cb116-2" data-line-number="2"><span class="kw">colAUC</span>(<span class="dt">X =</span> <span class="kw">predict</span>(fit_RF_C, testing_sample, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>), </a>
-<a class="sourceLine" id="cb116-3" data-line-number="3">       <span class="dt">y =</span> testing_sample<span class="op">$</span>R1M_Usd_C, </a>
-<a class="sourceLine" id="cb116-4" data-line-number="4">       <span class="dt">plotROC =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb117-1" data-line-number="1"><span class="kw">library</span>(caTools)  <span class="co"># Package for AUC computation</span></a>
+<a class="sourceLine" id="cb117-2" data-line-number="2"><span class="kw">colAUC</span>(<span class="dt">X =</span> <span class="kw">predict</span>(fit_RF_C, testing_sample, <span class="dt">type =</span> <span class="st">&quot;prob&quot;</span>), </a>
+<a class="sourceLine" id="cb117-3" data-line-number="3">       <span class="dt">y =</span> testing_sample<span class="op">$</span>R1M_Usd_C, </a>
+<a class="sourceLine" id="cb117-4" data-line-number="4">       <span class="dt">plotROC =</span> <span class="ot">TRUE</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:roc"></span>
 <img src="ML_factor_files/figure-html/roc-1.png" alt="Example of ROC curve." width="450px" />
 <p class="caption">
@@ -600,14 +599,14 @@ FIGURE 11.5: Second representation of the variance-bias tradeoff.
 <p>All in all, ridge regressions are very handy because with a single parameter, they are able to provide a cursor that directly tunes the variance-bias tradeoff.</p>
 <p>It’s easy to illustrate how simple it is to display the tradeoff with the ridge regression. In the example below we recycle the ridge model trained in Chapter <a href="lasso.html#lasso">6</a>.</p>
 
-<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb118-1" data-line-number="1">ridge_errors &lt;-<span class="st"> </span><span class="kw">predict</span>(fit_ridge, x_penalized_test) <span class="op">-</span><span class="st">                       </span><span class="co"># Errors from all models</span></a>
-<a class="sourceLine" id="cb118-2" data-line-number="2"><span class="st">    </span>(<span class="kw">rep</span>(testing_sample<span class="op">$</span>R1M_Usd, <span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb118-3" data-line-number="3"><span class="st">    </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">100</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>))</a>
-<a class="sourceLine" id="cb118-4" data-line-number="4">ridge_bias &lt;-<span class="st"> </span>ridge_errors <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">apply</span>(<span class="dv">2</span>, mean)                                <span class="co"># Biases</span></a>
-<a class="sourceLine" id="cb118-5" data-line-number="5">ridge_var &lt;-<span class="st"> </span><span class="kw">predict</span>(fit_ridge, x_penalized_test) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">apply</span>(<span class="dv">2</span>, var)          <span class="co"># Variance</span></a>
-<a class="sourceLine" id="cb118-6" data-line-number="6"><span class="kw">tibble</span>(lambda, ridge_bias<span class="op">^</span><span class="dv">2</span>, ridge_var, <span class="dt">total =</span> ridge_bias<span class="op">^</span><span class="dv">2</span><span class="op">+</span>ridge_var) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb118-7" data-line-number="7"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Error_Component, <span class="dt">value =</span> Value, <span class="op">-</span>lambda) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb118-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> Value, <span class="dt">color =</span> Error_Component)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">ridge_errors &lt;-<span class="st"> </span><span class="kw">predict</span>(fit_ridge, x_penalized_test) <span class="op">-</span><span class="st">                       </span><span class="co"># Errors from all models</span></a>
+<a class="sourceLine" id="cb119-2" data-line-number="2"><span class="st">    </span>(<span class="kw">rep</span>(testing_sample<span class="op">$</span>R1M_Usd, <span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb119-3" data-line-number="3"><span class="st">    </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">100</span>, <span class="dt">byrow =</span> <span class="ot">FALSE</span>))</a>
+<a class="sourceLine" id="cb119-4" data-line-number="4">ridge_bias &lt;-<span class="st"> </span>ridge_errors <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">apply</span>(<span class="dv">2</span>, mean)                                <span class="co"># Biases</span></a>
+<a class="sourceLine" id="cb119-5" data-line-number="5">ridge_var &lt;-<span class="st"> </span><span class="kw">predict</span>(fit_ridge, x_penalized_test) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">apply</span>(<span class="dv">2</span>, var)          <span class="co"># Variance</span></a>
+<a class="sourceLine" id="cb119-6" data-line-number="6"><span class="kw">tibble</span>(lambda, ridge_bias<span class="op">^</span><span class="dv">2</span>, ridge_var, <span class="dt">total =</span> ridge_bias<span class="op">^</span><span class="dv">2</span><span class="op">+</span>ridge_var) <span class="op">%&gt;%</span><span class="st">  </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb119-7" data-line-number="7"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Error_Component, <span class="dt">value =</span> Value, <span class="op">-</span>lambda) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb119-8" data-line-number="8"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> Value, <span class="dt">color =</span> Error_Component)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>()</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ridgetrade"></span>
 <img src="ML_factor_files/figure-html/ridgetrade-1.png" alt="Error decomposition for a ridge regression" width="480" />
 <p class="caption">
@@ -622,12 +621,12 @@ FIGURE 11.6: Error decomposition for a ridge regression
 <p>The variance-bias tradeoff is often presented in theoretical terms that are easy to grasp. It is nonetheless useful to demonstrate how it operates on true algorithmic choices. Below, we take the example of trees because their complexity is easy to evaluate. Basically, a tree with many terminal nodes is more complex than a tree with a handful of clusters.</p>
 <p>We start with the parcimonious model, which we train below.</p>
 
-<div class="sourceCode" id="cb119"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb119-1" data-line-number="1">fit_tree_simple &lt;-<span class="st"> </span><span class="kw">rpart</span>(formula, </a>
-<a class="sourceLine" id="cb119-2" data-line-number="2">             <span class="dt">data =</span> training_sample,     <span class="co"># Data source: training sample</span></a>
-<a class="sourceLine" id="cb119-3" data-line-number="3">             <span class="dt">cp =</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller = more leaves</span></a>
-<a class="sourceLine" id="cb119-4" data-line-number="4">             <span class="dt">maxdepth =</span> <span class="dv">2</span>                <span class="co"># Maximum depth (i.e. tree levels)</span></a>
-<a class="sourceLine" id="cb119-5" data-line-number="5">             ) </a>
-<a class="sourceLine" id="cb119-6" data-line-number="6"><span class="kw">rpart.plot</span>(fit_tree_simple)</a></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1">fit_tree_simple &lt;-<span class="st"> </span><span class="kw">rpart</span>(formula, </a>
+<a class="sourceLine" id="cb120-2" data-line-number="2">             <span class="dt">data =</span> training_sample,     <span class="co"># Data source: training sample</span></a>
+<a class="sourceLine" id="cb120-3" data-line-number="3">             <span class="dt">cp =</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller = more leaves</span></a>
+<a class="sourceLine" id="cb120-4" data-line-number="4">             <span class="dt">maxdepth =</span> <span class="dv">2</span>                <span class="co"># Maximum depth (i.e. tree levels)</span></a>
+<a class="sourceLine" id="cb120-5" data-line-number="5">             ) </a>
+<a class="sourceLine" id="cb120-6" data-line-number="6"><span class="kw">rpart.plot</span>(fit_tree_simple)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:treesimple"></span>
 <img src="ML_factor_files/figure-html/treesimple-1.png" alt="Simple tree." width="400px" />
 <p class="caption">
@@ -638,17 +637,17 @@ FIGURE 11.7: Simple tree.
 <p>The model only has 4 clusters, which means that the predictions can only take four values. The smallest one is 0.011 and encompasses a large portion of the sample (85%) and the largest one is 0.062 and corresponds to only 4% of the training sample.<br />
 We are then able to compute the bias and the variance of the predictions on the <em>testing</em> set.</p>
 
-<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb120-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_tree_simple, testing_sample) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd) <span class="co"># Bias</span></a></code></pre></div>
+<div class="sourceCode" id="cb121"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb121-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_tree_simple, testing_sample) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd) <span class="co"># Bias</span></a></code></pre></div>
 <pre><code>## [1] 0.004973917</code></pre>
-<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb122-1" data-line-number="1"><span class="kw">var</span>(<span class="kw">predict</span>(fit_tree_simple, testing_sample))                           <span class="co"># Variance</span></a></code></pre></div>
+<div class="sourceCode" id="cb123"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb123-1" data-line-number="1"><span class="kw">var</span>(<span class="kw">predict</span>(fit_tree_simple, testing_sample))                           <span class="co"># Variance</span></a></code></pre></div>
 <pre><code>## [1] 0.0001398003</code></pre>
 <p></p>
 <p>On average, the error is slightly positive, with an overall overestimation of 0.005 . As expected, the variance is very small (10^{-4}).</p>
 <p>For the complex model, we take the boosted tree that was obtained in Section <a href="trees.html#boostcode">7.4.6</a> (fit_xgb). The model aggregates 40 trees with a maximum depth of 4, it is thus undoubtedly more complex.</p>
 
-<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb124-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd) <span class="co"># Bias</span></a></code></pre></div>
+<div class="sourceCode" id="cb125"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb125-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd) <span class="co"># Bias</span></a></code></pre></div>
 <pre><code>## [1] 0.00324996</code></pre>
-<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb126-1" data-line-number="1"><span class="kw">var</span>(<span class="kw">predict</span>(fit_xgb, xgb_test))                           <span class="co"># Variance</span></a></code></pre></div>
+<div class="sourceCode" id="cb127"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb127-1" data-line-number="1"><span class="kw">var</span>(<span class="kw">predict</span>(fit_xgb, xgb_test))                           <span class="co"># Variance</span></a></code></pre></div>
 <pre><code>## [1] 0.002206797</code></pre>
 <p></p>
 <p>The bias is indeed smaller compared to that of the simple model, but in exchange, the variance increases sustantially. The net effect (via the <em>squared bias</em>) is in favor of the simpler model.</p>
@@ -729,11 +728,11 @@ which corresponds to the maximum location of the expected improvement. Instead o
 </ul>
 <p>Below, we create a grid with the values we want to test for these parameters.</p>
 
-<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb128-1" data-line-number="1">eta &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>)         <span class="co"># Values for eta</span></a>
-<a class="sourceLine" id="cb128-2" data-line-number="2">nrounds &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>)                 <span class="co"># Values for nrounds</span></a>
-<a class="sourceLine" id="cb128-3" data-line-number="3">lambda &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)        <span class="co"># Values for lambda</span></a>
-<a class="sourceLine" id="cb128-4" data-line-number="4">pars &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(eta, nrounds, lambda) <span class="co"># Exploring all combinations!</span></a>
-<a class="sourceLine" id="cb128-5" data-line-number="5"><span class="kw">head</span>(pars)                                <span class="co"># Let&#39;s see the parameters</span></a></code></pre></div>
+<div class="sourceCode" id="cb129"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb129-1" data-line-number="1">eta &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span>)         <span class="co"># Values for eta</span></a>
+<a class="sourceLine" id="cb129-2" data-line-number="2">nrounds &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>)                 <span class="co"># Values for nrounds</span></a>
+<a class="sourceLine" id="cb129-3" data-line-number="3">lambda &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="dv">1</span>, <span class="dv">10</span>, <span class="dv">100</span>)        <span class="co"># Values for lambda</span></a>
+<a class="sourceLine" id="cb129-4" data-line-number="4">pars &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(eta, nrounds, lambda) <span class="co"># Exploring all combinations!</span></a>
+<a class="sourceLine" id="cb129-5" data-line-number="5"><span class="kw">head</span>(pars)                                <span class="co"># Let&#39;s see the parameters</span></a></code></pre></div>
 <pre><code>##   Var1 Var2 Var3
 ## 1  0.1   10 0.01
 ## 2  0.3   10 0.01
@@ -741,46 +740,46 @@ which corresponds to the maximum location of the expected improvement. Instead o
 ## 4  0.7   10 0.01
 ## 5  0.9   10 0.01
 ## 6  0.1   50 0.01</code></pre>
-<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb130-1" data-line-number="1">eta &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>]</a>
-<a class="sourceLine" id="cb130-2" data-line-number="2">nrounds &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]</a>
-<a class="sourceLine" id="cb130-3" data-line-number="3">lambda &lt;-<span class="st"> </span>pars[,<span class="dv">3</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1">eta &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>]</a>
+<a class="sourceLine" id="cb131-2" data-line-number="2">nrounds &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]</a>
+<a class="sourceLine" id="cb131-3" data-line-number="3">lambda &lt;-<span class="st"> </span>pars[,<span class="dv">3</span>]</a></code></pre></div>
 <p></p>
 <p>Given the computational cost of grid search, we perform the exploration on the dataset with the small number of features (which we recycle from Chapter <a href="trees.html#trees">7</a>). In order to avoid the burden of loops, we resort to the functional programming capabilities of R, via the <em>purrr</em> package. This allows us to define a function that will lighten and simplify the code. This function, coded below, takes data and parameter inputs and returns an error metric for the algorithm. We choose the mean squared error to evaluate the impact of hyperparameter values.</p>
 
-<div class="sourceCode" id="cb131"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb131-1" data-line-number="1">grid_par &lt;-<span class="st"> </span><span class="cf">function</span>(train_matrix, test_features, test_label, eta, nrounds, lambda){</a>
-<a class="sourceLine" id="cb131-2" data-line-number="2">    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb131-3" data-line-number="3"><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></a>
-<a class="sourceLine" id="cb131-4" data-line-number="4">                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></a>
-<a class="sourceLine" id="cb131-5" data-line-number="5">                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></a>
-<a class="sourceLine" id="cb131-6" data-line-number="6">                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></a>
-<a class="sourceLine" id="cb131-7" data-line-number="7">                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></a>
-<a class="sourceLine" id="cb131-8" data-line-number="8">                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></a>
-<a class="sourceLine" id="cb131-9" data-line-number="9">                  <span class="dt">nrounds =</span> nrounds,              <span class="co"># Number of trees used</span></a>
-<a class="sourceLine" id="cb131-10" data-line-number="10">                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></a>
-<a class="sourceLine" id="cb131-11" data-line-number="11">        )</a>
-<a class="sourceLine" id="cb131-12" data-line-number="12">    </a>
-<a class="sourceLine" id="cb131-13" data-line-number="13">    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Preditions based on model &amp; test values</span></a>
-<a class="sourceLine" id="cb131-14" data-line-number="14">    <span class="kw">return</span>(<span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>))             <span class="co"># Mean squared error</span></a>
-<a class="sourceLine" id="cb131-15" data-line-number="15">}</a></code></pre></div>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1">grid_par &lt;-<span class="st"> </span><span class="cf">function</span>(train_matrix, test_features, test_label, eta, nrounds, lambda){</a>
+<a class="sourceLine" id="cb132-2" data-line-number="2">    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb132-3" data-line-number="3"><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></a>
+<a class="sourceLine" id="cb132-4" data-line-number="4">                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></a>
+<a class="sourceLine" id="cb132-5" data-line-number="5">                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></a>
+<a class="sourceLine" id="cb132-6" data-line-number="6">                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></a>
+<a class="sourceLine" id="cb132-7" data-line-number="7">                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></a>
+<a class="sourceLine" id="cb132-8" data-line-number="8">                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></a>
+<a class="sourceLine" id="cb132-9" data-line-number="9">                  <span class="dt">nrounds =</span> nrounds,              <span class="co"># Number of trees used</span></a>
+<a class="sourceLine" id="cb132-10" data-line-number="10">                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></a>
+<a class="sourceLine" id="cb132-11" data-line-number="11">        )</a>
+<a class="sourceLine" id="cb132-12" data-line-number="12">    </a>
+<a class="sourceLine" id="cb132-13" data-line-number="13">    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Preditions based on model &amp; test values</span></a>
+<a class="sourceLine" id="cb132-14" data-line-number="14">    <span class="kw">return</span>(<span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>))             <span class="co"># Mean squared error</span></a>
+<a class="sourceLine" id="cb132-15" data-line-number="15">}</a></code></pre></div>
 <p></p>
 <p>The grid_par function can then be processed by the functional programming tool <strong>pmap</strong> that is going to perform the loop on parameter values automatically.</p>
 
-<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb132-1" data-line-number="1"><span class="co"># grid_par(train_matrix_xgb, xgb_test, testing_sample$R1M_Usd, 0.1, 3, 0.1) # Possible test </span></a>
-<a class="sourceLine" id="cb132-2" data-line-number="2">grd &lt;-<span class="st"> </span><span class="kw">pmap</span>(<span class="kw">list</span>(eta, nrounds, lambda),             <span class="co"># Parameters for the grid search</span></a>
-<a class="sourceLine" id="cb132-3" data-line-number="3">            grid_par,                               <span class="co"># Function on which to apply the search</span></a>
-<a class="sourceLine" id="cb132-4" data-line-number="4">            <span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for function: training data</span></a>
-<a class="sourceLine" id="cb132-5" data-line-number="5">            <span class="dt">test_features =</span> xgb_test,               <span class="co"># Input for function: test features</span></a>
-<a class="sourceLine" id="cb132-6" data-line-number="6">            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd     <span class="co"># Input for function: test labels (returns) </span></a>
-<a class="sourceLine" id="cb132-7" data-line-number="7">)</a>
-<a class="sourceLine" id="cb132-8" data-line-number="8">grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(eta, nrounds, lambda, <span class="dt">error =</span> <span class="kw">unlist</span>(grd)) <span class="co"># Dataframe with all results</span></a></code></pre></div>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1"><span class="co"># grid_par(train_matrix_xgb, xgb_test, testing_sample$R1M_Usd, 0.1, 3, 0.1) # Possible test </span></a>
+<a class="sourceLine" id="cb133-2" data-line-number="2">grd &lt;-<span class="st"> </span><span class="kw">pmap</span>(<span class="kw">list</span>(eta, nrounds, lambda),             <span class="co"># Parameters for the grid search</span></a>
+<a class="sourceLine" id="cb133-3" data-line-number="3">            grid_par,                               <span class="co"># Function on which to apply the search</span></a>
+<a class="sourceLine" id="cb133-4" data-line-number="4">            <span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for function: training data</span></a>
+<a class="sourceLine" id="cb133-5" data-line-number="5">            <span class="dt">test_features =</span> xgb_test,               <span class="co"># Input for function: test features</span></a>
+<a class="sourceLine" id="cb133-6" data-line-number="6">            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd     <span class="co"># Input for function: test labels (returns) </span></a>
+<a class="sourceLine" id="cb133-7" data-line-number="7">)</a>
+<a class="sourceLine" id="cb133-8" data-line-number="8">grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(eta, nrounds, lambda, <span class="dt">error =</span> <span class="kw">unlist</span>(grd)) <span class="co"># Dataframe with all results</span></a></code></pre></div>
 <p></p>
 <p>Once the squared mean errors have been gathered, it is possible to plot them. We chose to work with 3 parameters on purpose because their influence can be simultaneuously plotted on one graph.</p>
 
-<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb133-1" data-line-number="1">grd<span class="op">$</span>eta &lt;-<span class="st"> </span><span class="kw">as.factor</span>(eta)                                  <span class="co"># Params as categories (for plot)</span></a>
-<a class="sourceLine" id="cb133-2" data-line-number="2">grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> eta, <span class="dt">y =</span> error, <span class="dt">fill =</span> eta)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></a>
-<a class="sourceLine" id="cb133-3" data-line-number="3"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb133-4" data-line-number="4"><span class="st">    </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(nrounds), <span class="dt">cols =</span> <span class="kw">vars</span>(lambda)) <span class="op">+</span></a>
-<a class="sourceLine" id="cb133-5" data-line-number="5"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">6</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">grd<span class="op">$</span>eta &lt;-<span class="st"> </span><span class="kw">as.factor</span>(eta)                                  <span class="co"># Params as categories (for plot)</span></a>
+<a class="sourceLine" id="cb134-2" data-line-number="2">grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> eta, <span class="dt">y =</span> error, <span class="dt">fill =</span> eta)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></a>
+<a class="sourceLine" id="cb134-3" data-line-number="3"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb134-4" data-line-number="4"><span class="st">    </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(nrounds), <span class="dt">cols =</span> <span class="kw">vars</span>(lambda)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb134-5" data-line-number="5"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">6</span>))</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:gridvisu"></span>
 <img src="ML_factor_files/figure-html/gridvisu-1.png" alt="Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda." width="550px" />
 <p class="caption">
@@ -796,54 +795,54 @@ FIGURE 11.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 <p>There are several packages in R that relate to Bayesian optimization. We work with <em>rBayesianOptimization</em>, which is general purpose but also needs more coding involvment.</p>
 <p>Just as for the grid search, we need to code the objective function on which the hyperparameters will be optimized. Under <em>rBayesianOptimization</em>, the output has to have a particular form, with a score and a prediction variable. The function will <em>maximize</em> the score, hence we will define it as <em>minus</em> the mean squared error.</p>
 
-<div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb134-1" data-line-number="1">bayes_par_opt &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for func: train data</span></a>
-<a class="sourceLine" id="cb134-2" data-line-number="2">            <span class="dt">test_features =</span> xgb_test,                             <span class="co"># Input for func: test features</span></a>
-<a class="sourceLine" id="cb134-3" data-line-number="3">            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd,                  <span class="co"># Input for func: test label</span></a>
-<a class="sourceLine" id="cb134-4" data-line-number="4">            eta, nrounds, lambda){                                <span class="co"># Input for func params</span></a>
-<a class="sourceLine" id="cb134-5" data-line-number="5">    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb134-6" data-line-number="6"><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></a>
-<a class="sourceLine" id="cb134-7" data-line-number="7">                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></a>
-<a class="sourceLine" id="cb134-8" data-line-number="8">                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></a>
-<a class="sourceLine" id="cb134-9" data-line-number="9">                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></a>
-<a class="sourceLine" id="cb134-10" data-line-number="10">                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></a>
-<a class="sourceLine" id="cb134-11" data-line-number="11">                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></a>
-<a class="sourceLine" id="cb134-12" data-line-number="12">                  <span class="dt">nrounds =</span> <span class="kw">round</span>(nrounds),       <span class="co"># Number of trees used</span></a>
-<a class="sourceLine" id="cb134-13" data-line-number="13">                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></a>
-<a class="sourceLine" id="cb134-14" data-line-number="14">        )</a>
-<a class="sourceLine" id="cb134-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb134-16" data-line-number="16">    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Forecast based on fitted model &amp; test values</span></a>
-<a class="sourceLine" id="cb134-17" data-line-number="17">    <span class="kw">list</span>(<span class="dt">Score =</span> <span class="op">-</span><span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>),      <span class="co"># Minus RMSE</span></a>
-<a class="sourceLine" id="cb134-18" data-line-number="18">         <span class="dt">Pred =</span> pred)                             <span class="co"># Predictions on test set</span></a>
-<a class="sourceLine" id="cb134-19" data-line-number="19">}</a></code></pre></div>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1">bayes_par_opt &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for func: train data</span></a>
+<a class="sourceLine" id="cb135-2" data-line-number="2">            <span class="dt">test_features =</span> xgb_test,                             <span class="co"># Input for func: test features</span></a>
+<a class="sourceLine" id="cb135-3" data-line-number="3">            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd,                  <span class="co"># Input for func: test label</span></a>
+<a class="sourceLine" id="cb135-4" data-line-number="4">            eta, nrounds, lambda){                                <span class="co"># Input for func params</span></a>
+<a class="sourceLine" id="cb135-5" data-line-number="5">    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb135-6" data-line-number="6"><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></a>
+<a class="sourceLine" id="cb135-7" data-line-number="7">                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></a>
+<a class="sourceLine" id="cb135-8" data-line-number="8">                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></a>
+<a class="sourceLine" id="cb135-9" data-line-number="9">                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></a>
+<a class="sourceLine" id="cb135-10" data-line-number="10">                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></a>
+<a class="sourceLine" id="cb135-11" data-line-number="11">                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></a>
+<a class="sourceLine" id="cb135-12" data-line-number="12">                  <span class="dt">nrounds =</span> <span class="kw">round</span>(nrounds),       <span class="co"># Number of trees used</span></a>
+<a class="sourceLine" id="cb135-13" data-line-number="13">                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></a>
+<a class="sourceLine" id="cb135-14" data-line-number="14">        )</a>
+<a class="sourceLine" id="cb135-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb135-16" data-line-number="16">    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Forecast based on fitted model &amp; test values</span></a>
+<a class="sourceLine" id="cb135-17" data-line-number="17">    <span class="kw">list</span>(<span class="dt">Score =</span> <span class="op">-</span><span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>),      <span class="co"># Minus RMSE</span></a>
+<a class="sourceLine" id="cb135-18" data-line-number="18">         <span class="dt">Pred =</span> pred)                             <span class="co"># Predictions on test set</span></a>
+<a class="sourceLine" id="cb135-19" data-line-number="19">}</a></code></pre></div>
 <p></p>
 <p>Once the objective function is defined, it can be plugged into the Bayesian optimizer.</p>
 
-<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb135-1" data-line-number="1"><span class="kw">library</span>(rBayesianOptimization)</a>
-<a class="sourceLine" id="cb135-2" data-line-number="2">bayes_opt &lt;-<span class="st"> </span><span class="kw">BayesianOptimization</span>(bayes_par_opt,           <span class="co"># Function to maximize</span></a>
-<a class="sourceLine" id="cb135-3" data-line-number="3">                     <span class="dt">bounds =</span> <span class="kw">list</span>(<span class="dt">eta =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>),      <span class="co"># Bounds for eta</span></a>
-<a class="sourceLine" id="cb135-4" data-line-number="4">                                   <span class="dt">lambda =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">15</span>),    <span class="co"># Bounds for lambda</span></a>
-<a class="sourceLine" id="cb135-5" data-line-number="5">                                   <span class="dt">nrounds =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">100</span>)),  <span class="co"># Bounds for nrounds</span></a>
-<a class="sourceLine" id="cb135-6" data-line-number="6">                     <span class="dt">init_points =</span> <span class="dv">10</span>,            <span class="co"># Nb initial points for first estimation</span></a>
-<a class="sourceLine" id="cb135-7" data-line-number="7">                     <span class="dt">n_iter =</span> <span class="dv">24</span>,                 <span class="co"># Nb optimization steps/trials</span></a>
-<a class="sourceLine" id="cb135-8" data-line-number="8">                     <span class="dt">acq =</span> <span class="st">&quot;ei&quot;</span>,                  <span class="co"># Acquisition function = expected improvement</span></a>
-<a class="sourceLine" id="cb135-9" data-line-number="9">                     <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb136-1" data-line-number="1"><span class="kw">library</span>(rBayesianOptimization)</a>
+<a class="sourceLine" id="cb136-2" data-line-number="2">bayes_opt &lt;-<span class="st"> </span><span class="kw">BayesianOptimization</span>(bayes_par_opt,           <span class="co"># Function to maximize</span></a>
+<a class="sourceLine" id="cb136-3" data-line-number="3">                     <span class="dt">bounds =</span> <span class="kw">list</span>(<span class="dt">eta =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>),      <span class="co"># Bounds for eta</span></a>
+<a class="sourceLine" id="cb136-4" data-line-number="4">                                   <span class="dt">lambda =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">15</span>),    <span class="co"># Bounds for lambda</span></a>
+<a class="sourceLine" id="cb136-5" data-line-number="5">                                   <span class="dt">nrounds =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">100</span>)),  <span class="co"># Bounds for nrounds</span></a>
+<a class="sourceLine" id="cb136-6" data-line-number="6">                     <span class="dt">init_points =</span> <span class="dv">10</span>,            <span class="co"># Nb initial points for first estimation</span></a>
+<a class="sourceLine" id="cb136-7" data-line-number="7">                     <span class="dt">n_iter =</span> <span class="dv">24</span>,                 <span class="co"># Nb optimization steps/trials</span></a>
+<a class="sourceLine" id="cb136-8" data-line-number="8">                     <span class="dt">acq =</span> <span class="st">&quot;ei&quot;</span>,                  <span class="co"># Acquisition function = expected improvement</span></a>
+<a class="sourceLine" id="cb136-9" data-line-number="9">                     <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## 
 ##  Best Parameters Found: 
 ## Round = 27   eta = 0.3568    lambda = 8.4042 nrounds = 11.9646   Value = -0.0372</code></pre>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb137-1" data-line-number="1">bayes_opt<span class="op">$</span>Best_Par</a></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb138-1" data-line-number="1">bayes_opt<span class="op">$</span>Best_Par</a></code></pre></div>
 <pre><code>##        eta     lambda    nrounds 
 ##  0.3567502  8.4041836 11.9645900</code></pre>
 <p></p>
 <p>The final parameters indicate that it is advised to resist overfitting: small number of learners and large penalization seem to be the best choices.</p>
 <p>As a confirmation of these results, we plot the relationship between the loss (up to the sign) and two hyperparameters. Each point corresponds to a value tested in the optimization. The best values are clearly to the left of the left graph and to the right of the right graph and the pattern is reliably pronounced.</p>
 
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb139-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>) <span class="co"># Package for combining plots</span></a>
-<a class="sourceLine" id="cb139-2" data-line-number="2">plot_rounds &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb139-3" data-line-number="3"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> nrounds, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a>
-<a class="sourceLine" id="cb139-4" data-line-number="4">plot_lambda &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb139-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a>
-<a class="sourceLine" id="cb139-6" data-line-number="6"><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb139-7" data-line-number="7"><span class="kw">ggarrange</span>(plot_rounds, plot_lambda, <span class="dt">ncol =</span> <span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb140-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>) <span class="co"># Package for combining plots</span></a>
+<a class="sourceLine" id="cb140-2" data-line-number="2">plot_rounds &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-3" data-line-number="3"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> nrounds, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a>
+<a class="sourceLine" id="cb140-4" data-line-number="4">plot_lambda &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb140-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</a>
+<a class="sourceLine" id="cb140-6" data-line-number="6"><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb140-7" data-line-number="7"><span class="kw">ggarrange</span>(plot_rounds, plot_lambda, <span class="dt">ncol =</span> <span class="dv">2</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:bayesoptfig"></span>
 <img src="ML_factor_files/figure-html/bayesoptfig-1.png" alt="Relationship between (minus) loss and hyperparameter values." width="450px" />
 <p class="caption">

@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-03-28" />
+<meta name="date" content="2020-04-05" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -274,7 +274,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="9.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>9.1</b> SVM for classification</a></li>
 <li class="chapter" data-level="9.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>9.2</b> SVM for regression</a></li>
 <li class="chapter" data-level="9.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>9.3</b> Practice</a></li>
-<li class="chapter" data-level="9.4" data-path="svm.html"><a href="svm.html#coding-exercises-3"><i class="fa fa-check"></i><b>9.4</b> Coding exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="10" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>10</b> Bayesian methods</a><ul>
 <li class="chapter" data-level="10.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>10.1</b> The Bayesian framework</a></li>
@@ -345,7 +344,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
 </ul></li>
 <li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
-<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-4"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-3"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>IV Further important topics</b></span></li>
 <li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
@@ -516,18 +515,25 @@ FIGURE 2.1: Number of assets through time.
 <p></p>
 <p>There are four immediate <strong>labels</strong> in the dataset: R1M_Usd, R3M_Usd, R6M_Usd and R12M_Usd, which correspond to the 1 month, 3 month, 6 month and 12 month future/forward returns of the stocks. The returns are <strong>total returns</strong>, that is, they incorporate potential <strong>dividend</strong> payments over the considered periods. This is a better proxy of financial gain compared to price returns only. We refer to the analysis of <span class="citation">Hartzmark and Solomon (<a href="#ref-hartzmark2019dividend">2019</a>)</span> for a study on the impact of decoupling price returns and dividends. These labels are located in the last 4 columns of the dataset. We provide their descriptive statistics below.</p>
 
+<pre><code>## # A tibble: 4 x 5
+##   Label      mean    sd    min   max
+##   &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 R12M_Usd 0.137  0.738 -0.991  96.0
+## 2 R1M_Usd  0.0127 0.176 -0.922  30.2
+## 3 R3M_Usd  0.0369 0.328 -0.929  39.4
+## 4 R6M_Usd  0.0723 0.527 -0.98  107.</code></pre>
 <p></p>
 <p>In anticipation for future models, we keep the name of the predictors in memory. In addition, we also keep a much shorter list of predictors.</p>
 
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">features &lt;-<span class="st"> </span><span class="kw">colnames</span>(data_ml[<span class="dv">3</span><span class="op">:</span><span class="dv">95</span>]) <span class="co"># Keep the feature&#39;s column names (hard-coded, beware!)</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">features_short &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Div_Yld&quot;</span>, <span class="st">&quot;Eps&quot;</span>, <span class="st">&quot;Mkt_Cap_12M_Usd&quot;</span>, <span class="st">&quot;Mom_11M_Usd&quot;</span>, </a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">                    <span class="st">&quot;Ocf&quot;</span>, <span class="st">&quot;Pb&quot;</span>, <span class="st">&quot;Vol1Y_Usd&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">features &lt;-<span class="st"> </span><span class="kw">colnames</span>(data_ml[<span class="dv">3</span><span class="op">:</span><span class="dv">95</span>]) <span class="co"># Keep the feature&#39;s column names (hard-coded, beware!)</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">features_short &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Div_Yld&quot;</span>, <span class="st">&quot;Eps&quot;</span>, <span class="st">&quot;Mkt_Cap_12M_Usd&quot;</span>, <span class="st">&quot;Mom_11M_Usd&quot;</span>, </a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">                    <span class="st">&quot;Ocf&quot;</span>, <span class="st">&quot;Pb&quot;</span>, <span class="st">&quot;Vol1Y_Usd&quot;</span>)</a></code></pre></div>
 <p></p>
 <p>The predictors have been uniformized, that is: for any given feature and time point, the distribution is uniform. Given 1,207 stocks, the graph below cannot display a perfect rectangle.</p>
 
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">    </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> &quot;2000-02-29&quot;</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Div_Yld)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">100</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="fl">0.03</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">data_ml <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">    </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> &quot;2000-02-29&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Div_Yld)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">100</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="fl">0.03</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:datarectangle"></span>
 <img src="ML_factor_files/figure-html/datarectangle-1.png" alt="Distribution of the dividend yield feature on 2000-02-29." width="384" />
 <p class="caption">
@@ -537,30 +543,30 @@ FIGURE 2.2: Distribution of the dividend yield feature on 2000-02-29.
 <p></p>
 <p>The original labels (future returns) are numerical and will be used for regression exercises, that is, when the objective is to predict a scalar real number. Sometimes, the exercises can be different and the purpose may be to forecast <strong>categories</strong>, like “buy”, “hold” or “sell”. In order to be able to perform this type of classification analysis, we create additional labels that are categorical.</p>
 
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">data_ml &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Group by date</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">R1M_Usd_C =</span> R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(R1M_Usd),        <span class="co"># Create the categorical labels</span></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">           <span class="dt">R12M_Usd_C =</span> R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(R12M_Usd)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb8-6" data-line-number="6"><span class="st">    </span><span class="kw">mutate_if</span>(is.logical, as.factor)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">data_ml &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                   </span><span class="co"># Group by date</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">R1M_Usd_C =</span> R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(R1M_Usd),        <span class="co"># Create the categorical labels</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">           <span class="dt">R12M_Usd_C =</span> R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(R12M_Usd)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5"><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="st">    </span><span class="kw">mutate_if</span>(is.logical, as.factor)</a></code></pre></div>
 <p></p>
 <p>The new labels are binary: they are equal to 1 (true) if the original return is above that of the median return over the considered period and to 0 (false) if not. Hence, at each point in time, half of the sample equal to zero and the other half to one: some stocks overperforms and others underperform.</p>
 <p>In machine learning, models are estimated on one portion of data (<strong>training set</strong>) and then tested on another portion of the data (<strong>testing set</strong>) to assess their quality. We split our sample accordingly.</p>
 
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">separation_date &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2014-01-15&quot;</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">training_sample &lt;-<span class="st"> </span><span class="kw">filter</span>(data_ml, date <span class="op">&lt;</span><span class="st"> </span>separation_date)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">testing_sample &lt;-<span class="st"> </span><span class="kw">filter</span>(data_ml, date <span class="op">&gt;=</span><span class="st"> </span>separation_date)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">separation_date &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2014-01-15&quot;</span>)</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">training_sample &lt;-<span class="st"> </span><span class="kw">filter</span>(data_ml, date <span class="op">&lt;</span><span class="st"> </span>separation_date)</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">testing_sample &lt;-<span class="st"> </span><span class="kw">filter</span>(data_ml, date <span class="op">&gt;=</span><span class="st"> </span>separation_date)</a></code></pre></div>
 <p></p>
 <p>We also keep in memory a few key variables, like the list of asset identifiers and a rectangular version of returns. For simplicity, in the computation of the latter, we shrink the investment universe to keep only the stocks for which we have the maximum number of points.</p>
 
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1">stock_ids &lt;-<span class="st"> </span><span class="kw">levels</span>(<span class="kw">as.factor</span>(data_ml<span class="op">$</span>stock_id)) <span class="co"># A list of all stock_ids</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">stock_days &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Compute the number of data points per stock</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(stock_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) </a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">stock_ids_short &lt;-<span class="st"> </span>stock_ids[<span class="kw">which</span>(stock_days<span class="op">$</span>nb <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(stock_days<span class="op">$</span>nb))] <span class="co"># Stocks with full data</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Compute returns, in matrix format, in 3 steps:</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">%in%</span><span class="st"> </span>stock_ids_short) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># 1. Filtering the data</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(date, stock_id, R1M_Usd) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># 2. Keep returns along with dates &amp; firm names</span></a>
-<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)      <span class="co"># 3. Put in matrix shape </span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">stock_ids &lt;-<span class="st"> </span><span class="kw">levels</span>(<span class="kw">as.factor</span>(data_ml<span class="op">$</span>stock_id)) <span class="co"># A list of all stock_ids</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">stock_days &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Compute the number of data points per stock</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(stock_id) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summarize</span>(<span class="dt">nb =</span> <span class="kw">n</span>()) </a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">stock_ids_short &lt;-<span class="st"> </span>stock_ids[<span class="kw">which</span>(stock_days<span class="op">$</span>nb <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(stock_days<span class="op">$</span>nb))] <span class="co"># Stocks with full data</span></a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                           </span><span class="co"># Compute returns, in matrix format, in 3 steps:</span></a>
+<a class="sourceLine" id="cb11-6" data-line-number="6"><span class="st">    </span><span class="kw">filter</span>(stock_id <span class="op">%in%</span><span class="st"> </span>stock_ids_short) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># 1. Filtering the data</span></a>
+<a class="sourceLine" id="cb11-7" data-line-number="7"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(date, stock_id, R1M_Usd) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># 2. Keep returns along with dates &amp; firm names</span></a>
+<a class="sourceLine" id="cb11-8" data-line-number="8"><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)      <span class="co"># 3. Put in matrix shape </span></a></code></pre></div>
 <p></p>
 
 </div>
