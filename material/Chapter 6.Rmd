@@ -60,7 +60,7 @@ We start with the LASSO. The syntax is slightly different, compared to usual lin
 ```{r, message = FALSE, warning = FALSE}
 y_penalized <- data_ml$R1M_Usd                              # Dependent variable
 x_penalized <- data_ml %>%                                  # Predictors
-    dplyr::select(features) %>% as.matrix() 
+    dplyr::select(all_of(features)) %>% as.matrix() 
 fit_lasso <- glmnet(x_penalized, y_penalized, alpha = 1)    # Model alpha = 1: LASSO
 ```
 
@@ -180,7 +180,7 @@ The code below is dedicated to predictive regressions.
 ```{r penpredreg, message = FALSE, warning = FALSE, size = "footnotesize"}
 y_penalized_train <- training_sample$R1M_Usd                 # Dependent variable
 x_penalized_train <- training_sample %>%                     # Predictors
-    dplyr::select(features) %>% as.matrix()                  
+    dplyr::select(all_of(features)) %>% as.matrix()                  
 fit_pen_pred <- glmnet(x_penalized_train, y_penalized_train, # Model
                        alpha = 0.1, lambda = 0.1)
 ```

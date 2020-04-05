@@ -210,7 +210,7 @@ Moreover, because training times can be long, we shorten the training sample: we
 train_features_xgb <- training_sample %>% 
     filter(R1M_Usd < quantile(R1M_Usd, 0.2) | 
                R1M_Usd > quantile(R1M_Usd, 0.8)) %>%            # Extreme values only!
-    dplyr::select(features_short) %>% as.matrix()               # Independent variable
+    dplyr::select(all_of(features_short)) %>% as.matrix()       # Independent variable
 train_label_xgb <- training_sample %>%
     filter(R1M_Usd < quantile(R1M_Usd, 0.2) | 
                R1M_Usd > quantile(R1M_Usd, 0.8)) %>%
@@ -255,7 +255,7 @@ Finally, we evaluate the performance of the model. Note that before that, a prop
 
 ```{r, message = FALSE, warning = FALSE}
 xgb_test <- testing_sample %>%                                # Test sample => XGB format
-    dplyr::select(features_short) %>% 
+    dplyr::select(all_of(features_short)) %>% 
     as.matrix() 
 mean((predict(fit_xgb, xgb_test) - testing_sample$R1M_Usd)^2) # MSE
 mean(predict(fit_xgb, xgb_test) * testing_sample$R1M_Usd > 0) # Hit ratio
