@@ -1,0 +1,228 @@
+# Unsupervised learning 
+
+
+
+**NOTES TO USERS**:   
+- notebooks are by nature sequential. Chunks at the end depend on variables defined in the snippets at the beginning: don't forget to proceed in order!   
+- only the code is provided. For comments of methods & results, we refer to the book.   
+- please report errors!    
+- don't forget: models are not optimized and variables are probably not optimally chosen, so *performance is often disappointing*.    
+
+**Step 0**: please make sure the dataset is in your working directory!
+
+
+The first step is to make sure the required packages are installed.
+
+
+```{r, message = FALSE, warning = FALSE}
+if(!require(tidyverse)){install.packages("tidyverse")}
+if(!require(lubridate)){install.packages("lubridate")}
+if(!require(broom)){install.packages("broom")}
+if(!require(keras)){install.packages("keras")}
+if(!require(magrittr)){install.packages("magrittr")}
+if(!require(corrplot)){install.packages("corrplot")}
+if(!require(factoextra)){install.packages("factoextra")}
+if(!require(FNN)){install.packages("FNN")}
+```
+
+
+Next, we activate the relevant packages and load the data. 
+
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse)                      # Activate the data science package
+library(lubridate)                      # Activate the date management package
+load("data_ml.RData")                   # Load the data
+data_ml <- data_ml %>% 
+    filter(date > "1999-12-31",         # Keep the date with sufficient data points
+           date < "2019-01-01") %>%
+    arrange(stock_id, date)             # Order the data
+```
+
+
+We also copy/paste & aggregate some chunks from Chapter 2.
+
+
+```{r, message = FALSE, warning = FALSE}
+stock_ids <- levels(as.factor(data_ml$stock_id)) # A list of all stock_ids
+stock_days <- data_ml %>%                        # Compute the number of data points per stock
+    group_by(stock_id) %>% summarize(nb = n()) 
+stock_ids_short <- stock_ids[which(stock_days$nb == max(stock_days$nb))] # Stocks with full data
+returns <- data_ml %>%                           # Compute returns, in matrix format, in 3 steps:
+    filter(stock_id %in% stock_ids_short) %>%    # 1. Filtering the data
+    dplyr::select(date, stock_id, R1M_Usd) %>%   # 2. Keep returns along with dates & firm names
+    spread(key = stock_id, value = R1M_Usd)      # 3. Put in matrix shape 
+features <- colnames(data_ml[3:95]) # Keep the feature's column names (hard-coded, beware!)
+features_short <- c("Div_Yld", "Eps", "Mkt_Cap_12M_Usd", "Mom_11M_Usd", 
+                    "Ocf", "Pb", "Vol1Y_Usd")
+data_ml <- data_ml %>% 
+    group_by(date) %>%                                   # Group by date
+    mutate(R1M_Usd_C = R1M_Usd > median(R1M_Usd),        # Create the categorical labels
+           R12M_Usd_C = R1M_Usd > median(R12M_Usd)) %>%
+    ungroup() %>%
+    mutate_if(is.logical, as.factor)
+separation_date <- as.Date("2014-01-15")
+training_sample <- filter(data_ml, date < separation_date)
+testing_sample <- filter(data_ml, date >= separation_date)
+```
+
+
+Let's start with regression examples.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(broom)                                  # Package for clean regression output 
+training_sample %>%    
+    dplyr::select(c(features,  "R1M_Usd")) %>%  # List of variables
+    lm(R1M_Usd ~ . , data = .) %>%              # Model: predict R1M_Usd
+    tidy() %>%                                  # Put output in clean format
+    filter(abs(statistic) > 3)                  # Keep significant predictors only
+
+```
+
+
+To further depict correlation issues, we compute the correlation matrix of the predictors below (on the training sample). Because of its dimension, we show it graphically. As there are too many labels, we remove them.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(corrplot)              # Package for plots of correlation matrices
+C <- cor(training_sample %>% dplyr::select(features)) # Correlation matrix
+corrplot(C, tl.pos='n')        # Plot
+```
+
+
+
+
+Below, we show how to perform PCA and visualize the output with the *factoextra* package. To ease readability, we use the smaller sample with few predictors.
+
+```{r, message = FALSE, warning = FALSE}
+pca <- training_sample %>% 
+    dplyr::select(features_short) %>%    # Smaller number of predictors
+    prcomp()                             # Performs PCA
+pca                                      # Show the result
+```
+
+
+
+```{r, message = FALSE, warning = FALSE}
+library(factoextra)                      # Package for PCA visualization
+fviz_pca_var(pca,                        # Source of PCA decomposition
+             col.var="contrib",          
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE                # Avoid text overlapping
+)
+```
+
+
+The plot shows that no initial factor has negative signs for the first two principal components. 
+
+Once the rotation is known, it is possible to select a subsample of the transformed data. From the original 7 features, it is easy to pick just 4.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(magrittr)
+training_sample %>%                                  # Start from large sample
+    dplyr::select(features_short) %>%                # Keep only 7 features
+    as.matrix() %>%                                  # Transform in matrix
+    multiply_by_matrix(pca$rotation[,1:4]) %>%       # Rotate via PCA (first 4 columns of P)
+    `colnames<-`(c("PC1", "PC2", "PC3", "PC4")) %>%  # Change column names
+    head()                                           # Show first 6 lines
+```
+
+
+We then turn to autoencoders. This requires Keras to be properly installed (see chapter on neural networks).
+
+
+
+```{r, message = FALSE, warning = FALSE}
+library(keras)
+input_layer <- layer_input(shape = c(7))    # features_short has 7 columns 
+
+encoder <- input_layer %>%       # First, encode
+    layer_dense(units = 32, activation = "sigmoid") %>% 
+    layer_dense(units = 4)       # 4 dimensions for the output layer (same as PCA example)
+
+decoder <- encoder %>%           # Then, from encoder, decode
+    layer_dense(units = 32, activation = "sigmoid") %>% 
+    layer_dense(units = 7)       # the original sample has 7 features
+```
+
+
+In the training part, we optimize the MSE and use an Adam update of the weights.
+
+
+```{r, message = FALSE, warning = FALSE}
+ae_model <- keras_model(inputs = input_layer, outputs = decoder) # Builds the model
+
+ae_model %>% compile(                # Learning parameters
+    loss = 'mean_squared_error',
+    optimizer = 'adam',
+    metrics = c('mean_absolute_error')
+)
+```
+
+Finally, we are ready to train the data onto itself!
+
+```{r, message = FALSE, warning = FALSE}
+fit_ae <- ae_model %>% 
+    fit(training_sample %>% dplyr::select(features_short) %>% as.matrix(),  # Input
+        training_sample %>% dplyr::select(features_short) %>% as.matrix(),  # Output
+        epochs = 15, batch_size = 512,
+        validation_data = list(testing_sample %>% dplyr::select(features_short) %>% as.matrix(), 
+                               testing_sample %>% dplyr::select(features_short) %>% as.matrix())
+    )
+plot(fit_ae) + theme_grey()
+```
+
+
+In order to get the details of all weights and biases, the syntax is the following.
+
+
+```{r, message = FALSE, warning = FALSE}
+ae_model %>% get_weights()
+```
+
+That's a lot of parameters...    
+
+Next, we briefly switch to $k$-means.
+
+
+```{r, message = FALSE, warning = FALSE}
+set.seed(42)                               # Setting the random seed (the optim. is random)
+k_means <- training_sample %>%             # Performs the k-means clustering
+    dplyr::select(features) %>%
+    as.matrix() %>%
+    t() %>%
+    kmeans(10)
+clusters <- tibble(factor = names(k_means$cluster),   # Organize the cluster data
+                   cluster = k_means$cluster) %>%
+    arrange(cluster)
+clusters %>% filter(cluster == 4)                     # Shows one particular group
+```
+
+
+Finally, a detour via $k$ nearest neighbors.
+
+
+```{r, message = FALSE, warning = FALSE}
+library(FNN)     # Package for Fast Nearest Neighbors detection
+knn_data <- filter(data_ml, date == "2006-12-31")    # Dataset for k-NN exercise
+knn_target <- filter(knn_data, stock_id == 13) %>%   # Target observation
+              dplyr::select(features)
+knn_sample <- filter(knn_data, stock_id != 13) %>%   # All other observations
+              dplyr::select(features)
+neighbors <- get.knnx(data = knn_sample, query = knn_target, k = 30) 
+neighbors$nn.index                                   # Indices of the k nearest neighbors
+```
+
+Once the neighbors and distances are known, we can compute a prediction for the return of the target stock. We use the function $h(z)=e^{-z}$ for the weighting of instances (via the distances). 
+
+```{r, message = FALSE, warning = FALSE}
+knn_labels <- knn_data[as.vector(neighbors$nn.index),] %>%                # y values for neighb.
+    dplyr::select(R1M_Usd)    
+sum(knn_labels * exp(-neighbors$nn.dist) / sum(exp(-neighbors$nn.dist)))  # Pred w. k(z)=e^(-z)
+filter(knn_data, stock_id == 13) %>%                                      # True y 
+              dplyr::select(R1M_Usd)
+```
+
+The prediction is neither very good, nor very bad (the sign is correct!). 
