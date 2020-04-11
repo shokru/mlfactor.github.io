@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-04-05" />
+<meta name="date" content="2020-04-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -642,7 +642,7 @@ where <span class="math inline">\(e^{\textbf{X}}\)</span> is the element-wise ex
 <h2><span class="header-section-number">17.4</span> Simple examples</h2>
 <div id="q-learning-with-simulations" class="section level3">
 <h3><span class="header-section-number">17.4.1</span> Q-learning with simulations</h3>
-<p>To illustrate the gist of the problems mentioned above, we propose two implementations of <span class="math inline">\(Q\)</span>-learning. For simplicity, the first one is based on simulations. This helps understand the learning process in a simplified framework. We consider two assets: one risky and one riskless, with return equal to zero. The returns for the risky process follow an autoregressive model of order one (AR(1)): <span class="math inline">\(r_{t+1}=a+\rho r_t+\epsilon_{t+1}\)</span> with <span class="math inline">\(|\rho|&lt;1\)</span> and <span class="math inline">\(\epsilon\)</span> following a standard white noise with variance <span class="math inline">\(\sigma^2\)</span>. In practivc, individual (monthly) returns are seldom autocorrelated, but adjusting the autocorrelation helps understand if the algorithm learns correctly (see exercise below).</p>
+<p>To illustrate the gist of the problems mentioned above, we propose two implementations of <span class="math inline">\(Q\)</span>-learning. For simplicity, the first one is based on simulations. This helps understand the learning process in a simplified framework. We consider two assets: one risky and one riskless, with return equal to zero. The returns for the risky process follow an autoregressive model of order one (AR(1)): <span class="math inline">\(r_{t+1}=a+\rho r_t+\epsilon_{t+1}\)</span> with <span class="math inline">\(|\rho|&lt;1\)</span> and <span class="math inline">\(\epsilon\)</span> following a standard white noise with variance <span class="math inline">\(\sigma^2\)</span>. In practice, individual (monthly) returns are seldom autocorrelated, but adjusting the autocorrelation helps understand if the algorithm learns correctly (see exercise below).</p>
 <p>The environment consists only in observing the past return <span class="math inline">\(r_t\)</span>. Since we seek to estimate the <span class="math inline">\(Q\)</span> function, we need to discretize this state variable. The simplest choice is to resort to a binary variable: equal to -1 (negative) if <span class="math inline">\(r_t&lt;0\)</span> and to +1 (positive) if <span class="math inline">\(r_t\ge 0\)</span>. The actions are summarized by the quantity invested in the risky asset. It can take 5 values: 0 (risk-free portfolio), 0.25, 0.5, 0.75 and 1 (fully invested in the risky asset). This is for instance the same choice as in <span class="citation">Pendharkar and Cusatis (<a href="#ref-pendharkar2018trading">2018</a>)</span>.</p>
 <p>The landscape of R libraries for RL is surprisingly sparse. We resort to the package <em>ReinforcementLearning</em> which has an intuitive implementation of <span class="math inline">\(Q\)</span>-learning (another option would be the <em>reinforcelearn</em> package). It requires a dataset with the usual inputs: state, action, reward and subsequent state. We start by simulating the returns: they drive the states and the rewards (portfolio returns). The actions are sampled randomly. Technically, the main function of the package requires that states and actions be of character type. The data is built in the chunk below.</p>
 
@@ -839,7 +839,7 @@ where <span class="math inline">\(e^{\textbf{X}}\)</span> is the element-wise ex
 <p>Moody, John, Lizhong Wu, Yuansong Liao, and Matthew Saffell. 1998. “Performance Functions and Reinforcement Learning for Trading Systems and Portfolios.” <em>Journal of Forecasting</em> 17 (5-6): 441–70.</p>
 </div>
 <div id="ref-mosavi2020comprehensive">
-<p>Mosavi, Amir, Pedram Ghamisi, Yaser Faghan, Puhong Duan, and Shahab Shamshirband. 2020. “Comprehensive Review of Deep Reinforcement Learning Methods and Applications in Economics.” <em>Preprints.org</em>. Preprints.</p>
+<p>Mosavi, Amir, Pedram Ghamisi, Yaser Faghan, Puhong Duan, and Shahab Shamshirband. 2020. “Comprehensive Review of Deep Reinforcement Learning Methods and Applications in Economics.” <em>arXiv Preprint</em>, no. 2004.01509.</p>
 </div>
 <div id="ref-neuneier1996optimal">
 <p>Neuneier, Ralph. 1996. “Optimal Asset Allocation Using Adaptive Dynamic Programming.” In <em>Advances in Neural Information Processing Systems</em>, 952–58.</p>
