@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-04-11" />
+<meta name="date" content="2020-04-12" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -580,7 +580,7 @@ We can then proceed:</p>
 <p>When the data is formatted using tensors, it is possible to resort to vectorization so that the number of calls is limited to an order of the magnitude of the number of nodes (units) in the network.</p>
 <p>The backpropagation algorithm can be summarized as follows. Given a sample of points (possibly just one):</p>
 <ol style="list-style-type: decimal">
-<li>the data flows from left as is described in Figure <a href="NN.html#fig:MLperceptron">8.3</a>;<br />
+<li>the data flows from left as is described in Figure <a href="NN.html#fig:backp">8.6</a>;<br />
 </li>
 <li>this allows the computation of the error or loss function;<br />
 </li>
@@ -588,6 +588,12 @@ We can then proceed:</p>
 </li>
 <li>all weights and biases can be updated to take the sample points into account (the model is adjusted to reduce the loss/error stemming from these points).</li>
 </ol>
+<div class="figure" style="text-align: center"><span id="fig:backp"></span>
+<img src="images/backprop.png" alt="Diagram of backpropagation." width="380px" />
+<p class="caption">
+FIGURE 8.6: Diagram of backpropagation.
+</p>
+</div>
 <p>This operation can be performed any number of times with different sample sizes. We discuss this issue in Section <a href="NN.html#howdeep">8.3</a>.</p>
 <p>The learning rate <span class="math inline">\(\eta\)</span> can be refined. One option to reduce overfitting is to impose that after each epoch, the intensity of the update decreases. One possible parametric form is <span class="math inline">\(\eta=\alpha e^{- \beta t}\)</span>, where <span class="math inline">\(t\)</span> is the epoch and <span class="math inline">\(\alpha,\beta&gt;0\)</span>. One further sophistication is to resort to so-called <em>momentum</em> (which originates from <span class="citation">Polyak (<a href="#ref-polyak1964some">1964</a>)</span>):
 <span class="math display" id="eq:gradmom">\[\begin{align}
@@ -738,18 +744,18 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <div class="figure" style="text-align: center"><span id="fig:NN3"></span>
 <img src="ML_factor_files/figure-html/NN3-1.png" alt="Output from a trained neural network (regression task)." width="480" />
 <p class="caption">
-FIGURE 8.6: Output from a trained neural network (regression task).
+FIGURE 8.7: Output from a trained neural network (regression task).
 </p>
 </div>
 <p></p>
 <p>The batch size is quite arbitrary. For technical reasons pertaining to training on GPUs, these sizes are often powers of 2.</p>
-<p>In keras, the plot of the trained model shows four different curves (shown here in Figure <a href="NN.html#fig:NN3">8.6</a>). The top graph displays the improvement (or lack thereof) in loss as the number of epochs increases. Usually, the algorithm starts by learning rapidly and then converges to a point where any additional epoch does not improve the fit. In the example above, this point arrives rather quickly because it is hard to notice any gain beyond the fourth epoch. The two colors show the performance on the two samples: the training sample and the testing sample. By construction, the loss will always improve (even marginally) on the training sample. When the impact is negligible on the testing sample (the curve is flat, as is the case here), the model fails to generalize out-of-sample: the gains obtained by training on the original sample do not translate to gains on previously unseen data, thus, the model seems to be learning noise.</p>
+<p>In keras, the plot of the trained model shows four different curves (shown here in Figure <a href="NN.html#fig:NN3">8.7</a>). The top graph displays the improvement (or lack thereof) in loss as the number of epochs increases. Usually, the algorithm starts by learning rapidly and then converges to a point where any additional epoch does not improve the fit. In the example above, this point arrives rather quickly because it is hard to notice any gain beyond the fourth epoch. The two colors show the performance on the two samples: the training sample and the testing sample. By construction, the loss will always improve (even marginally) on the training sample. When the impact is negligible on the testing sample (the curve is flat, as is the case here), the model fails to generalize out-of-sample: the gains obtained by training on the original sample do not translate to gains on previously unseen data, thus, the model seems to be learning noise.</p>
 <p>The second graph shows the same behavior but computed using the metric function. The correlation (in absolute terms) between the two curves (loss and metric) is usually high. If one of them is flat, the other should be as well.</p>
 <p>In order to obtain the parameters of the model, the user can call get_weights(model)<a href="#fn17" class="footnote-ref" id="fnref17"><sup>17</sup></a> We do not execute the code here because the size of the output is much too large as their are thousands of weights.</p>
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb81-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.5309651</code></pre>
+<pre><code>## [1] 0.5443254</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -829,14 +835,14 @@ FIGURE 8.6: Output from a trained neural network (regression task).
 <div class="figure" style="text-align: center"><span id="fig:NN3C"></span>
 <img src="ML_factor_files/figure-html/NN3C-1.png" alt="Output from a trained neural network (classification task) with early stopping." width="400px" />
 <p class="caption">
-FIGURE 8.7: Output from a trained neural network (classification task) with early stopping.
+FIGURE 8.8: Output from a trained neural network (classification task) with early stopping.
 </p>
 </div>
 <p></p>
 <p>There is only one major difference here compared to the previous training call. In keras, callbacks are functions that can be used at given stages of the learning process. In the above example, we use one such function to stop the algorithm when no progress has been made for some time.</p>
 <p>When datasets are large, the training can be long, especially when batch sizes are small and/or the number of epochs is high. It is not guaranteed that going to the full number of epochs is useful, as the loss or metric functions may be plateauing much sooner. Hence, it can be very convenient to stop the process if no improvement is achieved during a specified time frame. We set the number of epochs to 20, but the process will likely stop before that.</p>
 <p>In the above code, the improvement is focused on validation accuracy (“val_acc”; one alternative is “val_loss”). The min_delta value sets the minimum improvement that needs to be attained for the algorithm to continue. Therefore, unless the validation accuracy gains 0.001 points at each epoch, the training will stop. Nevertheless, some flexibility is introduced via the patience parameter, which in our case asserts that the hatling decision is made only after three consecutive epochs with no improvement. In the option, the verbose parameter dictates the amount of comments that is made by the function. For simplicity, we do not want any comments, hence this value is set to zero.</p>
-<p>In Figure <a href="NN.html#fig:NN3C">8.7</a>, the two graphs yield very different curves. One reason for that is the scale of the second graph. The range of accuracies is very narrow. Any change in this range does not represent much variation overall. The pattern is relatively clear on the training sample: the loss decreases while the accuracy improves. Unfortunately, this does not translate to the testing sample which indicates that the model does not generalize well out-of-sample.</p>
+<p>In Figure <a href="NN.html#fig:NN3C">8.8</a>, the two graphs yield very different curves. One reason for that is the scale of the second graph. The range of accuracies is very narrow. Any change in this range does not represent much variation overall. The pattern is relatively clear on the training sample: the loss decreases while the accuracy improves. Unfortunately, this does not translate to the testing sample which indicates that the model does not generalize well out-of-sample.</p>
 </div>
 <div id="custloss" class="section level3">
 <h3><span class="header-section-number">8.4.3</span> Custom losses</h3>
@@ -873,7 +879,7 @@ FIGURE 8.7: Output from a trained neural network (classification task) with earl
 <p>The curves may go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns.</p>
 
 <div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb91-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(model_custom, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4468864</code></pre>
+<pre><code>## [1] 0.5460346</code></pre>
 <p></p>
 <p>The outcome could be improved. There several directions that could help. One of them is arguably that the model should be dynamic and not static (see Chapter <a href="backtest.html#backtest">13</a>).</p>
 </div>
@@ -885,15 +891,15 @@ FIGURE 8.7: Output from a trained neural network (classification task) with earl
 <p>Multilayer perceptrons are feedforward networks because the data flows from left to right with no looping in between. For some particular tasks with sequential linkages (e.g., time-series or speech recognition), it might be useful to keep track of what happened with the previous sample (i.e., there is a natural ordering). One simple way to model ‘memory’ would be to consider the following network with only one intermediate layer:
 <span class="math display">\[\begin{align*}
 \tilde{y}_i&amp;=f^{(y)}\left(\sum_{j=1}^{U_1}h_{i,j}w^{(y)}_j+b^{(2)}\right) \\
-h_{i} &amp;=f^{(h)}\left(\sum_{k=1}^{U_0}x_{i,k}w^{(h,1)}_k+b^{(1)}+ \underbrace{\sum_{k=1}^{U_1}  w^{(h,2)}_{k}h_{i-1,k}}_{\text{memory part}} \right),
+\textbf{h}_{i} &amp;=f^{(h)}\left(\sum_{k=1}^{U_0}x_{i,k}w^{(h,1)}_k+b^{(1)}+ \underbrace{\sum_{k=1}^{U_1}  w^{(h,2)}_{k}h_{i-1,k}}_{\text{memory part}} \right),
 \end{align*}\]</span></p>
 <p>where <span class="math inline">\(h_0\)</span> is customarily set at zero (vector-wise).</p>
 <p>These kinds of models are often referred to as <span class="citation">Elman (<a href="#ref-elman1990finding">1990</a>)</span> models or to <span class="citation">Jordan (<a href="#ref-jordan1997serial">1997</a>)</span> models if in the latter case <span class="math inline">\(h_{i-1}\)</span> is replaced by <span class="math inline">\(y_{i-1}\)</span> in the computation of <span class="math inline">\(h_i\)</span>. Both types of models fall under the overarching umbrella of Recurrent Neural Networks (RNNs).</p>
-<p>The <span class="math inline">\(h_i\)</span> is usually called the state or the hidden layer. The training of this model is complicated and must be done by unfolding the network over all instances to obtain a simple feed-forward network and train it regularly. We illustrate the unfolding principle in Figure <a href="NN.html#fig:recnet">8.8</a>. It shows a very deep network. The first input impacts the first layer and then the second one via <span class="math inline">\(h_1\)</span> and all following layers in the same fashion. Likewise, the second input impacts all layers except the first and each instance <span class="math inline">\(i-1\)</span> is going to impact the output <span class="math inline">\(\tilde{y}_i\)</span> and all outputs <span class="math inline">\(\tilde{y}_j\)</span> for <span class="math inline">\(j \ge i\)</span>. In Figure <a href="NN.html#fig:recnet">8.8</a>, the parameters that are trained are shown in blue. They appear many times, in fact, at each level of the unfolded network.</p>
+<p>The <span class="math inline">\(h_i\)</span> is usually called the state or the hidden layer. The training of this model is complicated and must be done by unfolding the network over all instances to obtain a simple feed-forward network and train it regularly. We illustrate the unfolding principle in Figure <a href="NN.html#fig:recnet">8.9</a>. It shows a very deep network. The first input impacts the first layer and then the second one via <span class="math inline">\(h_1\)</span> and all following layers in the same fashion. Likewise, the second input impacts all layers except the first and each instance <span class="math inline">\(i-1\)</span> is going to impact the output <span class="math inline">\(\tilde{y}_i\)</span> and all outputs <span class="math inline">\(\tilde{y}_j\)</span> for <span class="math inline">\(j \ge i\)</span>. In Figure <a href="NN.html#fig:recnet">8.9</a>, the parameters that are trained are shown in blue. They appear many times, in fact, at each level of the unfolded network.</p>
 <div class="figure" style="text-align: center"><span id="fig:recnet"></span>
 <img src="images/RN.png" alt="Unfolding a recurrent network." width="480px" />
 <p class="caption">
-FIGURE 8.8: Unfolding a recurrent network.
+FIGURE 8.9: Unfolding a recurrent network.
 </p>
 </div>
 <p>The main problem with the above architecture is the loss of memory induced by <strong>vanishing gradients</strong>. Because of the depth of the model, the chain rule used in the backpropagation will imply a large number of products of derivatives of activation functions. Now, as is shown in Figure <a href="NN.html#fig:activationf">8.4</a>, these functions are very smooth and their derivatives are most of the time smaller than one (in absolute value). Hence, multiplying many numbers smaller than one leads to very small figures: beyond some layers, the learning does not propagate because the adjustments are too small.</p>
@@ -973,11 +979,11 @@ Once the structure is determined, we can move forward to the training stage.</p>
 <div class="figure" style="text-align: center"><span id="fig:RNN2"></span>
 <img src="ML_factor_files/figure-html/RNN2-1.png" alt="Output from a trained recurrent neural network (regression task)." width="300px" />
 <p class="caption">
-FIGURE 8.9: Output from a trained recurrent neural network (regression task).
+FIGURE 8.10: Output from a trained recurrent neural network (regression task).
 </p>
 </div>
 <p></p>
-<p>Compared to our previous models, the major difference both in the ouptut (the graph on Figure <a href="NN.html#fig:RNN2">8.9</a>) and the input (the code) is the absence of validation (or testing) data. One reason for that is because keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.</p>
+<p>Compared to our previous models, the major difference both in the ouptut (the graph on Figure <a href="NN.html#fig:RNN2">8.10</a>) and the input (the code) is the absence of validation (or testing) data. One reason for that is because keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.</p>
 
 <div class="sourceCode" id="cb97"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb97-1" data-line-number="1">new_model &lt;-<span class="st"> </span><span class="kw">keras_model_sequential</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb97-2" data-line-number="2"><span class="st">    </span><span class="kw">layer_gru</span>(<span class="dt">units =</span> <span class="dv">16</span>, </a>
@@ -993,7 +999,7 @@ FIGURE 8.9: Output from a trained recurrent neural network (regression task).
 
 <div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb98-1" data-line-number="1">pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></a>
 <a class="sourceLine" id="cb98-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4999857</code></pre>
+<pre><code>## [1] 0.4994698</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 <p>Before we close this section on RNNs, we mention a new type architecture, called <span class="math inline">\(\alpha\)</span>-RNN which are simpler compared to LSTMs and GRUs. They consist in vanilla RNNs to which a simple autocorrelation is added to generate long term memory. We refer to the paper <span class="citation">Matthew F Dixon (<a href="#ref-dixon2020industrial">2020</a>)</span> for more details on this subject.</p>
@@ -1022,7 +1028,7 @@ which is an application of Equation <a href="factor.html#eq:SDFGMM">(4.7)</a> wh
 <p>The full specification of the network is given by the program:
 <span class="math display">\[\underset{w}{\text{min}} \ \underset{g}{\text{max}} \ \sum_{j=1}^N \left\| \mathbb{E} \left[\left(1-\sum_{n=1}^Nw(I_t,I_{t,n})r_{t+1,n} \right)r_{t+1,j}g(I_t,I_{t,j})\right] \right\|^2,\]</span></p>
 <p>where the <span class="math inline">\(L^2\)</span> norm applies on the <span class="math inline">\(d\)</span> values generated via <span class="math inline">\(g\)</span>. The asset pricing equations (moments) are not treated as equalities but as a relationship that is approximated. The network defined by <span class="math inline">\(\textbf{w}\)</span> is the asset pricing modeler and tries to determine the best possible model while the network defined by <span class="math inline">\(\textbf{g}\)</span> seeks to find the worst possible conditions so that the model performs badly. We refer to the original article for the full specification of both networks. In their empirical section, <span class="citation">Luyang Chen, Pelger, and Zhu (<a href="#ref-chen2019deep">2020</a>)</span> report that adopting a strong structure driven by asset pricing imperatives add values compared to a pure predictive ‘vanilla’ approach such as the one detailed in <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2020</a><a href="#ref-gu2018empirical">b</a>)</span>. The out-of-sample behavior of decile sorted portfolios (based on the model’s prediction) display a monotonic pattern with respect to the order of the deciles.</p>
-<p>GANs can also be used to generate artificial financial data (see <span class="citation">Efimov and Xu (<a href="#ref-efimov2019using">2019</a>)</span> and <span class="citation">Wiese et al. (<a href="#ref-wiese2019quant">2020</a>)</span>), but this topic is outside the scope of the book.</p>
+<p>GANs can also be used to generate artificial financial data (see <span class="citation">Efimov and Xu (<a href="#ref-efimov2019using">2019</a>)</span>, <span class="citation">Marti (<a href="#ref-marti2019corrgan">2019</a>)</span> and <span class="citation">Wiese et al. (<a href="#ref-wiese2019quant">2020</a>)</span>), but this topic is outside the scope of the book.</p>
 </div>
 <div id="autoencoders" class="section level3">
 <h3><span class="header-section-number">8.6.2</span> Auto-encoders</h3>
@@ -1044,21 +1050,21 @@ where <span class="math inline">\(\textbf{NN}_{\textbf{beta}}\)</span> and <span
 <h3><span class="header-section-number">8.6.3</span> A word on convolutional networks</h3>
 <p>Neural networks gained popularity during the 2010 decade thanks to a series of successes in computer vision competitions. The algorithms behind these advances are convolutional neural networks (CNNs). While they may seem a surprising choice for financial predictions, several teams of researchers in the Computer Science field have proposed approaches that rely on this variation of neural networks (<span class="citation">J.-F. Chen et al. (<a href="#ref-chen2016financial">2016</a>)</span>, <span class="citation">Loreggia et al. (<a href="#ref-loreggia2016deep">2016</a>)</span>, <span class="citation">Dingli and Fournier (<a href="#ref-dingli2017financial">2017</a>)</span>, <span class="citation">Tsantekidis et al. (<a href="#ref-tsantekidis2017forecasting">2017</a>)</span>, <span class="citation">Hoseinzade and Haratizadeh (<a href="#ref-hoseinzade2019cnnpred">2019</a>)</span>). Hence, we briefly present the principle in this final section on neural networks. We lay out the presentation for CNNs of dimension two, but they can also be used in dimension one or three.</p>
 <p>The reason why CNNs are useful is because they allow to progressively reduce the dimension of a large dataset by keeping local information. An image is a rectangle of pixels. Each pixel is usually coded via three layers, one for each color: red, blue and green. But to keep things simple, let’s just consider one layer of, say 1,000 by 1,000 pixels with one value for each pixel. In order to analyze the content of this image, a <strong>convolutional layer</strong> will reduce the dimension of inputs by resorting to some convolution. Visually, this simplification is performed by scanning and altering the values using rectangles with arbitrary weights.</p>
-<p>Figure <a href="NN.html#fig:cnnscheme">8.10</a> sketches this process (it is strongly inspired by <span class="citation">Hoseinzade and Haratizadeh (<a href="#ref-hoseinzade2019cnnpred">2019</a>)</span>). The original data is a matrix <span class="math inline">\((I\times K)\)</span> <span class="math inline">\(x_{i,k}\)</span> and the weights are also a matrix <span class="math inline">\(w_{j,l}\)</span> of size <span class="math inline">\((J\times L)\)</span> with <span class="math inline">\(J&lt;I\)</span> and <span class="math inline">\(L&lt;K\)</span>. The scanning transforms each rectangle of size <span class="math inline">\((J\times L)\)</span> into one real number. Hence, the output has a smaller size: <span class="math inline">\((I-J+1)\times(K-L+1)\)</span>. If <span class="math inline">\(I=K=1,000\)</span> and <span class="math inline">\(J=L=201\)</span>, then the output has dimension <span class="math inline">\((800\times 800)\)</span> which is already much smaller. The output values are given by
+<p>Figure <a href="NN.html#fig:cnnscheme">8.11</a> sketches this process (it is strongly inspired by <span class="citation">Hoseinzade and Haratizadeh (<a href="#ref-hoseinzade2019cnnpred">2019</a>)</span>). The original data is a matrix <span class="math inline">\((I\times K)\)</span> <span class="math inline">\(x_{i,k}\)</span> and the weights are also a matrix <span class="math inline">\(w_{j,l}\)</span> of size <span class="math inline">\((J\times L)\)</span> with <span class="math inline">\(J&lt;I\)</span> and <span class="math inline">\(L&lt;K\)</span>. The scanning transforms each rectangle of size <span class="math inline">\((J\times L)\)</span> into one real number. Hence, the output has a smaller size: <span class="math inline">\((I-J+1)\times(K-L+1)\)</span>. If <span class="math inline">\(I=K=1,000\)</span> and <span class="math inline">\(J=L=201\)</span>, then the output has dimension <span class="math inline">\((800\times 800)\)</span> which is already much smaller. The output values are given by
 <span class="math display">\[o_{i,k}=\sum_{j=1}^J\sum_{l=1}^Lw_{j,l}x_{i+j-1,k+l-1}.\]</span></p>
 <div class="figure" style="text-align: center"><span id="fig:cnnscheme"></span>
 <img src="images/cnn_scheme.png" alt="Scheme of a convolutional unit. Note: the dimensions are general and do not correspond to the number of squares." width="480px" />
 <p class="caption">
-FIGURE 8.10: Scheme of a convolutional unit. Note: the dimensions are general and do not correspond to the number of squares.
+FIGURE 8.11: Scheme of a convolutional unit. Note: the dimensions are general and do not correspond to the number of squares.
 </p>
 </div>
 <p>Iteratively reducing the dimension of the output via sequences of convolutional layers like the one presented above would be costly in computation and could give rise to overfitting because the number of weights would be incredibly large. In order to efficiently reduce the size of outputs, <strong>pooling layers</strong> are often used. The job of pooling units is to simplify matrices by reducing them to a simple metric such as the minimum, maximum or average value of the matrix:</p>
 <p><span class="math display">\[o_{i,k}=f(x_{i+j-1,k+l-1}, 1\le j\le J, 1 \le l\le L),\]</span></p>
-<p>where <span class="math inline">\(f\)</span> is the minimum, maximum or average value. We show examples of pooling in Figure <a href="NN.html#fig:cnnpooling">8.11</a> below. In order to increase the speed of compression, it is possible to add a stride to omit cells. A stride value of <span class="math inline">\(v\)</span> will perform the operation only every <span class="math inline">\(v\)</span> value and hence bypass intermediate steps. In Figure <a href="NN.html#fig:cnnpooling">8.11</a>, the two cases on the left do not resort to pooling, hence the reduction in dimension is exactly equal to the size of the pooling size. When stride is into action (right pane), the reduction is more marked. From a 1,000 by 1,000 input, a 2-by-2 pooling layer with stride 2 will yield a 500 by 500 output: the dimension is shrinked four-fold, as in the right scheme of Figure <a href="NN.html#fig:cnnpooling">8.11</a> .</p>
+<p>where <span class="math inline">\(f\)</span> is the minimum, maximum or average value. We show examples of pooling in Figure <a href="NN.html#fig:cnnpooling">8.12</a> below. In order to increase the speed of compression, it is possible to add a stride to omit cells. A stride value of <span class="math inline">\(v\)</span> will perform the operation only every <span class="math inline">\(v\)</span> value and hence bypass intermediate steps. In Figure <a href="NN.html#fig:cnnpooling">8.12</a>, the two cases on the left do not resort to pooling, hence the reduction in dimension is exactly equal to the size of the pooling size. When stride is into action (right pane), the reduction is more marked. From a 1,000 by 1,000 input, a 2-by-2 pooling layer with stride 2 will yield a 500 by 500 output: the dimension is shrinked four-fold, as in the right scheme of Figure <a href="NN.html#fig:cnnpooling">8.12</a> .</p>
 <div class="figure" style="text-align: center"><span id="fig:cnnpooling"></span>
 <img src="images/cnn_pooling.png" alt="Scheme of pooling units." width="500px" />
 <p class="caption">
-FIGURE 8.11: Scheme of pooling units.
+FIGURE 8.12: Scheme of pooling units.
 </p>
 </div>
 <p>With these tools in hand, it is possible to build new predictive tools. In <span class="citation">Hoseinzade and Haratizadeh (<a href="#ref-hoseinzade2019cnnpred">2019</a>)</span>, predictors such as price quotes, technical indicators and macro-economic data are fed to a complex neural network with 6 layers in order to predict the sign of price variations. While this is clearly an interesting computer science exercise, the deep economic motivation behind this choice of architecture remains unclear.</p>
@@ -1074,7 +1080,7 @@ FIGURE 8.11: Scheme of pooling units.
 <div class="figure" style="text-align: center"><span id="fig:AEgu"></span>
 <img src="images/AE.png" alt="Scheme of the autoencoder pricing model." width="500px" />
 <p class="caption">
-FIGURE 8.12: Scheme of the autoencoder pricing model.
+FIGURE 8.13: Scheme of the autoencoder pricing model.
 </p>
 </div>
 <p>In order to harness the full potential of Keras, it is imperative to switch to more general formulations of NNs. This can be done via the so-called <em>functional API</em>: <a href="https://keras.rstudio.com/articles/functional_api.html" class="uri">https://keras.rstudio.com/articles/functional_api.html</a>.</p>
@@ -1205,6 +1211,9 @@ FIGURE 8.12: Scheme of the autoencoder pricing model.
 </div>
 <div id="ref-loreggia2016deep">
 <p>Loreggia, Andrea, Yuri Malitsky, Horst Samulowitz, and Vijay Saraswat. 2016. “Deep Learning for Algorithm Portfolios.” In <em>Proceedings of the Thirtieth Aaai Conference on Artificial Intelligence</em>, 1280–6. AAAI Press.</p>
+</div>
+<div id="ref-marti2019corrgan">
+<p>Marti, Gautier. 2019. “CorrGAN: Sampling Realistic Financial Correlation Matrices Using Generative Adversarial Networks.” <em>arXiv Preprint</em>, no. 1910.09504.</p>
 </div>
 <div id="ref-masters1993practical">
 <p>Masters, Timothy. 1993. <em>Practical Neural Network Recipes in C++</em>. Morgan Kaufmann.</p>
