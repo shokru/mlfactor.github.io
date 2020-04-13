@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-04-12" />
+<meta name="date" content="2020-04-13" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -336,15 +336,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="13.4" data-path="backtest.html"><a href="backtest.html#common-errors-and-issues"><i class="fa fa-check"></i><b>13.4</b> Common errors and issues</a><ul>
 <li class="chapter" data-level="13.4.1" data-path="backtest.html"><a href="backtest.html#forward-looking-data"><i class="fa fa-check"></i><b>13.4.1</b> Forward looking data</a></li>
-<li class="chapter" data-level="13.4.2" data-path="backtest.html"><a href="backtest.html#backtest-overfitting"><i class="fa fa-check"></i><b>13.4.2</b> Backtest overfitting</a></li>
+<li class="chapter" data-level="13.4.2" data-path="backtest.html"><a href="backtest.html#backov"><i class="fa fa-check"></i><b>13.4.2</b> Backtest overfitting</a></li>
 <li class="chapter" data-level="13.4.3" data-path="backtest.html"><a href="backtest.html#simple-safeguards"><i class="fa fa-check"></i><b>13.4.3</b> Simple safeguards</a></li>
 </ul></li>
 <li class="chapter" data-level="13.5" data-path="backtest.html"><a href="backtest.html#implication-of-non-stationarity-forecasting-is-hard"><i class="fa fa-check"></i><b>13.5</b> Implication of non-stationarity: forecasting is hard</a><ul>
 <li class="chapter" data-level="13.5.1" data-path="backtest.html"><a href="backtest.html#general-comments"><i class="fa fa-check"></i><b>13.5.1</b> General comments</a></li>
 <li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
 </ul></li>
-<li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
-<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-3"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+<li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#first-example-a-complete-backtest"><i class="fa fa-check"></i><b>13.6</b> First example: a complete backtest</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#second-example-backtest-overfitting"><i class="fa fa-check"></i><b>13.7</b> Second example: backtest overfitting</a></li>
+<li class="chapter" data-level="13.8" data-path="backtest.html"><a href="backtest.html#coding-exercises-3"><i class="fa fa-check"></i><b>13.8</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>IV Further important topics</b></span></li>
 <li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
@@ -582,7 +583,7 @@ SR_{TC}=\frac{\mu_P-TC}{\sigma_P}.
 <h3><span class="header-section-number">13.4.1</span> Forward looking data</h3>
 <p>One of the most common mistakes in portfolio backtesting is the use of forward looking data. It is for instance easy to fall in the trap of the danger zone depicted in Figure <a href="backtest.html#fig:backtestoos2">13.2</a>. In this case, the labels used at time <span class="math inline">\(t\)</span> are computed with knowledge of what happens at times <span class="math inline">\(t+1\)</span>, <span class="math inline">\(t+2\)</span>, etc. It is worth triple checking every step in the code to make sure that strategies are not built on prescient data.</p>
 </div>
-<div id="backtest-overfitting" class="section level3">
+<div id="backov" class="section level3">
 <h3><span class="header-section-number">13.4.2</span> Backtest overfitting</h3>
 <p>The second major problem is backtest overfitting. The analogy with training set overfitting is easy to grasp. It is a well known issue and was formalized for instance in <span class="citation">White (<a href="#ref-white2000reality">2000</a>)</span> and <span class="citation">Romano and Wolf (<a href="#ref-romano2005stepwise">2005</a>)</span>. In portfolio choice, we refer to <span class="citation">Bajgrowicz and Scaillet (<a href="#ref-bajgrowicz2012technical">2012</a>)</span> and <span class="citation">Bailey and Prado (<a href="#ref-bailey2014deflated">2014</a>)</span> and the references therein.</p>
 <p>At any given moment, a backtest depends on <em>only</em> one particular dataset. Often, the result of the first backtest will not be satisfactory - for many possible reasons. Hence, it is tempting to have another try, when altering some parameters that were probably not optimal. This second test may be better, but not quite good enough - yet. Thus, a in a third trial, a new weighting scheme can be tested, along with a new forecasting engine (more sophisticated). Iteratively, the backtester can only end up with a strategy that performs well enough, it is just a matter of time and trials.</p>
@@ -643,8 +644,8 @@ where <span class="math inline">\(\delta(\cdot,\cdot)\)</span> is the delta Kron
 One of the no free lunch theorems states that <span class="math inline">\(E_1(S)=E_2(S)\)</span>, that is, that with the sole knowledge of <span class="math inline">\(S\)</span>, there can be no superior algorithm, <em>on average</em>. In order to build a performing algorithm, the analyst or econometrician must have prior views on the structure of the relationship between <span class="math inline">\(y\)</span> and <span class="math inline">\(\textbf{x}\)</span> and integrate these views in the construction of the model. Unfortunately, this can also yield underperforming models if the views are incorrect.</p>
 </div>
 </div>
-<div id="example-1" class="section level2">
-<h2><span class="header-section-number">13.6</span> Example</h2>
+<div id="first-example-a-complete-backtest" class="section level2">
+<h2><span class="header-section-number">13.6</span> First example: a complete backtest</h2>
 <p>We finally propose a full detailed example of one implementation of a ML-based strategy run on a careful backtest.
 What follows is a generalization of the content of Section <a href="lasso.html#sparseex">6.2.2</a>. In the same spirit, we split the backtest in four parts:</p>
 <ol style="list-style-type: decimal">
@@ -833,8 +834,93 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p></p>
 <p>Out of the 12 years of the backtest, the advanced strategy outperforms the benchmark during 10 years. It is less hurtful in two of the four years of aggregate losses (2015 and 2018). This is a satisfactory improvement because the EW benchmark is tough to beat!</p>
 </div>
+<div id="second-example-backtest-overfitting" class="section level2">
+<h2><span class="header-section-number">13.7</span> Second example: backtest overfitting</h2>
+<p>To end this chapter, we quantify the concepts of Section <a href="backtest.html#backov">13.4.2</a>. First, we build a function that is able to generate performance metrics for simple strategies that can be evaluated in batches. The strategies are pure factor bets and depend on three inputs: the chosen characteristic (e.g., market capitalization), a threshold level (quantile of the characteristic) and a direction (long position in the top or bottom of the distribution).</p>
+
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb186-1" data-line-number="1">strat &lt;-<span class="st"> </span><span class="cf">function</span>(data, feature, thresh, direction){</a>
+<a class="sourceLine" id="cb186-2" data-line-number="2">    data_tmp &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(data, feature, date, R1M_Usd)       <span class="co"># Data</span></a>
+<a class="sourceLine" id="cb186-3" data-line-number="3">    <span class="kw">colnames</span>(data_tmp)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;feature&quot;</span>                            <span class="co"># Colname</span></a>
+<a class="sourceLine" id="cb186-4" data-line-number="4">    data_tmp <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb186-5" data-line-number="5"><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">decision =</span> direction <span class="op">*</span><span class="st"> </span>feature <span class="op">&gt;</span><span class="st"> </span>direction <span class="op">*</span><span class="st"> </span>thresh) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Investment decision</span></a>
+<a class="sourceLine" id="cb186-6" data-line-number="6"><span class="st">        </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># Date-by-date  analysis    </span></a>
+<a class="sourceLine" id="cb186-7" data-line-number="7"><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">nb =</span> <span class="kw">sum</span>(decision),                                  <span class="co"># Nb assets in portfolio</span></a>
+<a class="sourceLine" id="cb186-8" data-line-number="8">               <span class="dt">w =</span> decision <span class="op">/</span><span class="st"> </span>nb,                                   <span class="co"># Weights of assets</span></a>
+<a class="sourceLine" id="cb186-9" data-line-number="9">               <span class="dt">return =</span> w <span class="op">*</span><span class="st"> </span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Asset contribution</span></a>
+<a class="sourceLine" id="cb186-10" data-line-number="10"><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">p_return =</span> <span class="kw">sum</span>(return)) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># Portfolio return</span></a>
+<a class="sourceLine" id="cb186-11" data-line-number="11"><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(p_return), <span class="dt">sd =</span> <span class="kw">sd</span>(p_return), <span class="dt">SR =</span> avg<span class="op">/</span>sd) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Perf. metrics</span></a>
+<a class="sourceLine" id="cb186-12" data-line-number="12"><span class="st">        </span><span class="kw">return</span>()</a>
+<a class="sourceLine" id="cb186-13" data-line-number="13">}</a></code></pre></div>
+<p></p>
+<p>Then, we test the function on a triplet of arguments. We pick the price-to-book (Pb) ratio. The position is positive and the threshold is 0.3, which means that the strategy buys the stocks that have a Pb value above the 0.3 quantile of the distribution.</p>
+
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb187-1" data-line-number="1"><span class="kw">strat</span>(data_ml, <span class="st">&quot;Pb&quot;</span>, <span class="fl">0.3</span>, <span class="dv">1</span>)   <span class="co"># Large cap</span></a></code></pre></div>
+<pre><code>## # A tibble: 1 x 3
+##      avg     sd    SR
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1 0.0102 0.0496 0.207</code></pre>
+<p></p>
+<p>The output keeps three quantities that will be useful to compute the statistic <a href="backtest.html#eq:tSR">(13.5)</a>. We must now generate these indicators for many strategies. We start by creating the grid of parameters.</p>
+
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb189-1" data-line-number="1">feature &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Div_Yld&quot;</span>, <span class="st">&quot;Ebit_Bv&quot;</span>, <span class="st">&quot;Mkt_Cap_6M_Usd&quot;</span>, <span class="st">&quot;Mom_11M_Usd&quot;</span>, <span class="st">&quot;Pb&quot;</span>, <span class="st">&quot;Vol1Y_Usd&quot;</span>)  </a>
+<a class="sourceLine" id="cb189-2" data-line-number="2">thresh &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.2</span>,<span class="fl">0.8</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)                                <span class="co"># Threshold values values</span></a>
+<a class="sourceLine" id="cb189-3" data-line-number="3">direction &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>)                                            <span class="co"># Decision direction</span></a>
+<a class="sourceLine" id="cb189-4" data-line-number="4">pars &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(feature, thresh, direction)                 <span class="co"># The grid</span></a>
+<a class="sourceLine" id="cb189-5" data-line-number="5">feature &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>()                          <span class="co"># re-features</span></a>
+<a class="sourceLine" id="cb189-6" data-line-number="6">thresh &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]                                              <span class="co"># re-thresholds</span></a>
+<a class="sourceLine" id="cb189-7" data-line-number="7">direction &lt;-<span class="st"> </span>pars[,<span class="dv">3</span>]                                           <span class="co"># re-directions</span></a></code></pre></div>
+<p></p>
+<p>This makes 84 strategies in total. We can proceed to see how they fare. We plot the corresponding Sharpe ratios below in Figure <a href="#fig:backov3"><strong>??</strong></a>. The top plot shows the strategies that invest in the bottoms of the distributions of characteristics while the bottom plot pertains to the portfolios that are long in the lower parts of these distributions.</p>
+
+<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb190-1" data-line-number="1">grd &lt;-<span class="st"> </span><span class="kw">pmap</span>(<span class="kw">list</span>(feature, thresh, direction),      <span class="co"># Parameters for the grid search</span></a>
+<a class="sourceLine" id="cb190-2" data-line-number="2">            strat,                                 <span class="co"># Function on which to apply the grid search</span></a>
+<a class="sourceLine" id="cb190-3" data-line-number="3">            <span class="dt">data =</span> data_ml                         <span class="co"># Data source/input</span></a>
+<a class="sourceLine" id="cb190-4" data-line-number="4">) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb190-5" data-line-number="5"><span class="st">    </span><span class="kw">unlist</span>() <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb190-6" data-line-number="6"><span class="st">    </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> T)</a>
+<a class="sourceLine" id="cb190-7" data-line-number="7">grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(feature, thresh, direction, grd)              <span class="co"># Gather &amp; reformat results </span></a>
+<a class="sourceLine" id="cb190-8" data-line-number="8"><span class="kw">colnames</span>(grd)[<span class="dv">4</span><span class="op">:</span><span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;sd&quot;</span>, <span class="st">&quot;SR&quot;</span>)                     <span class="co"># Change colnames</span></a>
+<a class="sourceLine" id="cb190-9" data-line-number="9">grd &lt;-<span class="st"> </span>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(direction), as.factor)            <span class="co"># Change type: factor (for plot)</span></a>
+<a class="sourceLine" id="cb190-10" data-line-number="10">grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> thresh, <span class="dt">y =</span> SR, <span class="dt">color =</span> feature)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></a>
+<a class="sourceLine" id="cb190-11" data-line-number="11"><span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(direction<span class="op">~</span>.) </a></code></pre></div>
+<p><img src="ML_factor_files/figure-html/backov3-1.png" width="480" style="display: block; margin: auto;" /></p>
+<p></p>
+<p>The last step is to compute the statistic <a href="backtest.html#eq:tSR">(13.5)</a>. We code it here:</p>
+
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb191-1" data-line-number="1">DSR &lt;-<span class="st"> </span><span class="cf">function</span>(SR, Tt, M, g3, g4, SR_m, SR_v){ <span class="co"># First, we build the function</span></a>
+<a class="sourceLine" id="cb191-2" data-line-number="2">    gamma &lt;-<span class="st"> </span><span class="op">-</span><span class="kw">digamma</span>(<span class="dv">1</span>)                        <span class="co"># Euler-Mascheroni constant</span></a>
+<a class="sourceLine" id="cb191-3" data-line-number="3">    SR_star &lt;-<span class="st"> </span>SR_m <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(SR_v)<span class="op">*</span>((<span class="dv">1</span><span class="op">-</span>gamma)<span class="op">*</span><span class="kw">qnorm</span>(<span class="dv">1-1</span><span class="op">/</span>M) <span class="op">+</span><span class="st"> </span>gamma<span class="op">*</span><span class="kw">qnorm</span>(<span class="dv">1-1</span><span class="op">/</span>M<span class="op">/</span><span class="kw">exp</span>(<span class="dv">1</span>))) <span class="co"># SR*</span></a>
+<a class="sourceLine" id="cb191-4" data-line-number="4">    num &lt;-<span class="st"> </span>(SR<span class="op">-</span>SR_star) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(Tt<span class="dv">-1</span>)            <span class="co"># Numerator</span></a>
+<a class="sourceLine" id="cb191-5" data-line-number="5">    den &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>g3<span class="op">*</span>SR <span class="op">+</span><span class="st"> </span>(g4<span class="dv">-1</span>)<span class="op">/</span><span class="dv">4</span><span class="op">*</span>SR<span class="op">^</span><span class="dv">2</span>)      <span class="co"># Denominator</span></a>
+<a class="sourceLine" id="cb191-6" data-line-number="6">    <span class="kw">return</span>(<span class="kw">pnorm</span>(num<span class="op">/</span>den))</a>
+<a class="sourceLine" id="cb191-7" data-line-number="7">}</a></code></pre></div>
+<p></p>
+<p>All that remains to do is to evaluate the arguments of the function. The “best” strategy is the one on the top left corner of Figure <a href="#eq:backov3">(<strong>??</strong>)</a> and it is based on market capitalization.</p>
+
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb192-1" data-line-number="1">M &lt;-<span class="st"> </span><span class="kw">nrow</span>(pars)             <span class="co"># Number of strategies we tested</span></a>
+<a class="sourceLine" id="cb192-2" data-line-number="2">SR &lt;-<span class="st"> </span><span class="kw">max</span>(grd<span class="op">$</span>SR)           <span class="co"># The SR we want to test</span></a>
+<a class="sourceLine" id="cb192-3" data-line-number="3">SR_m &lt;-<span class="st"> </span><span class="kw">mean</span>(grd<span class="op">$</span>SR)        <span class="co"># Average SR across all strategies</span></a>
+<a class="sourceLine" id="cb192-4" data-line-number="4">SR_v &lt;-<span class="st"> </span><span class="kw">var</span>(grd<span class="op">$</span>SR)         <span class="co"># Std dev of SR</span></a>
+<a class="sourceLine" id="cb192-5" data-line-number="5"><span class="co"># Below, we compute the returns of the strategy by recycling the code of the strat() function</span></a>
+<a class="sourceLine" id="cb192-6" data-line-number="6">data_tmp &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(data_ml, <span class="st">&quot;Mkt_Cap_6M_Usd&quot;</span>, date, R1M_Usd) <span class="co"># feature = Mkt_Cap  </span></a>
+<a class="sourceLine" id="cb192-7" data-line-number="7"><span class="kw">colnames</span>(data_tmp)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;feature&quot;</span></a>
+<a class="sourceLine" id="cb192-8" data-line-number="8">returns &lt;-<span class="st">  </span>data_tmp <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb192-9" data-line-number="9"><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">decision =</span> feature <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Investment decision: 0.2 is the best threshold</span></a>
+<a class="sourceLine" id="cb192-10" data-line-number="10"><span class="st">        </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># Date-by-date computations</span></a>
+<a class="sourceLine" id="cb192-11" data-line-number="11"><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">nb =</span> <span class="kw">sum</span>(decision),           <span class="co"># Nb assets in portfolio</span></a>
+<a class="sourceLine" id="cb192-12" data-line-number="12">               <span class="dt">w =</span> decision <span class="op">/</span><span class="st"> </span>nb,            <span class="co"># Portfolio weights</span></a>
+<a class="sourceLine" id="cb192-13" data-line-number="13">               <span class="dt">return =</span> w <span class="op">*</span><span class="st"> </span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Asset contribution to return</span></a>
+<a class="sourceLine" id="cb192-14" data-line-number="14"><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">p_return =</span> <span class="kw">sum</span>(return))    <span class="co"># Portfolio return</span></a>
+<a class="sourceLine" id="cb192-15" data-line-number="15">g3 &lt;-<span class="st"> </span><span class="kw">skewness</span>(returns<span class="op">$</span>p_return)        <span class="co"># Function from the e1071 package</span></a>
+<a class="sourceLine" id="cb192-16" data-line-number="16">g4 &lt;-<span class="st"> </span><span class="kw">kurtosis</span>(returns<span class="op">$</span>p_return) <span class="op">+</span><span class="st"> </span><span class="dv">3</span>    <span class="co"># Function from the e1071 package</span></a>
+<a class="sourceLine" id="cb192-17" data-line-number="17">Tt &lt;-<span class="st"> </span><span class="kw">nrow</span>(returns)                     <span class="co"># Number of dates</span></a>
+<a class="sourceLine" id="cb192-18" data-line-number="18"><span class="kw">DSR</span>(SR, Tt, M, g3, g4, SR_m, SR_v)      <span class="co"># The sought value!</span></a></code></pre></div>
+<pre><code>## [1] 0.6676416</code></pre>
+<p></p>
+<p>The value 0.6676416 is not high enough (it does reach the 90% or 95% threshold) to make the strategy significantly superior to the other ones that were considered in the batch of tests.</p>
+</div>
 <div id="coding-exercises-3" class="section level2">
-<h2><span class="header-section-number">13.7</span> Coding exercises</h2>
+<h2><span class="header-section-number">13.8</span> Coding exercises</h2>
 <ol start="0" style="list-style-type: decimal">
 <li>Code the returns of the EW portfolio with tidyverse functions only (no loop).<br />
 </li>
