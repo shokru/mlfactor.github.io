@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-04-13" />
+<meta name="date" content="2020-05-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -484,7 +484,7 @@ FIGURE 13.2: The subtleties in rolling training samples.
 \textbf{w}&#39;\textbf{w} \le \delta_D,
 \end{array}
 \end{equation}\]</span></p>
-<p>where it is easy to recognize the usual mean-variance optimization in the left-hand side. We impose three constraints on the right-hand side. The first one is the budget constraint (weights sum to one). The second one penalizes variations in weights (compared to the current allocation, <span class="math inline">\(\textbf{w}_-\)</span>) via a diagonal matrix <span class="math inline">\(\boldsymbol{\Lambda}\)</span> that penalizes trading costs. This is a crucial point. Portfolios are rarely constructed from scratch and are most of the time <strong>adjustments</strong> from existing positions. In order to reduce the orders and the corresponding transaction costs, it is possible to penalize large variations from the existing portfolio. In the above program, the current weights are written <span class="math inline">\(\textbf{w}_-\)</span> and the desired ones <span class="math inline">\(\textbf{w}\)</span> so that <span class="math inline">\(\textbf{w}-\textbf{w}_-\)</span> is the vector of deviations from the current positions. The term <span class="math inline">\((\textbf{w}-\textbf{w}_-)\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-)\)</span> is an expression that characterizes the sum of squared deviations, weighted by the diagonal coefficients <span class="math inline">\(\Lambda_{n,n}\)</span>. This can be helpful because some assets may be more costly to trade due to liquidity (large cap stocks are more liquid and their trading costs are lower). When <span class="math inline">\(\delta_R\)</span> decreases, the rotation is reduce because weights are not allowed to deviate to much from <span class="math inline">\(\textbf{w}_-\)</span>. The last constraint enforces <strong>diversification</strong> via the Herfindhal-Hirschmann index of the portfolio: the smaller <span class="math inline">\(\delta_D\)</span>, the more diversified the portfolio.</p>
+<p>where it is easy to recognize the usual mean-variance optimization in the left-hand side. We impose three constraints on the right-hand side.<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a> The first one is the budget constraint (weights sum to one). The second one penalizes variations in weights (compared to the current allocation, <span class="math inline">\(\textbf{w}_-\)</span>) via a diagonal matrix <span class="math inline">\(\boldsymbol{\Lambda}\)</span> that penalizes trading costs. This is a crucial point. Portfolios are rarely constructed from scratch and are most of the time <strong>adjustments</strong> from existing positions. In order to reduce the orders and the corresponding transaction costs, it is possible to penalize large variations from the existing portfolio. In the above program, the current weights are written <span class="math inline">\(\textbf{w}_-\)</span> and the desired ones <span class="math inline">\(\textbf{w}\)</span> so that <span class="math inline">\(\textbf{w}-\textbf{w}_-\)</span> is the vector of deviations from the current positions. The term <span class="math inline">\((\textbf{w}-\textbf{w}_-)\boldsymbol{\Lambda}(\textbf{w}-\textbf{w}_-)\)</span> is an expression that characterizes the sum of squared deviations, weighted by the diagonal coefficients <span class="math inline">\(\Lambda_{n,n}\)</span>. This can be helpful because some assets may be more costly to trade due to liquidity (large cap stocks are more liquid and their trading costs are lower). When <span class="math inline">\(\delta_R\)</span> decreases, the rotation is reduce because weights are not allowed to deviate to much from <span class="math inline">\(\textbf{w}_-\)</span>. The last constraint enforces <strong>diversification</strong> via the Herfindhal-Hirschmann index of the portfolio: the smaller <span class="math inline">\(\delta_D\)</span>, the more diversified the portfolio.</p>
 <p>Recalling that there are <span class="math inline">\(N\)</span> assets in the universe, the Lagrange form of <a href="backtest.html#eq:coq">(13.1)</a> is:</p>
 <p><span class="math display" id="eq:lagrangew">\[\begin{equation}
 \tag{13.2}
@@ -504,7 +504,7 @@ with
 - When <span class="math inline">\(\kappa_R\)</span> is large, the importance of transaction costs in <a href="backtest.html#eq:lagrangew">(13.2)</a> is high and thus, in the limit when <span class="math inline">\(\kappa_R \rightarrow \infty\)</span>, the optimal weights are equal to the old ones <span class="math inline">\(\textbf{w}_-\)</span> (for finite values of the other parameters).<br />
 - When <span class="math inline">\(\kappa_D\)</span> is large, the portfolio is more diversified and (all other things equal) when <span class="math inline">\(\kappa_D \rightarrow \infty\)</span>, the weights are all equal (to <span class="math inline">\(1/N\)</span>).<br />
 - When <span class="math inline">\(\kappa_R=\kappa_D=0\)</span>, we recover the classical mean-variance weights which are a mix between the maximum Sharpe ratio portfolio proportional to <span class="math inline">\((\boldsymbol{\Sigma})^{-1} \boldsymbol{\mu}\)</span> and the minimum variance portfolio proportional to <span class="math inline">\((\boldsymbol{\Sigma})^{-1} \textbf{1}_N\)</span>.</p>
-<p>This seemingly complex formula is in fact very flexible and tractable. It requires some tests and adjustments before finding realistic values for <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span> (see exercise at the end of the chapter).</p>
+<p>This seemingly complex formula is in fact very flexible and tractable. It requires some tests and adjustments before finding realistic values for <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\kappa_R\)</span> and <span class="math inline">\(\kappa_D\)</span> (see exercise at the end of the chapter). In <span class="citation">Pedersen, Babu, and Levine (<a href="#ref-pedersen2020enhanced">2020</a>)</span>, the authors recommend a similar form, except that the covariance matrix is shrunk towards the diagonal matrix of sample variances and the expected returns are mix between a signal and an anchor portfolio. The authors argue that their general formulation has links with robust optimization (see also <span class="citation">Kim, Kim, and Fabozzi (<a href="#ref-kim2014deciphering">2014</a>)</span>), Bayesian inference, matrix denoising via random matrix theory, and, naturally, shrinkage. In fact, shrunk expected returns have been around for quite some time (<span class="citation">Jorion (<a href="#ref-jorion1985international">1985</a>)</span>, <span class="citation">Kan and Zhou (<a href="#ref-kan2007optimal">2007</a>)</span> and <span class="citation">Bodnar, Parolya, and Schmid (<a href="#ref-bodnar2013equivalence">2013</a>)</span>) and simply seek to diversify and reduce estimation risk.</p>
 </div>
 <div id="perfmet" class="section level2">
 <h2><span class="header-section-number">13.3</span> Performance metrics</h2>
@@ -513,7 +513,7 @@ with
 <h3><span class="header-section-number">13.3.1</span> Discussion</h3>
 <p>While the evaluation of the accuracy of ML tools (See Section <a href="valtune.html#mlmetrics">11.1</a>) is of course valuable (and imperative!), the portfolio returns are the ultimate yardstick during a backtest. One essential element in such an exercise is a <strong>benchmark</strong> because raw and absolute metrics don’t mean much one their own.</p>
 <p>This is not only true at the portfolio level, but also at the ML engine level. In most of the trials of the previous chapters, the MSE of the models on the testing set revolves around 0.037. An interesting figure is the variance of one month returns on this set, which corresponds to the error made by a constant prediction of 0 all the time. This figure is equal to 0.037, which means that the sophisticated algorithm don’t really improve on a naive heuristic. This benchmark is the one used in the out-of-sample <span class="math inline">\(R^2\)</span> of <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2020</a><a href="#ref-gu2018empirical">b</a>)</span>.</p>
-<p>In portfolio choice, the most elementary allocation is the uniform one, whereby each asset receive the same weight. This seemingly simplistic solution is in fact an incredible benchmark, one that is hard to beat consistently (see <span class="citation">DeMiguel, Garlappi, and Uppal (<a href="#ref-demiguel2007optimal">2009</a>)</span> and <span class="citation">Plyakha, Uppal, and Vilkov (<a href="#ref-plyakha2014equal">2016</a>)</span>). Below, we will pick this <strong>equally-weighted</strong> (EW) portfolio as the benchmark.</p>
+<p>In portfolio choice, the most elementary allocation is the uniform one, whereby each asset receive the same weight. This seemingly simplistic solution is in fact an incredible benchmark, one that is hard to beat consistently (see <span class="citation">DeMiguel, Garlappi, and Uppal (<a href="#ref-demiguel2007optimal">2009</a>)</span> and <span class="citation">Plyakha, Uppal, and Vilkov (<a href="#ref-plyakha2014equal">2016</a>)</span>). Theoretically, uniform portfolios are optimal when uncertainty, ambiguity or estimation risk is high (<span class="citation">Pflug, Pichler, and Wozabal (<a href="#ref-pflug20121">2012</a>)</span>) and empirically, it is cannot be outperformed even at the factor level (<span class="citation">Dichtl, Drobetz, and Wendt (<a href="#ref-dichtl2020build">2020</a>)</span>). Below, we will pick an <strong>equally-weighted</strong> (EW) portfolio of all stocks as our benchmark.</p>
 </div>
 <div id="pure-performance-and-risk-indicators" class="section level3">
 <h3><span class="header-section-number">13.3.2</span> Pure performance and risk indicators</h3>
@@ -523,7 +523,7 @@ with
 <p>where, obviously, the portfolio is noteworthy if <span class="math inline">\(\mathbb{E}[r^P]&gt;\mathbb{E}[r^B]\)</span>. Note that we use the arithmetic average above but the geometric one is also an option, in which case:
 <span class="math display">\[\tilde{\mu}_P\approx \left(\prod_{t=1}^T(1+r^P_t) \right)^{1/T}-1 , \quad \tilde{\mu}_B=\approx  \left(\prod_{t=1}^T(1+r^B_t) \right)^{1/T}-1.\]</span>
 The benefit of this second definition is that it takes the compounding of returns into account and hence compensates for volatility pumping. To see this, consider a very simple two period model with returns <span class="math inline">\(-r\)</span> and <span class="math inline">\(+r\)</span>. The arithmetic average is zero, but the geometric one <span class="math inline">\(\sqrt{1-r^2}-1\)</span> is negative.</p>
-<p>Hit ratios are the proportion of times when the position is in the right direction (long when the realized return is positive and short when it is negative). Hence hit ratios evaluate the propensity to make <em>good guesses</em>. This can be evaluated at the asset level (the proportion of positions in the correct direction<a href="#fn22" class="footnote-ref" id="fnref22"><sup>22</sup></a>) or a the portfolio level. In all cases, the computation can be performed on raw returns or on relative returns (e.g., compared to a benchmark). A meaningful hit ratio is the proportion of times that a strategy beats its benchmark. This is of course not sufficient, as many small gains can be offset by a few large losses.</p>
+<p>Hit ratios are the proportion of times when the position is in the right direction (long when the realized return is positive and short when it is negative). Hence hit ratios evaluate the propensity to make <em>good guesses</em>. This can be evaluated at the asset level (the proportion of positions in the correct direction<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a>) or a the portfolio level. In all cases, the computation can be performed on raw returns or on relative returns (e.g., compared to a benchmark). A meaningful hit ratio is the proportion of times that a strategy beats its benchmark. This is of course not sufficient, as many small gains can be offset by a few large losses.</p>
 <p>Lastly, one important precision. In all examples of supervised learning tools in the book, we compared the hit ratios to 0.5. This is in fact wrong because if an investor is bullish, he or she may always bet on upward moves. In this case, the hit ratio is the percentage of time that returns are positive. Over the long run, this probability is above 0.5. In our sample, it is equal to 0.556, which is well above 0.5. This could be viewed as a benchmark to be surpassed.</p>
 <p>Pure performance measures are almost always accompanied by <strong>risk measures</strong>. The second moment of returns is usually used to quantify the magnitude of fluctuations of the portfolio. A large variance implies sizable movements in returns, and hence in portfolio values. This is why the standard deviation of returns is called the <strong>volatility</strong> of the portfolio.
 <span class="math display">\[\sigma^2_P=\mathbb{V}[r^P]\approx \frac{1}{T-1}\sum_{t=1}^T (r_t^P-\mu_P)^2, \quad \sigma^2_B=\mathbb{V}[r^B]\approx \frac{1}{T-1}\sum_{t=1}^T (r_t^B-\mu_B)^2.\]</span></p>
@@ -624,8 +624,8 @@ It is unlikely that any realistic strategy can outperform a solid benchmark by a
 <h3><span class="header-section-number">13.5.1</span> General comments</h3>
 <p>The careful reader must have noticed that throughout Chapters <a href="lasso.html#lasso">6</a> to <a href="ensemble.html#ensemble">12</a>, the performance of ML engines is underwhelming. These disappointing results are there on purpose and highlight the crucial truth that machine learning is no panacea, no magic wand, no philosopher’s stone that can transform data into golden predictions. Most ML-based forecasts fail. This is in fact not only true for very enhanced and sophisticated techniques, but also for simpler econometric approaches (<span class="citation">Dichtl et al. (<a href="#ref-dichtl2019data">2020</a>)</span>), which again underlines the need to replicate results to challenge their validity.</p>
 <p>One reason for that is that datasets are full of noise and extracting the slightest amount of signal is a tough challenge (we recommend a careful reading of the introduction of <span class="citation">Timmermann (<a href="#ref-timmermann2018forecasting">2018</a>)</span> for more details on this topic). One rationale for that is the ever time-varying nature of factor analysis in the equity space. Some factors can perform very well during one year and then poorly the next year and these reversals can be costly in the context of fully automated data-based allocation processes.</p>
-<p>In fact, this is one major difference with many fields for which ML has made huge advances. In image recognition, numbers will always have the same shape, and so will cats, buses, etc. Likewise, a verb will always be a verb and syntaxes in languages do not change. This invariance, though sometimes hard to grasp<a href="#fn23" class="footnote-ref" id="fnref23"><sup>23</sup></a> is nonetheless key to the great improvement both in computer vision and natural language processing.</p>
-<p>In factor investing, there does not seem to be such invariance. There is no factor and no (possibly nonlinear) combination of factors that can explain and accurately forecast returns over decades long periods.<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a> The academic literature has yet to find such a model; but even if it did, a simple arbitrage reasoning would logically invalidate its conclusions in future datasets.</p>
+<p>In fact, this is one major difference with many fields for which ML has made huge advances. In image recognition, numbers will always have the same shape, and so will cats, buses, etc. Likewise, a verb will always be a verb and syntaxes in languages do not change. This invariance, though sometimes hard to grasp<a href="#fn24" class="footnote-ref" id="fnref24"><sup>24</sup></a> is nonetheless key to the great improvement both in computer vision and natural language processing.</p>
+<p>In factor investing, there does not seem to be such invariance (see \cite(cornell2020stock)). There is no factor and no (possibly nonlinear) combination of factors that can explain and accurately forecast returns over decades long periods.<a href="#fn25" class="footnote-ref" id="fnref25"><sup>25</sup></a> The academic literature has yet to find such a model; but even if it did, a simple arbitrage reasoning would logically invalidate its conclusions in future datasets.</p>
 </div>
 <div id="the-no-free-lunch-theorem" class="section level3">
 <h3><span class="header-section-number">13.5.2</span> The no free lunch theorem</h3>
@@ -953,6 +953,9 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <div id="ref-bajgrowicz2012technical">
 <p>Bajgrowicz, Pierre, and Olivier Scaillet. 2012. “Technical Trading Revisited: False Discoveries, Persistence Tests, and Transaction Costs.” <em>Journal of Financial Economics</em> 106 (3): 473–91.</p>
 </div>
+<div id="ref-bodnar2013equivalence">
+<p>Bodnar, Taras, Nestor Parolya, and Wolfgang Schmid. 2013. “On the Equivalence of Quadratic Optimization Problems Commonly Used in Portfolio Theory.” <em>European Journal of Operational Research</em> 229 (3): 637–44.</p>
+</div>
 <div id="ref-carhart1997persistence">
 <p>Carhart, Mark M. 1997. “On Persistence in Mutual Fund Performance.” <em>Journal of Finance</em> 52 (1): 57–82.</p>
 </div>
@@ -974,6 +977,9 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <div id="ref-dichtl2019data">
 <p>Dichtl, Hubert, Wolfgang Drobetz, Andreas Neuhierl, and Viktoria-Sophie Wendt. 2020. “Data Snooping in Equity Premium Prediction.” <em>Journal of Forecasting</em> Forthcoming.</p>
 </div>
+<div id="ref-dichtl2020build">
+<p>Dichtl, Hubert, Wolfgang Drobetz, and Viktoria-Sophie Wendt. 2020. “How to Build a Factor Portfolio: Does the Allocation Strategy Matter?” <em>European Financial Management</em> Forthcoming.</p>
+</div>
 <div id="ref-elliott2019detecting">
 <p>Elliott, Graham, Nikolay Kudrin, and Kaspar Wuthrich. 2019. “Detecting P-Hacking.” <em>arXiv Preprint</em>, no. 1906.06711.</p>
 </div>
@@ -990,7 +996,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p>Goto, Shingo, and Yan Xu. 2015. “Improving Mean Variance Optimization Through Sparse Hedging Restrictions.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1415–41.</p>
 </div>
 <div id="ref-gu2018empirical">
-<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2020b. “Empirical Asset Pricing via Machine Learning.” <em>Review of Financial Studies</em> Forthcoming.</p>
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2020b. “Empirical Asset Pricing via Machine Learning.” <em>Review of Financial Studies</em> 33 (5): 2223–73.</p>
 </div>
 <div id="ref-harvey2017presidential">
 <p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
@@ -1013,6 +1019,15 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <div id="ref-jensen1968performance">
 <p>Jensen, Michael C. 1968. “The Performance of Mutual Funds in the Period 1945–1964.” <em>Journal of Finance</em> 23 (2): 389–416.</p>
 </div>
+<div id="ref-jorion1985international">
+<p>Jorion, Philippe. 1985. “International Portfolio Diversification with Estimation Risk.” <em>Journal of Business</em>, 259–78.</p>
+</div>
+<div id="ref-kan2007optimal">
+<p>Kan, Raymond, and Guofu Zhou. 2007. “Optimal Portfolio Choice with Parameter Uncertainty.” <em>Journal of Financial and Quantitative Analysis</em> 42 (3): 621–56.</p>
+</div>
+<div id="ref-kim2014deciphering">
+<p>Kim, Woo Chang, Jang Ho Kim, and Frank J Fabozzi. 2014. “Deciphering Robust Portfolios.” <em>Journal of Banking &amp; Finance</em> 45: 1–8.</p>
+</div>
 <div id="ref-ledoit2008robust">
 <p>Ledoit, Oliver, and Michael Wolf. 2008. “Robust Performance Hypothesis Testing with the Sharpe Ratio.” <em>Journal of Empirical Finance</em> 15 (5): 850–59.</p>
 </div>
@@ -1027,6 +1042,12 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 </div>
 <div id="ref-novy2015taxonomy">
 <p>Novy-Marx, Robert, and Mihail Velikov. 2015. “A Taxonomy of Anomalies and Their Trading Costs.” <em>Review of Financial Studies</em> 29 (1): 104–47.</p>
+</div>
+<div id="ref-pedersen2020enhanced">
+<p>Pedersen, Lasse Heje, Abhilash Babu, and Ari Levine. 2020. “Enhanced Portfolio Optimization.” <em>SSRN Working Paper</em> 3530390.</p>
+</div>
+<div id="ref-pflug20121">
+<p>Pflug, Georg Ch, Alois Pichler, and David Wozabal. 2012. “The 1/N Investment Strategy Is Optimal Under High Model Ambiguity.” <em>Journal of Banking &amp; Finance</em> 36 (2): 410–17.</p>
 </div>
 <div id="ref-plyakha2014equal">
 <p>Plyakha, Yuliya, Raman Uppal, and Grigory Vilkov. 2016. “Equal or Value Weighting? Implications for Asset-Pricing Tests.” <em>SSRN Working Paper</em> 1787045.</p>
@@ -1068,9 +1089,10 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <div class="footnotes">
 <hr />
 <ol start="22">
-<li id="fn22"><p>A long position in an asset with positive return or a short position in an asset with negative return.<a href="backtest.html#fnref22" class="footnote-back">↩</a></p></li>
-<li id="fn23"><p>We invite the reader to have a look at the thoughtful albeit theoretical paper by <span class="citation">Arjovsky et al. (<a href="#ref-arjovsky2019invariant">2019</a>)</span>.<a href="backtest.html#fnref23" class="footnote-back">↩</a></p></li>
-<li id="fn24"><p>In the thread <a href="https://twitter.com/fchollet/status/1177633367472259072" class="uri">https://twitter.com/fchollet/status/1177633367472259072</a>, François Chollet, the creator of Keras argues that ML predictions based on price data cannot be profitable on the long term. Given the wide access to financial data, it is likely that the statement holds for predictions stemming from factor-related data as well.<a href="backtest.html#fnref24" class="footnote-back">↩</a></p></li>
+<li id="fn22"><p>Constraints often have beneficial effects on portfolio composition, see <span class="citation">Jagannathan and Ma (<a href="#ref-jagannathan2003risk">2003</a>)</span> and <span class="citation">DeMiguel et al. (<a href="#ref-demiguel2009generalized">2009</a>)</span>.<a href="backtest.html#fnref22" class="footnote-back">↩</a></p></li>
+<li id="fn23"><p>A long position in an asset with positive return or a short position in an asset with negative return.<a href="backtest.html#fnref23" class="footnote-back">↩</a></p></li>
+<li id="fn24"><p>We invite the reader to have a look at the thoughtful albeit theoretical paper by <span class="citation">Arjovsky et al. (<a href="#ref-arjovsky2019invariant">2019</a>)</span>.<a href="backtest.html#fnref24" class="footnote-back">↩</a></p></li>
+<li id="fn25"><p>In the thread <a href="https://twitter.com/fchollet/status/1177633367472259072" class="uri">https://twitter.com/fchollet/status/1177633367472259072</a>, François Chollet, the creator of Keras argues that ML predictions based on price data cannot be profitable on the long term. Given the wide access to financial data, it is likely that the statement holds for predictions stemming from factor-related data as well.<a href="backtest.html#fnref25" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
             </section>
