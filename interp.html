@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-05-21" />
+<meta name="date" content="2020-05-23" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -538,7 +538,7 @@ Given the way the graph is coded, Figure <a href="interp.html#fig:VItrees">14.2<
 <ol style="list-style-type: decimal">
 <li>Train the model on the original data and compute the associated loss <span class="math inline">\(l^*\)</span>.<br />
 </li>
-<li>For each feature <span class="math inline">\(k\)</span>, create a new training dataset in which the feature’s values are randomly permuted. Then, train the model on this altered sample and record the corresponding loss <span class="math inline">\(l_k\)</span>.<br />
+<li>For each feature <span class="math inline">\(k\)</span>, create a new training dataset in which the feature’s values are randomly permuted. Then, evaluate the loss <span class="math inline">\(l_k\)</span> of the model based on this altered sample.<br />
 </li>
 <li>Rank the variable importance of each feature, computed as a difference <span class="math inline">\(\text{VI}_k=l_k-l^*\)</span> or a ratio <span class="math inline">\(\text{VI}_k=l_k/l^*\)</span>.</li>
 </ol>
@@ -559,10 +559,8 @@ Below, we implement this algorithm manually so to speak for the features appeari
 <a class="sourceLine" id="cb197-6" data-line-number="6"><span class="st">        </span><span class="kw">sample</span>(temp_data[, <span class="kw">which</span>(<span class="kw">colnames</span>(temp_data) <span class="op">==</span><span class="st"> </span>feat_name)]</a>
 <a class="sourceLine" id="cb197-7" data-line-number="7">               <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">pull</span>(<span class="dv">1</span>), <span class="dt">replace =</span> <span class="ot">FALSE</span>)</a>
 <a class="sourceLine" id="cb197-8" data-line-number="8">    x_penalized_temp &lt;-<span class="st"> </span>temp_data <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                    <span class="co"># Predictors into matrix</span></a>
-<a class="sourceLine" id="cb197-9" data-line-number="9">    fit_ridge_temp &lt;-<span class="st"> </span><span class="kw">glmnet</span>(x_penalized_temp, y_penalized_train,    <span class="co"># Fits the model</span></a>
-<a class="sourceLine" id="cb197-10" data-line-number="10">                             <span class="dt">alpha =</span> <span class="dv">0</span>, <span class="dt">lambda =</span> <span class="fl">0.01</span>) </a>
-<a class="sourceLine" id="cb197-11" data-line-number="11">    l[i] &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_temp, x_penalized_temp))<span class="op">^</span><span class="dv">2</span>) <span class="co"># = Loss</span></a>
-<a class="sourceLine" id="cb197-12" data-line-number="12">}</a></code></pre></div>
+<a class="sourceLine" id="cb197-9" data-line-number="9">    l[i] &lt;-<span class="st"> </span><span class="kw">mean</span>((y_penalized_train<span class="op">-</span><span class="kw">predict</span>(fit_ridge_<span class="dv">0</span>, x_penalized_temp))<span class="op">^</span><span class="dv">2</span>) <span class="co"># = Loss</span></a>
+<a class="sourceLine" id="cb197-10" data-line-number="10">}</a></code></pre></div>
 <p></p>
 <p>Finally, we plot the results.</p>
 
