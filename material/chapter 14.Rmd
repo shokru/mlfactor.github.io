@@ -186,9 +186,7 @@ for(i in 1:nrow(VI_trees)){                                          # Loop on t
         sample(temp_data[, which(colnames(temp_data) == feat_name)]
                %>% pull(1), replace = FALSE)
     x_penalized_temp <- temp_data %>% as.matrix()                    # Predictors into matrix
-    fit_ridge_temp <- glmnet(x_penalized_temp, y_penalized_train,    # Fits the model
-                             alpha = 0, lambda = 0.01) 
-    l[i] <- mean((y_penalized_train-predict(fit_ridge_temp, x_penalized_temp))^2) # = Loss
+    l[i] <- mean((y_penalized_train-predict(fit_ridge_0, x_penalized_temp))^2) # = Loss
 }
 ```
 
