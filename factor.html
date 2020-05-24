@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing</title>
   <meta name="description" content="Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing" />
-  <meta name="generator" content="bookdown 0.17 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Factor investing and asset pricing anomalies | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-05-23" />
+<meta name="date" content="2020-05-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -151,7 +152,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.1" data-path="factor.html"><a href="factor.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
 <li class="chapter" data-level="4.2" data-path="factor.html"><a href="factor.html#detecting-anomalies"><i class="fa fa-check"></i><b>4.2</b> Detecting anomalies</a><ul>
 <li class="chapter" data-level="4.2.1" data-path="factor.html"><a href="factor.html#challenges"><i class="fa fa-check"></i><b>4.2.1</b> Challenges</a></li>
-<li class="chapter" data-level="4.2.2" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>4.2.2</b> Simple portfolio sorts</a></li>
+<li class="chapter" data-level="4.2.2" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>4.2.2</b> Simple portfolio sorts </a></li>
 <li class="chapter" data-level="4.2.3" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>4.2.3</b> Factors</a></li>
 <li class="chapter" data-level="4.2.4" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>4.2.4</b> Predictive regressions, sorts, and p-value issues</a></li>
 <li class="chapter" data-level="4.2.5" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>4.2.5</b> Fama-Macbeth regressions</a></li>
@@ -441,7 +442,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="factor" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Factor investing and asset pricing anomalies</h1>
-<p>Asset pricing anomalies are the foundations of factor investing. In this chapter our aim is twofold:</p>
+<p>Asset pricing anomalies are the foundations of <strong>factor investing</strong>. In this chapter our aim is twofold:</p>
 <ul>
 <li>present simple ideas and concepts: basic factor models and common empirical facts (time-varying nature of returns and risk premia);<br />
 </li>
@@ -482,7 +483,7 @@ r_{t,n}= \alpha_n+\sum_{k=1}^K\beta_{n,k}f_{t,k}+\epsilon_{t,n},
 <p>The remainder of this subsection was inspired from <span class="citation">Baker, Luo, and Taliaferro (<a href="#ref-baker2017detecting">2017</a>)</span> and <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2019</a>)</span>.</p>
 </div>
 <div id="simple-portfolio-sorts" class="section level3">
-<h3><span class="header-section-number">4.2.2</span> Simple portfolio sorts</h3>
+<h3><span class="header-section-number">4.2.2</span> Simple portfolio sorts </h3>
 <p>This is the most common procedure and the one used in <span class="citation">Fama and French (<a href="#ref-fama1992cross">1992</a>)</span>. The idea is simple. On one date,</p>
 <ol style="list-style-type: decimal">
 <li>rank firms according to a particular criterion (e.g., size, book-to-market ratio);<br />
@@ -565,8 +566,177 @@ FIGURE 4.1: The size factor: average returns of small versus large firms.
 <a class="sourceLine" id="cb13-22" data-line-number="22"><span class="st">    </span><span class="kw">filter</span>(date <span class="op">&gt;=</span><span class="st"> </span>min_date, date <span class="op">&lt;=</span><span class="st"> </span>max_date)             <span class="co"># Finally, keep only recent points</span></a>
 <a class="sourceLine" id="cb13-23" data-line-number="23">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(FF_factors),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
 <a class="sourceLine" id="cb13-24" data-line-number="24">             <span class="dt">caption =</span> <span class="st">&quot;Sample of monthly factor returns.&quot;</span>) <span class="co"># A look at the data (see table)                   </span></a></code></pre></div>
+<table>
+<caption>
+<span id="tab:factorImport">TABLE 4.1: </span>Sample of monthly factor returns.
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+date
+</th>
+<th style="text-align:right;">
+MKT_RF
+</th>
+<th style="text-align:right;">
+SMB
+</th>
+<th style="text-align:right;">
+HML
+</th>
+<th style="text-align:right;">
+RMW
+</th>
+<th style="text-align:right;">
+CMA
+</th>
+<th style="text-align:right;">
+RF
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1963-07-31
+</td>
+<td style="text-align:right;">
+-0.0039
+</td>
+<td style="text-align:right;">
+-0.0047
+</td>
+<td style="text-align:right;">
+-0.0083
+</td>
+<td style="text-align:right;">
+0.0066
+</td>
+<td style="text-align:right;">
+-0.0115
+</td>
+<td style="text-align:right;">
+0.0027
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1963-08-31
+</td>
+<td style="text-align:right;">
+0.0507
+</td>
+<td style="text-align:right;">
+-0.0079
+</td>
+<td style="text-align:right;">
+0.0167
+</td>
+<td style="text-align:right;">
+0.0040
+</td>
+<td style="text-align:right;">
+-0.0040
+</td>
+<td style="text-align:right;">
+0.0025
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1963-09-30
+</td>
+<td style="text-align:right;">
+-0.0157
+</td>
+<td style="text-align:right;">
+-0.0048
+</td>
+<td style="text-align:right;">
+0.0018
+</td>
+<td style="text-align:right;">
+-0.0076
+</td>
+<td style="text-align:right;">
+0.0024
+</td>
+<td style="text-align:right;">
+0.0027
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1963-10-31
+</td>
+<td style="text-align:right;">
+0.0253
+</td>
+<td style="text-align:right;">
+-0.0129
+</td>
+<td style="text-align:right;">
+-0.0010
+</td>
+<td style="text-align:right;">
+0.0275
+</td>
+<td style="text-align:right;">
+-0.0224
+</td>
+<td style="text-align:right;">
+0.0029
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1963-11-30
+</td>
+<td style="text-align:right;">
+-0.0085
+</td>
+<td style="text-align:right;">
+-0.0084
+</td>
+<td style="text-align:right;">
+0.0171
+</td>
+<td style="text-align:right;">
+-0.0045
+</td>
+<td style="text-align:right;">
+0.0222
+</td>
+<td style="text-align:right;">
+0.0027
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1963-12-31
+</td>
+<td style="text-align:right;">
+0.0183
+</td>
+<td style="text-align:right;">
+-0.0189
+</td>
+<td style="text-align:right;">
+-0.0012
+</td>
+<td style="text-align:right;">
+0.0007
+</td>
+<td style="text-align:right;">
+-0.0030
+</td>
+<td style="text-align:right;">
+0.0029
+</td>
+</tr>
+</tbody>
+</table>
 
-<p></p>
 <p>Posterior to the discovery of these stylized facts, some contributions have aimed at building theoretical models that capture these properties. We cite a handful below:</p>
 <ul>
 <li><strong>size</strong> and <strong>value</strong>: <span class="citation">Berk, Green, and Naik (<a href="#ref-berk1999optimal">1999</a>)</span>, <span class="citation">K. D. Daniel, Hirshleifer, and Subrahmanyam (<a href="#ref-daniel2001overconfidence">2001</a>)</span>, <span class="citation">Barberis and Shleifer (<a href="#ref-barberis2003style">2003</a>)</span>, <span class="citation">Gomes, Kogan, and Zhang (<a href="#ref-gomes2003equilibrium">2003</a>)</span>, <span class="citation">Carlson, Fisher, and Giammarino (<a href="#ref-carlson2004corporate">2004</a>)</span>, <span class="citation">Arnott et al. (<a href="#ref-arnott2014can">2014</a>)</span>;</li>
@@ -589,7 +759,7 @@ FIGURE 4.1: The size factor: average returns of small versus large firms.
 FIGURE 4.2: Average returns of common anomalies (1963-2020). Source: Ken French library.
 </p>
 </div>
-<p></p>
+
 <p>The individual attributes of investors who allocate towards particular factors is a blossoming topic. We list a few references below, even though, they somewhat lie out of the scope of this book. <span class="citation">Betermier, Calvet, and Sodini (<a href="#ref-betermier2017value">2017</a>)</span> show that value investors are older, wealthier and face lower income risk compared to growth investors who are those in the best position to take financial risks. The study <span class="citation">Cronqvist, Siegel, and Yu (<a href="#ref-cronqvist2015value">2015</a>)</span> leads to different conclusions: it finds that the propensity to invest in value versus growth assets has roots in genetics and in life events (the latter effect being confirmed in <span class="citation">Cocco, Gomes, and Lopes (<a href="#ref-cocco2019evidence">2020</a>)</span>, and the former being further detailed in a more general context in <span class="citation">Cronqvist et al. (<a href="#ref-cronqvist2015fetal">2015</a>)</span>). Psychological traits can also explain some factors: when agents extrapolate, they are likely to fuel momentum (this topic is thoroughly reviewed in <span class="citation">Barberis (<a href="#ref-barberis2018psychology">2018</a>)</span>). Micro- and macro-economic consequences of these preferences are detailed in <span class="citation">Bhamra and Uppal (<a href="#ref-bhamra2019does">2019</a>)</span>. To conclude this paragraph, we mention that theoretical models have also been proposed that link agents’ preferences and beliefs (via prospect theory) to market anomalies (see for instance <span class="citation">Barberis, Jin, and Wang (<a href="#ref-barberis2019prospect">2020</a>)</span>).</p>
 <p>Finally, we highlight the need of replicability of factor premia and echo the recent editorial by <span class="citation">Harvey (<a href="#ref-harvey2020replication">2020</a>)</span>. As is shown by <span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history">2018</a>)</span> and <span class="citation">Hou, Xue, and Zhang (<a href="#ref-hou2019replicating">2020</a>)</span>, many proclaimed factors are in fact very much data-dependent and often fail to deliver sustained profitability when the investment universe is altered or when the definition of variable changes (<span class="citation">Clifford Asness and Frazzini (<a href="#ref-asness2013devil">2013</a>)</span>).</p>
 <p>Campbell Harvey and his co-authors, in a series of papers, tried to synthesize the research on factors in <span class="citation">Harvey, Liu, and Zhu (<a href="#ref-harvey2016and">2016</a>)</span>, <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky">2019</a>)</span> and <span class="citation">Harvey and Liu (<a href="#ref-harvey2019census">2019</a>)</span>. His work underlines the need to set high bars for an anomaly to be called a ‘true’ factor. Increasing thresholds for <span class="math inline">\(p\)</span>-values is only a partial answer, as it is always possible to resort to data snooping in order to find an optimized strategy that will fail out-of-sample but that will deliver a <span class="math inline">\(t\)</span>-statistic larger than three (or even four). <span class="citation">Harvey (<a href="#ref-harvey2017presidential">2017</a>)</span> recommends to resort to a Bayesian approach which blends data-based significance with a prior into a so-called Bayesanized <em>p</em>-value (see subsection below).</p>
@@ -653,59 +823,82 @@ is often used in pure Gaussian contexts to assess whether or not the factor is s
 <a class="sourceLine" id="cb15-18" data-line-number="18">                 )</a>
 <a class="sourceLine" id="cb15-19" data-line-number="19">betas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> nb_factors <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Extract the betas</span></a>
 <a class="sourceLine" id="cb15-20" data-line-number="20"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> stock_ids_short)                               <span class="co"># Format: row names</span></a>
-<a class="sourceLine" id="cb15-21" data-line-number="21"><span class="kw">colnames</span>(betas) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Constant&quot;</span>, <span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)    <span class="co"># Format: col names</span></a>
-<a class="sourceLine" id="cb15-22" data-line-number="22">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(betas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb15-23" data-line-number="23">             <span class="dt">caption =</span> <span class="st">&quot;Sample of beta values (row numbers are stock IDs).&quot;</span>) <span class="co"># Betas (table) </span></a></code></pre></div>
+<a class="sourceLine" id="cb15-21" data-line-number="21"><span class="kw">colnames</span>(betas) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Constant&quot;</span>, <span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)    <span class="co"># Format: col names</span></a></code></pre></div>
 
-<p></p>
+<pre><code>##         Constant    MKT_RF       SMB         HML          RMW         CMA
+## 1   7.612634e-03 1.4384642 0.5251567  0.56703640  1.006390127 -0.30134919
+## 3  -1.562029e-03 0.7912419 1.0843206  0.85366866  0.220045138 -0.42275539
+## 4   4.520514e-03 0.3640251 0.3047825 -0.07183666  0.588563156  0.26664267
+## 7   5.704146e-03 0.4143588 0.6817543  0.28397181  0.294145983  0.11932978
+## 9   4.603134e-03 0.8104622 0.6823502  1.04656343  0.008542371  0.14681374
+## 11 -3.242657e-06 0.9368310 0.1197819  0.49397549 -0.246535345  0.08498451</code></pre>
 <p>In the table, <em>MKT_RF</em> is the market return minus the risk free rate. The corresponding coefficient is often referred to as the beta, especially in univariate regressions. We then reformat these betas from Table <a href="#tab:FMreg"><strong>??</strong></a> to prepare the second pass. Each line corresponds to one asset: the first 5 columns are the estimated factor loadings and the remaining ones are the asset returns (date by date).</p>
 
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1">loadings &lt;-<span class="st"> </span>betas <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Start from loadings (betas)</span></a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Constant) <span class="op">%&gt;%</span><span class="st">                 </span><span class="co"># Remove constant</span></a>
-<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="st">    </span><span class="kw">data.frame</span>()                                 <span class="co"># Convert to dataframe             </span></a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">ret &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Start from returns</span></a>
-<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Keep the returns only</span></a>
-<a class="sourceLine" id="cb16-6" data-line-number="6"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> returns<span class="op">$</span>date) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Set row names</span></a>
-<a class="sourceLine" id="cb16-7" data-line-number="7"><span class="st">    </span><span class="kw">t</span>()                                          <span class="co"># Transpose</span></a>
-<a class="sourceLine" id="cb16-8" data-line-number="8">FM_data &lt;-<span class="st"> </span><span class="kw">cbind</span>(loadings, ret)                  <span class="co"># Aggregate both</span></a>
-<a class="sourceLine" id="cb16-9" data-line-number="9">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(FM_data[,<span class="dv">1</span><span class="op">:</span><span class="dv">8</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,    <span class="co"># The betas (see table)</span></a>
-<a class="sourceLine" id="cb16-10" data-line-number="10">             <span class="dt">caption =</span> <span class="st">&quot;Sample of reformatted beta values (ready for regression).&quot;</span>)  </a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">loadings &lt;-<span class="st"> </span>betas <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Start from loadings (betas)</span></a>
+<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>Constant) <span class="op">%&gt;%</span><span class="st">                 </span><span class="co"># Remove constant</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="st">    </span><span class="kw">data.frame</span>()                                 <span class="co"># Convert to dataframe             </span></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">ret &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Start from returns</span></a>
+<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Keep the returns only</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> returns<span class="op">$</span>date) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Set row names</span></a>
+<a class="sourceLine" id="cb17-7" data-line-number="7"><span class="st">    </span><span class="kw">t</span>()                                          <span class="co"># Transpose</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8">FM_data &lt;-<span class="st"> </span><span class="kw">cbind</span>(loadings, ret)                  <span class="co"># Aggregate both</span></a></code></pre></div>
 
-<p></p>
+
+<pre><code>##       MKT_RF       SMB         HML          RMW         CMA 2000-01-31 2000-02-29
+## 1  1.4384642 0.5251567  0.56703640  1.006390127 -0.30134919     -0.036      0.263
+## 3  0.7912419 1.0843206  0.85366866  0.220045138 -0.42275539      0.077     -0.024
+## 4  0.3640251 0.3047825 -0.07183666  0.588563156  0.26664267     -0.016      0.000
+## 7  0.4143588 0.6817543  0.28397181  0.294145983  0.11932978     -0.009      0.027
+## 9  0.8104622 0.6823502  1.04656343  0.008542371  0.14681374      0.032      0.076
+## 11 0.9368310 0.1197819  0.49397549 -0.246535345  0.08498451      0.144      0.258
+##    2000-03-31
+## 1       0.031
+## 3       0.018
+## 4       0.153
+## 7       0.000
+## 9      -0.025
+## 11      0.049</code></pre>
+
 <p>We observe that the values of the first column (market betas) revolve around one, which is what we would expect.
 Finally, we are ready for the second round of regressions.</p>
 
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste</span>(<span class="st">&quot;`&quot;</span>, returns<span class="op">$</span>date, <span class="st">&quot;`&quot;</span>, <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA&#39;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>),</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> FM_data) <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Call lm(.)</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Gather the output</span></a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Keep only the coefs</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Convert to dataframe</span></a>
-<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="st">                         </span>dplyr<span class="op">::</span><span class="kw">select</span>(Estimate)}                         <span class="co"># Keep only estimates</span></a>
-<a class="sourceLine" id="cb17-7" data-line-number="7">                 )</a>
-<a class="sourceLine" id="cb17-8" data-line-number="8">gammas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> nb_factors <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Switch to dataframe</span></a>
-<a class="sourceLine" id="cb17-9" data-line-number="9"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> returns<span class="op">$</span>date)                                  <span class="co"># &amp; set row names</span></a>
-<a class="sourceLine" id="cb17-10" data-line-number="10"><span class="kw">colnames</span>(gammas) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Constant&quot;</span>, <span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)   <span class="co"># Set col names</span></a>
-<a class="sourceLine" id="cb17-11" data-line-number="11">knitr<span class="op">::</span><span class="kw">kable</span>(<span class="kw">head</span>(gammas <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)),  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,    <span class="co"># The gammas (see table)</span></a>
-<a class="sourceLine" id="cb17-12" data-line-number="12">             <span class="dt">caption =</span> <span class="st">&quot;Sample of gamma (premia) values.&quot;</span>) </a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste</span>(<span class="st">&quot;`&quot;</span>, returns<span class="op">$</span>date, <span class="st">&quot;`&quot;</span>, <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA&#39;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>),</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> FM_data) <span class="op">%&gt;%</span><span class="st">                        </span><span class="co"># Call lm(.)</span></a>
+<a class="sourceLine" id="cb19-3" data-line-number="3"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Gather the output</span></a>
+<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Keep only the coefs</span></a>
+<a class="sourceLine" id="cb19-5" data-line-number="5"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Convert to dataframe</span></a>
+<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="st">                         </span>dplyr<span class="op">::</span><span class="kw">select</span>(Estimate)}                         <span class="co"># Keep only estimates</span></a>
+<a class="sourceLine" id="cb19-7" data-line-number="7">                 )</a>
+<a class="sourceLine" id="cb19-8" data-line-number="8">gammas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> nb_factors <span class="op">+</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Switch to dataframe</span></a>
+<a class="sourceLine" id="cb19-9" data-line-number="9"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> returns<span class="op">$</span>date)                                  <span class="co"># &amp; set row names</span></a>
+<a class="sourceLine" id="cb19-10" data-line-number="10"><span class="kw">colnames</span>(gammas) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Constant&quot;</span>, <span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)   <span class="co"># Set col names</span></a></code></pre></div>
 
-<p></p>
+
+<pre><code>##            Constant MKT_RF    SMB    HML    RMW    CMA
+## 2000-01-31   -0.031  0.037  0.227 -0.157 -0.276  0.044
+## 2000-02-29    0.020  0.081 -0.134  0.050  0.089 -0.027
+## 2000-03-31    0.007 -0.011 -0.016  0.054  0.036  0.039
+## 2000-04-30    0.127 -0.132 -0.104  0.088  0.117 -0.002
+## 2000-05-31    0.042 -0.005  0.075 -0.113 -0.080 -0.045
+## 2000-06-30    0.028 -0.029 -0.019  0.054  0.045  0.017</code></pre>
+
 <p>Visually, the estimated premia are also very volatile. We plot their estimated values for the market, SMB and HML factors.
 </p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">gammas <span class="op">%&gt;%</span><span class="st">                                                          </span><span class="co"># Take gammas:</span></a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(MKT_RF, SMB, HML) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Select 3 factors</span></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3"><span class="st">    </span><span class="kw">bind_cols</span>(<span class="dt">date =</span> data_FM<span class="op">$</span>date) <span class="op">%&gt;%</span><span class="st">                              </span><span class="co"># Add date</span></a>
-<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> factor, <span class="dt">value =</span> gamma, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">                  </span><span class="co"># Put in tidy shape</span></a>
-<a class="sourceLine" id="cb18-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> gamma, <span class="dt">color =</span> factor)) <span class="op">+</span><span class="st">              </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>( factor<span class="op">~</span>. ) <span class="op">+</span><span class="st">                          </span><span class="co"># Lines &amp; facets</span></a>
-<a class="sourceLine" id="cb18-7" data-line-number="7"><span class="st">    </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>, <span class="st">&quot;#F81F40&quot;</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Colors</span></a>
-<a class="sourceLine" id="cb18-8" data-line-number="8"><span class="st">    </span><span class="kw">coord_fixed</span>(<span class="dv">980</span>)                                                <span class="co"># Fix x/y ratio</span></a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">gammas <span class="op">%&gt;%</span><span class="st">                                                          </span><span class="co"># Take gammas:</span></a>
+<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(MKT_RF, SMB, HML) <span class="op">%&gt;%</span><span class="st">                             </span><span class="co"># Select 3 factors</span></a>
+<a class="sourceLine" id="cb21-3" data-line-number="3"><span class="st">    </span><span class="kw">bind_cols</span>(<span class="dt">date =</span> data_FM<span class="op">$</span>date) <span class="op">%&gt;%</span><span class="st">                              </span><span class="co"># Add date</span></a>
+<a class="sourceLine" id="cb21-4" data-line-number="4"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> factor, <span class="dt">value =</span> gamma, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">                  </span><span class="co"># Put in tidy shape</span></a>
+<a class="sourceLine" id="cb21-5" data-line-number="5"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> gamma, <span class="dt">color =</span> factor)) <span class="op">+</span><span class="st">              </span><span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb21-6" data-line-number="6"><span class="st">    </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>( factor<span class="op">~</span>. ) <span class="op">+</span><span class="st">                          </span><span class="co"># Lines &amp; facets</span></a>
+<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="st">    </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>, <span class="st">&quot;#F81F40&quot;</span>)) <span class="op">+</span><span class="st"> </span><span class="co"># Colors</span></a>
+<a class="sourceLine" id="cb21-8" data-line-number="8"><span class="st">    </span><span class="kw">coord_fixed</span>(<span class="dv">980</span>)                                                <span class="co"># Fix x/y ratio</span></a></code></pre></div>
 <div class="figure"><span id="fig:premiaplot"></span>
 <img src="ML_factor_files/figure-html/premiaplot-1.png" alt="Time-series plot of gammas (premia) in Fama-Macbeth regressions." width="672" />
 <p class="caption">
 FIGURE 4.3: Time-series plot of gammas (premia) in Fama-Macbeth regressions.
 </p>
 </div>
-<p></p>
+
 <p>The two spikes at the end of the sample signal potential colinearity issues; two factors seem to compensate in an unclear aggregate effect. This underlines the usefulness of penalized estimates (see Chapter <a href="lasso.html#lasso">6</a>).</p>
 </div>
 <div id="factor-competition" class="section level3">
@@ -720,52 +913,57 @@ The interesting metric is then the test statistic associated to the estimation o
 <p>One mainstream application of this technique was performed in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>, in which the authors show that the HML factor is redundant when taking into account four other factors (Market, SMB, RMW and CMA). Below, we reproduce their analysis on an updated sample. We start our analysis directly with the database maintained by Kenneth French.</p>
 <p>We can run the regressions that determine the redundancy of factors via the procedure defined in Equation <a href="factor.html#eq:faccompet">(4.4)</a>.</p>
 
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">factors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste</span>(factors, <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA-&#39;</span>,factors),</a>
-<a class="sourceLine" id="cb19-3" data-line-number="3"> <span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> FF_factors) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># Call lm(.)</span></a>
-<a class="sourceLine" id="cb19-4" data-line-number="4"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Gather the output</span></a>
-<a class="sourceLine" id="cb19-5" data-line-number="5"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Keep only the coefs</span></a>
-<a class="sourceLine" id="cb19-6" data-line-number="6"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Convert to dataframe</span></a>
-<a class="sourceLine" id="cb19-7" data-line-number="7"><span class="st">                         </span><span class="kw">filter</span>(<span class="kw">rownames</span>(.) <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Keep only the Intercept</span></a>
-<a class="sourceLine" id="cb19-8" data-line-number="8"><span class="st">                         </span>dplyr<span class="op">::</span><span class="kw">select</span>(Estimate,<span class="st">`</span><span class="dt">Pr...t..</span><span class="st">`</span>)}         <span class="co"># Keep the coef &amp; p-value</span></a>
-<a class="sourceLine" id="cb19-9" data-line-number="9">                 )</a>
-<a class="sourceLine" id="cb19-10" data-line-number="10">alphas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Switch from list to dataframe</span></a>
-<a class="sourceLine" id="cb19-11" data-line-number="11"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> factors)</a>
-<a class="sourceLine" id="cb19-12" data-line-number="12"><span class="co"># alphas # To see the alphas (optional)</span></a></code></pre></div>
-<p></p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">factors &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;MKT_RF&quot;</span>, <span class="st">&quot;SMB&quot;</span>, <span class="st">&quot;HML&quot;</span>, <span class="st">&quot;RMW&quot;</span>, <span class="st">&quot;CMA&quot;</span>)</a>
+<a class="sourceLine" id="cb22-2" data-line-number="2">models &lt;-<span class="st"> </span><span class="kw">lapply</span>(<span class="kw">paste</span>(factors, <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA-&#39;</span>,factors),</a>
+<a class="sourceLine" id="cb22-3" data-line-number="3"> <span class="cf">function</span>(f){ <span class="kw">lm</span>(<span class="kw">as.formula</span>(f), <span class="dt">data =</span> FF_factors) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># Call lm(.)</span></a>
+<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">                         </span><span class="kw">summary</span>() <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Gather the output</span></a>
+<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">                         &quot;$&quot;</span>(coef) <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Keep only the coefs</span></a>
+<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">                         </span><span class="kw">data.frame</span>() <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Convert to dataframe</span></a>
+<a class="sourceLine" id="cb22-7" data-line-number="7"><span class="st">                         </span><span class="kw">filter</span>(<span class="kw">rownames</span>(.) <span class="op">==</span><span class="st"> &quot;(Intercept)&quot;</span>) <span class="op">%&gt;%</span><span class="st">    </span><span class="co"># Keep only the Intercept</span></a>
+<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="st">                         </span>dplyr<span class="op">::</span><span class="kw">select</span>(Estimate,<span class="st">`</span><span class="dt">Pr...t..</span><span class="st">`</span>)}         <span class="co"># Keep the coef &amp; p-value</span></a>
+<a class="sourceLine" id="cb22-9" data-line-number="9">                 )</a>
+<a class="sourceLine" id="cb22-10" data-line-number="10">alphas &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">unlist</span>(models), <span class="dt">ncol =</span> <span class="dv">2</span>, <span class="dt">byrow =</span> T) <span class="op">%&gt;%</span><span class="st">       </span><span class="co"># Switch from list to dataframe</span></a>
+<a class="sourceLine" id="cb22-11" data-line-number="11"><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> factors)</a>
+<a class="sourceLine" id="cb22-12" data-line-number="12"><span class="co"># alphas # To see the alphas (optional)</span></a></code></pre></div>
+
 <p>We obtain the vector of <span class="math inline">\(\alpha\)</span> values from Equation (). Below, we format these figures along with <span class="math inline">\(p\)</span>-value thresholds and export them in a summary table. The significance levels of coefficients is coded as follows: <span class="math inline">\(0&lt;(***)&lt;0.001&lt;(**)&lt;0.01&lt;(*)&lt;0.05\)</span>.</p>
 
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">results &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># Coefs</span></a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">signif  &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># p-values</span></a>
-<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(factors)){</a>
-<a class="sourceLine" id="cb20-4" data-line-number="4">    form &lt;-<span class="st"> </span><span class="kw">paste</span>(factors[j],</a>
-<a class="sourceLine" id="cb20-5" data-line-number="5">                  <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA-&#39;</span>,factors[j])         <span class="co"># Build model</span></a>
-<a class="sourceLine" id="cb20-6" data-line-number="6">    fit &lt;-<span class="st"> </span><span class="kw">lm</span>(form, <span class="dt">data =</span> FF_factors) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summary</span>()                        <span class="co"># Estimate model</span></a>
-<a class="sourceLine" id="cb20-7" data-line-number="7">    coef &lt;-<span class="st"> </span>fit<span class="op">$</span>coefficients[,<span class="dv">1</span>]                                            <span class="co"># Keep coefficients</span></a>
-<a class="sourceLine" id="cb20-8" data-line-number="8">    p_val &lt;-<span class="st"> </span>fit<span class="op">$</span>coefficients[,<span class="dv">4</span>]                                           <span class="co"># Keep p-values</span></a>
-<a class="sourceLine" id="cb20-9" data-line-number="9">    results[j,<span class="op">-</span>(j<span class="op">+</span><span class="dv">1</span>)] &lt;-<span class="st"> </span>coef                                               <span class="co"># Fill matrix</span></a>
-<a class="sourceLine" id="cb20-10" data-line-number="10">    signif[j,<span class="op">-</span>(j<span class="op">+</span><span class="dv">1</span>)] &lt;-<span class="st"> </span>p_val</a>
-<a class="sourceLine" id="cb20-11" data-line-number="11">}</a>
-<a class="sourceLine" id="cb20-12" data-line-number="12">signif[<span class="kw">is.na</span>(signif)] &lt;-<span class="st"> </span><span class="dv">1</span>                                                  <span class="co"># Kick out NAs</span></a>
-<a class="sourceLine" id="cb20-13" data-line-number="13">results &lt;-<span class="st"> </span>results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">data.frame</span>()                           <span class="co"># Basic formatting</span></a>
-<a class="sourceLine" id="cb20-14" data-line-number="14">results[signif<span class="op">&lt;</span><span class="fl">0.001</span>] &lt;-<span class="st"> </span><span class="kw">paste</span>(results[signif<span class="op">&lt;</span><span class="fl">0.001</span>],<span class="st">&quot; (***)&quot;</span>)              <span class="co"># 3 star signif</span></a>
-<a class="sourceLine" id="cb20-15" data-line-number="15">results[signif<span class="op">&gt;</span><span class="fl">0.001</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.01</span>] &lt;-<span class="st">                                        </span><span class="co"># 2 star signif</span></a>
-<a class="sourceLine" id="cb20-16" data-line-number="16"><span class="st">    </span><span class="kw">paste</span>(results[signif<span class="op">&gt;</span><span class="fl">0.001</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.01</span>],<span class="st">&quot; (**)&quot;</span>)</a>
-<a class="sourceLine" id="cb20-17" data-line-number="17">results[signif<span class="op">&gt;</span><span class="fl">0.01</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.05</span>] &lt;-<span class="st">                                         </span><span class="co"># 1 star signif</span></a>
-<a class="sourceLine" id="cb20-18" data-line-number="18"><span class="st">    </span><span class="kw">paste</span>(results[signif<span class="op">&gt;</span><span class="fl">0.01</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.05</span>],<span class="st">&quot; (*)&quot;</span>)     </a>
-<a class="sourceLine" id="cb20-19" data-line-number="19"></a>
-<a class="sourceLine" id="cb20-20" data-line-number="20">results &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.character</span>(factors), results)                            <span class="co"># Add dep. variable</span></a>
-<a class="sourceLine" id="cb20-21" data-line-number="21"><span class="kw">colnames</span>(results) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Dep. Variable&quot;</span>,<span class="st">&quot;Intercept&quot;</span>, factors)                <span class="co"># Add column names</span></a>
-<a class="sourceLine" id="cb20-22" data-line-number="22">knitr<span class="op">::</span><span class="kw">kable</span>(results,  <span class="dt">booktabs =</span> <span class="ot">TRUE</span>,</a>
-<a class="sourceLine" id="cb20-23" data-line-number="23">             <span class="dt">caption =</span> <span class="kw">paste0</span>(<span class="st">&quot;Factor competition among the Fama and French (2015) five &quot;</span>,</a>
-<a class="sourceLine" id="cb20-24" data-line-number="24">                              <span class="st">&quot;factors. The sample starts in &quot;</span>,<span class="kw">substr</span>(min_date,<span class="dv">1</span>,<span class="dv">7</span>), </a>
-<a class="sourceLine" id="cb20-25" data-line-number="25">                              <span class="st">&quot; and ends in &quot;</span>, <span class="kw">substr</span>(max_date,<span class="dv">1</span>,<span class="dv">7</span>),</a>
-<a class="sourceLine" id="cb20-26" data-line-number="26">                              <span class="st">&quot;. The regressions are run on monthly returns. &quot;</span></a>
-<a class="sourceLine" id="cb20-27" data-line-number="27">                       )</a>
-<a class="sourceLine" id="cb20-28" data-line-number="28">       ) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb20-29" data-line-number="29"><span class="st">    </span><span class="kw">kable_styling</span>(<span class="dt">font_size =</span> <span class="dv">9</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">results &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># Coefs</span></a>
+<a class="sourceLine" id="cb23-2" data-line-number="2">signif  &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># p-values</span></a>
+<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span><span class="kw">length</span>(factors)){</a>
+<a class="sourceLine" id="cb23-4" data-line-number="4">    form &lt;-<span class="st"> </span><span class="kw">paste</span>(factors[j],</a>
+<a class="sourceLine" id="cb23-5" data-line-number="5">                  <span class="st">&#39; ~  MKT_RF + SMB + HML + RMW + CMA-&#39;</span>,factors[j])         <span class="co"># Build model</span></a>
+<a class="sourceLine" id="cb23-6" data-line-number="6">    fit &lt;-<span class="st"> </span><span class="kw">lm</span>(form, <span class="dt">data =</span> FF_factors) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">summary</span>()                        <span class="co"># Estimate model</span></a>
+<a class="sourceLine" id="cb23-7" data-line-number="7">    coef &lt;-<span class="st"> </span>fit<span class="op">$</span>coefficients[,<span class="dv">1</span>]                                            <span class="co"># Keep coefficients</span></a>
+<a class="sourceLine" id="cb23-8" data-line-number="8">    p_val &lt;-<span class="st"> </span>fit<span class="op">$</span>coefficients[,<span class="dv">4</span>]                                           <span class="co"># Keep p-values</span></a>
+<a class="sourceLine" id="cb23-9" data-line-number="9">    results[j,<span class="op">-</span>(j<span class="op">+</span><span class="dv">1</span>)] &lt;-<span class="st"> </span>coef                                               <span class="co"># Fill matrix</span></a>
+<a class="sourceLine" id="cb23-10" data-line-number="10">    signif[j,<span class="op">-</span>(j<span class="op">+</span><span class="dv">1</span>)] &lt;-<span class="st"> </span>p_val</a>
+<a class="sourceLine" id="cb23-11" data-line-number="11">}</a>
+<a class="sourceLine" id="cb23-12" data-line-number="12">signif[<span class="kw">is.na</span>(signif)] &lt;-<span class="st"> </span><span class="dv">1</span>                                                  <span class="co"># Kick out NAs</span></a>
+<a class="sourceLine" id="cb23-13" data-line-number="13">results &lt;-<span class="st"> </span>results <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)  <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">data.frame</span>()                           <span class="co"># Basic formatting</span></a>
+<a class="sourceLine" id="cb23-14" data-line-number="14">results[signif<span class="op">&lt;</span><span class="fl">0.001</span>] &lt;-<span class="st"> </span><span class="kw">paste</span>(results[signif<span class="op">&lt;</span><span class="fl">0.001</span>],<span class="st">&quot; (***)&quot;</span>)              <span class="co"># 3 star signif</span></a>
+<a class="sourceLine" id="cb23-15" data-line-number="15">results[signif<span class="op">&gt;</span><span class="fl">0.001</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.01</span>] &lt;-<span class="st">                                        </span><span class="co"># 2 star signif</span></a>
+<a class="sourceLine" id="cb23-16" data-line-number="16"><span class="st">    </span><span class="kw">paste</span>(results[signif<span class="op">&gt;</span><span class="fl">0.001</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.01</span>],<span class="st">&quot; (**)&quot;</span>)</a>
+<a class="sourceLine" id="cb23-17" data-line-number="17">results[signif<span class="op">&gt;</span><span class="fl">0.01</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.05</span>] &lt;-<span class="st">                                         </span><span class="co"># 1 star signif</span></a>
+<a class="sourceLine" id="cb23-18" data-line-number="18"><span class="st">    </span><span class="kw">paste</span>(results[signif<span class="op">&gt;</span><span class="fl">0.01</span><span class="op">&amp;</span>signif<span class="op">&lt;</span><span class="fl">0.05</span>],<span class="st">&quot; (*)&quot;</span>)     </a>
+<a class="sourceLine" id="cb23-19" data-line-number="19"></a>
+<a class="sourceLine" id="cb23-20" data-line-number="20">results &lt;-<span class="st"> </span><span class="kw">cbind</span>(<span class="kw">as.character</span>(factors), results)                            <span class="co"># Add dep. variable</span></a>
+<a class="sourceLine" id="cb23-21" data-line-number="21"><span class="kw">colnames</span>(results) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Dep. Variable&quot;</span>,<span class="st">&quot;Intercept&quot;</span>, factors)                <span class="co"># Add column names</span></a></code></pre></div>
 
-<p></p>
+
+<pre><code>##   Dep. Variable    Intercept        MKT_RF           SMB          HML           RMW
+## 1        MKT_RF 0.008  (***)          &lt;NA&gt;  0.258  (***)        0.104 -0.368  (***)
+## 2           SMB   0.003  (*)  0.131  (***)          &lt;NA&gt;        0.072  -0.43  (***)
+## 3           HML            0         0.028         0.038         &lt;NA&gt;  0.148  (***)
+## 4           RMW 0.004  (***) -0.096  (***) -0.219  (***) 0.143  (***)          &lt;NA&gt;
+## 5           CMA 0.002  (***)  -0.11  (***)         -0.03 0.456  (***) -0.133  (***)
+##             CMA
+## 1 -0.911  (***)
+## 2        -0.127
+## 3   1.02  (***)
+## 4 -0.287  (***)
+## 5          &lt;NA&gt;</code></pre>
+
 <p>We confirm that the HML factor remains redundant when the four others are present in the asset pricing model. The figures we obtain are very close to the ones in the original paper (<span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>), which makes sense, since we only add 5 years to their initial sample.</p>
 <p>At a more macro-level, researchers also try to figure out which models (i.e., combinations of factors) are the most likely, given the data empirically observed (and possibly given priors formulated by the econometrician). For instance, this stream of literature seeks to quantify to which extent the 3-factor model of <span class="citation">Fama and French (<a href="#ref-fama1993common">1993</a>)</span> outperforms the 5 factors in <span class="citation">Fama and French (<a href="#ref-fama2015five">2015</a>)</span>. In this direction, <span class="citation">De Moor, Dhaene, and Sercu (<a href="#ref-de2015comparing">2015</a>)</span> introduce a novel computation for <em>p</em>-values that compare the relative likelihood that two models pass a zero-alpha test. More generally, the Bayesian method of <span class="citation">Barillas and Shanken (<a href="#ref-barillas2018comparing">2018</a>)</span> was subsequently improved by <span class="citation">Chib, Zeng, and Zhao (<a href="#ref-chib2019comparing">2019</a>)</span>.</p>
 <p>Lastly, even the optimal number of factors is a subject of disagreement among conclusions of recent work. While the traditional literature focuses on a limited number (3-5) of factors, more recent research by <span class="citation">Martin Utrera et al. (<a href="#ref-martin2018transaction">2020</a>)</span>, <span class="citation">He, Huang, and Zhou (<a href="#ref-he2019factors">2020</a>)</span>, <span class="citation">Kozak, Nagel, and Santosh (<a href="#ref-kozak2019shrinking">2019</a>)</span> and <span class="citation">Freyberger, Neuhierl, and Weber (<a href="#ref-freyberger2020dissecting">2020</a>)</span> advocates the need to use at least 15 or more. <span class="citation">Green, Hand, and Zhang (<a href="#ref-green2017characteristics">2017</a>)</span> even find that the number of characteristics that help explain the cross-section of returns varies in time.</p>
@@ -816,21 +1014,21 @@ The interesting metric is then the test statistic associated to the estimation o
 <p>Given the data obtained on Ken French’s website, we compute the autocorrelation function (ACF) of factors. We recall that
 <span class="math display">\[\text{ACF}_k(\textbf{x}_t)=\mathbb{E}[(\textbf{x}_t-\bar{\textbf{x}})(\textbf{x}_{t+k}-\bar{\textbf{x}})].\]</span></p>
 
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="kw">library</span>(cowplot)                   <span class="co"># For stacking plots</span></a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">library</span>(forecast)                  <span class="co"># For autocorrelation function</span></a>
-<a class="sourceLine" id="cb21-3" data-line-number="3">acf_SMB &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>SMB, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF SMB</span></a>
-<a class="sourceLine" id="cb21-4" data-line-number="4">acf_HML &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>HML, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF HML</span></a>
-<a class="sourceLine" id="cb21-5" data-line-number="5">acf_RMW &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>RMW, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF RMW</span></a>
-<a class="sourceLine" id="cb21-6" data-line-number="6">acf_CMA &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>CMA, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF CMA</span></a>
-<a class="sourceLine" id="cb21-7" data-line-number="7"><span class="kw">plot_grid</span>(acf_SMB, acf_HML, acf_RMW, acf_CMA,  <span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb21-8" data-line-number="8">          <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;SMB&#39;</span>, <span class="st">&#39;HML&#39;</span>, <span class="st">&#39;RMW&#39;</span>, <span class="st">&#39;CMA&#39;</span>)) </a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="kw">library</span>(cowplot)                   <span class="co"># For stacking plots</span></a>
+<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="kw">library</span>(forecast)                  <span class="co"># For autocorrelation function</span></a>
+<a class="sourceLine" id="cb25-3" data-line-number="3">acf_SMB &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>SMB, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF SMB</span></a>
+<a class="sourceLine" id="cb25-4" data-line-number="4">acf_HML &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>HML, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF HML</span></a>
+<a class="sourceLine" id="cb25-5" data-line-number="5">acf_RMW &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>RMW, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF RMW</span></a>
+<a class="sourceLine" id="cb25-6" data-line-number="6">acf_CMA &lt;-<span class="st"> </span><span class="kw">ggAcf</span>(FF_factors<span class="op">$</span>CMA, <span class="dt">lag.max =</span> <span class="dv">10</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;&quot;</span>)  <span class="co"># ACF CMA</span></a>
+<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="kw">plot_grid</span>(acf_SMB, acf_HML, acf_RMW, acf_CMA,  <span class="co"># Plot</span></a>
+<a class="sourceLine" id="cb25-8" data-line-number="8">          <span class="dt">labels =</span> <span class="kw">c</span>(<span class="st">&#39;SMB&#39;</span>, <span class="st">&#39;HML&#39;</span>, <span class="st">&#39;RMW&#39;</span>, <span class="st">&#39;CMA&#39;</span>)) </a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:facautocorr"></span>
 <img src="ML_factor_files/figure-html/facautocorr-1.png" alt="Autocorrelograms of common factor portfolios." width="432" />
 <p class="caption">
 FIGURE 4.4: Autocorrelograms of common factor portfolios.
 </p>
 </div>
-<p></p>
+
 <p>Of the four chosen series, only the size factor is not significantly autocorrelated at the first order.</p>
 </div>
 <div id="factor-timing" class="section level3">
@@ -839,7 +1037,7 @@ FIGURE 4.4: Autocorrelograms of common factor portfolios.
 </div>
 <div id="the-green-factors" class="section level3">
 <h3><span class="header-section-number">4.4.3</span> The green factors</h3>
-<p>The demand for ethical financial products has sharply risen during the 2010 decade, leading to the creation of funds dedicated to socially responsible investing (SRI). Though this phenomenon is not really new (<span class="citation">Schueth (<a href="#ref-schueth2003socially">2003</a>)</span>, <span class="citation">Hill et al. (<a href="#ref-hill2007corporate">2007</a>)</span>), its acceleration has prompted research about whether or not characteristics related to ESG criteria (environment, social, governance) are priced. Dozens and even possibly hundreds of papers have been devoted to this question, but no consensus has been reached. More and more, researchers study the financial impact of climate change (see <span class="citation">Bernstein, Gustafson, and Lewis (<a href="#ref-bernstein2019disaster">2019</a>)</span>, <span class="citation">Hong, Li, and Xu (<a href="#ref-hong2019climate">2019</a>)</span> and <span class="citation">Hong, Karolyi, and Scheinkman (<a href="#ref-hong2020climate">2020</a>)</span>) and the societal push for responsible corporate behavior (<span class="citation">Fabozzi (<a href="#ref-fabozzi2020introduction">2020</a>)</span>, <span class="citation">Kurtz (<a href="#ref-kurtz2020three">2020</a>)</span>).</p>
+<p>The demand for ethical financial products has sharply risen during the 2010 decade, leading to the creation of funds dedicated to socially responsible investing (SRI - see <span class="citation">Camilleri (<a href="#ref-camilleri2020market">2020</a>)</span>). Though this phenomenon is not really new (<span class="citation">Schueth (<a href="#ref-schueth2003socially">2003</a>)</span>, <span class="citation">Hill et al. (<a href="#ref-hill2007corporate">2007</a>)</span>), its acceleration has prompted research about whether or not characteristics related to ESG criteria (environment, social, governance) are priced. Dozens and even possibly hundreds of papers have been devoted to this question, but no consensus has been reached. More and more, researchers study the financial impact of climate change (see <span class="citation">Bernstein, Gustafson, and Lewis (<a href="#ref-bernstein2019disaster">2019</a>)</span>, <span class="citation">Hong, Li, and Xu (<a href="#ref-hong2019climate">2019</a>)</span> and <span class="citation">Hong, Karolyi, and Scheinkman (<a href="#ref-hong2020climate">2020</a>)</span>) and the societal push for responsible corporate behavior (<span class="citation">Fabozzi (<a href="#ref-fabozzi2020introduction">2020</a>)</span>, <span class="citation">Kurtz (<a href="#ref-kurtz2020three">2020</a>)</span>).</p>
 <p>We gather below a very short list of papers that suggests conflicting results:</p>
 <ul>
 <li><strong>favorable</strong>: ESG investing works (<span class="citation">Kempf and Osthoff (<a href="#ref-kempf2007effect">2007</a>)</span>, <span class="citation">Cheema-Fox et al. (<a href="#ref-cheema2020decarbonization">2020</a>)</span>), can work (<span class="citation">Nagy, Kassam, and Lee (<a href="#ref-nagy2016can">2016</a>)</span>, <span class="citation">Alessandrini and Jondeau (<a href="#ref-alessandrini2020optimal">2020</a>)</span>), or can at least be rendered efficient (<span class="citation">Branch and Cai (<a href="#ref-branch2012socially">2012</a>)</span>). A large meta-study reports overwhelming favorable results (<span class="citation">Friede, Busch, and Bassen (<a href="#ref-friede2015esg">2015</a>)</span>), but of course, they could well stem from the publication bias towards positive results.<br />
@@ -1078,6 +1276,9 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 </div>
 <div id="ref-bustos2020stock">
 <p>Bustos, O, and A Pomares-Quimbaya. 2020. “Stock Market Movement Forecast: A Systematic Review.” <em>Expert Systems with Applications</em> Forthcoming.</p>
+</div>
+<div id="ref-camilleri2020market">
+<p>Camilleri, Mark Anthony. 2020. “The Market for Socially Responsible Investing: A Review of the Developments.” <em>Social Responsibility Journal</em> Forthcoming.</p>
 </div>
 <div id="ref-cao2003support">
 <p>Cao, Li-Juan, and Francis Eng Hock Tay. 2003. “Support Vector Machine with Adaptive Parameters in Financial Time Series Forecasting.” <em>IEEE Transactions on Neural Networks</em> 14 (6): 1506–18.</p>
