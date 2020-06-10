@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-06-04" />
+<meta name="date" content="2020-06-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -160,7 +161,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>4.4</b> Hot topics: momentum, timing and ESG</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
-<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.2</b> The green factors</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+<li class="chapter" data-level="4.4.3" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.3</b> The green factors</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-links-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The links with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
@@ -664,7 +666,7 @@ where the left part is the average number of votes based on the <span class="mat
 <p>We can then assess the proportion of correct (binary) guesses.
 </p>
 <div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb59-1" data-line-number="1"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF_C, testing_sample) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
-<pre><code>## [1] 0.4983905</code></pre>
+<pre><code>## [1] 0.4987751</code></pre>
 
 <p>The accuracy is disappointing. There are two potential explanations for this (beyond the possibility of very different patterns in the training and testing sets). The first one is the sample size, which may be too small. The original training set has more than 200,000 observations, hence we retain only one in 10 in the above training specification. We are thus probably sidelining relevant information and the cost can be heavy. The second reason is the number of predictors, which is set to 30, i.e., one third of the total at our disposal. Unfortunately, this leaves room for the algorithm to pick less pertinent predictors. The default numbers of predictors chosen by the routines are <span class="math inline">\(\sqrt{p}\)</span> and <span class="math inline">\(p/3\)</span> for classification and regression tasks, respectively. Here <span class="math inline">\(p\)</span> is the total number of features.</p>
 </div>

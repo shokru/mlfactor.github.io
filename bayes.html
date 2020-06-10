@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-06-04" />
+<meta name="date" content="2020-06-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -160,7 +161,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>4.4</b> Hot topics: momentum, timing and ESG</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
-<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.2</b> The green factors</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+<li class="chapter" data-level="4.4.3" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.3</b> The green factors</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-links-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The links with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
@@ -467,7 +469,7 @@ p(\boldsymbol{\theta}| \textbf{y})=\frac{p(\boldsymbol{\theta})p(\textbf{y} |\bo
 p(\textbf{y} |\boldsymbol{\theta}, \boldsymbol{\lambda})=\prod_{i=1}^I f_{\boldsymbol{\lambda}}(y_i; \boldsymbol{\beta}), 
 \end{equation}\]</span>
 but in this case the problem becomes slightly more complex because adding new parameters changes the posterior distribution to <span class="math inline">\(p(\boldsymbol{\theta}, \boldsymbol{\lambda}|\textbf{y})\)</span>. The user must find out the joint distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> and <span class="math inline">\(\boldsymbol{\lambda}\)</span> - given <span class="math inline">\(\textbf{y}\)</span>. Because of their nested structure, these models are often called <strong>hierarchical models</strong>.</p>
-<p>Bayesian methods are widely used for portfolio choice. The rationale is that the distribution of asset returns depends on some parameter and the main issue is to determine the posterior distribution. We very briefly review a vast literature below. Bayesian asset allocation is investigated in <span class="citation">Lai et al. (<a href="#ref-lai2011mean">2011</a>)</span> (via stochastic optimization) and <span class="citation">Guidolin and Liu (<a href="#ref-guidolin2016ambiguity">2016</a>)</span>. Shrinkage techniques (of means and covariance matrices) are tested in <span class="citation">Frost and Savarino (<a href="#ref-frost1986empirical">1986</a>)</span>, <span class="citation">Kan and Zhou (<a href="#ref-kan2007optimal">2007</a>)</span> and <span class="citation">DeMiguel, Martı'n-Utrera, and Nogales (<a href="#ref-demiguel2015parameter">2015</a>)</span>. In a similar vein, <span class="citation">Tu and Zhou (<a href="#ref-tu2010incorporating">2010</a>)</span> build priors that are coherent with asset pricing theories. Finally, <span class="citation">Bauder et al. (<a href="#ref-bauder2020bayesian">2020</a>)</span> sample portfolio returns which allows to dervive a Bayesian optimal frontier. We invite the interested reader to also dwelve in the references that are cited within these few articles.</p>
+<p>Bayesian methods are widely used for portfolio choice. The rationale is that the distribution of asset returns depends on some parameter and the main issue is to determine the posterior distribution. We very briefly review a vast literature below. Bayesian asset allocation is investigated in <span class="citation">Lai et al. (<a href="#ref-lai2011mean">2011</a>)</span> (via stochastic optimization), <span class="citation">Guidolin and Liu (<a href="#ref-guidolin2016ambiguity">2016</a>)</span> and <span class="citation">Dangl and Weissensteiner (<a href="#ref-dangl2020optimal">2020</a>)</span>. Shrinkage techniques (of means and covariance matrices) are tested in <span class="citation">Frost and Savarino (<a href="#ref-frost1986empirical">1986</a>)</span>, <span class="citation">Kan and Zhou (<a href="#ref-kan2007optimal">2007</a>)</span> and <span class="citation">DeMiguel, Martı'n-Utrera, and Nogales (<a href="#ref-demiguel2015parameter">2015</a>)</span>. In a similar vein, <span class="citation">Tu and Zhou (<a href="#ref-tu2010incorporating">2010</a>)</span> build priors that are coherent with asset pricing theories. Finally, <span class="citation">Bauder et al. (<a href="#ref-bauder2020bayesian">2020</a>)</span> sample portfolio returns which allows to dervive a Bayesian optimal frontier. We invite the interested reader to also dwelve in the references that are cited within these few articles.</p>
 </div>
 <div id="bayesian-sampling" class="section level2">
 <h2><span class="header-section-number">10.2</span> Bayesian sampling</h2>
@@ -801,7 +803,7 @@ FIGURE 10.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed 
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 28s
+## time: 26s
 ## trcnt,tecnt: 200,200</code></pre>
 
 <p>Once the model is trained,<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>’.</p>
@@ -832,13 +834,16 @@ FIGURE 10.4: Evolution of sigma across BART simulations.
 <p>Bauder, David, Taras Bodnar, Nestor Parolya, and Wolfgang Schmid. 2020. “Bayesian Inference of the Multi-Period Optimal Portfolio for an Exponential Utility.” <em>Journal of Multivariate Analysis</em> 175: 104544.</p>
 </div>
 <div id="ref-chen2001initialization">
-<p>Chen, Huifen. 2001. “Initialization for Norta: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4). INFORMS: 312–31.</p>
+<p>Chen, Huifen. 2001. “Initialization for NORTA: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4). INFORMS: 312–31.</p>
 </div>
 <div id="ref-chipman2010bart">
 <p>Chipman, Hugh A, Edward I George, and Robert E McCulloch. 2010. “BART: Bayesian Additive Regression Trees.” <em>Annals of Applied Statistics</em> 4 (1): 266–98.</p>
 </div>
 <div id="ref-coqueret2017approximate">
-<p>Coqueret, Guillaume. 2017. “Approximate Norta Simulations for Virtual Sample Generation.” <em>Expert Systems with Applications</em> 73: 69–81.</p>
+<p>Coqueret, Guillaume. 2017. “Approximate NORTA Simulations for Virtual Sample Generation.” <em>Expert Systems with Applications</em> 73: 69–81.</p>
+</div>
+<div id="ref-dangl2020optimal">
+<p>Dangl, Thomas, and Alex Weissensteiner. 2020. “Optimal Portfolios Under Time-Varying Investment Opportunities, Parameter Uncertainty, and Ambiguity Aversion.” <em>Journal of Financial and Quantitative Analysis</em> 55 (4): 1163–98.</p>
 </div>
 <div id="ref-demiguel2015parameter">
 <p>DeMiguel, Victor, Alberto Martı'n-Utrera, and Francisco J Nogales. 2015. “Parameter Uncertainty in Multiperiod Portfolio Optimization with Transaction Costs.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1443–71.</p>

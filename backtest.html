@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-06-04" />
+<meta name="date" content="2020-06-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -160,7 +161,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>4.4</b> Hot topics: momentum, timing and ESG</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
-<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.2</b> The green factors</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+<li class="chapter" data-level="4.4.3" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.3</b> The green factors</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-links-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The links with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
@@ -440,6 +442,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div id="backtest" class="section level1">
 <h1><span class="header-section-number">Chapter 13</span> Portfolio backtesting</h1>
 <p>
+
 In this section, we introduce the notations and framework that will be used when analyzing and comparing investment strategies. Portfolio backtesting is often conceived and perceived as a quest to find the best strategy - or at least a solidly profitable one. When carried out thoroughly, this possibly long endeavor may entice the layman to confuse a fluke for a robust policy. Two papers published back-to-back warn against the <strong>perils of data snooping</strong>, which is related to <span class="math inline">\(p\)</span>-hacking. In both cases, the researcher will torture the data until the sought result is found.</p>
 <p><span class="citation">Fabozzi and Prado (<a href="#ref-fabozzi2018being">2018</a>)</span> acknowledge that only strategies that work make it to the public, while thousands (at least) have been tested. Picking the pleasing outlier (the only strategy that seemed to work) is likely to generate disappointment when switching to real trading. In a similar vein, <span class="citation">R. Arnott, Harvey, and Markowitz (<a href="#ref-arnott2019backtesting">2019</a>)</span> provide a list of principles and safeguards that any analyst should follow to avoid any type of error when backtesting strategies. The worst type is arguably <strong>false positives</strong> whereby strategies are found (often by cherrypicking) to outperform in one very particular setting, but will likely fail in live implementation.</p>
 <p>In addition to these recommendations on portfolio constructions, <span class="citation">R. Arnott et al. (<a href="#ref-arnott2019alice">2019</a>)</span> also warn against the hazards of blindly investing in smart beta products related to academic factors. Plainly, expectations should not be set too high or face the risk of being disappointed. Another takeaway from their article is that <strong>economic cycles</strong> have a strong impact on factor returns: correlations change quickly and drawdowns can be magnified in times of major downturns.</p>
@@ -565,7 +568,7 @@ where the <span class="math inline">\(\bar{f}_k\)</span> are the sample average 
 </div>
 <div id="transaction-costs-and-turnover" class="section level3">
 <h3><span class="header-section-number">13.3.5</span> Transaction costs and turnover</h3>
-<p>index{transaction costs}
+<p>
 Updating portfolio composition is not free. In all generality, the total cost of one rebalancing at time <span class="math inline">\(t\)</span> is proportional to <span class="math inline">\(C_t=\sum_{n=1}^N | \Delta w_{t,n}|c_{t,n}\)</span>, where <span class="math inline">\(\Delta w_{t,n}\)</span> is the change in position for asset <span class="math inline">\(n\)</span> and <span class="math inline">\(c_{t,n}\)</span> the corresponding fee. This last quantity is often hard to predict, thus it is customary to use a proxy that depends for instance on market capitalization (large stocks have more liquid shares and thus require smaller fees) or bid-ask spreads (smaller spreads mean smaller fees).</p>
 <p>As a first order approximation, it is often useful to compute the average turnover:
 <span class="math display">\[\text{Turnover}=\frac{1}{T-1}\sum_{t=2}^T\sum_{n=1}^N|w_{t,n}-w_{t-,n}|,\]</span>

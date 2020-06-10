@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-06-04" />
+<meta name="date" content="2020-06-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -160,7 +161,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>4.4</b> Hot topics: momentum, timing and ESG</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
-<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.2</b> The green factors</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+<li class="chapter" data-level="4.4.3" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.3</b> The green factors</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-links-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The links with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
@@ -504,17 +506,17 @@ where while the second term converges to zero as <span class="math inline">\(M\)
 <a class="sourceLine" id="cb141-7" data-line-number="7"><span class="kw">colnames</span>(E) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)                               <span class="co"># Col. names</span></a>
 <a class="sourceLine" id="cb141-8" data-line-number="8"><span class="kw">cor</span>(E)                                                                               <span class="co"># Cor. mat.</span></a></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9963642
-## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9972902
-## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9974647
-## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9277349
-## NN      0.9963642 0.9972902 0.9974647 0.9277349 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9969135
+## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9974810
+## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9976131
+## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9282508
+## NN      0.9969135 0.9974810 0.9976131 0.9282508 1.0000000</code></pre>
 
 <p>As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. The minimum correlation (though above 95%!) is obtained by the boosted tree models. Below, we compare the training accuracy of models by computing the average absolute value of errors.</p>
 
 <div class="sourceCode" id="cb143"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb143-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">abs</span>(E), <span class="dv">2</span>, mean) <span class="co"># Mean absolute error or columns of E </span></a></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.08345916 0.08362133 0.08327121 0.08986993 0.08371022</code></pre>
+## 0.08345916 0.08362133 0.08327121 0.08986993 0.08369588</code></pre>
 
 <p>The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non-constrained) weights for the combination of models.</p>
 
@@ -522,11 +524,11 @@ where while the second term converges to zero as <span class="math inline">\(M\)
 <a class="sourceLine" id="cb145-2" data-line-number="2">w_ensemble &lt;-<span class="st"> </span>w_ensemble <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w_ensemble)</a>
 <a class="sourceLine" id="cb145-3" data-line-number="3">w_ensemble</a></code></pre></div>
 <pre><code>##                  [,1]
-## Pen_reg -0.5512341911
-## Tree    -0.0907134876
-## RF       1.3533298838
-## XGB     -0.0006175726
-## NN       0.2892353675</code></pre>
+## Pen_reg -0.5817327676
+## Tree    -0.0543806114
+## RF       1.3769780491
+## XGB     -0.0006271105
+## NN       0.2597624405</code></pre>
 
 <p>Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and ‘short’ a few models in order to compensate. As one could expect, the model with the largest negative weights (Pen_reg) has a very high correlation with the random forest algorithm (0.997).</p>
 <p>Note that the weights are of course computed with <strong>training errors</strong>. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.</p>
@@ -540,29 +542,29 @@ where while the second term converges to zero as <span class="math inline">\(M\)
 <a class="sourceLine" id="cb147-7" data-line-number="7"><span class="kw">colnames</span>(E_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)</a>
 <a class="sourceLine" id="cb147-8" data-line-number="8"><span class="kw">apply</span>(<span class="kw">abs</span>(E_test), <span class="dv">2</span>, mean)             <span class="co"># Mean absolute error or columns of E </span></a></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.06618181 0.06653527 0.06710349 0.07170802 0.06711755</code></pre>
+## 0.06618181 0.06653527 0.06710349 0.07170802 0.06716501</code></pre>
 
 <p>The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.</p>
 
 <div class="sourceCode" id="cb149"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb149-1" data-line-number="1">err_EW_test &lt;-<span class="st"> </span><span class="kw">apply</span>(E_test, <span class="dv">1</span>, mean)  <span class="co"># Equally weighted combination</span></a>
 <a class="sourceLine" id="cb149-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">abs</span>(err_EW_test))</a></code></pre></div>
-<pre><code>## [1] 0.06692585</code></pre>
+<pre><code>## [1] 0.06693156</code></pre>
 
 <p>Because the errors are very correlated, the equally weighted combination of forecasts yields an average error which lies ‘in the middle’ of individual errors. The diversification benefits are too small. Let us now test the ‘optimal’ combination <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M&#39;\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}\)</span>.</p>
 
 <div class="sourceCode" id="cb151"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb151-1" data-line-number="1">err_opt_test &lt;-<span class="st"> </span>E_test <span class="op">%*%</span><span class="st"> </span>w_ensemble   <span class="co"># Optimal unconstrained combination</span></a>
 <a class="sourceLine" id="cb151-2" data-line-number="2"><span class="kw">mean</span>(<span class="kw">abs</span>(err_opt_test))</a></code></pre></div>
-<pre><code>## [1] 0.06831472</code></pre>
+<pre><code>## [1] 0.06835538</code></pre>
 
 <p>Again, the result is disappointing because of the lack of diversification across models. The correlations between errors are high not only on the training sample, but also on the testing sample, as shown below.</p>
 
 <div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb153-1" data-line-number="1"><span class="kw">cor</span>(E_test)</a></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9964172
-## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9975820
-## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9978634
-## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9612227
-## NN      0.9964172 0.9975820 0.9978634 0.9612227 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9966959
+## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9976702
+## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9979694
+## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9609153
+## NN      0.9966959 0.9976702 0.9979694 0.9609153 1.0000000</code></pre>
 
 <p>The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of <span class="citation">Breiman (<a href="#ref-breiman1996stacked">1996</a>)</span> using the <em>quadprog</em> package. If we write <span class="math inline">\(\mathbf{\Sigma}\)</span> for the covariance matrix of errors, we seek
 <span class="math display">\[\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}&#39;\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}&#39;\mathbf{w}=1, \quad w_i\ge 0,\]</span>
@@ -585,7 +587,7 @@ The constraints will be handled as:</p>
 <a class="sourceLine" id="cb155-8" data-line-number="8">              <span class="dt">meq =</span> <span class="dv">1</span>                   <span class="co"># 1 line of equality constraints, others = inequalities</span></a>
 <a class="sourceLine" id="cb155-9" data-line-number="9">              )</a>
 <a class="sourceLine" id="cb155-10" data-line-number="10">w_const<span class="op">$</span>solution <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)           <span class="co"># Solution</span></a></code></pre></div>
-<pre><code>## [1] 0.000 0.000 0.953 0.000 0.047</code></pre>
+<pre><code>## [1] 0 0 1 0 0</code></pre>
 
 <p>Compared to the unconstrained solution, the weights are sparse and concentrated in one or two models, usually those with small training sample errors.</p>
 </div>
@@ -625,11 +627,11 @@ FIGURE 12.1: Scheme of stacked ensembles.
 <pre><code>## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_35 (Dense)                        (None, 8)                           48            
+## dense_11 (Dense)                        (None, 8)                           48            
 ## __________________________________________________________________________________________
-## dense_36 (Dense)                        (None, 4)                           36            
+## dense_12 (Dense)                        (None, 4)                           36            
 ## __________________________________________________________________________________________
-## dense_37 (Dense)                        (None, 1)                           5             
+## dense_13 (Dense)                        (None, 1)                           5             
 ## ==========================================================================================
 ## Total params: 89
 ## Trainable params: 89
@@ -685,12 +687,12 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <a class="sourceLine" id="cb165-12" data-line-number="12"><span class="st">    </span><span class="kw">left_join</span>(ts)                                     <span class="co"># Add termspread</span></a>
 <a class="sourceLine" id="cb165-13" data-line-number="13"><span class="kw">head</span>(ens_data)                                        <span class="co"># Show first lines</span></a></code></pre></div>
 <pre><code>##         date err_NN_test      Index CPIAUCSL   inflation termspread
-## 1 2014-01-31 -0.16100795 2014-01-01  235.288 0.002424175       2.47
-## 2 2014-02-28  0.06145555 2014-02-01  235.547 0.001100779       2.38
-## 3 2014-03-31 -0.03457711 2014-03-01  236.028 0.002042055       2.32
-## 4 2014-04-30 -0.09869212 2014-04-01  236.468 0.001864186       2.29
-## 5 2014-05-31 -0.11048001 2014-05-01  236.918 0.001903006       2.17
-## 6 2014-06-30  0.02019391 2014-06-01  237.231 0.001321132       2.15</code></pre>
+## 1 2014-01-31 -0.15700543 2014-01-01  235.288 0.002424175       2.47
+## 2 2014-02-28  0.07107934 2014-02-01  235.547 0.001100779       2.38
+## 3 2014-03-31 -0.01740334 2014-03-01  236.028 0.002042055       2.32
+## 4 2014-04-30 -0.08128143 2014-04-01  236.468 0.001864186       2.29
+## 5 2014-05-31 -0.09547639 2014-05-01  236.918 0.001903006       2.17
+## 6 2014-06-30  0.03042763 2014-06-01  237.231 0.001321132       2.15</code></pre>
 
 <p>We can now build a tree that tries to explain the accuracy of models as a function of macro-variables.</p>
 
@@ -792,10 +794,10 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
 <a class="sourceLine" id="cb173-4" data-line-number="4">                        err_ens_<span class="dv">2013</span>)</a>
 <a class="sourceLine" id="cb173-5" data-line-number="5"><span class="kw">cor</span>(E_subtraining)</a></code></pre></div>
 <pre><code>##              err_ens_2007 err_ens_2009 err_ens_2011 err_ens_2013
-## err_ens_2007    1.0000000    0.9610165    0.6460091    0.9986611
-## err_ens_2009    0.9610165    1.0000000    0.6340258    0.9663329
-## err_ens_2011    0.6460091    0.6340258    1.0000000    0.6468114
-## err_ens_2013    0.9986611    0.9663329    0.6468114    1.0000000</code></pre>
+## err_ens_2007    1.0000000    0.9610165    0.6460091    0.9985485
+## err_ens_2009    0.9610165    1.0000000    0.6340258    0.9638768
+## err_ens_2011    0.6460091    0.6340258    1.0000000    0.6456426
+## err_ens_2013    0.9985485    0.9638768    0.6456426    1.0000000</code></pre>
 
 <p>The results are overall disappointing. Only one model manages to extract patterns that are somewhat different from the other ones, resulting in a 65% correlation across the board. Neural networks (on 2013 data) and penalized regressions (2007) remain highly correlated. One possible explanation could be that the models capture mainly noise and little signal. Working with long-term labels like annual returns could help improve diversification across models.  </p>
 </div>

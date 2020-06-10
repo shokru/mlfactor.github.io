@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-06-04" />
+<meta name="date" content="2020-06-10" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,6 +50,7 @@
 
 
 
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
 
 
 <style type="text/css">
@@ -160,7 +161,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>4.4</b> Hot topics: momentum, timing and ESG</a><ul>
 <li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
-<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.2</b> The green factors</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+<li class="chapter" data-level="4.4.3" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>4.4.3</b> The green factors</a></li>
 </ul></li>
 <li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-links-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The links with machine learning</a><ul>
 <li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
@@ -739,9 +741,9 @@ FIGURE 19.10: Tree for 2008.
 <a class="sourceLine" id="cb270-4" data-line-number="4">                   <span class="dt">maxdepth =</span> <span class="dv">2</span>) </a>
 <a class="sourceLine" id="cb270-5" data-line-number="5"><span class="kw">rpart.plot</span>(tree_<span class="dv">2009</span>)</a></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:ex73b"></span>
-<img src="ML_factor_files/figure-html/ex73b-1.png" alt="Tree for 2008." width="384" />
+<img src="ML_factor_files/figure-html/ex73b-1.png" alt="Tree for 2009." width="384" />
 <p class="caption">
-FIGURE 19.11: Tree for 2008.
+FIGURE 19.11: Tree for 2009.
 </p>
 </div>
 
@@ -959,17 +961,17 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 ## __________________________________________________________________________________________
 ## layer_3 (Dense)              (None, 8)           256        third_input[0][0]             
 ## __________________________________________________________________________________________
-## dense_45 (Dense)             (None, 2)           18         layer_1[0][0]                 
+## dense_21 (Dense)             (None, 2)           18         layer_1[0][0]                 
 ## __________________________________________________________________________________________
-## dense_46 (Dense)             (None, 2)           18         layer_2[0][0]                 
+## dense_22 (Dense)             (None, 2)           18         layer_2[0][0]                 
 ## __________________________________________________________________________________________
-## dense_47 (Dense)             (None, 2)           18         layer_3[0][0]                 
+## dense_23 (Dense)             (None, 2)           18         layer_3[0][0]                 
 ## __________________________________________________________________________________________
-## concatenate_1 (Concatenate)  (None, 6)           0          dense_45[0][0]                
-##                                                             dense_46[0][0]                
-##                                                             dense_47[0][0]                
+## concatenate (Concatenate)    (None, 6)           0          dense_21[0][0]                
+##                                                             dense_22[0][0]                
+##                                                             dense_23[0][0]                
 ## __________________________________________________________________________________________
-## main_output (Dense)          (None, 2)           14         concatenate_1[0][0]           
+## main_output (Dense)          (None, 2)           14         concatenate[0][0]             
 ## ==========================================================================================
 ## Total params: 836
 ## Trainable params: 836
@@ -1137,12 +1139,12 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <a class="sourceLine" id="cb298-12" data-line-number="12"><span class="st">                              </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></a>
 <a class="sourceLine" id="cb298-13" data-line-number="13"><span class="st">                              </span><span class="kw">as.matrix</span>()) <span class="op">%&gt;%</span></a>
 <a class="sourceLine" id="cb298-14" data-line-number="14"><span class="st">    </span><span class="kw">head</span>(<span class="dv">5</span>)</a></code></pre></div>
-<pre><code>##           [,1]      [,2]      [,3]      [,4]
-## [1,] -1.522975 0.5867078 0.4209905 0.2742179
-## [2,] -1.757348 0.6128739 0.4506728 0.7438647
-## [3,] -1.121114 0.5780660 0.2197917 0.2788095
-## [4,] -1.047601 0.5782878 0.1598438 0.2497214
-## [5,] -1.015154 0.5391178 0.1533059 0.1982184</code></pre>
+<pre><code>##             [,1]       [,2]       [,3]      [,4]
+## [1,]  0.08191419 -0.9621535 -0.5812733 -1.579238
+## [2,] -0.42058694 -1.4223130 -0.7921795 -1.955365
+## [3,] -0.12434226 -0.6918194 -0.7008188 -1.354228
+## [4,] -0.13246053 -0.6209474 -0.7375830 -1.274672
+## [5,] -0.09145322 -0.5634195 -0.6669618 -1.212981</code></pre>
 
 
 
@@ -1635,7 +1637,7 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <p>Chen, Andrew Y, and Tom Zimmermann. 2020. “Publication Bias and the Cross-Section of Stock Returns.” <em>Review of Asset Pricing Studies</em> Forthcoming.</p>
 </div>
 <div>
-<p>Chen, Huifen. 2001. “Initialization for Norta: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4). INFORMS: 312–31.</p>
+<p>Chen, Huifen. 2001. “Initialization for NORTA: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4). INFORMS: 312–31.</p>
 </div>
 <div>
 <p>Chen, Jianbo, Le Song, Martin J Wainwright, and Michael I Jordan. 2018. “L-Shapley and c-Shapley: Efficient Model Interpretation for Structured Data.” <em>arXiv Preprint</em>, no. 1808.02610.</p>
@@ -1725,7 +1727,7 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <p>Coqueret, Guillaume. 2015. “Diversified Minimum-Variance Portfolios.” <em>Annals of Finance</em> 11 (2): 221–41.</p>
 </div>
 <div>
-<p>———. 2017. “Approximate Norta Simulations for Virtual Sample Generation.” <em>Expert Systems with Applications</em> 73: 69–81.</p>
+<p>———. 2017. “Approximate NORTA Simulations for Virtual Sample Generation.” <em>Expert Systems with Applications</em> 73: 69–81.</p>
 </div>
 <div>
 <p>———. 2020. “Stock Specific Sentiment and Return Predictability.” <em>Quantitative Finance</em> Forthcoming.</p>
@@ -1765,6 +1767,9 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 </div>
 <div>
 <p>Dangl, Thomas, and Michael Halling. 2012. “Predictive Regressions with Time-Varying Coefficients.” <em>Journal of Financial Economics</em> 106 (1): 157–81.</p>
+</div>
+<div>
+<p>Dangl, Thomas, and Alex Weissensteiner. 2020. “Optimal Portfolios Under Time-Varying Investment Opportunities, Parameter Uncertainty, and Ambiguity Aversion.” <em>Journal of Financial and Quantitative Analysis</em> 55 (4): 1163–98.</p>
 </div>
 <div>
 <p>Daniel, Kent D, David Hirshleifer, and Avanidhar Subrahmanyam. 2001. “Overconfidence, Arbitrage, and Equilibrium Asset Pricing.” <em>Journal of Finance</em> 56 (3): 921–65.</p>
