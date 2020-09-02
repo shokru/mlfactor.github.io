@@ -1,0 +1,330 @@
+---
+title: "Machine Learning for Factor Investing"
+subtitle: "An introduction"
+author: Guillaume Coqueret
+date: .font80[Cass **AIR-Q** seminar] 2020-09-02
+output:
+  xaringan::moon_reader:
+    css: 
+    - metropolis
+    - metropolis-fonts
+    - "my-theme.css"
+    #mathjax: "https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_HTMLorMML"
+    - "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"  
+          # animation in transition, https://github.com/yihui/xaringan/issues/184
+    nature:
+        ratio: "16:9"
+---
+
+# Purpose of the talk
+
+This talk provides an overview of ML for factor modelling with a focus on **financial economics**. Importantly, we discuss important limitations of this approach.
+
+When people start learning ML, they (rightfully) focus on the **technicalities** (.grey[.font90[because they want to be able to answer interview questions!]]).
+
+.font90[The problem is that they often see the data just as the input (the fuel) that you feed an ML algorithm (the pure computer science way).
+
+This is ok to start with, but **WRONG** in practice! .bluen[Contextualization] is key.]
+
+
+
+---
+# ML for trading: why?
+
+.font120[
+1. Because .bluen[**we can**] (data availability, software democratization (open source!), and academic maturity).   
+2. Because it's **fancy** (it makes great marketing pitches).  
+3. Because it **works** (well... it depends).
+]
+
+
+---
+# About this nexus
+
+Many people think of machine learning as a **magic wand** (.grey[.font90[it's sophisticated, those who master it are smart & make money]]). .font110[**NO!**]
+
+.font90[The only way to make ML truly work, is by understanding the **environment** in which it is applied. For instance, this requires knowledge of **corporate finance** (factor investing), **market microstructure** (HFT), **lending industry** (credit scoring). $\rightarrow$ domain-specific expertise.
+
+This is a prerequisite to making .bluen[**enlightened modelling**] choices (.grey[.fot80[e.g., to choose the HPs]]).
+
+For factor investing, .bluen[**asset pricing models**] (and financial economics more generally) are key.]
+
+---
+
+class: inverse, center, middle, animated, fadeInRight
+
+
+<style type="text/css">
+.remark-slide-content {
+font-size: 32px;
+padding: 1em 4em 1em 4em;
+}
+</style>
+
+
+# Factor models: a primer
+
+
+---
+class: animated, fadeInRight
+
+
+# The equation .grey[.font60[(there is just one, but it's important to understand it)]]
+
+.bib[
+Here it goes*:
+$$r_i= f(\textbf{x}_i) + e_i,$$
+
+- $r_i$ is the (future) return of firm $i$,   
+- $f$ is some function which may depend on some *hyperparameters*,   
+- $\textbf{x}_i$ are the .bluen[firms characteristics] (market cap, earning/debt ratios, past returns, etc.),   
+- $e_i$ is the error made by the model ( $f(\textbf{x}_i)$ )
+
+**Note**: it a **panel** model: $f$ is the same for all stocks.
+
+*.grey[.font70[It's the simple version: it can (should?) be made time-dependent. ]]
+]
+
+---
+# A simple example
+
+
+Assume
+
+$$r_i = a + b*\text{Size}_i + e_i,$$
+where Size is a **proxy** of the size of the company (e.g. market capitalization - rescaled/normalized/standardized).   
+If $b>0$: large firms earn higher returns (according to the model).   
+$\rightarrow$ Usually, it is considered that $b<0$: small firms have more potential for **growth**, and thus experience enhanced performance (more on that soon).   
+This is related to the so-called **size premium** (or anomaly).   
+.font70[.grey[There are many anomalies: value, momentum, low risk (?), profitability, etc.]]
+
+
+---
+# Generalizations
+
+Extensions include:         
+- adding more characteristics (accounting ratios, risk, sentiment, .bluen[ESG], etc.);      
+- going beyond linear forms (that where the ML kicks in);    
+- reinforcing conditionality (ex: via macro indicators).
+
+**BUT**! You should always be wary about the error terms $e_i$! Gaussian? Independent (in time, in the cross-section)?   
+Maybe not...
+
+
+---
+
+class: inverse, center, middle, animated, fadeInRight
+
+
+<style type="text/css">
+.remark-slide-content {
+font-size: 32px;
+padding: 1em 4em 1em 4em;
+}
+</style>
+
+
+# Factor models: limitations
+
+
+---
+# First issue: noise! (1/2)
+
+Optimal case: low noise (stylized graph).
+
+```{r, warning = F, message = F, echo = F, fig.align='center', fig.width = 11, fig.height = 6.5 }
+library(tidyverse)
+set.seed(42)
+n_points <- 10^3
+x <- runif(n_points)
+y <- -x/3 + rnorm(n_points, mean = 0, sd = 0.1) + 0.1
+bind_cols(x,y) %>% ggplot(aes(x = x, y = y)) + geom_point() + geom_smooth(se = F) +
+    theme(text = element_text(size=24), aspect.ratio = 0.6) + 
+    xlab("Size") + ylab("Future return") +
+    annotate("text", x = 0.25, y = 0.33, label = "Small firms, high returns", color = "#25C845", size = 6) +
+    annotate("text", x = 0.75, y = -0.44, label = "Large firms, low returns", color = "#FE210B", size = 6) 
+
+```
+
+
+---
+# First issue: noise! (2/2)
+
+Second configuration: overwhelming noise (more realistic).
+
+```{r, warning = F, message = F, echo = F, fig.align='center', fig.width = 10, fig.height = 5.5 }
+set.seed(42)
+n_points <- 10^3
+x <- runif(n_points)
+y <- -x/20 + rnorm(n_points, mean = 0, sd = 0.1) + 0.1
+bind_cols(x,y) %>% ggplot(aes(x = x, y = y)) + geom_point() + geom_smooth(se = F) +
+    theme(text = element_text(size=24), aspect.ratio = 0.6) + xlab("Size") + ylab("Future return") +
+    annotate("text", x = 0.15, y = 0.33, label = "Small firms, high returns?", color = "#25C845", size = 6) +
+    annotate("text", x = 0.85, y = -0.33, label = "Large firms, low returns?", color = "#FE210B", size = 6) 
+```
+
+.font70[In practice, things are much more complicated (many predictors, nonlinearities, etc.)]
+
+
+---
+# Illustrating nonlinearity with many features
+
+A simple decision tree.
+
+```{r, message=FALSE, warning=FALSE, echo=FALSE, out.width="530px", fig.align='center'}
+knitr::include_graphics("trees.png")
+```
+
+
+---
+# Second issue: everything is time-varying (1/2)
+
+.font90[Average returns, volatility, factor loadings, they all] .font110[**change**]! .font80[(No arbitrage..)]
+
+```{r, warning = F, message = F, echo = F, fig.align='center', fig.width = 10, fig.height = 6.5}
+set.seed(42)
+n_points <- 10^3
+x <- runif(n_points)
+y1 <- -x/20 + rnorm(n_points, mean = 0, sd = 0.1) + 0.1
+y2 <- x/30 + rnorm(n_points, mean = 0, sd = 0.1) + 0.1
+d1 <- bind_cols(x = x, y = y1, year = 2025)
+d2 <- bind_cols(x = x, y = y2, year = 2026)
+bind_rows(d1, d2) %>% 
+    ggplot(aes(x = x, y = y, color = as.factor(year))) + geom_point() +
+    scale_color_manual(values = c("#FE7714", "#1462FE")) + geom_smooth() +
+    theme(text = element_text(size=24), aspect.ratio = 0.8, legend.position = c(0.5, 0.15)) + 
+    xlab("Size") + ylab("Future return") +
+    labs(color = "Hypothetical Year")
+```
+
+---
+# Second issue: everything is time-varying (2/2)
+
+Any solutions?
+
+- first, make sure your models evolve & react to new data! One natural inclination is to **fix** the model once & for all... that's a bad idea. Updating is key (though the details are far from obvious).  
+- second, think broadly. Does the **macroeconomy** help explain some variations? Stocks do not move out of nowhere... The credit spread may matter for the Size factor. There are many ways to integrate macro indicators in predictive models.
+
+
+---
+# Third isse: algorithmic overfitting (1/2)
+
+Big models $\neq$ better. (exaggerated version below)
+
+```{r, warning = F, message = F, echo = F, fig.align='center', fig.width = 10, fig.height = 6.5 }
+set.seed(42)
+n_points <- 150
+x <- runif(n_points)
+y <- -x/20 + rnorm(n_points, mean = 0, sd = 0.1) + 0.1
+z <- bind_cols(x = x, y = y) 
+z0 <- data.frame(x = rep(0.5, 10), y = rep(0.8, 10))
+z00 <- data.frame(x = rep(0.52, 15), y = rep(0.78, 15))
+z1 <- bind_rows(z, z0, z00)
+z1 %>% ggplot(aes(x = x, y = y)) + geom_point() + geom_smooth(se = F, color = "red") +
+    theme(text = element_text(size=24), aspect.ratio = 0.6, legend.position = c(0.5, 0.15)) +
+    xlab("Size") + ylab("Future return") +
+    geom_smooth(data = z, se = F) +
+    annotate("rect", xmin = 0.48, xmax = 0.54, ymin = 0.7, ymax = 0.9, alpha = .25, color = "black", fill = "black") +
+    annotate("text", x = 0.60, y = 0.8, label = "Outliers", color = "black", size = 6) +
+    annotate("segment", x = 0.5, xend = 0.5, y = 0.08, yend = 0.38, colour = "#656666", size = 1.5, arrow=arrow()) +
+    annotate("text", x = 0.48, y = 0.43, label = "A few points push the complex model in a potentially wrong direction", color = "black", size = 6)
+
+
+```
+
+---
+# Third isse: algorithmic overfitting (2/2)
+
+Some **solutions** to overfitting:   
+- often, they are technical and algorithm-dependent. Penalization for regressions, trees and neural networks takes various forms. This requires a bit of practice.
+- one heuristic tip is: .bluen[avoid complex models]!   
+- if you like sophistication, invest time in robustness checks (HP, time windows)
+
+
+
+---
+# Fourth issue: backtest overfitting (1/3)
+
+.font90[Imagine a quant fund manager with 5 modelling engines] (.font80[Random Forests, Boosted Trees, Neural Nets, Recurrent NN, Ensemble]).   
+.font90[Say, she wishes to test 10 HP values for each family of models (that's a pretty small number to evaluate sensitivity).  
+This makes 50 combinations. Then, assume there are 5 ways to translate predictive signals into portfolio weights.]  
+$\rightarrow$ In the end, this makes 250 options to build a strategy. 
+
+
+.font90[.grey[And I haven't even mentioned data pre-processing.]] `r emo::ji("wink")`
+
+---
+# Fourth issue backtest overfitting (2/3)
+
+.font90[So the fund manager is going to **backtest** these strategies, that is, test them on data. Sadly, she only has past data at her disposal... And in the end, she is going to pick the one that works best (after robustness checks, sensitivity analyses, etc.)]
+
+Is this choice truly the best? Will it work well in live trading (out-of-sample)? Probably not, because the strategy is optimized on only one dataset! .font70[.grey[In factor investing, artificial data is hard to generate.]]
+
+A rule of thumb: take the Sharpe ratio of the best strat and .bluen[divide it by two] to get a better estimate of what will happen.
+
+---
+# Fourth issue: backtest overfitting (3/3)
+
+This relates to a crisis of .bluen[reproducibility]:
+
+- Academic research is plagued by the "*publish or perish*" paradigm (with a strong bias towards positive results).    
+- Likewise, money managers are pressured to craft **winning strategies**, but can only backtest on past data.
+
+$\rightarrow$ we are pushed towards **false positives**. We so badly want to find recipes that succeed, that we end up forgetting the framework in which we work. Often, the best strategies perform well by chance! (one lucky random trajectory of the world)
+
+
+
+---
+
+class: inverse, center, middle, animated, fadeInRight
+
+
+<style type="text/css">
+.remark-slide-content {
+font-size: 32px;
+padding: 1em 4em 1em 4em;
+}
+</style>
+
+
+# Final words
+
+
+---
+# Going further: the book!
+
+It is located at http://www.mlfactor.com.    
+The material can be accessed at https://github.com/shokru/mlfactor.github.io/tree/master/material    
+It includes a reasonably sized dataset & all the R codes (Python soon to come). .bluen[Nothing will replace practice]!    
+
+If you want a review of recent advances in ML & econometrics in financial economics, have a look at my html [presentation](https://www.gcoqueret.com/files/AAP/AAP.html)
+
+---
+# Wrap up: key takeaways
+
+Factor investing aims to explain or predict financial returns with .bluen[firms characteristics]. 
+
+People tend to focus on sophistication, which sometimes does add value, but requires a huge amount of expertise. Often it is preferable to spend more time on **simple approaches** & have an integrated understanding of the models. 
+
+One major topic I left out is **causality**. It's incredibly important, but personally, I think it's still out of reach in factor investing.  
+
+
+---
+# Pieces of advice for students
+
+
+Prefer .bluen[in-depth knowledge]. It's better to fully comprehend simple objects & concept like the **linear regression** that to have a shallow understanding of neural networks.
+
+Focus on simple statistics, optimization & .bluen[financial economics]. And code code code, but **code smart**.
+
+Think on your own, read & write a lot & don't fool yourself: if you have doubts or hesitations, go back to work.
+
+---
+
+<center>
+.large[THANK YOU!]
+<br>
+.bluen[What are your questions? ]
+</center>
+
+
