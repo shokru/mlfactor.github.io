@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Machine Learning for Factor Investing</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Guillaume Coqueret" />
+    <link href="SLIDES_files/remark-css-0.0.1/metropolis.css" rel="stylesheet" />
+    <link href="SLIDES_files/remark-css-0.0.1/metropolis-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="my-theme.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Machine Learning for Factor Investing
+## An introduction
+### Guillaume Coqueret
+### .font80[Cass <strong>AIR-Q</strong> seminar] 2020-09-02
+
+---
+
+
+# Purpose of the talk
+
+This talk provides an overview of ML for factor modelling with a focus on **financial economics**. Importantly, we discuss important limitations of this approach.
+
+When people start learning ML, they (rightfully) focus on the **technicalities** (.grey[.font90[because they want to be able to answer interview questions!]]).
+
+.font90[The problem is that they often see the data just as the input (the fuel) that you feed an ML algorithm (the pure computer science way).
+
+This is ok to start with, but **WRONG** in practice! .bluen[Contextualization] is key.]
+
+
+
+---
+# ML for trading: why?
+
+.font120[
+1. Because .bluen[**we can**] (data availability, software democratization (open source!), and academic maturity).   
+2. Because it's **fancy** (it makes great marketing pitches).  
+3. Because it **works** (well... it depends).
+]
+
+
+---
+# About this nexus
+
+Many people think of machine learning as a **magic wand** (.grey[.font90[it's sophisticated, those who master it are smart &amp; make money]]). .font110[**NO!**]
+
+.font90[The only way to make ML truly work, is by understanding the **environment** in which it is applied. For instance, this requires knowledge of **corporate finance** (factor investing), **market microstructure** (HFT), **lending industry** (credit scoring). `\(\rightarrow\)` domain-specific expertise.
+
+This is a prerequisite to making .bluen[**enlightened modelling**] choices (.grey[.fot80[e.g., to choose the HPs]]).
+
+For factor investing, .bluen[**asset pricing models**] (and financial economics more generally) are key.]
+
+---
+
+class: inverse, center, middle, animated, fadeInRight
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+font-size: 32px;
+padding: 1em 4em 1em 4em;
+}
+&lt;/style&gt;
+
+
+# Factor models: a primer
+
+
+---
+class: animated, fadeInRight
+
+
+# The equation .grey[.font60[(there is just one, but it's important to understand it)]]
+
+.bib[
+Here it goes*:
+`$$r_i= f(\textbf{x}_i) + e_i,$$`
+
+- `\(r_i\)` is the (future) return of firm `\(i\)`,   
+- `\(f\)` is some function which may depend on some *hyperparameters*,   
+- `\(\textbf{x}_i\)` are the .bluen[firms characteristics] (market cap, earning/debt ratios, past returns, etc.),   
+- `\(e_i\)` is the error made by the model ( `\(f(\textbf{x}_i)\)` )
+
+**Note**: it a **panel** model: `\(f\)` is the same for all stocks.
+
+*.grey[.font70[It's the simple version: it can (should?) be made time-dependent. ]]
+]
+
+---
+# A simple example
+
+
+Assume
+
+`$$r_i = a + b*\text{Size}_i + e_i,$$`
+where Size is a **proxy** of the size of the company (e.g. market capitalization - rescaled/normalized/standardized).   
+If `\(b&gt;0\)`: large firms earn higher returns (according to the model).   
+`\(\rightarrow\)` Usually, it is considered that `\(b&lt;0\)`: small firms have more potential for **growth**, and thus experience enhanced performance (more on that soon).   
+This is related to the so-called **size premium** (or anomaly).   
+.font70[.grey[There are many anomalies: value, momentum, low risk (?), profitability, etc.]]
+
+
+---
+# Generalizations
+
+Extensions include:         
+- adding more characteristics (accounting ratios, risk, sentiment, .bluen[ESG], etc.);      
+- going beyond linear forms (that where the ML kicks in);    
+- reinforcing conditionality (ex: via macro indicators).
+
+**BUT**! You should always be wary about the error terms `\(e_i\)`! Gaussian? Independent (in time, in the cross-section)?   
+Maybe not...
+
+
+---
+
+class: inverse, center, middle, animated, fadeInRight
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+font-size: 32px;
+padding: 1em 4em 1em 4em;
+}
+&lt;/style&gt;
+
+
+# Factor models: limitations
+
+
+---
+# First issue: noise! (1/2)
+
+Optimal case: low noise (stylized graph).
+
+&lt;img src="SLIDES_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+
+
+---
+# First issue: noise! (2/2)
+
+Second configuration: overwhelming noise (more realistic).
+
+&lt;img src="SLIDES_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+
+.font70[In practice, things are much more complicated (many predictors, nonlinearities, etc.)]
+
+
+---
+# Illustrating nonlinearity with many features
+
+A simple decision tree.
+
+&lt;img src="trees.png" width="530px" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Second issue: everything is time-varying (1/2)
+
+.font90[Average returns, volatility, factor loadings, they all] .font110[**change**]! .font80[(No arbitrage..)]
+
+&lt;img src="SLIDES_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Second issue: everything is time-varying (2/2)
+
+Any solutions?
+
+- first, make sure your models evolve &amp; react to new data! One natural inclination is to **fix** the model once &amp; for all... that's a bad idea. Updating is key (though the details are far from obvious).  
+- second, think broadly. Does the **macroeconomy** help explain some variations? Stocks do not move out of nowhere... The credit spread may matter for the Size factor. There are many ways to integrate macro indicators in predictive models.
+
+
+---
+# Third isse: algorithmic overfitting (1/2)
+
+Big models `\(\neq\)` better. (exaggerated version below)
+
+&lt;img src="SLIDES_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Third isse: algorithmic overfitting (2/2)
+
+Some **solutions** to overfitting:   
+- often, they are technical and algorithm-dependent. Penalization for regressions, trees and neural networks takes various forms. This requires a bit of practice.
+- one heuristic tip is: .bluen[avoid complex models]!   
+- if you like sophistication, invest time in robustness checks (HP, time windows)
+
+
+
+---
+# Fourth issue: backtest overfitting (1/3)
+
+.font90[Imagine a quant fund manager with 5 modelling engines] (.font80[Random Forests, Boosted Trees, Neural Nets, Recurrent NN, Ensemble]).   
+.font90[Say, she wishes to test 10 HP values for each family of models (that's a pretty small number to evaluate sensitivity).  
+This makes 50 combinations. Then, assume there are 5 ways to translate predictive signals into portfolio weights.]  
+`\(\rightarrow\)` In the end, this makes 250 options to build a strategy. 
+
+
+.font90[.grey[And I haven't even mentioned data pre-processing.]] 😉
+
+---
+# Fourth issue backtest overfitting (2/3)
+
+.font90[So the fund manager is going to **backtest** these strategies, that is, test them on data. Sadly, she only has past data at her disposal... And in the end, she is going to pick the one that works best (after robustness checks, sensitivity analyses, etc.)]
+
+Is this choice truly the best? Will it work well in live trading (out-of-sample)? Probably not, because the strategy is optimized on only one dataset! .font70[.grey[In factor investing, artificial data is hard to generate.]]
+
+A rule of thumb: take the Sharpe ratio of the best strat and .bluen[divide it by two] to get a better estimate of what will happen.
+
+---
+# Fourth issue: backtest overfitting (3/3)
+
+This relates to a crisis of .bluen[reproducibility]:
+
+- Academic research is plagued by the "*publish or perish*" paradigm (with a strong bias towards positive results).    
+- Likewise, money managers are pressured to craft **winning strategies**, but can only backtest on past data.
+
+`\(\rightarrow\)` we are pushed towards **false positives**. We so badly want to find recipes that succeed, that we end up forgetting the framework in which we work. Often, the best strategies perform well by chance! (one lucky random trajectory of the world)
+
+
+
+---
+
+class: inverse, center, middle, animated, fadeInRight
+
+
+&lt;style type="text/css"&gt;
+.remark-slide-content {
+font-size: 32px;
+padding: 1em 4em 1em 4em;
+}
+&lt;/style&gt;
+
+
+# Final words
+
+
+---
+# Going further: the book!
+
+It is located at http://www.mlfactor.com.    
+The material can be accessed at https://github.com/shokru/mlfactor.github.io/tree/master/material    
+It includes a reasonably sized dataset &amp; all the R codes (Python soon to come). .bluen[Nothing will replace practice]!    
+
+If you want a review of recent advances in ML &amp; econometrics in financial economics, have a look at my html [presentation](https://www.gcoqueret.com/files/AAP/AAP.html)
+
+---
+# Wrap up: key takeaways
+
+Factor investing aims to explain or predict financial returns with .bluen[firms characteristics]. 
+
+People tend to focus on sophistication, which sometimes does add value, but requires a huge amount of expertise. Often it is preferable to spend more time on **simple approaches** &amp; have an integrated understanding of the models. 
+
+One major topic I left out is **causality**. It's incredibly important, but personally, I think it's still out of reach in factor investing.  
+
+
+---
+# Pieces of advice for students
+
+
+Prefer .bluen[in-depth knowledge]. It's better to fully comprehend simple objects &amp; concept like the **linear regression** that to have a shallow understanding of neural networks.
+
+Focus on simple statistics, optimization &amp; .bluen[financial economics]. And code code code, but **code smart**.
+
+Think on your own, read &amp; write a lot &amp; don't fool yourself: if you have doubts or hesitations, go back to work.
+
+---
+
+&lt;center&gt;
+.large[THANK YOU!]
+&lt;br&gt;
+.bluen[What are your questions? ]
+&lt;/center&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
