@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Data preprocessing | Machine Learning for Factor Investing</title>
   <meta name="description" content="Chapter 4 Data preprocessing | Machine Learning for Factor Investing" />
-  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Data preprocessing | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-08-09" />
+<meta name="date" content="2020-09-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,15 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +67,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +85,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -194,7 +199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>4.8.1</b> Impact of rescaling: graphical representation</a></li>
 <li class="chapter" data-level="4.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>4.8.2</b> Impact of rescaling: toy example</a></li>
 </ul></li>
-<li class="chapter" data-level="4.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>4.9</b> Coding exercises</a></li>
+<li class="chapter" data-level="4.9" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>4.9</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>II Common supervised algorithms</b></span></li>
 <li class="chapter" data-level="5" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>5</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
@@ -222,7 +227,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>6.2</b> Random forests</a><ul>
 <li class="chapter" data-level="6.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>6.2.1</b> Principle</a></li>
-<li class="chapter" data-level="6.2.2" data-path="trees.html"><a href="trees.html#code-and-results-1"><i class="fa fa-check"></i><b>6.2.2</b> Code and results</a></li>
+<li class="chapter" data-level="6.2.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>6.2.2</b> Code and results</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>6.3</b> Boosted trees: Adaboost</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>6.3.1</b> Methodology</a></li>
@@ -238,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>6.4.7</b> Instance weighting</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
-<li class="chapter" data-level="6.6" data-path="trees.html"><a href="trees.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.6</b> Coding exercises</a></li>
+<li class="chapter" data-level="6.6" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>6.6</b> Coding exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>7</b> Neural networks</a><ul>
 <li class="chapter" data-level="7.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>7.1</b> The original perceptron</a></li>
@@ -260,7 +265,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>7.5</b> Recurrent networks</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>7.5.1</b> Presentation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="NN.html"><a href="NN.html#code-and-results-2"><i class="fa fa-check"></i><b>7.5.2</b> Code and results</a></li>
+<li class="chapter" data-level="7.5.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>7.5.2</b> Code and results</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>7.6</b> Other common architectures</a><ul>
 <li class="chapter" data-level="7.6.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>7.6.1</b> Generative adversarial networks</a></li>
@@ -268,13 +273,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.3" data-path="NN.html"><a href="NN.html#a-word-on-convolutional-networks"><i class="fa fa-check"></i><b>7.6.3</b> A word on convolutional networks</a></li>
 <li class="chapter" data-level="7.6.4" data-path="NN.html"><a href="NN.html#advanced-architectures"><i class="fa fa-check"></i><b>7.6.4</b> Advanced architectures</a></li>
 </ul></li>
-<li class="chapter" data-level="7.7" data-path="NN.html"><a href="NN.html#coding-exercise-1"><i class="fa fa-check"></i><b>7.7</b> Coding exercise</a></li>
+<li class="chapter" data-level="7.7" data-path="lasso.html"><a href="lasso.html#coding-exercise"><i class="fa fa-check"></i><b>7.7</b> Coding exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>8</b> Support vector machines</a><ul>
 <li class="chapter" data-level="8.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>8.1</b> SVM for classification</a></li>
 <li class="chapter" data-level="8.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>8.2</b> SVM for regression</a></li>
 <li class="chapter" data-level="8.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>8.3</b> Practice</a></li>
-<li class="chapter" data-level="8.4" data-path="svm.html"><a href="svm.html#coding-exercises-3"><i class="fa fa-check"></i><b>8.4</b> Coding exercises</a></li>
+<li class="chapter" data-level="8.4" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>8.4</b> Coding exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>9</b> Bayesian methods</a><ul>
 <li class="chapter" data-level="9.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>9.1</b> The Bayesian framework</a></li>
@@ -317,9 +322,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="11.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>11.2</b> Stacked ensembles</a><ul>
 <li class="chapter" data-level="11.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>11.2.1</b> Two-stage training</a></li>
-<li class="chapter" data-level="11.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-3"><i class="fa fa-check"></i><b>11.2.2</b> Code and results</a></li>
+<li class="chapter" data-level="11.2.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>11.2.2</b> Code and results</a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>11.3</b> Extensions</a><ul>
+<li class="chapter" data-level="11.3" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>11.3</b> Extensions</a><ul>
 <li class="chapter" data-level="11.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>11.3.1</b> Exogenous variables</a></li>
 <li class="chapter" data-level="11.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>11.3.2</b> Shrinking inter-model correlations</a></li>
 </ul></li>
@@ -329,7 +334,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>12.1</b> Setting the protocol</a></li>
 <li class="chapter" data-level="12.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>12.2</b> Turning signals into portfolio weights</a></li>
 <li class="chapter" data-level="12.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>12.3</b> Performance metrics</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>12.3.1</b> Discussion</a></li>
+<li class="chapter" data-level="12.3.1" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>12.3.1</b> Discussion</a></li>
 <li class="chapter" data-level="12.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>12.3.2</b> Pure performance and risk indicators</a></li>
 <li class="chapter" data-level="12.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>12.3.3</b> Factor-based evaluation</a></li>
 <li class="chapter" data-level="12.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>12.3.4</b> Risk-adjusted measures</a></li>
@@ -346,7 +351,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12.6" data-path="backtest.html"><a href="backtest.html#first-example-a-complete-backtest"><i class="fa fa-check"></i><b>12.6</b> First example: a complete backtest</a></li>
 <li class="chapter" data-level="12.7" data-path="backtest.html"><a href="backtest.html#second-example-backtest-overfitting"><i class="fa fa-check"></i><b>12.7</b> Second example: backtest overfitting</a></li>
-<li class="chapter" data-level="12.8" data-path="backtest.html"><a href="backtest.html#coding-exercises-4"><i class="fa fa-check"></i><b>12.8</b> Coding exercises</a></li>
+<li class="chapter" data-level="12.8" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>12.8</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>IV Further important topics</b></span></li>
 <li class="chapter" data-level="13" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>13</b> Interpretability</a><ul>
@@ -384,7 +389,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="15.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>15.3</b> Clustering via k-means</a></li>
 <li class="chapter" data-level="15.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>15.4</b> Nearest neighbors</a></li>
-<li class="chapter" data-level="15.5" data-path="unsup.html"><a href="unsup.html#coding-exercise-2"><i class="fa fa-check"></i><b>15.5</b> Coding exercise</a></li>
+<li class="chapter" data-level="15.5" data-path="lasso.html"><a href="lasso.html#coding-exercise"><i class="fa fa-check"></i><b>15.5</b> Coding exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>16</b> Reinforcement learning</a><ul>
 <li class="chapter" data-level="16.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>16.1</b> Theoretical layout</a><ul>
@@ -394,8 +399,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="16.2" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>16.2</b> The curse of dimensionality</a></li>
 <li class="chapter" data-level="16.3" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>16.3</b> Policy gradient</a><ul>
-<li class="chapter" data-level="16.3.1" data-path="RL.html"><a href="RL.html#principle-2"><i class="fa fa-check"></i><b>16.3.1</b> Principle</a></li>
-<li class="chapter" data-level="16.3.2" data-path="RL.html"><a href="RL.html#extensions-2"><i class="fa fa-check"></i><b>16.3.2</b> Extensions</a></li>
+<li class="chapter" data-level="16.3.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>16.3.1</b> Principle</a></li>
+<li class="chapter" data-level="16.3.2" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>16.3.2</b> Extensions</a></li>
 </ul></li>
 <li class="chapter" data-level="16.4" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>16.4</b> Simple examples</a><ul>
 <li class="chapter" data-level="16.4.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>16.4.1</b> Q-learning with simulations</a></li>
@@ -441,7 +446,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="Data" class="section level1">
 <h1><span class="header-section-number">Chapter 4</span> Data preprocessing</h1>
-<p>The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two references: chapter 3 from the general purpose ML book by <span class="citation">Boehmke and Greenwell (<a href="#ref-boehmke2019hands">2019</a>)</span> and the monograph on this dedicated subject by <span class="citation">Kuhn and Johnson (<a href="#ref-kuhn2019feature">2019</a>)</span>.</p>
+<p>The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two references: chapter 3 from the general purpose ML book by <span class="citation">Boehmke and Greenwell (<a href="#ref-boehmke2019hands" role="doc-biblioref">2019</a>)</span> and the monograph on this dedicated subject by <span class="citation">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>.</p>
 <div id="know-your-data" class="section level2">
 <h2><span class="header-section-number">4.1</span> Know your data</h2>
 <p>The first step, as in any quantitative study, is obviously to make sure the data is trustworthy, i.e., comes from a reliable provider (a minima). The landscape in financial data provision is vast to say the least: some providers are well established (e.g., Bloomberg, Thomson-Reuters, Datastream, CRSP, Morningstar), some are more recent (e.g., Capital IQ, Ravenpack) and some focus on alternative data niches (see <a href="https://alternativedata.org/data-providers/" class="uri">https://alternativedata.org/data-providers/</a> for an exhaustive list). Unfortunately, and to the best of our knowledge, no study has been published that evaluates a large spectrum of these providers in terms of data reliability.</p>
@@ -455,65 +460,65 @@ Beyond first order moments, second order quantities (variances and covariances/c
 </ul>
 <p>Below, in Figure <a href="Data.html#fig:boxcorr">4.1</a>, we show a box plot that illustrates the distribution of correlations between features and the one month ahead return. The correlations are computed on a date-by-date basis, over the whole cross-section of stocks. They are mostly located close to zero, but some dates seem to experience extreme shifts (outliers are shown with black circles). The market capitalization has the median which is the most negative while volatility is the only predictor with positive median correlation (this particular example seems to refute the low risk anomaly).</p>
 
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(features_short, <span class="st">&quot;R1M_Usd&quot;</span>, <span class="st">&quot;date&quot;</span>)) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Keep few features, label &amp; date</span></a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># Group: dates!</span></a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="st">    </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(<span class="kw">cor</span>(.,R1M_Usd))) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Compute correlations</span></a>
-<a class="sourceLine" id="cb22-5" data-line-number="5"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Remove label</span></a>
-<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Predictor, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Put in tidy format</span></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Predictor, <span class="dt">y =</span> value, <span class="dt">color =</span> Predictor)) <span class="op">+</span><span class="st">  </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb22-8" data-line-number="8"><span class="st">    </span><span class="kw">geom_boxplot</span>(<span class="dt">outlier.colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb22-9" data-line-number="9"><span class="st">    </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.6</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="kw">element_blank</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="Data.html#cb22-1"></a>data_ml <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb22-2"><a href="Data.html#cb22-2"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(features_short, <span class="st">&quot;R1M_Usd&quot;</span>, <span class="st">&quot;date&quot;</span>)) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Keep few features, label &amp; date</span></span>
+<span id="cb22-3"><a href="Data.html#cb22-3"></a><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># Group: dates!</span></span>
+<span id="cb22-4"><a href="Data.html#cb22-4"></a><span class="st">    </span><span class="kw">summarise_all</span>(<span class="kw">funs</span>(<span class="kw">cor</span>(.,R1M_Usd))) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Compute correlations</span></span>
+<span id="cb22-5"><a href="Data.html#cb22-5"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                                 </span><span class="co"># Remove label</span></span>
+<span id="cb22-6"><a href="Data.html#cb22-6"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Predictor, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Put in tidy format</span></span>
+<span id="cb22-7"><a href="Data.html#cb22-7"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Predictor, <span class="dt">y =</span> value, <span class="dt">color =</span> Predictor)) <span class="op">+</span><span class="st">  </span><span class="co"># Plot</span></span>
+<span id="cb22-8"><a href="Data.html#cb22-8"></a><span class="st">    </span><span class="kw">geom_boxplot</span>(<span class="dt">outlier.colour =</span> <span class="st">&quot;black&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_flip</span>() <span class="op">+</span><span class="st"> </span></span>
+<span id="cb22-9"><a href="Data.html#cb22-9"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">aspect.ratio =</span> <span class="fl">0.6</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="kw">element_blank</span>())</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:boxcorr"></span>
 <img src="ML_factor_files/figure-html/boxcorr-1.png" alt="Boxplot of correlations with the 1M forward return (label)." width="400px" />
 <p class="caption">
 FIGURE 4.1: Boxplot of correlations with the 1M forward return (label).
 </p>
 </div>
-
-<p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements">2009</a>)</span>):
+<p></p>
+<p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation">Hastie, Tibshirani, and Friedman (<a href="#ref-friedman2009elements" role="doc-biblioref">2009</a>)</span>):
 <span class="math display" id="eq:regfun">\[\begin{equation}
 \tag{4.1}
 f(x)=\mathbb{E}[Y|X=x].
 \end{equation}\]</span></p>
 <p>In Figure <a href="Data.html#fig:regfun">4.2</a>, we plot two illustrations of this function when the dependent variable (<span class="math inline">\(Y\)</span>) is the one month ahead return. The first one pertains to the average market capitalization over the past year and the second to the volatility over the past year as well. Both predictors have been uniformized (see Section <a href="Data.html#scaling">4.4.2</a> below) so that their values are uniformly distributed in the cross-section of assets for any given time period. Thus, the range of features is <span class="math inline">\([0,1]\)</span> and is shown on the <span class="math inline">\(x\)</span>-axis of the plot. The grey corridors around the lines show 95% level confidence interval for the computation of the mean. Essentially, it is narrow when both (i) many data points are available and (ii) these points are not too dispersed.</p>
 
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">data_ml <span class="op">%&gt;%</span><span class="st">                                                      </span><span class="co"># From dataset:</span></a>
-<a class="sourceLine" id="cb23-2" data-line-number="2"><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> R1M_Usd)) <span class="op">+</span><span class="st">                                     </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb23-3" data-line-number="3"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_12M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>)) <span class="op">+</span><span class="st">  </span><span class="co"># Cond. Exp. Mkt_cap</span></a>
-<a class="sourceLine" id="cb23-4" data-line-number="4"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Vol1Y_Usd, <span class="dt">color =</span> <span class="st">&quot;Volatility&quot;</span>)) <span class="op">+</span><span class="st">        </span><span class="co"># Cond. Exp. Vol</span></a>
-<a class="sourceLine" id="cb23-5" data-line-number="5"><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>)) <span class="op">+</span><span class="st">           </span><span class="co"># Change color</span></a>
-<a class="sourceLine" id="cb23-6" data-line-number="6"><span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dv">10</span>) <span class="op">+</span><span class="st">                                              </span><span class="co"># Change x/y ratio</span></a>
-<a class="sourceLine" id="cb23-7" data-line-number="7"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">&quot;Predictor&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="kw">element_blank</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="Data.html#cb23-1"></a>data_ml <span class="op">%&gt;%</span><span class="st">                                                      </span><span class="co"># From dataset:</span></span>
+<span id="cb23-2"><a href="Data.html#cb23-2"></a><span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">y =</span> R1M_Usd)) <span class="op">+</span><span class="st">                                     </span><span class="co"># Plot</span></span>
+<span id="cb23-3"><a href="Data.html#cb23-3"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_12M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>)) <span class="op">+</span><span class="st">  </span><span class="co"># Cond. Exp. Mkt_cap</span></span>
+<span id="cb23-4"><a href="Data.html#cb23-4"></a><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Vol1Y_Usd, <span class="dt">color =</span> <span class="st">&quot;Volatility&quot;</span>)) <span class="op">+</span><span class="st">        </span><span class="co"># Cond. Exp. Vol</span></span>
+<span id="cb23-5"><a href="Data.html#cb23-5"></a><span class="st">  </span><span class="kw">scale_color_manual</span>(<span class="dt">values=</span><span class="kw">c</span>(<span class="st">&quot;#F87E1F&quot;</span>, <span class="st">&quot;#0570EA&quot;</span>)) <span class="op">+</span><span class="st">           </span><span class="co"># Change color</span></span>
+<span id="cb23-6"><a href="Data.html#cb23-6"></a><span class="st">  </span><span class="kw">coord_fixed</span>(<span class="dv">10</span>) <span class="op">+</span><span class="st">                                              </span><span class="co"># Change x/y ratio</span></span>
+<span id="cb23-7"><a href="Data.html#cb23-7"></a><span class="st">  </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">&quot;Predictor&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">xlab</span>(<span class="kw">element_blank</span>())</span></code></pre></div>
 <div class="figure"><span id="fig:regfun"></span>
 <img src="ML_factor_files/figure-html/regfun-1.png" alt="Conditional expectations: average returns as smooth functions of features." width="672" />
 <p class="caption">
 FIGURE 4.2: Conditional expectations: average returns as smooth functions of features.
 </p>
 </div>
-
+<p></p>
 <p>The two variables have a close to monotonic impact on future returns. Returns, on average, decrease with market capitalization (thereby corroborating the so-called <em>size</em> effect). The reverse pattern is less pronounced for volatility: the curve is rather flat for the first half of volatility scores and progressively increases, especially over the last quintile of volatility values (thereby contradicting the low-volatility anomaly).</p>
 <p>One important empirical property of features is <strong>autocorrelation</strong> (or absence thereof). A high level of autocorrelation for one predictor makes it plausible to use simple imputation techniques when some data points are missing. But autocorrelation is also important when moving towards prediction tasks and we discuss this issue shortly below in Section <a href="Data.html#pers">4.6</a>. In Figure <a href="Data.html#fig:histcorr">4.3</a>, we build the histogram of autocorrelations, computed stock-by-stock and feature-by-feature.</p>
 
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">autocorrs &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                         </span><span class="co"># From dataset:</span></a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;stock_id&quot;</span>, features)) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Keep ids &amp; features</span></a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> feature, <span class="dt">value =</span> value, <span class="op">-</span>stock_id) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Put in tidy format</span></a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="st">  </span><span class="kw">group_by</span>(stock_id, feature) <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Group</span></a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">acf =</span> <span class="kw">acf</span>(value, <span class="dt">lag.max =</span> <span class="dv">1</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)<span class="op">$</span>acf[<span class="dv">2</span>])  <span class="co"># Compute ACF</span></a>
-<a class="sourceLine" id="cb24-6" data-line-number="6">autocorrs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> acf)) <span class="op">+</span><span class="st"> </span><span class="kw">xlim</span>(<span class="op">-</span><span class="fl">0.1</span>,<span class="dv">1</span>) <span class="op">+</span><span class="st">              </span><span class="co"># Plot</span></a>
-<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="st">   </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">60</span>)  </a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="Data.html#cb24-1"></a>autocorrs &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                                         </span><span class="co"># From dataset:</span></span>
+<span id="cb24-2"><a href="Data.html#cb24-2"></a><span class="st">  </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">c</span>(<span class="st">&quot;stock_id&quot;</span>, features)) <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Keep ids &amp; features</span></span>
+<span id="cb24-3"><a href="Data.html#cb24-3"></a><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> feature, <span class="dt">value =</span> value, <span class="op">-</span>stock_id) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Put in tidy format</span></span>
+<span id="cb24-4"><a href="Data.html#cb24-4"></a><span class="st">  </span><span class="kw">group_by</span>(stock_id, feature) <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Group</span></span>
+<span id="cb24-5"><a href="Data.html#cb24-5"></a><span class="st">  </span><span class="kw">summarize</span>(<span class="dt">acf =</span> <span class="kw">acf</span>(value, <span class="dt">lag.max =</span> <span class="dv">1</span>, <span class="dt">plot =</span> <span class="ot">FALSE</span>)<span class="op">$</span>acf[<span class="dv">2</span>])  <span class="co"># Compute ACF</span></span>
+<span id="cb24-6"><a href="Data.html#cb24-6"></a>autocorrs <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> acf)) <span class="op">+</span><span class="st"> </span><span class="kw">xlim</span>(<span class="op">-</span><span class="fl">0.1</span>,<span class="dv">1</span>) <span class="op">+</span><span class="st">              </span><span class="co"># Plot</span></span>
+<span id="cb24-7"><a href="Data.html#cb24-7"></a><span class="st">   </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">60</span>)  </span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:histcorr"></span>
 <img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of sample feature autocorrelations." width="384" />
 <p class="caption">
 FIGURE 4.3: Histogram of sample feature autocorrelations.
 </p>
 </div>
-
+<p></p>
 <p>Given the large number of values to evaluate, the above chunk is quite time-consuming. The output shows that predictors are highly autocorrelated: most of them have a first order autocorrelation above 0.80.</p>
 </div>
 <div id="missing-data" class="section level2">
 <h2><span class="header-section-number">4.2</span> Missing data</h2>
-<p>Similarly to any empirical discipline, portfolio management is bound to face missing data issues. The topic is well known and several books detail solutions to this problem (e.g., <span class="citation">Allison (<a href="#ref-allison2001missing">2001</a>)</span>, <span class="citation">Enders (<a href="#ref-enders2010applied">2010</a>)</span>, <span class="citation">Little and Rubin (<a href="#ref-little2014statistical">2014</a>)</span> and <span class="citation">Van Buuren (<a href="#ref-van2018flexible">2018</a>)</span>). While researchers continuously propose new methods to cope with absent points (<span class="citation">Honaker and King (<a href="#ref-honaker2010missing">2010</a>)</span> or <span class="citation">Che et al. (<a href="#ref-che2018recurrent">2018</a>)</span> to cite but a few), we believe that a simple, heuristic treatment is usually sufficient as long as some basic cautious safeguards are enforced.</p>
+<p>Similarly to any empirical discipline, portfolio management is bound to face missing data issues. The topic is well known and several books detail solutions to this problem (e.g., <span class="citation">Allison (<a href="#ref-allison2001missing" role="doc-biblioref">2001</a>)</span>, <span class="citation">Enders (<a href="#ref-enders2010applied" role="doc-biblioref">2010</a>)</span>, <span class="citation">Little and Rubin (<a href="#ref-little2014statistical" role="doc-biblioref">2014</a>)</span> and <span class="citation">Van Buuren (<a href="#ref-van2018flexible" role="doc-biblioref">2018</a>)</span>). While researchers continuously propose new methods to cope with absent points (<span class="citation">Honaker and King (<a href="#ref-honaker2010missing" role="doc-biblioref">2010</a>)</span> or <span class="citation">Che et al. (<a href="#ref-che2018recurrent" role="doc-biblioref">2018</a>)</span> to cite but a few), we believe that a simple, heuristic treatment is usually sufficient as long as some basic cautious safeguards are enforced.</p>
 <p>First of all, there are mainly two ways to deal with missing data: <strong>removal</strong> and <strong>imputation</strong>. Removal is agnostic but costly, especially if one whole instance is eliminated because of only one missing feature value. Imputation is often preferred but relies on some underlying and potentially erroneous assumption.</p>
 <p>A simplified classification of imputation is the following:</p>
 <ul>
@@ -523,7 +528,7 @@ FIGURE 4.3: Histogram of sample feature autocorrelations.
 </li>
 <li>Medians and means can also be computed over the <strong>cross-section</strong> of assets. This roughly implies that the missing feature value will be relocated in the bulk of observed values. When many values are missing, this creates an atom in the distribution of the feature and alters the original distribution. One advantage is that this imputation is not forward-looking.<br />
 </li>
-<li>Many techniques rely on some modelling assumptions for the data generating process. We refer to nonparametric approaches (<span class="citation">Stekhoven and Bühlmann (<a href="#ref-stekhoven2011missforest">2011</a>)</span> and <span class="citation">Shah et al. (<a href="#ref-shah2014comparison">2014</a>)</span>, which rely on random forests, see Chapter <a href="trees.html#trees">6</a>), Bayesian imputation (<span class="citation">Schafer (<a href="#ref-schafer1999multiple">1999</a>)</span>), maximum likelihood approaches (<span class="citation">Enders (<a href="#ref-enders2001primer">2001</a>)</span>, <span class="citation">Enders (<a href="#ref-enders2010applied">2010</a>)</span>), interpolation or extrapolation and nearest neighbor algorithms (<span class="citation">Garcı'a-Laencina et al. (<a href="#ref-garcia2009k">2009</a>)</span>). More generally, the four books cited at the begining of the subsection detail many such imputation processes. Advanced techniques are much more demanding computationally.</li>
+<li>Many techniques rely on some modelling assumptions for the data generating process. We refer to nonparametric approaches (<span class="citation">Stekhoven and Bühlmann (<a href="#ref-stekhoven2011missforest" role="doc-biblioref">2011</a>)</span> and <span class="citation">Shah et al. (<a href="#ref-shah2014comparison" role="doc-biblioref">2014</a>)</span>, which rely on random forests, see Chapter <a href="trees.html#trees">6</a>), Bayesian imputation (<span class="citation">Schafer (<a href="#ref-schafer1999multiple" role="doc-biblioref">1999</a>)</span>), maximum likelihood approaches (<span class="citation">Enders (<a href="#ref-enders2001primer" role="doc-biblioref">2001</a>)</span>, <span class="citation">Enders (<a href="#ref-enders2010applied" role="doc-biblioref">2010</a>)</span>), interpolation or extrapolation and nearest neighbor algorithms (<span class="citation">Garcı́a-Laencina et al. (<a href="#ref-garcia2009k" role="doc-biblioref">2009</a>)</span>). More generally, the four books cited at the begining of the subsection detail many such imputation processes. Advanced techniques are much more demanding computationally.</li>
 </ul>
 <p>A few words of caution:</p>
 <ul>
@@ -576,13 +581,13 @@ FIGURE 4.3: Histogram of sample feature autocorrelations.
 </li>
 <li>Extrapolate from previous observations (this is very different from <strong>inter</strong>polation): for instance, evaluate a trend on past data and pursue that trend.<br />
 </li>
-<li>Set the value to zero. This is tempting but may be sub-optimal due to dividend smoothing practices from executives (see for instance <span class="citation">Leary and Michaely (<a href="#ref-leary2011determinants">2011</a>)</span> and <span class="citation">Chen, Da, and Priestley (<a href="#ref-chen2012dividend">2012</a>)</span> for details on the subject). For persistent time series, the first two options are probably better.</li>
+<li>Set the value to zero. This is tempting but may be sub-optimal due to dividend smoothing practices from executives (see for instance <span class="citation">Leary and Michaely (<a href="#ref-leary2011determinants" role="doc-biblioref">2011</a>)</span> and <span class="citation">Chen, Da, and Priestley (<a href="#ref-chen2012dividend" role="doc-biblioref">2012</a>)</span> for details on the subject). For persistent time series, the first two options are probably better.</li>
 </ol>
 <p>Tests can be performed to evaluate the relative performance of each option. It is also important to <strong>remember</strong> these design choices. There are so many of them that they are easy to forget. Keeping track of them is obviously compulsory. In the ML pipeline, the <strong>scripts</strong> pertaining to data preparation are often key because they do not serve only once!</p>
 </div>
 <div id="outlier-detection" class="section level2">
 <h2><span class="header-section-number">4.3</span> Outlier detection</h2>
-<p>The topic of outlier detection is also well documented and has its own surveys (<span class="citation">Hodge and Austin (<a href="#ref-hodge2004survey">2004</a>)</span>, <span class="citation">Chandola, Banerjee, and Kumar (<a href="#ref-chandola2009anomaly">2009</a>)</span> and <span class="citation">Gupta et al. (<a href="#ref-gupta2014outlier">2014</a>)</span>) and a few dedicated books (<span class="citation">Aggarwal (<a href="#ref-aggarwal2013outlier">2013</a>)</span> and <span class="citation">Rousseeuw and Leroy (<a href="#ref-rousseeuw2005robust">2005</a>)</span>, though the latter is very focused on regression analysis).</p>
+<p>The topic of outlier detection is also well documented and has its own surveys (<span class="citation">Hodge and Austin (<a href="#ref-hodge2004survey" role="doc-biblioref">2004</a>)</span>, <span class="citation">Chandola, Banerjee, and Kumar (<a href="#ref-chandola2009anomaly" role="doc-biblioref">2009</a>)</span> and <span class="citation">Gupta et al. (<a href="#ref-gupta2014outlier" role="doc-biblioref">2014</a>)</span>) and a few dedicated books (<span class="citation">Aggarwal (<a href="#ref-aggarwal2013outlier" role="doc-biblioref">2013</a>)</span> and <span class="citation">Rousseeuw and Leroy (<a href="#ref-rousseeuw2005robust" role="doc-biblioref">2005</a>)</span>, though the latter is very focused on regression analysis).</p>
 <p>Again, incredibly sophisticated methods may require a lot of efforts for possibly limited gain. Simple heuristic methods, as long as they are documented in the process, may suffice. They often rely on ‘hard’ thresholds:</p>
 <ul>
 <li>for one given feature (possibly filtered in time), any point outside the interval <span class="math inline">\([\mu-m\sigma, \mu+m\sigma]\)</span> can be deemed an outlier. Here <span class="math inline">\(\mu\)</span> is the mean of the sample and <span class="math inline">\(\sigma\)</span> the standard deviation. The multiple value <span class="math inline">\(m\)</span> usually belongs to the set <span class="math inline">\(\{3, 5, 10\}\)</span>, which is of course arbitrary.</li>
@@ -602,7 +607,7 @@ x^{(1-q)} &amp; \text{ if }  x_i &gt; x^{(1-q)}
 <div id="feateng" class="section level2">
 <h2><span class="header-section-number">4.4</span> Feature engineering</h2>
 <p>Feature engineering is a very important step of the portfolio construction process. Computer scientists often refer to the saying “<em>garbage in, garbage out</em>”. It is thus paramount to prevent the ML engine of the allocation to be trained on ill-designed variables.
-We invite the interested reader to have a look at the recent work of <span class="citation">Kuhn and Johnson (<a href="#ref-kuhn2019feature">2019</a>)</span> on this topic. The (shorter) academic reference is <span class="citation">Guyon and Elisseeff (<a href="#ref-guyon2003introduction">2003</a>)</span>.</p>
+We invite the interested reader to have a look at the recent work of <span class="citation">Kuhn and Johnson (<a href="#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span> on this topic. The (shorter) academic reference is <span class="citation">Guyon and Elisseeff (<a href="#ref-guyon2003introduction" role="doc-biblioref">2003</a>)</span>.</p>
 <div id="feature-selection" class="section level3">
 <h3><span class="header-section-number">4.4.1</span> Feature selection</h3>
 <p>The first step is selection. Given a large set of predictors, it seems a sound idea to filter out unwanted or redundant exogenous variables. Heuristically, simple methods include:</p>
@@ -627,7 +632,7 @@ We invite the interested reader to have a look at the recent work of <span class
 <li>accounting ratios can have inhomogeneous units;</li>
 <li>synthetic attributes like sentiment also have their idiosyncrasies.</li>
 </ul>
-<p>While it is widely considered that monotonic transformations of the features have a marginal impact on prediction outcomes, <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting">2016</a>)</span> show that this is not always the case (see also Section <a href="Data.html#impact-of-rescaling-toy-example">4.8.2</a>). Hence, the choice of normalization may in fact very well matter.</p>
+<p>While it is widely considered that monotonic transformations of the features have a marginal impact on prediction outcomes, <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting" role="doc-biblioref">2016</a>)</span> show that this is not always the case (see also Section <a href="Data.html#impact-of-rescaling-toy-example">4.8.2</a>). Hence, the choice of normalization may in fact very well matter.</p>
 <p>If we write <span class="math inline">\(x_i\)</span> for the raw input and <span class="math inline">\(\tilde{x}_i\)</span> for the transformed data, common scaling practices include: </p>
 <ul>
 <li><strong>standardization</strong>: <span class="math inline">\(\tilde{x}_i=(x_i-m_x)/\sigma_x\)</span>, where <span class="math inline">\(m_x\)</span> and <span class="math inline">\(\sigma_x\)</span> are the mean and standard deviation of <span class="math inline">\(x\)</span>, respectively;</li>
@@ -637,7 +642,7 @@ We invite the interested reader to have a look at the recent work of <span class
 </ul>
 <p>Sometimes, it is possible to apply a logarithmic transform of variables with both large values (market capitalization) and large outliers. The scaling can come after this transformation. Obviously, this technique is prohibited for features with negative values.</p>
 <p>It is often advised to scale inputs so that they range in [0,1] before sending them through the training of neural networks for instance. The dataset that we use in this book is based on variables that have been uniformized: for each point in time, the cross-sectional distribution of each feature is uniform over the unit interval. In factor investing, the scaling of features must be <strong>operated separately for each date and each feature</strong>. This point is critical. It makes sure that for every rebalancing date, the predictors will have a similar shape and do carry information on the cross-section of stocks.</p>
-<p>Uniformization is sometimes presented differently: for a given characteristic and time, characteristic values are ranked and the rank is then divided by the number of non-missing points. This is done in <span class="citation">Freyberger, Neuhierl, and Weber (<a href="#ref-freyberger2020dissecting">2020</a>)</span> for example. In <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics">2019</a>)</span>, the authors perform this operation but then subtract 0.5 to all features so that their values lie in [-0.5,0.5].</p>
+<p>Uniformization is sometimes presented differently: for a given characteristic and time, characteristic values are ranked and the rank is then divided by the number of non-missing points. This is done in <span class="citation">Freyberger, Neuhierl, and Weber (<a href="#ref-freyberger2020dissecting" role="doc-biblioref">2020</a>)</span> for example. In <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics" role="doc-biblioref">2019</a>)</span>, the authors perform this operation but then subtract 0.5 to all features so that their values lie in [-0.5,0.5].</p>
 <p>Scaling features across dates should be proscribed. Take for example the case of market capitalization. In the long run (market crashes notwithstanding), this feature increases through time. Thus, scaling across dates would lead to small values at the beginning of the sample and large values at the end of the sample. This would completely alter and dilute the cross-sectional content of the features. </p>
 </div>
 </div>
@@ -734,7 +739,7 @@ where <span class="math inline">\(\hat{r}_{t,i}\)</span> is the performance prox
 </div>
 <div id="the-triple-barrier-method" class="section level3">
 <h3><span class="header-section-number">4.5.3</span> The triple barrier method</h3>
-<p>We conclude this section with an advanced labelling technique mentioned in <span class="citation">De Prado (<a href="#ref-de2018advances">2018</a>)</span>. The idea is to consider the full dynamics of a trading strategy and not a simple performance proxy. The rationale for this extension is that often money managers implement P&amp;L triggers that cash in when gains are sufficient or opt out to stop their losses. Upon inception of the strategy, three barriers are fixed (see Figure <a href="Data.html#fig:triplebarrier">4.4</a>):</p>
+<p>We conclude this section with an advanced labelling technique mentioned in <span class="citation">De Prado (<a href="#ref-de2018advances" role="doc-biblioref">2018</a>)</span>. The idea is to consider the full dynamics of a trading strategy and not a simple performance proxy. The rationale for this extension is that often money managers implement P&amp;L triggers that cash in when gains are sufficient or opt out to stop their losses. Upon inception of the strategy, three barriers are fixed (see Figure <a href="Data.html#fig:triplebarrier">4.4</a>):</p>
 <ul>
 <li>one above the current level of the asset (magenta line), which measures a reasonable expected profit;<br />
 </li>
@@ -753,15 +758,15 @@ FIGURE 4.4:  Illustration of the triple barrier method.
 <div id="filtering-the-sample" class="section level3">
 <h3><span class="header-section-number">4.5.4</span> Filtering the sample</h3>
 <p>
-One of the main challenges in Machine Learning is to extract as much <strong>signal</strong> as possible. By signal, we mean patterns that will hold out-of-sample. Intuitively, it may seem reasonable to think that the more data we gather, the more signal we can extract. This is in fact false in all generality because more data also means more noise. Surprisingly, filtering the training samples can improve performance. This idea was for example implemented successfully in <span class="citation">Fu et al. (<a href="#ref-fu2018machine">2018</a>)</span>, <span class="citation">Guida and Coqueret (<a href="#ref-guida2019big">2018</a><a href="#ref-guida2019big">a</a>)</span> and <span class="citation">Guida and Coqueret (<a href="#ref-guida2018machine">2018</a><a href="#ref-guida2018machine">b</a>)</span>.</p>
-<p>In <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2020</a>)</span>, we investigate why smaller samples may lead to superior out-of-sample accuracy for a particular type of ML algorithm: decision trees (see Chapter <a href="trees.html#trees">6</a>). We focus on a particular kind of filter: we exclude the labels (e.g., returns) that are not extreme and retain the 20% values that are the smallest and the 20% that are the largest (the bulk of the distribution is removed). In doing so, we alter the structure of trees in two ways:<br />
+One of the main challenges in Machine Learning is to extract as much <strong>signal</strong> as possible. By signal, we mean patterns that will hold out-of-sample. Intuitively, it may seem reasonable to think that the more data we gather, the more signal we can extract. This is in fact false in all generality because more data also means more noise. Surprisingly, filtering the training samples can improve performance. This idea was for example implemented successfully in <span class="citation">Fu et al. (<a href="#ref-fu2018machine" role="doc-biblioref">2018</a>)</span>, <span class="citation">Guida and Coqueret (<a href="#ref-guida2019big" role="doc-biblioref">2018</a><a href="#ref-guida2019big" role="doc-biblioref">a</a>)</span> and <span class="citation">Guida and Coqueret (<a href="#ref-guida2018machine" role="doc-biblioref">2018</a><a href="#ref-guida2018machine" role="doc-biblioref">b</a>)</span>.</p>
+<p>In <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>, we investigate why smaller samples may lead to superior out-of-sample accuracy for a particular type of ML algorithm: decision trees (see Chapter <a href="trees.html#trees">6</a>). We focus on a particular kind of filter: we exclude the labels (e.g., returns) that are not extreme and retain the 20% values that are the smallest and the 20% that are the largest (the bulk of the distribution is removed). In doing so, we alter the structure of trees in two ways:<br />
 - when the splitting points are altered, they are always closer to the center of the distribution of the splitting variable (i.e., the resulting clusters are more balanced and possibly more robust);<br />
 - the choice of splitting variables is (sometimes) pushed towards the features that have a monotonic impact on the label.<br />
 These two properties are desirable. The first reduces the risk of fitting to small groups of instances that may be spurious. The second gives more importance to features that appear globally more relevant in explaining the returns. However, the filtering must not be too intense. If, instead of retaining 20% of each tail of the predictor, we keep just 10%, then the loss in signal becomes too severe and the performance deteriorates.</p>
 </div>
 <div id="horizons" class="section level3">
 <h3><span class="header-section-number">4.5.5</span> Return horizons</h3>
-<p>This subsection deals with one of the least debated issues in factor-based machine learning models: horizons. Several horizons come into play during the whole ML-driven allocation workflow: the <strong>horizon of the label</strong>, the <strong>estimation window</strong> (chronological depth of the training samples) and the <strong>holding periods</strong>. One early reference that looks at these aspects is the founding academic paper on momentum by <span class="citation">Jegadeesh and Titman (<a href="#ref-jegadeesh1993returns">1993</a>)</span>. The authors compute the profitability of portfolios based on the returns over the past <span class="math inline">\(J=3, 6, 9, 12\)</span> months. Four holding periods are tested: <span class="math inline">\(K=3,6,9,12\)</span> months. They report: “.” While there is no machine learning whatsoever in this contribution, it is possible that their conclusion that horizons matter may also hold for more sophisticated methods. This topic is in fact much discussed, as is shown by the continuing debate on the impact of horizons in momentum profitability (see, e.g., <span class="citation">Novy-Marx (<a href="#ref-novy2012momentum">2012</a>)</span>, <span class="citation">Gong, Liu, and Liu (<a href="#ref-gong2015momentum">2015</a>)</span> and <span class="citation">Goyal and Wahal (<a href="#ref-goyal2015momentum">2015</a>)</span>).</p>
+<p>This subsection deals with one of the least debated issues in factor-based machine learning models: horizons. Several horizons come into play during the whole ML-driven allocation workflow: the <strong>horizon of the label</strong>, the <strong>estimation window</strong> (chronological depth of the training samples) and the <strong>holding periods</strong>. One early reference that looks at these aspects is the founding academic paper on momentum by <span class="citation">Jegadeesh and Titman (<a href="#ref-jegadeesh1993returns" role="doc-biblioref">1993</a>)</span>. The authors compute the profitability of portfolios based on the returns over the past <span class="math inline">\(J=3, 6, 9, 12\)</span> months. Four holding periods are tested: <span class="math inline">\(K=3,6,9,12\)</span> months. They report: “.” While there is no machine learning whatsoever in this contribution, it is possible that their conclusion that horizons matter may also hold for more sophisticated methods. This topic is in fact much discussed, as is shown by the continuing debate on the impact of horizons in momentum profitability (see, e.g., <span class="citation">Novy-Marx (<a href="#ref-novy2012momentum" role="doc-biblioref">2012</a>)</span>, <span class="citation">Gong, Liu, and Liu (<a href="#ref-gong2015momentum" role="doc-biblioref">2015</a>)</span> and <span class="citation">Goyal and Wahal (<a href="#ref-goyal2015momentum" role="doc-biblioref">2015</a>)</span>).</p>
 <p>This debate should also be considered when working with ML algorithms. The issues of estimation windows and holding periods are mentioned later in the book, in Chapter <a href="backtest.html#backtest">12</a>. Naturally, in the present chapter, the horizon of the label is the important ingredient. Heuristically, there are four possible combinations if we consider only one feature for simplicity:</p>
 <ol style="list-style-type: decimal">
 <li>oscillating label and feature;<br />
@@ -773,14 +778,14 @@ These two properties are desirable. The first reduces the risk of fitting to sma
 <li>smooth label and feature.</li>
 </ol>
 <p>Of all of these options, the last one is probably preferable because it is more robust, all things being equal.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> By <em>all things being equal</em>, we mean that in each case, a model is capable of extracting some relevant pattern. A pattern that holds between two slowly moving series is more likely to persist in time. Thus, since features are often highly autocorrelated (cf Figure <a href="Data.html#fig:histcorr">4.3</a>), combining them with smooth labels is probably a good idea. To illustrate how critical this point is, we will purposefully use 1-month returns in most of the examples of the book and show that the corresponding results are often disappointing. These returns are very weakly autocorrelated while 6-month or 12-month returns are much more persistent and are better choices for labels.</p>
-<p>Theoretically, it is possible to understand why that may be the case. For simplicity, let us assume a single feature <span class="math inline">\(x\)</span> that explains returns <span class="math inline">\(r\)</span>: <span class="math inline">\(r_{t+1}=f(x_t)+e_{t+1}\)</span>. If <span class="math inline">\(x_t\)</span> is highly autocorrelated and the noise embeded in <span class="math inline">\(e_{t+1}\)</span> is not too large, then the two-period ahead return <span class="math inline">\((1+r_{t+1})(1+r_{t+2})-1\)</span> may carry more signal than <span class="math inline">\(r_{t+1}\)</span> because the relationship with <span class="math inline">\(x_t\)</span> has diffused and compounded through time. Consequently, it may also be beneficial to embed memory considerations directly into the modelling function, as is done for instance in <span class="citation">Matthew F Dixon (<a href="#ref-dixon2020industrial">2020</a>)</span>. We discuss some practicalities related to autocorrelations in the next section.</p>
+<p>Theoretically, it is possible to understand why that may be the case. For simplicity, let us assume a single feature <span class="math inline">\(x\)</span> that explains returns <span class="math inline">\(r\)</span>: <span class="math inline">\(r_{t+1}=f(x_t)+e_{t+1}\)</span>. If <span class="math inline">\(x_t\)</span> is highly autocorrelated and the noise embeded in <span class="math inline">\(e_{t+1}\)</span> is not too large, then the two-period ahead return <span class="math inline">\((1+r_{t+1})(1+r_{t+2})-1\)</span> may carry more signal than <span class="math inline">\(r_{t+1}\)</span> because the relationship with <span class="math inline">\(x_t\)</span> has diffused and compounded through time. Consequently, it may also be beneficial to embed memory considerations directly into the modelling function, as is done for instance in <span class="citation">Matthew F Dixon (<a href="#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span>. We discuss some practicalities related to autocorrelations in the next section.</p>
 </div>
 </div>
 <div id="pers" class="section level2">
 <h2><span class="header-section-number">4.6</span> Handling persistence</h2>
 <p>
 While we have separated the steps of feature engineering and labelling in two different subsections, it is probably wiser to consider them jointly. One important property of the dataset processed by the ML algorithm should be the consistency of persistence between features and labels. Intuitively, the autocorrelation patterns between the label <span class="math inline">\(y_{t,n}\)</span> (future performance) and the features <span class="math inline">\(x_{t,n}^{(k)}\)</span> should not be too distant.</p>
-<p>One problematic example is when the dataset is sampled at the monthly frequency (not unusual in the money management industry) with the labels being monthly returns and the features being risk-based or fundamental attributes. In this case, the label is very weakly autocorrelated, while the features are often highly autocorrelated. In this situation, most sophisticated forecasting tools will arbitrage between features which will probably result in a lot of noise. In linear predictive models, this configuration is known to generate bias in estimates (see the study of <span class="citation">Stambaugh (<a href="#ref-stambaugh1999predictive">1999</a>)</span> and the review by <span class="citation">Gonzalo and Pitarakis (<a href="#ref-gonzalo2018predictive">2018</a>)</span>).</p>
+<p>One problematic example is when the dataset is sampled at the monthly frequency (not unusual in the money management industry) with the labels being monthly returns and the features being risk-based or fundamental attributes. In this case, the label is very weakly autocorrelated, while the features are often highly autocorrelated. In this situation, most sophisticated forecasting tools will arbitrage between features which will probably result in a lot of noise. In linear predictive models, this configuration is known to generate bias in estimates (see the study of <span class="citation">Stambaugh (<a href="#ref-stambaugh1999predictive" role="doc-biblioref">1999</a>)</span> and the review by <span class="citation">Gonzalo and Pitarakis (<a href="#ref-gonzalo2018predictive" role="doc-biblioref">2018</a>)</span>).</p>
 <p>Among other more technical options, there are two simple solutions when facing this issue: either introduce autocorrelation into the label, or remove it from the features. Again, the first option is not advised for statistical inference on linear models. Both are rather easy econometrically:</p>
 <ul>
 <li>to increase the autocorrelation of the label, compute performance over longer time ranges. For instance, when working with monthly data, considering annual or biennial returns will do the trick. <br />
@@ -806,7 +811,7 @@ Finally, we discuss a very important topic. The data should never be separated f
 \tag{4.3}
 \breve{x}_{t,n}^{(k)}=z_t \times x_{t,n}^{(k)}
 \end{equation}\]</span>
-This technique is used by <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical">2020</a><a href="#ref-gu2018empirical">b</a>)</span> who use 8 economic indicators (plus the original predictors (<span class="math inline">\(z_t=1\)</span>)). This increases the feature space ninefold.</p>
+This technique is used by <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical" role="doc-biblioref">2020</a><a href="#ref-gu2018empirical" role="doc-biblioref">b</a>)</span> who use 8 economic indicators (plus the original predictors (<span class="math inline">\(z_t=1\)</span>)). This increases the feature space ninefold.</p>
 <p>Another route that integrates shifting economic environments is conditional engineering. Suppose that labels are coded via formula <a href="Data.html#eq:catlabel">(4.2)</a>. The thresholds can be made dependent on some exogenous variable. In times of turbulence, it might be a good idea to increase both <span class="math inline">\(r_+\)</span> (buy threshold) and <span class="math inline">\(r_-\)</span> (sell threshold) so that the labels become more conservative: it takes a higher return to make it to the <em>buy</em> category, while short positions are favored. One such example of dynamic thresholding could be</p>
 <p><span class="math display" id="eq:condvix">\[\begin{equation}
 \tag{4.4}
@@ -819,15 +824,15 @@ r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
 <p></p>
 <p>We end this section with the notion of active learning. To the best of our knowledge, it is not widely used in quantitative investment, but the underlying concept is enlightening, hence we dedicate a few paragraphs to this notion for the sake of completeness.</p>
 <p>In general supervised learning, there is sometimes an asymmetry in the ability to gather features versus labels. For instance, it is free to have access to images, but the labelling of the content of the image (e.g., “a dog”, “a truck”, “a pizza”, etc.) is costly because it requires human annotation. In formal terms, <span class="math inline">\(\textbf{X}\)</span> is cheap but the corresponding <span class="math inline">\(\textbf{y}\)</span> is expensive.</p>
-<p>As is often the case when facing cost constraints, an evident solution is greed. Ahead of the usual learning process, a filter (often called <em>query</em>) is used to decide which data to label and train on (possibly in relationship with the ML algorithm). The labelling is performed by a so-called <em>oracle</em> (which/who knows the truth), usually human. This technique that focuses on the most informative instances is referred to as <strong>active learning</strong>. We refer to the surveys of <span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span> and <span class="citation">Settles (<a href="#ref-settles2012active">2012</a>)</span> for a detailed account of this field (which we briefly summarize below). The term <strong>active</strong> comes from the fact that the learner does not passively accept data samples but actively participates in the choices of items it learns from.</p>
+<p>As is often the case when facing cost constraints, an evident solution is greed. Ahead of the usual learning process, a filter (often called <em>query</em>) is used to decide which data to label and train on (possibly in relationship with the ML algorithm). The labelling is performed by a so-called <em>oracle</em> (which/who knows the truth), usually human. This technique that focuses on the most informative instances is referred to as <strong>active learning</strong>. We refer to the surveys of <span class="citation">Settles (<a href="#ref-settles2009active" role="doc-biblioref">2009</a>)</span> and <span class="citation">Settles (<a href="#ref-settles2012active" role="doc-biblioref">2012</a>)</span> for a detailed account of this field (which we briefly summarize below). The term <strong>active</strong> comes from the fact that the learner does not passively accept data samples but actively participates in the choices of items it learns from.</p>
 <p>One major dichotomy in active learning pertains to the data source <span class="math inline">\(\textbf{X}\)</span> on which the query is based. One obvious case is when the original sample <span class="math inline">\(\textbf{X}\)</span> is very large and not labelled and the learner asks for particular instances within this sample to be labelled. The second case is when the learner has the ability to simulate/generate its own values <span class="math inline">\(\textbf{x}_i\)</span>. This can sometimes be problematic if the oracle does not recognize the data that is generated by the machine. For instance, if the purpose is to label images of characters and numbers, the learner may generate shapes that do not correspond to any letter or digit: the oracle cannot label it.</p>
 <p>In active learning, one key question is, how does the learner choose the instances to be labelled? Heuristically, the answer is by picking those observations that maximize learning efficiency. In binary classification, a simple criterion is the probability of belonging to one particular class. If this probability is far from 0.5, then the algorithm will have no difficulty of picking one class (even though it can be wrong). The interesting case is when the probability is close to 0.5: the machine may hesitate for this particular instance. Thus, having the oracle label it is useful in this case because it helps the learner in a configuration in which it is undecided.</p>
-<p>Other methods seek to estimate the fit that can be obtained when including particular (new) instances in the training set, and then to optimize this fit. Recalling Section 3.1 in <span class="citation">Geman, Bienenstock, and Doursat (<a href="#ref-geman1992neural">1992</a>)</span> on the variance-bias tradeoff, we have, for a training dataset <span class="math inline">\(D\)</span> and one instance <span class="math inline">\(x\)</span> (we omit the bold font for simplicity),
+<p>Other methods seek to estimate the fit that can be obtained when including particular (new) instances in the training set, and then to optimize this fit. Recalling Section 3.1 in <span class="citation">Geman, Bienenstock, and Doursat (<a href="#ref-geman1992neural" role="doc-biblioref">1992</a>)</span> on the variance-bias tradeoff, we have, for a training dataset <span class="math inline">\(D\)</span> and one instance <span class="math inline">\(x\)</span> (we omit the bold font for simplicity),
 <span class="math display">\[\mathbb{E}\left[\left.(y-\hat{f}(x;D))^2\right|\{D,x\}\right]=\mathbb{E}\left[\left.\underbrace{(y-\mathbb{E}[y|x])^2}_{\text{indep. from }D\text{ and }\hat{f}} \right|\{D,x\} \right]+(\hat{f}(x;D)-\mathbb{E}[y|x])^2,\]</span>
 where the notation <span class="math inline">\(f(x;D)\)</span> is used to highlight the dependence between the model <span class="math inline">\(\hat{f}\)</span> and the dataset <span class="math inline">\(D\)</span>: the model has been trained on <span class="math inline">\(D\)</span>. The first term is irreducible, as it does not depend on <span class="math inline">\(\hat{f}\)</span>. Thus, only the second term is of interest. If we take the average of this quantity, taken over all possible values of <span class="math inline">\(D\)</span>:
 <span class="math display">\[\mathbb{E}_D\left[(\hat{f}(x;D)-\mathbb{E}[y|x])^2  \right]=\underbrace{\left(\mathbb{E}_D\left[\hat{f}(x;D)-\mathbb{E}[y|x]\right]\right)^2}_{\text{squared bias}} \ + \ \underbrace{\mathbb{E}_D\left[(\hat{f}(x,D)-\mathbb{E}_D[\hat{f}(x;D)])^2\right]}_{\text{variance}}\]</span>
-If this expression is not too complicated to compute, the learner can query the <span class="math inline">\(x\)</span> that minimizes the tradeoff. Thus, on average, this new instance will be the one that yields the best learning angle (as measured by the <span class="math inline">\(L^2\)</span> error). Beyond this approach (which is limited because it requires the oracle to label a possibly irrelevant instance), many other criteria exist for querying and we refer to section 3 from <span class="citation">Settles (<a href="#ref-settles2009active">2009</a>)</span> for an exhaustive list.</p>
-<p>One final question: is active learning applicable to factor investing? One straightfoward answer is that data cannot be annotated by human intervention. Thus, the learners cannot simulate their own instances and ask for corresponding labels. One possible option is to provide the learner with <span class="math inline">\(\textbf{X}\)</span> but not <span class="math inline">\(\textbf{y}\)</span> and keep only a queried subset of observations with the corresponding labels. In spirit, this is close to what is done in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training">2020</a>)</span> except that the query is not performed by a machine but by the human user. Indeed, it is shown in this paper that not all observations carry the same amount of signal. Instances with ‘average’ label values seem to be on average less informative compared to those with extreme label values.</p>
+If this expression is not too complicated to compute, the learner can query the <span class="math inline">\(x\)</span> that minimizes the tradeoff. Thus, on average, this new instance will be the one that yields the best learning angle (as measured by the <span class="math inline">\(L^2\)</span> error). Beyond this approach (which is limited because it requires the oracle to label a possibly irrelevant instance), many other criteria exist for querying and we refer to section 3 from <span class="citation">Settles (<a href="#ref-settles2009active" role="doc-biblioref">2009</a>)</span> for an exhaustive list.</p>
+<p>One final question: is active learning applicable to factor investing? One straightfoward answer is that data cannot be annotated by human intervention. Thus, the learners cannot simulate their own instances and ask for corresponding labels. One possible option is to provide the learner with <span class="math inline">\(\textbf{X}\)</span> but not <span class="math inline">\(\textbf{y}\)</span> and keep only a queried subset of observations with the corresponding labels. In spirit, this is close to what is done in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span> except that the query is not performed by a machine but by the human user. Indeed, it is shown in this paper that not all observations carry the same amount of signal. Instances with ‘average’ label values seem to be on average less informative compared to those with extreme label values.</p>
 </div>
 </div>
 <div id="additional-code-and-results" class="section level2">
@@ -836,60 +841,268 @@ If this expression is not too complicated to compute, the learner can query the 
 <h3><span class="header-section-number">4.8.1</span> Impact of rescaling: graphical representation</h3>
 <p>We start with a simple illustration of the different scaling methods. We generate an arbitrary series and then rescale it. The series is not random so that each time the code chunk is executed, the output remains the same.</p>
 
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">Length &lt;-<span class="st"> </span><span class="dv">100</span>                                 <span class="co"># Length of the sequence</span></a>
-<a class="sourceLine" id="cb25-2" data-line-number="2">x &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">sin</span>(<span class="dv">1</span><span class="op">:</span>Length))                       <span class="co"># Original data</span></a>
-<a class="sourceLine" id="cb25-3" data-line-number="3">data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length, <span class="dt">x =</span> x)   <span class="co"># Data framed into dataframe</span></a>
-<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="co"># Plot</span></a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="Data.html#cb25-1"></a>Length &lt;-<span class="st"> </span><span class="dv">100</span>                                 <span class="co"># Length of the sequence</span></span>
+<span id="cb25-2"><a href="Data.html#cb25-2"></a>x &lt;-<span class="st"> </span><span class="kw">exp</span>(<span class="kw">sin</span>(<span class="dv">1</span><span class="op">:</span>Length))                       <span class="co"># Original data</span></span>
+<span id="cb25-3"><a href="Data.html#cb25-3"></a>data &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length, <span class="dt">x =</span> x)   <span class="co"># Data framed into dataframe</span></span>
+<span id="cb25-4"><a href="Data.html#cb25-4"></a><span class="kw">ggplot</span>(data, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> x)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="co"># Plot</span></span></code></pre></div>
 <p><img src="ML_factor_files/figure-html/scale_ex-1.png" width="672" /></p>
-
+<p></p>
 <p>We define and plot the scaled variables below.</p>
 
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">norm_unif &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">    v &lt;-<span class="st"> </span>v <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()</a>
-<a class="sourceLine" id="cb26-3" data-line-number="3">    <span class="kw">return</span>(<span class="kw">ecdf</span>(v)(v))</a>
-<a class="sourceLine" id="cb26-4" data-line-number="4">}</a>
-<a class="sourceLine" id="cb26-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb26-6" data-line-number="6">norm_<span class="dv">0</span>_<span class="dv">1</span> &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></a>
-<a class="sourceLine" id="cb26-7" data-line-number="7">    <span class="kw">return</span>((v<span class="op">-</span><span class="kw">min</span>(v))<span class="op">/</span>(<span class="kw">max</span>(v)<span class="op">-</span><span class="kw">min</span>(v)))</a>
-<a class="sourceLine" id="cb26-8" data-line-number="8">}</a>
-<a class="sourceLine" id="cb26-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb26-10" data-line-number="10">data_norm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(                        <span class="co"># Formatting the data</span></a>
-<a class="sourceLine" id="cb26-11" data-line-number="11">    <span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length,                           <span class="co"># Index of point/instance</span></a>
-<a class="sourceLine" id="cb26-12" data-line-number="12">    <span class="dt">standard =</span> (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x),           <span class="co"># Standardisation</span></a>
-<a class="sourceLine" id="cb26-13" data-line-number="13">    <span class="dt">norm_0_1 =</span> <span class="kw">norm_0_1</span>(x),                     <span class="co"># [0,1] reduction</span></a>
-<a class="sourceLine" id="cb26-14" data-line-number="14">    <span class="dt">unif =</span> <span class="kw">norm_unif</span>(x)) <span class="op">%&gt;%</span><span class="st">                    </span><span class="co"># Uniformisation</span></a>
-<a class="sourceLine" id="cb26-15" data-line-number="15"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Type, <span class="dt">value =</span> value, <span class="op">-</span>index)   <span class="co"># Putting in tidy format</span></a>
-<a class="sourceLine" id="cb26-16" data-line-number="16"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st">   </span><span class="co"># Plot!</span></a>
-<a class="sourceLine" id="cb26-17" data-line-number="17"><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></a>
-<a class="sourceLine" id="cb26-18" data-line-number="18"><span class="st">    </span><span class="kw">facet_grid</span>(Type<span class="op">~</span>.)          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="Data.html#cb26-1"></a>norm_unif &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></span>
+<span id="cb26-2"><a href="Data.html#cb26-2"></a>    v &lt;-<span class="st"> </span>v <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()</span>
+<span id="cb26-3"><a href="Data.html#cb26-3"></a>    <span class="kw">return</span>(<span class="kw">ecdf</span>(v)(v))</span>
+<span id="cb26-4"><a href="Data.html#cb26-4"></a>}</span>
+<span id="cb26-5"><a href="Data.html#cb26-5"></a></span>
+<span id="cb26-6"><a href="Data.html#cb26-6"></a>norm_<span class="dv">0</span>_<span class="dv">1</span> &lt;-<span class="st">  </span><span class="cf">function</span>(v){  <span class="co"># This is a function that uniformalises a vector.</span></span>
+<span id="cb26-7"><a href="Data.html#cb26-7"></a>    <span class="kw">return</span>((v<span class="op">-</span><span class="kw">min</span>(v))<span class="op">/</span>(<span class="kw">max</span>(v)<span class="op">-</span><span class="kw">min</span>(v)))</span>
+<span id="cb26-8"><a href="Data.html#cb26-8"></a>}</span>
+<span id="cb26-9"><a href="Data.html#cb26-9"></a></span>
+<span id="cb26-10"><a href="Data.html#cb26-10"></a>data_norm &lt;-<span class="st"> </span><span class="kw">data.frame</span>(                        <span class="co"># Formatting the data</span></span>
+<span id="cb26-11"><a href="Data.html#cb26-11"></a>    <span class="dt">index =</span> <span class="dv">1</span><span class="op">:</span>Length,                           <span class="co"># Index of point/instance</span></span>
+<span id="cb26-12"><a href="Data.html#cb26-12"></a>    <span class="dt">standard =</span> (x <span class="op">-</span><span class="st"> </span><span class="kw">mean</span>(x)) <span class="op">/</span><span class="st"> </span><span class="kw">sd</span>(x),           <span class="co"># Standardisation</span></span>
+<span id="cb26-13"><a href="Data.html#cb26-13"></a>    <span class="dt">norm_0_1 =</span> <span class="kw">norm_0_1</span>(x),                     <span class="co"># [0,1] reduction</span></span>
+<span id="cb26-14"><a href="Data.html#cb26-14"></a>    <span class="dt">unif =</span> <span class="kw">norm_unif</span>(x)) <span class="op">%&gt;%</span><span class="st">                    </span><span class="co"># Uniformisation</span></span>
+<span id="cb26-15"><a href="Data.html#cb26-15"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> Type, <span class="dt">value =</span> value, <span class="op">-</span>index)   <span class="co"># Putting in tidy format</span></span>
+<span id="cb26-16"><a href="Data.html#cb26-16"></a><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> index, <span class="dt">y =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st">   </span><span class="co"># Plot!</span></span>
+<span id="cb26-17"><a href="Data.html#cb26-17"></a><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></span>
+<span id="cb26-18"><a href="Data.html#cb26-18"></a><span class="st">    </span><span class="kw">facet_grid</span>(Type<span class="op">~</span>.)          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></span></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm-1.png" width="672" /></p>
-
+<p></p>
 <p>Finally, we look at the histogram of the newly created variables.</p>
 
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" data-line-number="1"><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="Data.html#cb27-1"></a><span class="kw">ggplot</span>(data_norm, <span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> Type)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>)</span></code></pre></div>
 <p><img src="ML_factor_files/figure-html/data_norm_dist-1.png" width="672" /></p>
-
+<p></p>
 <p>With respect to shape, the green and red distributions are close to the original one. It is only the support that changes: the min/max rescaling ensures all values lie in the <span class="math inline">\([0,1]\)</span> interval. In both cases, the smallest values (on the left) display a spike in distribution. By construction, this spike disappears under the uniformization: the points are evenly distributed over the unit interval.</p>
 </div>
 <div id="impact-of-rescaling-toy-example" class="section level3">
 <h3><span class="header-section-number">4.8.2</span> Impact of rescaling: toy example</h3>
 <p>To illustrate the impact of choosing one particular rescaling method,<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
 
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1">firm &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">3</span>,<span class="dv">3</span>))             <span class="co"># Firms (3 lines for each)</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2">date &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>)                             <span class="co"># Dates</span></a>
-<a class="sourceLine" id="cb28-3" data-line-number="3">cap &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>,                               <span class="co"># Market capitalization</span></a>
-<a class="sourceLine" id="cb28-4" data-line-number="4">         <span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">15</span>, </a>
-<a class="sourceLine" id="cb28-5" data-line-number="5">         <span class="dv">200</span>, <span class="dv">120</span>, <span class="dv">80</span>)</a>
-<a class="sourceLine" id="cb28-6" data-line-number="6">return &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.06</span>, <span class="fl">0.01</span>, <span class="fl">-0.06</span>,                      <span class="co"># Return values</span></a>
-<a class="sourceLine" id="cb28-7" data-line-number="7">            <span class="fl">-0.03</span>, <span class="fl">0.00</span>, <span class="fl">0.02</span>,</a>
-<a class="sourceLine" id="cb28-8" data-line-number="8">            <span class="fl">-0.04</span>, <span class="fl">-0.02</span>,<span class="fl">0.00</span>)</a>
-<a class="sourceLine" id="cb28-9" data-line-number="9">data_toy &lt;-<span class="st"> </span><span class="kw">data.frame</span>(firm, date, cap, return)     <span class="co"># Aggregation of data</span></a>
-<a class="sourceLine" id="cb28-10" data-line-number="10">data_toy &lt;-<span class="st"> </span>data_toy <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Transformation of data</span></a>
-<a class="sourceLine" id="cb28-11" data-line-number="11"><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                            </span></a>
-<a class="sourceLine" id="cb28-12" data-line-number="12"><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap_0_1 =</span> <span class="kw">norm_0_1</span>(cap), <span class="dt">cap_u =</span> <span class="kw">norm_unif</span>(cap))</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="Data.html#cb28-1"></a>firm &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">3</span>,<span class="dv">3</span>))             <span class="co"># Firms (3 lines for each)</span></span>
+<span id="cb28-2"><a href="Data.html#cb28-2"></a>date &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>)                             <span class="co"># Dates</span></span>
+<span id="cb28-3"><a href="Data.html#cb28-3"></a>cap &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>,                               <span class="co"># Market capitalization</span></span>
+<span id="cb28-4"><a href="Data.html#cb28-4"></a>         <span class="dv">15</span>, <span class="dv">10</span>, <span class="dv">15</span>, </span>
+<span id="cb28-5"><a href="Data.html#cb28-5"></a>         <span class="dv">200</span>, <span class="dv">120</span>, <span class="dv">80</span>)</span>
+<span id="cb28-6"><a href="Data.html#cb28-6"></a>return &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.06</span>, <span class="fl">0.01</span>, <span class="fl">-0.06</span>,                      <span class="co"># Return values</span></span>
+<span id="cb28-7"><a href="Data.html#cb28-7"></a>            <span class="fl">-0.03</span>, <span class="fl">0.00</span>, <span class="fl">0.02</span>,</span>
+<span id="cb28-8"><a href="Data.html#cb28-8"></a>            <span class="fl">-0.04</span>, <span class="fl">-0.02</span>,<span class="fl">0.00</span>)</span>
+<span id="cb28-9"><a href="Data.html#cb28-9"></a>data_toy &lt;-<span class="st"> </span><span class="kw">data.frame</span>(firm, date, cap, return)     <span class="co"># Aggregation of data</span></span>
+<span id="cb28-10"><a href="Data.html#cb28-10"></a>data_toy &lt;-<span class="st"> </span>data_toy <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Transformation of data</span></span>
+<span id="cb28-11"><a href="Data.html#cb28-11"></a><span class="st">    </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                            </span></span>
+<span id="cb28-12"><a href="Data.html#cb28-12"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">cap_0_1 =</span> <span class="kw">norm_0_1</span>(cap), <span class="dt">cap_u =</span> <span class="kw">norm_unif</span>(cap))</span></code></pre></div>
+<p></p>
 
-
-
+<table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:fakedata2">TABLE 4.3: </span>Sample data for a toy example.
+</caption>
+<thead>
+<tr>
+<th style="text-align:right;">
+firm
+</th>
+<th style="text-align:right;">
+date
+</th>
+<th style="text-align:right;">
+cap
+</th>
+<th style="text-align:right;">
+return
+</th>
+<th style="text-align:right;">
+cap_0_1
+</th>
+<th style="text-align:right;">
+cap_u
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+0.364
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-0.06
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.765
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+</tbody>
+</table>
 
 
 
@@ -905,25 +1118,144 @@ If this expression is not too complicated to compute, the learner can query the 
 <p>While the relationship is not always perfectly monotonous, there seems to be a link between size and return and, typically, investing in the smallest firm would be a very good strategy with this sample.</p>
 <p>Now let us look at the output of simple regressions. Below, the package <em>broom</em> is part of the <em>tidyverse</em>. It is great to format regression outputs.</p>
 
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_<span class="dv">0</span>_<span class="dv">1</span>, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># First regression (min-max rescaling)</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb29-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes </span></a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="st">                 from min-max rescaling&#39;</span>,  <span class="dt">booktabs =</span> T) </a></code></pre></div>
-
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="Data.html#cb29-1"></a><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_<span class="dv">0</span>_<span class="dv">1</span>, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># First regression (min-max rescaling)</span></span>
+<span id="cb29-2"><a href="Data.html#cb29-2"></a><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb29-3"><a href="Data.html#cb29-3"></a><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the independent var. comes </span></span>
+<span id="cb29-4"><a href="Data.html#cb29-4"></a><span class="st">                 from min-max rescaling&#39;</span>,  <span class="dt">booktabs =</span> T) </span></code></pre></div>
+<table>
+<caption>
+<span id="tab:datatoyreg">TABLE 4.4: </span>Regression output when the independent var. comes
+from min-max rescaling
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.0162778
+</td>
+<td style="text-align:right;">
+0.0137351
+</td>
+<td style="text-align:right;">
+1.185121
+</td>
+<td style="text-align:right;">
+0.2746390
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_0_1
+</td>
+<td style="text-align:right;">
+-0.0497032
+</td>
+<td style="text-align:right;">
+0.0213706
+</td>
+<td style="text-align:right;">
+-2.325777
+</td>
+<td style="text-align:right;">
+0.0529421
+</td>
+</tr>
+</tbody>
+</table>
 
 <p>
 </p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_u, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Second regression (uniformised feature)</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2"><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">   </span></a>
-<a class="sourceLine" id="cb30-3" data-line-number="3"><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the indep. var. comes from uniformization&#39;</span>,</a>
-<a class="sourceLine" id="cb30-4" data-line-number="4">                  <span class="dt">booktabs =</span> T)   </a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="Data.html#cb30-1"></a><span class="kw">lm</span>(return <span class="op">~</span><span class="st"> </span>cap_u, <span class="dt">data =</span> data_toy) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Second regression (uniformised feature)</span></span>
+<span id="cb30-2"><a href="Data.html#cb30-2"></a><span class="st">    </span>broom<span class="op">::</span><span class="kw">tidy</span>() <span class="op">%&gt;%</span><span class="st">   </span></span>
+<span id="cb30-3"><a href="Data.html#cb30-3"></a><span class="st">    </span>knitr<span class="op">::</span><span class="kw">kable</span>(<span class="dt">caption =</span> <span class="st">&#39;Regression output when the indep. var. comes from uniformization&#39;</span>,</span>
+<span id="cb30-4"><a href="Data.html#cb30-4"></a>                  <span class="dt">booktabs =</span> T)   </span></code></pre></div>
+<table>
+<caption>
+<span id="tab:datatoyreg2">TABLE 4.5: </span>Regression output when the indep. var. comes from uniformization
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.0198139
+</td>
+<td style="text-align:right;">
+3.028170
+</td>
+<td style="text-align:right;">
+0.0191640
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_u
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+<td style="text-align:right;">
+0.0275162
+</td>
+<td style="text-align:right;">
+-3.634219
+</td>
+<td style="text-align:right;">
+0.0083509
+</td>
+</tr>
+</tbody>
+</table>
 
-
-<p>In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="#tab:datatoyreg"><strong>??</strong></a>) while the second is below 1% (in Table <a href="#tab:datatoyreg2"><strong>??</strong></a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalizations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformized variables reduces dispersion and can help solve this problem.</p>
+<p>In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="Data.html#tab:datatoyreg">4.4</a>) while the second is below 1% (in Table <a href="Data.html#tab:datatoyreg2">4.5</a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalizations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformized variables reduces dispersion and can help solve this problem.</p>
 <p>Note that this is a <strong>double-edged sword</strong>: while it can help avoid <strong>false negatives</strong>, it can also lead to <strong>false positives</strong>.</p>
 </div>
 </div>
-<div id="coding-exercises-1" class="section level2">
+<div id="coding-exercises" class="section level2">
 <h2><span class="header-section-number">4.9</span> Coding exercises</h2>
 <ol style="list-style-type: decimal">
 <li>The Federal Reserve of Saint Louis (<a href="https://fred.stlouisfed.org" class="uri">https://fred.stlouisfed.org</a>) hosts thousands of time series of economic indicators that can serve as conditioning variables. Pick one and apply formula <a href="Data.html#eq:macrocond">(4.3)</a> to expand the number of predictors. If need be, use the function defined above.<br />
@@ -968,7 +1300,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <p>Dixon, Matthew F. 2020. “Industrial Forecasting with Exponentially Smoothed Recurrent Neural Networks.” <em>SSRN Working Paper</em>, no. 3572181.</p>
 </div>
 <div id="ref-enders2001primer">
-<p>Enders, Craig K. 2001. “A Primer on Maximum Likelihood Algorithms Available for Use with Missing Data.” <em>Structural Equation Modeling</em> 8 (1). Taylor &amp; Francis: 128–41.</p>
+<p>Enders, Craig K. 2001. “A Primer on Maximum Likelihood Algorithms Available for Use with Missing Data.” <em>Structural Equation Modeling</em> 8 (1): 128–41.</p>
 </div>
 <div id="ref-enders2010applied">
 <p>Enders, Craig K. 2010. <em>Applied Missing Data Analysis</em>. Guilford Press.</p>
@@ -983,7 +1315,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <p>Galili, Tal, and Isaac Meilijson. 2016. “Splitting Matters: How Monotone Transformation of Predictor Variables May Improve the Predictions of Decision Tree Models.” <em>arXiv Preprint</em>, no. 1611.04561.</p>
 </div>
 <div id="ref-garcia2009k">
-<p>Garcı'a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı'bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9): 1483–93.</p>
+<p>Garcı́a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı́bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9): 1483–93.</p>
 </div>
 <div id="ref-geman1992neural">
 <p>Geman, Stuart, Elie Bienenstock, and René Doursat. 1992. “Neural Networks and the Bias/Variance Dilemma.” <em>Neural Computation</em> 4 (1): 1–58.</p>
@@ -1067,9 +1399,9 @@ If this expression is not too complicated to compute, the learner can query the 
 <div class="footnotes">
 <hr />
 <ol start="9">
-<li id="fn9"><p>Some methodologies do map firm attributes into final weights, e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric">2009</a>)</span> and <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics">2016</a>)</span>, but these are outside the scope of the book.<a href="Data.html#fnref9" class="footnote-back">↩</a></p></li>
-<li id="fn10"><p>This is of course not the case for inference relying on linear models. Memory generates many problems and complicates the study of estimators. We refer to <span class="citation">Hjalmarsson (<a href="#ref-hjalmarsson2011new">2011</a>)</span> and <span class="citation">Xu (<a href="#ref-xu2020testing">2020</a>)</span> for theoretical and empirical results on this matter.<a href="Data.html#fnref10" class="footnote-back">↩</a></p></li>
-<li id="fn11"><p>For a more thorough technical discussion on the impact of feature engineering, we refer to <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting">2016</a>)</span>.<a href="Data.html#fnref11" class="footnote-back">↩</a></p></li>
+<li id="fn9"><p>Some methodologies do map firm attributes into final weights, e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric" role="doc-biblioref">2009</a>)</span> and <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics" role="doc-biblioref">2016</a>)</span>, but these are outside the scope of the book.<a href="Data.html#fnref9" class="footnote-back">↩︎</a></p></li>
+<li id="fn10"><p>This is of course not the case for inference relying on linear models. Memory generates many problems and complicates the study of estimators. We refer to <span class="citation">Hjalmarsson (<a href="#ref-hjalmarsson2011new" role="doc-biblioref">2011</a>)</span> and <span class="citation">Xu (<a href="#ref-xu2020testing" role="doc-biblioref">2020</a>)</span> for theoretical and empirical results on this matter.<a href="Data.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>For a more thorough technical discussion on the impact of feature engineering, we refer to <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting" role="doc-biblioref">2016</a>)</span>.<a href="Data.html#fnref11" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>

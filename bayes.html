@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 9 Bayesian methods | Machine Learning for Factor Investing</title>
   <meta name="description" content="Chapter 9 Bayesian methods | Machine Learning for Factor Investing" />
-  <meta name="generator" content="bookdown 0.19 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.20 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 9 Bayesian methods | Machine Learning for Factor Investing" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-08-09" />
+<meta name="date" content="2020-09-18" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -50,12 +50,15 @@
 
 
 
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 
 
 <style type="text/css">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 pre.sourceCode { margin: 0; }
@@ -64,14 +67,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -80,9 +85,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -194,7 +199,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="4.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>4.8.1</b> Impact of rescaling: graphical representation</a></li>
 <li class="chapter" data-level="4.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>4.8.2</b> Impact of rescaling: toy example</a></li>
 </ul></li>
-<li class="chapter" data-level="4.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>4.9</b> Coding exercises</a></li>
+<li class="chapter" data-level="4.9" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>4.9</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>II Common supervised algorithms</b></span></li>
 <li class="chapter" data-level="5" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>5</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
@@ -222,7 +227,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="6.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>6.2</b> Random forests</a><ul>
 <li class="chapter" data-level="6.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>6.2.1</b> Principle</a></li>
-<li class="chapter" data-level="6.2.2" data-path="trees.html"><a href="trees.html#code-and-results-1"><i class="fa fa-check"></i><b>6.2.2</b> Code and results</a></li>
+<li class="chapter" data-level="6.2.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>6.2.2</b> Code and results</a></li>
 </ul></li>
 <li class="chapter" data-level="6.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>6.3</b> Boosted trees: Adaboost</a><ul>
 <li class="chapter" data-level="6.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>6.3.1</b> Methodology</a></li>
@@ -238,7 +243,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="6.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>6.4.7</b> Instance weighting</a></li>
 </ul></li>
 <li class="chapter" data-level="6.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
-<li class="chapter" data-level="6.6" data-path="trees.html"><a href="trees.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.6</b> Coding exercises</a></li>
+<li class="chapter" data-level="6.6" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>6.6</b> Coding exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>7</b> Neural networks</a><ul>
 <li class="chapter" data-level="7.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>7.1</b> The original perceptron</a></li>
@@ -260,7 +265,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="7.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>7.5</b> Recurrent networks</a><ul>
 <li class="chapter" data-level="7.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>7.5.1</b> Presentation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="NN.html"><a href="NN.html#code-and-results-2"><i class="fa fa-check"></i><b>7.5.2</b> Code and results</a></li>
+<li class="chapter" data-level="7.5.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>7.5.2</b> Code and results</a></li>
 </ul></li>
 <li class="chapter" data-level="7.6" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>7.6</b> Other common architectures</a><ul>
 <li class="chapter" data-level="7.6.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>7.6.1</b> Generative adversarial networks</a></li>
@@ -268,13 +273,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="7.6.3" data-path="NN.html"><a href="NN.html#a-word-on-convolutional-networks"><i class="fa fa-check"></i><b>7.6.3</b> A word on convolutional networks</a></li>
 <li class="chapter" data-level="7.6.4" data-path="NN.html"><a href="NN.html#advanced-architectures"><i class="fa fa-check"></i><b>7.6.4</b> Advanced architectures</a></li>
 </ul></li>
-<li class="chapter" data-level="7.7" data-path="NN.html"><a href="NN.html#coding-exercise-1"><i class="fa fa-check"></i><b>7.7</b> Coding exercise</a></li>
+<li class="chapter" data-level="7.7" data-path="lasso.html"><a href="lasso.html#coding-exercise"><i class="fa fa-check"></i><b>7.7</b> Coding exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="8" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>8</b> Support vector machines</a><ul>
 <li class="chapter" data-level="8.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>8.1</b> SVM for classification</a></li>
 <li class="chapter" data-level="8.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>8.2</b> SVM for regression</a></li>
 <li class="chapter" data-level="8.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>8.3</b> Practice</a></li>
-<li class="chapter" data-level="8.4" data-path="svm.html"><a href="svm.html#coding-exercises-3"><i class="fa fa-check"></i><b>8.4</b> Coding exercises</a></li>
+<li class="chapter" data-level="8.4" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>8.4</b> Coding exercises</a></li>
 </ul></li>
 <li class="chapter" data-level="9" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>9</b> Bayesian methods</a><ul>
 <li class="chapter" data-level="9.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>9.1</b> The Bayesian framework</a></li>
@@ -317,9 +322,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="11.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>11.2</b> Stacked ensembles</a><ul>
 <li class="chapter" data-level="11.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>11.2.1</b> Two-stage training</a></li>
-<li class="chapter" data-level="11.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-3"><i class="fa fa-check"></i><b>11.2.2</b> Code and results</a></li>
+<li class="chapter" data-level="11.2.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>11.2.2</b> Code and results</a></li>
 </ul></li>
-<li class="chapter" data-level="11.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>11.3</b> Extensions</a><ul>
+<li class="chapter" data-level="11.3" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>11.3</b> Extensions</a><ul>
 <li class="chapter" data-level="11.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>11.3.1</b> Exogenous variables</a></li>
 <li class="chapter" data-level="11.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>11.3.2</b> Shrinking inter-model correlations</a></li>
 </ul></li>
@@ -329,7 +334,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="12.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>12.1</b> Setting the protocol</a></li>
 <li class="chapter" data-level="12.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>12.2</b> Turning signals into portfolio weights</a></li>
 <li class="chapter" data-level="12.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>12.3</b> Performance metrics</a><ul>
-<li class="chapter" data-level="12.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>12.3.1</b> Discussion</a></li>
+<li class="chapter" data-level="12.3.1" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>12.3.1</b> Discussion</a></li>
 <li class="chapter" data-level="12.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>12.3.2</b> Pure performance and risk indicators</a></li>
 <li class="chapter" data-level="12.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>12.3.3</b> Factor-based evaluation</a></li>
 <li class="chapter" data-level="12.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>12.3.4</b> Risk-adjusted measures</a></li>
@@ -346,7 +351,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="12.6" data-path="backtest.html"><a href="backtest.html#first-example-a-complete-backtest"><i class="fa fa-check"></i><b>12.6</b> First example: a complete backtest</a></li>
 <li class="chapter" data-level="12.7" data-path="backtest.html"><a href="backtest.html#second-example-backtest-overfitting"><i class="fa fa-check"></i><b>12.7</b> Second example: backtest overfitting</a></li>
-<li class="chapter" data-level="12.8" data-path="backtest.html"><a href="backtest.html#coding-exercises-4"><i class="fa fa-check"></i><b>12.8</b> Coding exercises</a></li>
+<li class="chapter" data-level="12.8" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>12.8</b> Coding exercises</a></li>
 </ul></li>
 <li class="part"><span><b>IV Further important topics</b></span></li>
 <li class="chapter" data-level="13" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>13</b> Interpretability</a><ul>
@@ -384,7 +389,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="15.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>15.3</b> Clustering via k-means</a></li>
 <li class="chapter" data-level="15.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>15.4</b> Nearest neighbors</a></li>
-<li class="chapter" data-level="15.5" data-path="unsup.html"><a href="unsup.html#coding-exercise-2"><i class="fa fa-check"></i><b>15.5</b> Coding exercise</a></li>
+<li class="chapter" data-level="15.5" data-path="lasso.html"><a href="lasso.html#coding-exercise"><i class="fa fa-check"></i><b>15.5</b> Coding exercise</a></li>
 </ul></li>
 <li class="chapter" data-level="16" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>16</b> Reinforcement learning</a><ul>
 <li class="chapter" data-level="16.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>16.1</b> Theoretical layout</a><ul>
@@ -394,8 +399,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="16.2" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>16.2</b> The curse of dimensionality</a></li>
 <li class="chapter" data-level="16.3" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>16.3</b> Policy gradient</a><ul>
-<li class="chapter" data-level="16.3.1" data-path="RL.html"><a href="RL.html#principle-2"><i class="fa fa-check"></i><b>16.3.1</b> Principle</a></li>
-<li class="chapter" data-level="16.3.2" data-path="RL.html"><a href="RL.html#extensions-2"><i class="fa fa-check"></i><b>16.3.2</b> Extensions</a></li>
+<li class="chapter" data-level="16.3.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>16.3.1</b> Principle</a></li>
+<li class="chapter" data-level="16.3.2" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>16.3.2</b> Extensions</a></li>
 </ul></li>
 <li class="chapter" data-level="16.4" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>16.4</b> Simple examples</a><ul>
 <li class="chapter" data-level="16.4.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>16.4.1</b> Q-learning with simulations</a></li>
@@ -441,7 +446,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             <section class="normal" id="section-">
 <div id="bayes" class="section level1">
 <h1><span class="header-section-number">Chapter 9</span> Bayesian methods</h1>
-<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concepts in the subsection below. Good references for Bayesian analysis are <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span> and <span class="citation">Kruschke (<a href="#ref-kruschke2014doing">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code.</p>
+<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concepts in the subsection below. Good references for Bayesian analysis are <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span> and <span class="citation">Kruschke (<a href="#ref-kruschke2014doing" role="doc-biblioref">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code.</p>
 <div id="the-bayesian-framework" class="section level2">
 <h2><span class="header-section-number">9.1</span> The Bayesian framework</h2>
 <p>Up to now, the models that have been presented rely on data only. This approach is often referred to as ‘<strong>frequentist</strong>’. Given one dataset, a frequentist will extract (i.e., estimate) a unique set of optimal parameters and consider it to be the best model. Bayesians, on the other hand, consider datasets as <strong>snapshots of reality</strong> and, for them, parameters are thus random! Instead of estimating one value for parameters (e.g., a coefficient in a linear model), they are more ambitious and try to determine the <strong>whole distribution</strong> of the parameter.</p>
@@ -454,7 +459,7 @@ that is, the probability of the intersection between the two sets divided by the
 \label{eq:bayes}
 P(A_i|B)=\frac{P(A_i)P(B|A_i)}{P(B)}= \frac{P(A_i)P(B|A_i)}{\sum_{i=1}^nP(B|A_i)P(A_i)}.
 \end{equation}\]</span></p>
-<p>Endowed with this result, we can move forward to the core topic of this section, which is the estimation of some parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> (possibly a vector) given a dataset, which we denote with <span class="math inline">\(\textbf{y}\)</span> thereby following the conventions from <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span>. This notation is suboptimal in this book nonetheless because in all other chapters, <span class="math inline">\(\textbf{y}\)</span> stands for the label of a dataset.</p>
+<p>Endowed with this result, we can move forward to the core topic of this section, which is the estimation of some parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> (possibly a vector) given a dataset, which we denote with <span class="math inline">\(\textbf{y}\)</span> thereby following the conventions from <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span>. This notation is suboptimal in this book nonetheless because in all other chapters, <span class="math inline">\(\textbf{y}\)</span> stands for the label of a dataset.</p>
 <p>In Bayesian analysis, one sophistication (compared to a frequentist approach) comes from the fact that the data is not almighty. The distribution of the parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> will be a mix between some <strong>prior</strong> distribution set by the statistician (the user, the analyst) and the empirical distribution from the data. More precisely, a simple application of Bayes’ formula yields
 <span class="math display">\[\begin{equation}
 \label{eq:bayes2}
@@ -469,7 +474,7 @@ p(\boldsymbol{\theta}| \textbf{y})=\frac{p(\boldsymbol{\theta})p(\textbf{y} |\bo
 p(\textbf{y} |\boldsymbol{\theta}, \boldsymbol{\lambda})=\prod_{i=1}^I f_{\boldsymbol{\lambda}}(y_i; \boldsymbol{\beta}), 
 \end{equation}\]</span>
 but in this case the problem becomes slightly more complex because adding new parameters changes the posterior distribution to <span class="math inline">\(p(\boldsymbol{\theta}, \boldsymbol{\lambda}|\textbf{y})\)</span>. The user must find out the joint distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> and <span class="math inline">\(\boldsymbol{\lambda}\)</span> - given <span class="math inline">\(\textbf{y}\)</span>. Because of their nested structure, these models are often called <strong>hierarchical models</strong>.</p>
-<p>Bayesian methods are widely used for portfolio choice. The rationale is that the distribution of asset returns depends on some parameter and the main issue is to determine the posterior distribution. We very briefly review a vast literature below. Bayesian asset allocation is investigated in <span class="citation">Lai et al. (<a href="#ref-lai2011mean">2011</a>)</span> (via stochastic optimization), <span class="citation">Guidolin and Liu (<a href="#ref-guidolin2016ambiguity">2016</a>)</span> and <span class="citation">Dangl and Weissensteiner (<a href="#ref-dangl2020optimal">2020</a>)</span>. Shrinkage techniques (of means and covariance matrices) are tested in <span class="citation">Frost and Savarino (<a href="#ref-frost1986empirical">1986</a>)</span>, <span class="citation">Kan and Zhou (<a href="#ref-kan2007optimal">2007</a>)</span> and <span class="citation">DeMiguel, Martı'n-Utrera, and Nogales (<a href="#ref-demiguel2015parameter">2015</a>)</span>. In a similar vein, <span class="citation">Tu and Zhou (<a href="#ref-tu2010incorporating">2010</a>)</span> build priors that are coherent with asset pricing theories. Finally, <span class="citation">Bauder et al. (<a href="#ref-bauder2020bayesian">2020</a>)</span> sample portfolio returns which allows to dervive a Bayesian optimal frontier. We invite the interested reader to also dwelve in the references that are cited within these few articles.</p>
+<p>Bayesian methods are widely used for portfolio choice. The rationale is that the distribution of asset returns depends on some parameter and the main issue is to determine the posterior distribution. We very briefly review a vast literature below. Bayesian asset allocation is investigated in <span class="citation">Lai et al. (<a href="#ref-lai2011mean" role="doc-biblioref">2011</a>)</span> (via stochastic optimization), <span class="citation">Guidolin and Liu (<a href="#ref-guidolin2016ambiguity" role="doc-biblioref">2016</a>)</span> and <span class="citation">Dangl and Weissensteiner (<a href="#ref-dangl2020optimal" role="doc-biblioref">2020</a>)</span>. Shrinkage techniques (of means and covariance matrices) are tested in <span class="citation">Frost and Savarino (<a href="#ref-frost1986empirical" role="doc-biblioref">1986</a>)</span>, <span class="citation">Kan and Zhou (<a href="#ref-kan2007optimal" role="doc-biblioref">2007</a>)</span> and <span class="citation">DeMiguel, Martı́n-Utrera, and Nogales (<a href="#ref-demiguel2015parameter" role="doc-biblioref">2015</a>)</span>. In a similar vein, <span class="citation">Tu and Zhou (<a href="#ref-tu2010incorporating" role="doc-biblioref">2010</a>)</span> build priors that are coherent with asset pricing theories. Finally, <span class="citation">Bauder et al. (<a href="#ref-bauder2020bayesian" role="doc-biblioref">2020</a>)</span> sample portfolio returns which allows to dervive a Bayesian optimal frontier. We invite the interested reader to also dwelve in the references that are cited within these few articles.</p>
 </div>
 <div id="bayesian-sampling" class="section level2">
 <h2><span class="header-section-number">9.2</span> Bayesian sampling</h2>
@@ -486,13 +491,13 @@ x_2^{m+1} &amp;=p(X_2|X_1=x_1^{m+1}, X_3=x^{m}_3, \dots, X_J=x_J^m); \\
 x_J^{m+1}&amp;= p(X_J|X_1=x_1^{m+1}, X_2=x_2^{m+1}, \dots, X_{J-1}=x_{J-1}^{m+1}).
 \end{align*}\]</span></p>
 <p>The important detail is that after each line, the value of the variable is updated. Hence, in the second line, <span class="math inline">\(X_2\)</span> is sampled with the knowledge of <span class="math inline">\(X_1=x_1^{m+1}\)</span> and in the last line, all variables except <span class="math inline">\(X_J\)</span> have been updated to their <span class="math inline">\((m+1)^{th}\)</span> state. The above algorithm is called Gibbs sampling. It relates to Markov chains because each new iteration depends only on the previous one.</p>
-<p>Under some technical assumptions, as <span class="math inline">\(T\)</span> increases, the distribution of <span class="math inline">\(\textbf{x}_T\)</span> converges to that of <span class="math inline">\(p\)</span>. The conditions under which the convergence occurs have been widely discussed in series of articles in the 1990s. The interested reader can have a look for instance at <span class="citation">Tierney (<a href="#ref-tierney1994markov">1994</a>)</span>, <span class="citation">Roberts and Smith (<a href="#ref-roberts1994simple">1994</a>)</span>, as well as at section 11.7 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span>.</p>
+<p>Under some technical assumptions, as <span class="math inline">\(T\)</span> increases, the distribution of <span class="math inline">\(\textbf{x}_T\)</span> converges to that of <span class="math inline">\(p\)</span>. The conditions under which the convergence occurs have been widely discussed in series of articles in the 1990s. The interested reader can have a look for instance at <span class="citation">Tierney (<a href="#ref-tierney1994markov" role="doc-biblioref">1994</a>)</span>, <span class="citation">Roberts and Smith (<a href="#ref-roberts1994simple" role="doc-biblioref">1994</a>)</span>, as well as at section 11.7 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span>.</p>
 <p>Sometimes, the full distribution is complex and the conditional laws are hard to determine and to sample. Then, a more general method, called Metropolis-Hastings, can be used that relies on the rejection method for the simulation of random variables.</p>
 </div>
 <div id="metropolis-hastings-sampling" class="section level3">
 <h3><span class="header-section-number">9.2.2</span> Metropolis-Hastings sampling</h3>
 <p>
-The Gibbs algorithm can be considered as a particular case of the Metropolis-Hastings (MH) method, which, in its simplest version, was introduced in <span class="citation">Metropolis and Ulam (<a href="#ref-metropolis1949monte">1949</a>)</span>. The premise is similar: the aim is to simulate random variables that follow <span class="math inline">\(p(\textbf{x})\)</span> with the ability to sample from a simpler form <span class="math inline">\(p(\textbf{x}|\textbf{y})\)</span> which gives the probability of the future state <span class="math inline">\(\textbf{x}\)</span>, given the past one <span class="math inline">\(\textbf{y}\)</span>.</p>
+The Gibbs algorithm can be considered as a particular case of the Metropolis-Hastings (MH) method, which, in its simplest version, was introduced in <span class="citation">Metropolis and Ulam (<a href="#ref-metropolis1949monte" role="doc-biblioref">1949</a>)</span>. The premise is similar: the aim is to simulate random variables that follow <span class="math inline">\(p(\textbf{x})\)</span> with the ability to sample from a simpler form <span class="math inline">\(p(\textbf{x}|\textbf{y})\)</span> which gives the probability of the future state <span class="math inline">\(\textbf{x}\)</span>, given the past one <span class="math inline">\(\textbf{y}\)</span>.</p>
 <p>Once an initial value for <span class="math inline">\(\textbf{x}\)</span> has been sampled (<span class="math inline">\(\textbf{x}_0\)</span>), each new iteration (<span class="math inline">\(m\)</span>) of the simulation takes place in three stages:</p>
 <ol style="list-style-type: decimal">
 <li>generate a candidate value <span class="math inline">\(\textbf{x}&#39;_{m+1}\)</span> from <span class="math inline">\(p(\textbf{x}|\textbf{x}_m)\)</span>,<br />
@@ -503,7 +508,7 @@ The Gibbs algorithm can be considered as a particular case of the Metropolis-Has
 </ol>
 <p>The interpretation of the acceptance ratio is not straightforward in the general case. When the sampling generator is symmetric (<span class="math inline">\(p(\textbf{x}|\textbf{y})=(\textbf{y}|\textbf{x})\)</span>), the candidate is always chosen whenever <span class="math inline">\(p(\textbf{x}&#39;_{m+1})\ge p(\textbf{x}_{m})\)</span>. If the reverse condition holds (<span class="math inline">\(p(\textbf{x}&#39;_{m+1})&lt; p(\textbf{x}_{m})\)</span>), then the candidate is retained with odds equal to <span class="math inline">\(p(\textbf{x}&#39;_{m+1})/p(\textbf{x}_{m})\)</span>, which is the ratio of likelihoods. The more likely the new proposal, the higher the odds of retaining it.</p>
 <p>Often, the first simulations are discarded in order to leave time to the chain to converge to a high probability region. This procedure (often called ‘<em>burn in</em>’) ensures that the first retained samples are located in a zone that is likely, i.e., that they are more representative of the law we are trying to simulate.</p>
-<p>For the sake of brevity, we stick to a succinct presentation here, but some additional details are outlined in section 11.2 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian">2013</a>)</span> and in chapter 7 of <span class="citation">Kruschke (<a href="#ref-kruschke2014doing">2014</a>)</span>.</p>
+<p>For the sake of brevity, we stick to a succinct presentation here, but some additional details are outlined in section 11.2 of <span class="citation">Gelman et al. (<a href="#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span> and in chapter 7 of <span class="citation">Kruschke (<a href="#ref-kruschke2014doing" role="doc-biblioref">2014</a>)</span>.</p>
 </div>
 </div>
 <div id="bayesian-linear-regression" class="section level2">
@@ -559,35 +564,35 @@ a_* &amp; = a_0 + I/2  \\
 b_* &amp;=b_0+\frac{1}{2}\left(\textbf{y}&#39;\textbf{y}+ \textbf{b}_0&#39;\boldsymbol{\Lambda}_0\textbf{b}_0+\textbf{b}_*&#39;\boldsymbol{\Lambda}_*\textbf{b}_* \right).\\
 \end{align*}\]</span></p>
 <p>This expression has two parts: the Gaussian component which relates mostly to <span class="math inline">\(\textbf{b}\)</span>, and the inverse gamma component, entirely dedicated to <span class="math inline">\(\sigma\)</span>. The mix between the prior and the data is clear. The posterior covariance matrix of the Gaussian part (<span class="math inline">\(\boldsymbol{\Lambda}_*\)</span>) is the sum between the prior and a quadratic form from the data. The posterior mean <span class="math inline">\(\textbf{b}_*\)</span> is a weighted average of the prior <span class="math inline">\(\textbf{b}_0\)</span> and the sample estimator <span class="math inline">\(\hat{\textbf{b}}\)</span>. Such blends of quantities estimated from data and a user-supplied version are often called <strong>shrinkages</strong>. For instance, the original matrix of cross-terms <span class="math inline">\(\textbf{X}&#39;\textbf{X}\)</span> is shrunk towards the prior <span class="math inline">\(\boldsymbol{\Lambda}_0\)</span>. This can be viewed as a <strong>regularization</strong> procedure: the pure fit originating from the data is mixed with some ‘external’ ingredient to give some structure to the final estimation.</p>
-<p>The interested reader can also have a look at section 16.3 of <span class="citation">Greene (<a href="#ref-greene2018econometric">2018</a>)</span> (the case of conjugate priors is treated in subsection 16.3.2).</p>
+<p>The interested reader can also have a look at section 16.3 of <span class="citation">Greene (<a href="#ref-greene2018econometric" role="doc-biblioref">2018</a>)</span> (the case of conjugate priors is treated in subsection 16.3.2).</p>
 <p>The formulae above can be long and risky to implement. Luckily, there is an R package (<span class="math inline">\(spBayes\)</span>) that performs Bayesian inference for linear regression using the conjugate priors. Below, we provide one example of how it works. To simplify the code and curtail computation times, we consider two predictors: market capitalization (size anomaly) and price-to-book ratio (value anomaly). In statistics, the <strong>precision matrix</strong> is the inverse of the covariance matrix. In the parameters, the first two priors relate to the Gaussian law and the last two to the inverse gamma distribution:
 <span class="math display">\[f_\text{invgamma}(x, \alpha, \beta)=\frac{\beta^\alpha}{\Gamma(\alpha)}x^{-1-\alpha}e^{-\frac{\beta}{x}},\]</span>
 where <span class="math inline">\(\alpha\)</span> is the shape and <span class="math inline">\(\beta\)</span> is the scale.</p>
 
-<div class="sourceCode" id="cb106"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb106-1" data-line-number="1">prior_mean &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>)                    <span class="co"># Average value of parameters (prior)</span></a>
-<a class="sourceLine" id="cb106-2" data-line-number="2">precision_mat &lt;-<span class="st"> </span><span class="kw">diag</span>(prior_mean<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">solve</span>()  <span class="co"># Inverse cov matrix of parameters (prior)</span></a>
-<a class="sourceLine" id="cb106-3" data-line-number="3">fit_lmBayes &lt;-<span class="st"> </span><span class="kw">bayesLMConjugate</span>(</a>
-<a class="sourceLine" id="cb106-4" data-line-number="4">    R1M_Usd <span class="op">~</span><span class="st"> </span>Mkt_Cap_3M_Usd <span class="op">+</span><span class="st"> </span>Pb,          <span class="co"># Model: size and value</span></a>
-<a class="sourceLine" id="cb106-5" data-line-number="5">    <span class="dt">data =</span> testing_sample,                  <span class="co"># Data source, here, the test sample</span></a>
-<a class="sourceLine" id="cb106-6" data-line-number="6">    <span class="dt">n.samples =</span> <span class="dv">2000</span>,                       <span class="co"># Number of samples used</span></a>
-<a class="sourceLine" id="cb106-7" data-line-number="7">    <span class="dt">beta.prior.mean =</span> prior_mean,           <span class="co"># Avg prior: size &amp; value rewarded &amp; unit beta</span></a>
-<a class="sourceLine" id="cb106-8" data-line-number="8">    <span class="dt">beta.prior.precision =</span> precision_mat,   <span class="co"># Precision matrix</span></a>
-<a class="sourceLine" id="cb106-9" data-line-number="9">    <span class="dt">prior.shape =</span> <span class="fl">0.5</span>,                      <span class="co"># Shape for prior distribution of sigma</span></a>
-<a class="sourceLine" id="cb106-10" data-line-number="10">    <span class="dt">prior.rate =</span> <span class="fl">0.5</span>)                       <span class="co"># Scale for prior distribution of sigma</span></a></code></pre></div>
-
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="bayes.html#cb108-1"></a>prior_mean &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.01</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>)                    <span class="co"># Average value of parameters (prior)</span></span>
+<span id="cb108-2"><a href="bayes.html#cb108-2"></a>precision_mat &lt;-<span class="st"> </span><span class="kw">diag</span>(prior_mean<span class="op">^</span><span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">solve</span>()  <span class="co"># Inverse cov matrix of parameters (prior)</span></span>
+<span id="cb108-3"><a href="bayes.html#cb108-3"></a>fit_lmBayes &lt;-<span class="st"> </span><span class="kw">bayesLMConjugate</span>(</span>
+<span id="cb108-4"><a href="bayes.html#cb108-4"></a>    R1M_Usd <span class="op">~</span><span class="st"> </span>Mkt_Cap_3M_Usd <span class="op">+</span><span class="st"> </span>Pb,          <span class="co"># Model: size and value</span></span>
+<span id="cb108-5"><a href="bayes.html#cb108-5"></a>    <span class="dt">data =</span> testing_sample,                  <span class="co"># Data source, here, the test sample</span></span>
+<span id="cb108-6"><a href="bayes.html#cb108-6"></a>    <span class="dt">n.samples =</span> <span class="dv">2000</span>,                       <span class="co"># Number of samples used</span></span>
+<span id="cb108-7"><a href="bayes.html#cb108-7"></a>    <span class="dt">beta.prior.mean =</span> prior_mean,           <span class="co"># Avg prior: size &amp; value rewarded &amp; unit beta</span></span>
+<span id="cb108-8"><a href="bayes.html#cb108-8"></a>    <span class="dt">beta.prior.precision =</span> precision_mat,   <span class="co"># Precision matrix</span></span>
+<span id="cb108-9"><a href="bayes.html#cb108-9"></a>    <span class="dt">prior.shape =</span> <span class="fl">0.5</span>,                      <span class="co"># Shape for prior distribution of sigma</span></span>
+<span id="cb108-10"><a href="bayes.html#cb108-10"></a>    <span class="dt">prior.rate =</span> <span class="fl">0.5</span>)                       <span class="co"># Scale for prior distribution of sigma</span></span></code></pre></div>
+<p></p>
 <p>In the above specification, we must also provide a prior for the constant. By default, we set its average value to 0.01, which corresponds to a 1% average monthly return. Once the model has been estimated, we can plot the distribution of coefficient estimates.</p>
 
-<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb107-1" data-line-number="1">fit_lmBayes<span class="op">$</span>p.beta.tauSq.samples[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb107-2" data-line-number="2"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(<span class="kw">c</span>(<span class="st">&quot;Intercept&quot;</span>, <span class="st">&quot;Size&quot;</span>, <span class="st">&quot;Value&quot;</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb107-3" data-line-number="3"><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> coefficient, <span class="dt">value =</span> value) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb107-4" data-line-number="4"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> coefficient)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb109-1"><a href="bayes.html#cb109-1"></a>fit_lmBayes<span class="op">$</span>p.beta.tauSq.samples[,<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>() <span class="op">%&gt;%</span></span>
+<span id="cb109-2"><a href="bayes.html#cb109-2"></a><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(<span class="kw">c</span>(<span class="st">&quot;Intercept&quot;</span>, <span class="st">&quot;Size&quot;</span>, <span class="st">&quot;Value&quot;</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb109-3"><a href="bayes.html#cb109-3"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> coefficient, <span class="dt">value =</span> value) <span class="op">%&gt;%</span></span>
+<span id="cb109-4"><a href="bayes.html#cb109-4"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> value, <span class="dt">fill =</span> coefficient)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">alpha =</span> <span class="fl">0.5</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:lmBayesplot"></span>
 <img src="ML_factor_files/figure-html/lmBayesplot-1.png" alt="Distribution of linear regression coefficients (betas)." width="320px" />
 <p class="caption">
 FIGURE 9.1: Distribution of linear regression coefficients (betas).
 </p>
 </div>
-
+<p></p>
 <p>The distribution of the constant in Figure <a href="bayes.html#fig:lmBayesplot">9.1</a> is firmly to the right with a small dispersion, hence it is solidly positive. For the size coefficient, it is the opposite; it is negative (small firms are more profitable). With regard to value, it is hard to conclude, the distribution is balanced around zero: there is no clear exposition to the price-to-book ratio variable.</p>
 </div>
 <div id="naive-bayes-classifier" class="section level2">
@@ -616,45 +621,45 @@ where <span class="math inline">\(c\)</span> is the value of the classes taken b
 \tag{9.9}
 \tilde{\textbf{x}}_k=\Phi^{-1}\left(F_{\textbf{x}_k}(\textbf{x}_k) \right),
 \end{equation}\]</span>
-will have a standard normal law whenever <span class="math inline">\(F_{\textbf{x}_k}\)</span> is not pathological. Non-pathological cases are when the cdf is continuous and strictly increasing and when observations lie in the open interval (0,1). If all features are independent, the transformation should not have any impact on the correlation structure. Otherwise, we refer to the literature on the NORmal-To-Anything (NORTA) method (see, e.g., <span class="citation">Chen (<a href="#ref-chen2001initialization">2001</a>)</span> and <span class="citation">Coqueret (<a href="#ref-coqueret2017approximate">2017</a>)</span>).</p>
+will have a standard normal law whenever <span class="math inline">\(F_{\textbf{x}_k}\)</span> is not pathological. Non-pathological cases are when the cdf is continuous and strictly increasing and when observations lie in the open interval (0,1). If all features are independent, the transformation should not have any impact on the correlation structure. Otherwise, we refer to the literature on the NORmal-To-Anything (NORTA) method (see, e.g., <span class="citation">Chen (<a href="#ref-chen2001initialization" role="doc-biblioref">2001</a>)</span> and <span class="citation">Coqueret (<a href="#ref-coqueret2017approximate" role="doc-biblioref">2017</a>)</span>).</p>
 <p>Lastly, the prior <span class="math inline">\(P[\textbf{y}]\)</span> in Equation <a href="bayes.html#eq:naivebayes3">(9.8)</a> is often either taken to be uniform across the classes (<span class="math inline">\(1/K\)</span> for all <span class="math inline">\(k\)</span>) or equal to the sample distribution.</p>
 <p>We illustrate the naive Bayes classification tool with a simple example. While the package <em>e1071</em> embeds such a classifier, the <em>naivebayes</em> library offers more options (Gaussian, Bernoulli, multinomial and nonparametric likelihoods). Below, since the features are uniformly distributed, thus the transformation in <a href="bayes.html#eq:transf">(9.9)</a> amounts to apply the Gaussian quantile function (inverse cdf).</p>
 <p>For visual clarity, we only use the small set of features.</p>
 
-<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb108-1" data-line-number="1"><span class="kw">library</span>(naivebayes)                           <span class="co"># Load package</span></a>
-<a class="sourceLine" id="cb108-2" data-line-number="2">gauss_features_train &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Build sample</span></a>
-<a class="sourceLine" id="cb108-3" data-line-number="3"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb108-4" data-line-number="4"><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb108-5" data-line-number="5"><span class="st">    `</span><span class="dt">*</span><span class="st">`</span>(<span class="fl">0.999</span>) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Features smaller than 1</span></a>
-<a class="sourceLine" id="cb108-6" data-line-number="6"><span class="st">    </span><span class="op">+</span><span class="st"> </span>(<span class="fl">0.0001</span>) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Features larger than 0</span></a>
-<a class="sourceLine" id="cb108-7" data-line-number="7"><span class="st">    </span><span class="kw">qnorm</span>() <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Inverse Gaussian cdf</span></a>
-<a class="sourceLine" id="cb108-8" data-line-number="8"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(features_short)</a>
-<a class="sourceLine" id="cb108-9" data-line-number="9">fit_NB_gauss &lt;-<span class="st"> </span><span class="kw">naive_bayes</span>(<span class="dt">x =</span> gauss_features_train,      <span class="co"># Transformed features</span></a>
-<a class="sourceLine" id="cb108-10" data-line-number="10">                            <span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Label</span></a>
-<a class="sourceLine" id="cb108-11" data-line-number="11"><span class="kw">layout</span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>), <span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>),     <span class="co"># Organize graphs</span></a>
-<a class="sourceLine" id="cb108-12" data-line-number="12">       <span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">0.9</span>,<span class="fl">0.45</span>))</a>
-<a class="sourceLine" id="cb108-13" data-line-number="13"><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb108-14" data-line-number="14"><span class="kw">plot</span>(fit_NB_gauss, <span class="dt">prob =</span> <span class="st">&quot;conditional&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="bayes.html#cb110-1"></a><span class="kw">library</span>(naivebayes)                           <span class="co"># Load package</span></span>
+<span id="cb110-2"><a href="bayes.html#cb110-2"></a>gauss_features_train &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Build sample</span></span>
+<span id="cb110-3"><a href="bayes.html#cb110-3"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb110-4"><a href="bayes.html#cb110-4"></a><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></span>
+<span id="cb110-5"><a href="bayes.html#cb110-5"></a><span class="st">    `</span><span class="dt">*</span><span class="st">`</span>(<span class="fl">0.999</span>) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Features smaller than 1</span></span>
+<span id="cb110-6"><a href="bayes.html#cb110-6"></a><span class="st">    </span><span class="op">+</span><span class="st"> </span>(<span class="fl">0.0001</span>) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Features larger than 0</span></span>
+<span id="cb110-7"><a href="bayes.html#cb110-7"></a><span class="st">    </span><span class="kw">qnorm</span>() <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># Inverse Gaussian cdf</span></span>
+<span id="cb110-8"><a href="bayes.html#cb110-8"></a><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(features_short)</span>
+<span id="cb110-9"><a href="bayes.html#cb110-9"></a>fit_NB_gauss &lt;-<span class="st"> </span><span class="kw">naive_bayes</span>(<span class="dt">x =</span> gauss_features_train,      <span class="co"># Transformed features</span></span>
+<span id="cb110-10"><a href="bayes.html#cb110-10"></a>                            <span class="dt">y =</span> training_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Label</span></span>
+<span id="cb110-11"><a href="bayes.html#cb110-11"></a><span class="kw">layout</span>(<span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>), <span class="dv">4</span>, <span class="dv">2</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>),     <span class="co"># Organize graphs</span></span>
+<span id="cb110-12"><a href="bayes.html#cb110-12"></a>       <span class="dt">widths=</span><span class="kw">c</span>(<span class="fl">0.9</span>,<span class="fl">0.45</span>))</span>
+<span id="cb110-13"><a href="bayes.html#cb110-13"></a><span class="kw">par</span>(<span class="dt">mar=</span><span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb110-14"><a href="bayes.html#cb110-14"></a><span class="kw">plot</span>(fit_NB_gauss, <span class="dt">prob =</span> <span class="st">&quot;conditional&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:NB"></span>
 <img src="ML_factor_files/figure-html/NB-1.png" alt="Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return." width="500px" />
 <p class="caption">
 FIGURE 9.2: Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return.
 </p>
 </div>
-
+<p></p>
 <p>The plots in Figure <a href="bayes.html#fig:NB">9.2</a> show the distributions of the features, conditionally on each value of the label. Essentially, those are the densities <span class="math inline">\(P[\textbf{x}_k| \textbf{y}]\)</span>. For each feature, both distributions are very similar.</p>
 <p>As usual, once the model has been trained, the accuracy of predictions can be evaluated.</p>
 
-<div class="sourceCode" id="cb109"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb109-1" data-line-number="1">gauss_features_test &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb109-2" data-line-number="2"><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb109-3" data-line-number="3"><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb109-4" data-line-number="4"><span class="st">    `</span><span class="dt">*</span><span class="st">`</span>(<span class="fl">0.999</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb109-5" data-line-number="5"><span class="st">    </span><span class="op">+</span><span class="st"> </span>(<span class="fl">0.0001</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb109-6" data-line-number="6"><span class="st">    </span><span class="kw">qnorm</span>() <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb109-7" data-line-number="7"><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(features_short)</a>
-<a class="sourceLine" id="cb109-8" data-line-number="8"><span class="kw">mean</span>(<span class="kw">predict</span>(fit_NB_gauss, gauss_features_test) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></a></code></pre></div>
+<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb111-1"><a href="bayes.html#cb111-1"></a>gauss_features_test &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb111-2"><a href="bayes.html#cb111-2"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb111-3"><a href="bayes.html#cb111-3"></a><span class="st">    </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></span>
+<span id="cb111-4"><a href="bayes.html#cb111-4"></a><span class="st">    `</span><span class="dt">*</span><span class="st">`</span>(<span class="fl">0.999</span>) <span class="op">%&gt;%</span></span>
+<span id="cb111-5"><a href="bayes.html#cb111-5"></a><span class="st">    </span><span class="op">+</span><span class="st"> </span>(<span class="fl">0.0001</span>) <span class="op">%&gt;%</span></span>
+<span id="cb111-6"><a href="bayes.html#cb111-6"></a><span class="st">    </span><span class="kw">qnorm</span>() <span class="op">%&gt;%</span></span>
+<span id="cb111-7"><a href="bayes.html#cb111-7"></a><span class="st">    `</span><span class="dt">colnames&lt;-</span><span class="st">`</span>(features_short)</span>
+<span id="cb111-8"><a href="bayes.html#cb111-8"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_NB_gauss, gauss_features_test) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></span></code></pre></div>
 <pre><code>## [1] 0.4956985</code></pre>
-
+<p></p>
 <p>The performance of the classifier is not satisfactory as it underperforms a random guess.</p>
 </div>
 <div id="BART" class="section level2">
@@ -662,7 +667,7 @@ FIGURE 9.2: Distributions of predictor variables, conditional on the class of th
 <p></p>
 <div id="general-formulation" class="section level3">
 <h3><span class="header-section-number">9.5.1</span> General formulation</h3>
-<p>Bayesian additive regression trees (BARTs) are an ensemble technique that mixes Bayesian thinking and regression trees. In spirit, they are close to the tree ensembles seen in Chapter <a href="trees.html#trees">6</a>, but they differ greatly in their implementation. In BARTs like in Bayesian regressions, the regularization comes from the prior. The original article is <span class="citation">Chipman, George, and McCulloch (<a href="#ref-chipman2010bart">2010</a>)</span> and the implementation (in R) follows <span class="citation">Sparapani, Spanbauer, and McCulloch (<a href="#ref-sparapani2019r">2019</a>)</span>.</p>
+<p>Bayesian additive regression trees (BARTs) are an ensemble technique that mixes Bayesian thinking and regression trees. In spirit, they are close to the tree ensembles seen in Chapter <a href="trees.html#trees">6</a>, but they differ greatly in their implementation. In BARTs like in Bayesian regressions, the regularization comes from the prior. The original article is <span class="citation">Chipman, George, and McCulloch (<a href="#ref-chipman2010bart" role="doc-biblioref">2010</a>)</span> and the implementation (in R) follows <span class="citation">Sparapani, Spanbauer, and McCulloch (<a href="#ref-sparapani2019r" role="doc-biblioref">2019</a>)</span>.</p>
 <p>Formally, the model is an aggregation of <span class="math inline">\(M\)</span> models, which we write as
 <span class="math display" id="eq:BART">\[\begin{equation}
 \tag{9.10}
@@ -693,7 +698,7 @@ P(\left(q_1,\textbf{w}_1\right),\dots,\left(q_M,\textbf{w}_M\right),\sigma^2)=\u
 \alpha(1+d)^{-\beta}, \quad \alpha \in (0,1), \quad \beta &gt;0.
 \end{equation}\]</span>
 The authors recommend to set <span class="math inline">\(\alpha = 0.95\)</span> and <span class="math inline">\(\beta=2\)</span>. This gives a probability of 5% to have 1 node, 55% to have 2 nodes, 28% to have 3 nodes, 9% to have 4 nodes and 3% to have 5 nodes. Thus, the aim is to force relatively shallow structures.</p>
-<p>Second, the choice of splitting variables is driven by a generalized Bernoulli (categorical) distribution which defines the odds of picking one particular feature. In the original paper by <span class="citation">Chipman, George, and McCulloch (<a href="#ref-chipman2010bart">2010</a>)</span>, the vector of probabilities was uniform (each predictor has the same odds of being chosen for the split). This vector can also be random and sampled from a more flexible Dirichlet distribution. The level of the split is drawn uniformly on the set of possible values for the chosen predictor.</p>
+<p>Second, the choice of splitting variables is driven by a generalized Bernoulli (categorical) distribution which defines the odds of picking one particular feature. In the original paper by <span class="citation">Chipman, George, and McCulloch (<a href="#ref-chipman2010bart" role="doc-biblioref">2010</a>)</span>, the vector of probabilities was uniform (each predictor has the same odds of being chosen for the split). This vector can also be random and sampled from a more flexible Dirichlet distribution. The level of the split is drawn uniformly on the set of possible values for the chosen predictor.</p>
 <p>Having determined the prior of structure of the tree <span class="math inline">\(q_m\)</span>, it remains to fix the terminal values at the leaves (<span class="math inline">\(\textbf{w}_m|q_m\)</span>). The weights at all leaves are assumed to follow a Gaussian distribution <span class="math inline">\(\mathcal{N}(\mu_\mu,\sigma_\mu^2)\)</span>, where <span class="math inline">\(\mu_\mu=(y_\text{min}+y_\text{max})/2\)</span> is the center of the range of the label values. The variance <span class="math inline">\(\sigma_\mu^2\)</span> is chosen such that <span class="math inline">\(\mu_\mu\)</span> plus or minus two times <span class="math inline">\(\sigma_\mu^2\)</span> covers 95% of the range observed in the training dataset. Those are default values and can be altered by the user.</p>
 <p>Lastly, for computational purposes similar to those of linear regressions, the parameter <span class="math inline">\(\sigma^2\)</span> (the variance of <span class="math inline">\(\epsilon\)</span> in <a href="bayes.html#eq:BART">(9.10)</a>) is assumed to follow an inverse Gamma law <span class="math inline">\(\text{IG}(\nu/2,\lambda \nu/2)\)</span> akin to that used in Bayesian regressions. The parameters are by default computed from the data so that the distribution of <span class="math inline">\(\sigma^2\)</span> is realistic and prevents overfitting. We refer to the original article, section 2.2.4, for more details on this topic.</p>
 <p>In sum, in addition to <span class="math inline">\(M\)</span> (number of trees), the prior depends on a small number of parameters: <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> (for the tree structure), <span class="math inline">\(\mu_\mu\)</span> and <span class="math inline">\(\sigma_\mu^2\)</span> (for the tree weights) and <span class="math inline">\(\nu\)</span> and <span class="math inline">\(\lambda\)</span> (for the noise term).</p>
@@ -714,7 +719,7 @@ where <span class="math inline">\(\textbf{R}_{m}=\textbf{y}-\sum_{l \neq m}\math
 - pruning a pair of terminal nodes (the opposite operation: reducing complexity);<br />
 - changing splitting rules.</p>
 <p>For simplicity, the third option is often excluded. Once the tree structure is defined (i.e., sampled), the terminal weights are independently drawn according to a Gaussian distribution <span class="math inline">\(\mathcal{N}(\mu_\mu, \sigma_\mu^2)\)</span>.</p>
-<p>After the tree is sampled, the MH principle requires that it be accepted or rejected based on some probability. This probability increases with the odds that the new tree increases the likelihood of the model. Its detailed computation is cumbersome and we refer to section 2.2 in <span class="citation">Sparapani, Spanbauer, and McCulloch (<a href="#ref-sparapani2019r">2019</a>)</span> for details on the matter.</p>
+<p>After the tree is sampled, the MH principle requires that it be accepted or rejected based on some probability. This probability increases with the odds that the new tree increases the likelihood of the model. Its detailed computation is cumbersome and we refer to section 2.2 in <span class="citation">Sparapani, Spanbauer, and McCulloch (<a href="#ref-sparapani2019r" role="doc-biblioref">2019</a>)</span> for details on the matter.</p>
 <p>Now, we must outline the overarching Gibbs procedure. First, the algorithm starts with trees that are simple nodes. Then, a specified number of loops include the following <em>sequential</em> steps:</p>
 <table>
 <colgroup>
@@ -770,20 +775,20 @@ FIGURE 9.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed t
 <h3><span class="header-section-number">9.5.4</span> Code</h3>
 <p>There are several R packages that implement BART methods: <em>BART</em>, <em>bartMachine</em> and an older one (the original), <em>BayesTree</em>. The first one is highly efficient, hence we work with it. We resort to only a few parameters, like the power and base, which are the <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> defined in <a href="bayes.html#eq:bartnode">(9.13)</a>. The program is a bit verbose and delivers a few parametric details.</p>
 
-<div class="sourceCode" id="cb111"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb111-1" data-line-number="1"><span class="kw">library</span>(BART)                                                           <span class="co"># Load package</span></a>
-<a class="sourceLine" id="cb111-2" data-line-number="2">fit_bart &lt;-<span class="st"> </span><span class="kw">gbart</span>(                                                      <span class="co"># Main function</span></a>
-<a class="sourceLine" id="cb111-3" data-line-number="3">    <span class="dt">x.train =</span> dplyr<span class="op">::</span><span class="kw">select</span>(training_sample, features_short) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Training features</span></a>
-<a class="sourceLine" id="cb111-4" data-line-number="4"><span class="st">        </span><span class="kw">data.frame</span>(), </a>
-<a class="sourceLine" id="cb111-5" data-line-number="5">    <span class="dt">y.train =</span> dplyr<span class="op">::</span><span class="kw">select</span>(training_sample, R1M_Usd) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># Training label</span></a>
-<a class="sourceLine" id="cb111-6" data-line-number="6"><span class="st">        </span><span class="kw">as.matrix</span>() ,        </a>
-<a class="sourceLine" id="cb111-7" data-line-number="7">    <span class="dt">x.test =</span> dplyr<span class="op">::</span><span class="kw">select</span>(testing_sample, features_short)  <span class="op">%&gt;%</span><span class="st">         </span><span class="co"># Testing features</span></a>
-<a class="sourceLine" id="cb111-8" data-line-number="8"><span class="st">        </span><span class="kw">data.frame</span>(),  </a>
-<a class="sourceLine" id="cb111-9" data-line-number="9">    <span class="dt">type =</span> <span class="st">&quot;wbart&quot;</span>,                                          <span class="co"># Option: label is continuous</span></a>
-<a class="sourceLine" id="cb111-10" data-line-number="10">    <span class="dt">ntree =</span> <span class="dv">20</span>,                                              <span class="co"># Number of trees in the model </span></a>
-<a class="sourceLine" id="cb111-11" data-line-number="11">    <span class="dt">nskip =</span> <span class="dv">100</span>,                                             <span class="co"># Size of burn-in sample</span></a>
-<a class="sourceLine" id="cb111-12" data-line-number="12">    <span class="dt">ndpost =</span> <span class="dv">200</span>,                                            <span class="co"># Number of posteriors drawn</span></a>
-<a class="sourceLine" id="cb111-13" data-line-number="13">    <span class="dt">power =</span> <span class="dv">2</span>,                                               <span class="co"># beta in the tree structure prior</span></a>
-<a class="sourceLine" id="cb111-14" data-line-number="14">    <span class="dt">base =</span> <span class="fl">0.95</span>)                                             <span class="co"># alpha in the tree structure prior</span></a></code></pre></div>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="bayes.html#cb113-1"></a><span class="kw">library</span>(BART)                                                           <span class="co"># Load package</span></span>
+<span id="cb113-2"><a href="bayes.html#cb113-2"></a>fit_bart &lt;-<span class="st"> </span><span class="kw">gbart</span>(                                                      <span class="co"># Main function</span></span>
+<span id="cb113-3"><a href="bayes.html#cb113-3"></a>    <span class="dt">x.train =</span> dplyr<span class="op">::</span><span class="kw">select</span>(training_sample, features_short) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Training features</span></span>
+<span id="cb113-4"><a href="bayes.html#cb113-4"></a><span class="st">        </span><span class="kw">data.frame</span>(), </span>
+<span id="cb113-5"><a href="bayes.html#cb113-5"></a>    <span class="dt">y.train =</span> dplyr<span class="op">::</span><span class="kw">select</span>(training_sample, R1M_Usd) <span class="op">%&gt;%</span><span class="st">               </span><span class="co"># Training label</span></span>
+<span id="cb113-6"><a href="bayes.html#cb113-6"></a><span class="st">        </span><span class="kw">as.matrix</span>() ,        </span>
+<span id="cb113-7"><a href="bayes.html#cb113-7"></a>    <span class="dt">x.test =</span> dplyr<span class="op">::</span><span class="kw">select</span>(testing_sample, features_short)  <span class="op">%&gt;%</span><span class="st">         </span><span class="co"># Testing features</span></span>
+<span id="cb113-8"><a href="bayes.html#cb113-8"></a><span class="st">        </span><span class="kw">data.frame</span>(),  </span>
+<span id="cb113-9"><a href="bayes.html#cb113-9"></a>    <span class="dt">type =</span> <span class="st">&quot;wbart&quot;</span>,                                          <span class="co"># Option: label is continuous</span></span>
+<span id="cb113-10"><a href="bayes.html#cb113-10"></a>    <span class="dt">ntree =</span> <span class="dv">20</span>,                                              <span class="co"># Number of trees in the model </span></span>
+<span id="cb113-11"><a href="bayes.html#cb113-11"></a>    <span class="dt">nskip =</span> <span class="dv">100</span>,                                             <span class="co"># Size of burn-in sample</span></span>
+<span id="cb113-12"><a href="bayes.html#cb113-12"></a>    <span class="dt">ndpost =</span> <span class="dv">200</span>,                                            <span class="co"># Number of posteriors drawn</span></span>
+<span id="cb113-13"><a href="bayes.html#cb113-13"></a>    <span class="dt">power =</span> <span class="dv">2</span>,                                               <span class="co"># beta in the tree structure prior</span></span>
+<span id="cb113-14"><a href="bayes.html#cb113-14"></a>    <span class="dt">base =</span> <span class="fl">0.95</span>)                                             <span class="co"># alpha in the tree structure prior</span></span></code></pre></div>
 <pre><code>## *****Calling gbart: type=1
 ## *****Data:
 ## data:n,p,np: 198128, 7, 70208
@@ -803,17 +808,17 @@ FIGURE 9.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed t
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 33s
+## time: 27s
 ## trcnt,tecnt: 200,200</code></pre>
-
+<p></p>
 <p>Once the model is trained,<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>’.</p>
 
-<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb113-1" data-line-number="1"><span class="kw">mean</span>(fit_bart<span class="op">$</span>yhat.test <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
-<pre><code>## [1] 0.5429237</code></pre>
-
+<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb115-1"><a href="bayes.html#cb115-1"></a><span class="kw">mean</span>(fit_bart<span class="op">$</span>yhat.test <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)</span></code></pre></div>
+<pre><code>## [1] 0.5433102</code></pre>
+<p></p>
 <p>The performance <em>seems</em> reasonable but is by no means not impressive. The data from all sampled trees is available in the <em>fit_bart</em> variable. It has nonetheless a complex structure (as is often the case with trees). The simplest information we can extract is the value of <span class="math inline">\(\sigma\)</span> across all 300 simulations (see Figure <a href="bayes.html#fig:bartsigplot">9.4</a>).</p>
-<div class="sourceCode" id="cb115"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb115-1" data-line-number="1"><span class="kw">data.frame</span>(<span class="dt">simulation =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">300</span>, <span class="dt">sigma =</span> fit_bart<span class="op">$</span>sigma) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb115-2" data-line-number="2"><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> simulation, <span class="dt">y =</span> sigma)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">0.7</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb117"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb117-1"><a href="bayes.html#cb117-1"></a><span class="kw">data.frame</span>(<span class="dt">simulation =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">300</span>, <span class="dt">sigma =</span> fit_bart<span class="op">$</span>sigma) <span class="op">%&gt;%</span></span>
+<span id="cb117-2"><a href="bayes.html#cb117-2"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> simulation, <span class="dt">y =</span> sigma)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>(<span class="dt">size =</span> <span class="fl">0.7</span>)</span></code></pre></div>
 <div class="figure"><span id="fig:bartsigplot"></span>
 <img src="ML_factor_files/figure-html/bartsigplot-1.png" alt="Evolution of sigma across BART simulations." width="384" />
 <p class="caption">
@@ -834,7 +839,7 @@ FIGURE 9.4: Evolution of sigma across BART simulations.
 <p>Bauder, David, Taras Bodnar, Nestor Parolya, and Wolfgang Schmid. 2020. “Bayesian Inference of the Multi-Period Optimal Portfolio for an Exponential Utility.” <em>Journal of Multivariate Analysis</em> 175: 104544.</p>
 </div>
 <div id="ref-chen2001initialization">
-<p>Chen, Huifen. 2001. “Initialization for NORTA: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4). INFORMS: 312–31.</p>
+<p>Chen, Huifen. 2001. “Initialization for NORTA: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4): 312–31.</p>
 </div>
 <div id="ref-chipman2010bart">
 <p>Chipman, Hugh A, Edward I George, and Robert E McCulloch. 2010. “BART: Bayesian Additive Regression Trees.” <em>Annals of Applied Statistics</em> 4 (1): 266–98.</p>
@@ -846,7 +851,7 @@ FIGURE 9.4: Evolution of sigma across BART simulations.
 <p>Dangl, Thomas, and Alex Weissensteiner. 2020. “Optimal Portfolios Under Time-Varying Investment Opportunities, Parameter Uncertainty, and Ambiguity Aversion.” <em>Journal of Financial and Quantitative Analysis</em> 55 (4): 1163–98.</p>
 </div>
 <div id="ref-demiguel2015parameter">
-<p>DeMiguel, Victor, Alberto Martı'n-Utrera, and Francisco J Nogales. 2015. “Parameter Uncertainty in Multiperiod Portfolio Optimization with Transaction Costs.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1443–71.</p>
+<p>DeMiguel, Victor, Alberto Martı́n-Utrera, and Francisco J Nogales. 2015. “Parameter Uncertainty in Multiperiod Portfolio Optimization with Transaction Costs.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1443–71.</p>
 </div>
 <div id="ref-frost1986empirical">
 <p>Frost, Peter A, and James E Savarino. 1986. “An Empirical Bayes Approach to Efficient Portfolio Selection.” <em>Journal of Financial and Quantitative Analysis</em> 21 (3): 293–305.</p>
@@ -888,8 +893,8 @@ FIGURE 9.4: Evolution of sigma across BART simulations.
 <div class="footnotes">
 <hr />
 <ol start="18">
-<li id="fn18"><p>This assumption can be relaxed, but the algorithms then become more complex and are out of the scope of the current book. One such example that generalizes the naive Bayes approach is <span class="citation">Friedman, Geiger, and Goldszmidt (<a href="#ref-friedman1997bayesian">1997</a>)</span>.<a href="bayes.html#fnref18" class="footnote-back">↩</a></p></li>
-<li id="fn19"><p>In the case of BARTs, the training consists exactly in the drawing of posterior samples.<a href="bayes.html#fnref19" class="footnote-back">↩</a></p></li>
+<li id="fn18"><p>This assumption can be relaxed, but the algorithms then become more complex and are out of the scope of the current book. One such example that generalizes the naive Bayes approach is <span class="citation">Friedman, Geiger, and Goldszmidt (<a href="#ref-friedman1997bayesian" role="doc-biblioref">1997</a>)</span>.<a href="bayes.html#fnref18" class="footnote-back">↩︎</a></p></li>
+<li id="fn19"><p>In the case of BARTs, the training consists exactly in the drawing of posterior samples.<a href="bayes.html#fnref19" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
