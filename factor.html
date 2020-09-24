@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-09-18" />
+<meta name="date" content="2020-09-24" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -158,9 +158,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2.1" data-path="factor.html"><a href="factor.html#challenges"><i class="fa fa-check"></i><b>3.2.1</b> Challenges</a></li>
 <li class="chapter" data-level="3.2.2" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>3.2.2</b> Simple portfolio sorts  </a></li>
 <li class="chapter" data-level="3.2.3" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>3.2.3</b> Factors</a></li>
-<li class="chapter" data-level="3.2.4" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>3.2.4</b> Fama-Macbeth regressions</a></li>
-<li class="chapter" data-level="3.2.5" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>3.2.5</b> Factor competition</a></li>
-<li class="chapter" data-level="3.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>3.2.6</b> Advanced techniques</a></li>
+<li class="chapter" data-level="3.2.4" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>3.2.4</b> Predictive regressions, sorts, and p-value issues</a></li>
+<li class="chapter" data-level="3.2.5" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>3.2.5</b> Fama-Macbeth regressions</a></li>
+<li class="chapter" data-level="3.2.6" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>3.2.6</b> Factor competition</a></li>
+<li class="chapter" data-level="3.2.7" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>3.2.7</b> Advanced techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>3.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="3.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>3.4</b> Hot topics: momentum, timing and ESG</a><ul>
@@ -768,14 +769,16 @@ FIGURE 3.2: Average returns of common anomalies (1963-2020). Source: Ken French 
 <p>Finally, we highlight the need of replicability of factor premia and echo the recent editorial by <span class="citation">Harvey (<a href="#ref-harvey2020replication" role="doc-biblioref">2020</a>)</span>. As is shown by <span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history" role="doc-biblioref">2018</a>)</span> and <span class="citation">Hou, Xue, and Zhang (<a href="#ref-hou2019replicating" role="doc-biblioref">2020</a>)</span>, many proclaimed factors are in fact very much data-dependent and often fail to deliver sustained profitability when the investment universe is altered or when the definition of variable changes (<span class="citation">Clifford Asness and Frazzini (<a href="#ref-asness2013devil" role="doc-biblioref">2013</a>)</span>).</p>
 <p>Campbell Harvey and his co-authors, in a series of papers, tried to synthesize the research on factors in <span class="citation">Harvey, Liu, and Zhu (<a href="#ref-harvey2016and" role="doc-biblioref">2016</a>)</span>, <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky" role="doc-biblioref">2019</a>)</span> and <span class="citation">Harvey and Liu (<a href="#ref-harvey2019census" role="doc-biblioref">2019</a>)</span>. His work underlines the need to set high bars for an anomaly to be called a ‘true’ factor. Increasing thresholds for <span class="math inline">\(p\)</span>-values is only a partial answer, as it is always possible to resort to data snooping in order to find an optimized strategy that will fail out-of-sample but that will deliver a <span class="math inline">\(t\)</span>-statistic larger than three (or even four). <span class="citation">Harvey (<a href="#ref-harvey2017presidential" role="doc-biblioref">2017</a>)</span> recommends to resort to a Bayesian approach which blends data-based significance with a prior into a so-called Bayesianized <em>p</em>-value (see subsection below).</p>
 <p>Following this work, researchers have continued to explore the richness of this zoo. <span class="citation">Bryzgalova, Huang, and Julliard (<a href="#ref-bryzgalova2019bayesian" role="doc-biblioref">2019</a>)</span> propose a tractable Bayesian estimation of large-dimensional factor models and evaluate all possible combinations of more than 50 factors, yielding an incredibly large number of coefficients. This combined with a Bayesianized <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk" role="doc-biblioref">1973</a>)</span> procedure allows to distinguish between pervasive and superfluous factors. <span class="citation">Chordia, Goyal, and Saretto (<a href="#ref-chordia2020anomalies" role="doc-biblioref">2020</a>)</span> use simulations of 2 million trading strategies to estimate the rate of <em>false discoveries</em>, that is, when a spurious factor is detected (type I error). They also advise to use thresholds for <em>t</em>-statistics that are well above three. In a similar vein, <span class="citation">Harvey and Liu (<a href="#ref-harvey2019false" role="doc-biblioref">2020</a>)</span> also underline that sometimes <em>true</em> anomalies may be missed because of a one time <span class="math inline">\(t\)</span>-statistic that is too low (type II error).</p>
-<p>The propensity of journals to publish positive results has led researchers to estimate the difference between reported returns and <em>true</em> returns. <span class="citation">A. Y. Chen and Zimmermann (<a href="#ref-chen2020publication" role="doc-biblioref">2020</a>)</span> call this difference the <em>publication bias</em> and estimate it as roughly 12%. That is, if a published average return is 8%, the actual value may in fact be closer to (1-12%)<em>8%=7%. Qualitatively, this estimation of 12% is smaller than the out-of-sample reduction in returns found in <span class="citation">McLean and Pontiff (<a href="#ref-mclean2016does" role="doc-biblioref">2016</a>)</span>.
-### Predictive regressions, sorts, and p-value issues
-For simplicity, we assume a simple form:
+<p>The propensity of journals to publish positive results has led researchers to estimate the difference between reported returns and <em>true</em> returns. <span class="citation">A. Y. Chen and Zimmermann (<a href="#ref-chen2020publication" role="doc-biblioref">2020</a>)</span> call this difference the <em>publication bias</em> and estimate it as roughly 12%. That is, if a published average return is 8%, the actual value may in fact be closer to (1-12%)*8%=7%. Qualitatively, this estimation of 12% is smaller than the out-of-sample reduction in returns found in <span class="citation">McLean and Pontiff (<a href="#ref-mclean2016does" role="doc-biblioref">2016</a>)</span>.</p>
+</div>
+<div id="predictive-regressions-sorts-and-p-value-issues" class="section level3">
+<h3><span class="header-section-number">3.2.4</span> Predictive regressions, sorts, and p-value issues</h3>
+<p>For simplicity, we assume a simple form:
 <span class="math display" id="eq:factsimple">\[\begin{equation}
 \tag{3.2}
 \textbf{r} = a+b\textbf{x}+\textbf{e},
 \end{equation}\]</span>
-where the vector <span class="math inline">\(\textbf{r}\)</span> stacks all returns of all stocks and <span class="math inline">\(\textbf{x}\)</span> is a lagged variable so that the regression is indeed predictive. If the estimate <span class="math inline">\(\hat{b}\)</span> is significant given a specified threshold, then it can be tempting to conclude that <span class="math inline">\(\textbf{x}\)</span> does a good job at predicting returns. Hence, long-short portfolios related to extreme values of <span class="math inline">\(\textbf{x}\)</span> (mind the sign of <span class="math inline">\(\hat{b}\)</span>) are expected to generate profits. This is unfortunately often false because <span class="math inline">\(\hat{b}\)</span> gives information on the </em>past* ability of <span class="math inline">\(\textbf{x}\)</span> to forecast returns. What happens in the future may be another story.</p>
+where the vector <span class="math inline">\(\textbf{r}\)</span> stacks all returns of all stocks and <span class="math inline">\(\textbf{x}\)</span> is a lagged variable so that the regression is indeed predictive. If the estimate <span class="math inline">\(\hat{b}\)</span> is significant given a specified threshold, then it can be tempting to conclude that <span class="math inline">\(\textbf{x}\)</span> does a good job at predicting returns. Hence, long-short portfolios related to extreme values of <span class="math inline">\(\textbf{x}\)</span> (mind the sign of <span class="math inline">\(\hat{b}\)</span>) are expected to generate profits. This is unfortunately often false because <span class="math inline">\(\hat{b}\)</span> gives information on the <em>past</em> ability of <span class="math inline">\(\textbf{x}\)</span> to forecast returns. What happens in the future may be another story.</p>
 <p>Statistical tests are also used for portfolio sorts. Assume two extreme portfolios are expected to yield very different average returns (like very small cap versus very large cap, or strong winners versus bad losers). The portfolio returns are written <span class="math inline">\(r_t^+\)</span> and <span class="math inline">\(r_t^-\)</span>. The simplest test for the mean is <span class="math inline">\(t=\sqrt{T}\frac{m_{r_+}-m_{r_-}}{\sigma_{r_+-r_-}}\)</span>, where <span class="math inline">\(T\)</span> is the number of points and <span class="math inline">\(m_{r_\pm}\)</span> denotes the means of returns and <span class="math inline">\(\sigma_{r_+-r_-}\)</span> is the standard deviation of the difference between the two series, i.e., the volatility of the long-short portfolio. In short, the statistic can be viewed as a scaled Sharpe ratio (though usually these ratios are computed for long-only portfolios) and can in turn be used to compute <span class="math inline">\(p\)</span>-values to assess the robustness of an anomaly. As is shown in <span class="citation">Linnainmaa and Roberts (<a href="#ref-linnainmaa2018history" role="doc-biblioref">2018</a>)</span> and <span class="citation">Hou, Xue, and Zhang (<a href="#ref-hou2019replicating" role="doc-biblioref">2020</a>)</span>, many factors discovered by reasearchers fail to survive in out-of-sample tests.</p>
 <p>One reason why people are overly optimistic about anomalies they detect is the widespread reverse interpretation of the <em>p</em>-value. Often, it is thought of as the probability of one hypothesis (e.g., my anomaly exists) given the data. In fact, it’s the opposite; it’s the likelihood of your data sample, knowing that the anomaly holds.
 <span class="math display">\[\begin{align*}
@@ -793,7 +796,7 @@ Thus, if the <em>t</em>-statistic is equal to 2 (corresponding to a <em>p</em>-v
 <p>The work of <span class="citation">Chinco, Neuhierl, and Weber (<a href="#ref-chinco2019estimating" role="doc-biblioref">2020</a>)</span> is very different but shares some key concepts, like the introduction of Bayesian priors in regression outputs. They show that coercing the predictive regression with an <span class="math inline">\(L^2\)</span> constraint (see the ridge regression in Chapter <a href="lasso.html#lasso">5</a>) amounts to introducing views on what the true distribution of <span class="math inline">\(b\)</span> is. The stronger the constraint, the more the estimate <span class="math inline">\(\hat{b}\)</span> will be shrunk towards zero. One key idea in their work is the assumption of a distribution for the true <span class="math inline">\(b\)</span> across many anomalies. It is assumed to be Gaussian and centered. The interesting parameter is the standard deviation: the larger it is, the more frequently significant anomalies are discovered. Notably, the authors show that this parameter changes through time and we refer to the original paper for more details on this subject.</p>
 </div>
 <div id="fama-macbeth-regressions" class="section level3">
-<h3><span class="header-section-number">3.2.4</span> Fama-Macbeth regressions</h3>
+<h3><span class="header-section-number">3.2.5</span> Fama-Macbeth regressions</h3>
 <p>
 Another detection method was proposed by <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk" role="doc-biblioref">1973</a>)</span> through a two-stage regression analysis of risk premia. The first stage is a simple estimation of the relationship (): the regressions are run on a stock-by-stock basis over the corresponding time series. The resulting estimates <span class="math inline">\(\hat{\beta}_{i,k}\)</span> are then plugged into a second series of regressions:
 <span class="math display">\[\begin{equation}
@@ -865,19 +868,19 @@ CMA
 0.008
 </td>
 <td style="text-align:right;">
-1.439
+1.437
 </td>
 <td style="text-align:right;">
-0.525
+0.523
 </td>
 <td style="text-align:right;">
-0.567
+0.566
 </td>
 <td style="text-align:right;">
-1.006
+1.004
 </td>
 <td style="text-align:right;">
--0.301
+-0.302
 </td>
 </tr>
 <tr>
@@ -888,19 +891,19 @@ CMA
 -0.002
 </td>
 <td style="text-align:right;">
-0.791
+0.792
 </td>
 <td style="text-align:right;">
-1.084
+1.082
 </td>
 <td style="text-align:right;">
-0.854
+0.853
 </td>
 <td style="text-align:right;">
-0.220
+0.218
 </td>
 <td style="text-align:right;">
--0.423
+-0.418
 </td>
 </tr>
 <tr>
@@ -911,19 +914,19 @@ CMA
 0.005
 </td>
 <td style="text-align:right;">
-0.364
+0.362
 </td>
 <td style="text-align:right;">
-0.305
+0.303
 </td>
 <td style="text-align:right;">
--0.072
+-0.068
 </td>
 <td style="text-align:right;">
-0.589
+0.583
 </td>
 <td style="text-align:right;">
-0.267
+0.263
 </td>
 </tr>
 <tr>
@@ -934,19 +937,19 @@ CMA
 0.006
 </td>
 <td style="text-align:right;">
-0.414
+0.413
 </td>
 <td style="text-align:right;">
-0.682
+0.679
 </td>
 <td style="text-align:right;">
-0.284
+0.287
 </td>
 <td style="text-align:right;">
-0.294
+0.289
 </td>
 <td style="text-align:right;">
-0.119
+0.118
 </td>
 </tr>
 <tr>
@@ -957,19 +960,19 @@ CMA
 0.005
 </td>
 <td style="text-align:right;">
-0.810
+0.809
 </td>
 <td style="text-align:right;">
-0.682
+0.677
 </td>
 <td style="text-align:right;">
-1.047
+1.048
 </td>
 <td style="text-align:right;">
-0.008
+0.001
 </td>
 <td style="text-align:right;">
-0.147
+0.148
 </td>
 </tr>
 <tr>
@@ -980,19 +983,19 @@ CMA
 0.000
 </td>
 <td style="text-align:right;">
-0.937
+0.936
 </td>
 <td style="text-align:right;">
-0.120
+0.116
 </td>
 <td style="text-align:right;">
 0.494
 </td>
 <td style="text-align:right;">
--0.247
+-0.253
 </td>
 <td style="text-align:right;">
-0.085
+0.086
 </td>
 </tr>
 </tbody>
@@ -1049,19 +1052,19 @@ CMA
 1
 </td>
 <td style="text-align:right;">
-1.4385013
+1.4374844
 </td>
 <td style="text-align:right;">
-0.5250608
+0.5226848
 </td>
 <td style="text-align:right;">
-0.5670710
+0.5660348
 </td>
 <td style="text-align:right;">
-1.0063552
+1.0037046
 </td>
 <td style="text-align:right;">
--0.3013830
+-0.3020368
 </td>
 <td style="text-align:right;">
 -0.036
@@ -1078,19 +1081,19 @@ CMA
 3
 </td>
 <td style="text-align:right;">
-0.7912013
+0.7916299
 </td>
 <td style="text-align:right;">
-1.0843156
+1.0824165
 </td>
 <td style="text-align:right;">
-0.8537160
+0.8526436
 </td>
 <td style="text-align:right;">
-0.2200027
+0.2184814
 </td>
 <td style="text-align:right;">
--0.4228649
+-0.4183512
 </td>
 <td style="text-align:right;">
 0.077
@@ -1107,19 +1110,19 @@ CMA
 4
 </td>
 <td style="text-align:right;">
-0.3640111
+0.3619969
 </td>
 <td style="text-align:right;">
-0.3047691
+0.3026351
 </td>
 <td style="text-align:right;">
--0.0718168
+-0.0676039
 </td>
 <td style="text-align:right;">
-0.5885412
+0.5833157
 </td>
 <td style="text-align:right;">
-0.2666079
+0.2630963
 </td>
 <td style="text-align:right;">
 -0.016
@@ -1136,19 +1139,19 @@ CMA
 7
 </td>
 <td style="text-align:right;">
-0.4143382
+0.4130331
 </td>
 <td style="text-align:right;">
-0.6817766
+0.6788700
 </td>
 <td style="text-align:right;">
-0.2839943
+0.2870320
 </td>
 <td style="text-align:right;">
-0.2941394
+0.2891410
 </td>
 <td style="text-align:right;">
-0.1192620
+0.1179618
 </td>
 <td style="text-align:right;">
 -0.009
@@ -1165,19 +1168,19 @@ CMA
 9
 </td>
 <td style="text-align:right;">
-0.8104441
+0.8093698
 </td>
 <td style="text-align:right;">
-0.6823054
+0.6765107
 </td>
 <td style="text-align:right;">
-1.0466025
+1.0479583
 </td>
 <td style="text-align:right;">
-0.0084947
+0.0005470
 </td>
 <td style="text-align:right;">
-0.1467478
+0.1480336
 </td>
 <td style="text-align:right;">
 0.032
@@ -1194,19 +1197,19 @@ CMA
 11
 </td>
 <td style="text-align:right;">
-0.9368472
+0.9356977
 </td>
 <td style="text-align:right;">
-0.1197519
+0.1158856
 </td>
 <td style="text-align:right;">
-0.4939980
+0.4937826
 </td>
 <td style="text-align:right;">
--0.2465448
+-0.2533245
 </td>
 <td style="text-align:right;">
-0.0849646
+0.0858436
 </td>
 <td style="text-align:right;">
 0.144
@@ -1276,16 +1279,16 @@ CMA
 0.037
 </td>
 <td style="text-align:right;">
-0.227
+0.229
 </td>
 <td style="text-align:right;">
 -0.157
 </td>
 <td style="text-align:right;">
--0.276
+-0.277
 </td>
 <td style="text-align:right;">
-0.044
+0.045
 </td>
 </tr>
 <tr>
@@ -1296,7 +1299,7 @@ CMA
 0.020
 </td>
 <td style="text-align:right;">
-0.081
+0.080
 </td>
 <td style="text-align:right;">
 -0.134
@@ -1339,7 +1342,7 @@ CMA
 2000-04-30
 </td>
 <td style="text-align:right;">
-0.127
+0.126
 </td>
 <td style="text-align:right;">
 -0.132
@@ -1348,10 +1351,10 @@ CMA
 -0.104
 </td>
 <td style="text-align:right;">
-0.088
+0.087
 </td>
 <td style="text-align:right;">
-0.117
+0.119
 </td>
 <td style="text-align:right;">
 -0.002
@@ -1362,7 +1365,7 @@ CMA
 2000-05-31
 </td>
 <td style="text-align:right;">
-0.042
+0.043
 </td>
 <td style="text-align:right;">
 -0.005
@@ -1371,13 +1374,13 @@ CMA
 0.075
 </td>
 <td style="text-align:right;">
--0.113
+-0.112
 </td>
 <td style="text-align:right;">
--0.080
+-0.081
 </td>
 <td style="text-align:right;">
--0.045
+-0.046
 </td>
 </tr>
 <tr>
@@ -1426,7 +1429,7 @@ FIGURE 3.3: Time series plot of gammas (premia) in Fama-Macbeth regressions.
 <p>The two spikes at the end of the sample signal potential colinearity issues; two factors seem to compensate in an unclear aggregate effect. This underlines the usefulness of penalized estimates (see Chapter <a href="lasso.html#lasso">5</a>).</p>
 </div>
 <div id="factor-competition" class="section level3">
-<h3><span class="header-section-number">3.2.5</span> Factor competition</h3>
+<h3><span class="header-section-number">3.2.6</span> Factor competition</h3>
 <p>
 The core purpose of factors is to explain the cross-section of stock returns. For theoretical and practical reasons, it is preferable if redundancies within factors are avoided. Indeed, redundancies imply collinearity which is known to perturb estimates (<span class="citation">Belsley, Kuh, and Welsch (<a href="#ref-belsley2005regression" role="doc-biblioref">2005</a>)</span>). In addition, when asset managers decompose the performance of their returns into factors, overlaps (high absolute correlations) between factors yield exposures that are less interpretable; positive and negative exposures compensate each other spuriously.</p>
 <p>A simple protocol to sort out redundant factors is to run regressions of each factor against all others:
@@ -1521,7 +1524,7 @@ NA
 0.104
 </td>
 <td style="text-align:left;">
--0.368 (***)
+-0.367 (***)
 </td>
 <td style="text-align:left;">
 -0.911 (***)
@@ -1541,13 +1544,13 @@ SMB
 NA
 </td>
 <td style="text-align:left;">
-0.072
+0.073
 </td>
 <td style="text-align:left;">
 -0.43 (***)
 </td>
 <td style="text-align:left;">
--0.127
+-0.128
 </td>
 </tr>
 <tr>
@@ -1561,13 +1564,13 @@ HML
 0.028
 </td>
 <td style="text-align:left;">
-0.038
+0.039
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-0.148 (***)
+0.149 (***)
 </td>
 <td style="text-align:left;">
 1.02 (***)
@@ -1581,19 +1584,19 @@ RMW
 0.004 (***)
 </td>
 <td style="text-align:left;">
--0.096 (***)
+-0.095 (***)
 </td>
 <td style="text-align:left;">
--0.219 (***)
+-0.22 (***)
 </td>
 <td style="text-align:left;">
-0.143 (***)
+0.144 (***)
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
--0.287 (***)
+-0.288 (***)
 </td>
 </tr>
 <tr>
@@ -1613,7 +1616,7 @@ CMA
 0.456 (***)
 </td>
 <td style="text-align:left;">
--0.133 (***)
+-0.134 (***)
 </td>
 <td style="text-align:left;">
 NA
@@ -1627,7 +1630,7 @@ NA
 <p>Lastly, even the optimal number of factors is a subject of disagreement among conclusions of recent work. While the traditional literature focuses on a limited number (3-5) of factors, more recent research by <span class="citation">DeMiguel et al. (<a href="#ref-martin2018transaction" role="doc-biblioref">2020</a>)</span>, <span class="citation">He, Huang, and Zhou (<a href="#ref-he2019factors" role="doc-biblioref">2020</a>)</span>, <span class="citation">Kozak, Nagel, and Santosh (<a href="#ref-kozak2019shrinking" role="doc-biblioref">2019</a>)</span> and <span class="citation">Freyberger, Neuhierl, and Weber (<a href="#ref-freyberger2020dissecting" role="doc-biblioref">2020</a>)</span> advocates the need to use at least 15 or more (in contrast, <span class="citation">Kelly, Pruitt, and Su (<a href="#ref-kelly2019characteristics" role="doc-biblioref">2019</a>)</span> argue that a small number of <strong>latent</strong> factors may suffice). <span class="citation">Green, Hand, and Zhang (<a href="#ref-green2017characteristics" role="doc-biblioref">2017</a>)</span> even find that the number of characteristics that help explain the cross-section of returns varies in time. </p>
 </div>
 <div id="advanced-techniques" class="section level3">
-<h3><span class="header-section-number">3.2.6</span> Advanced techniques</h3>
+<h3><span class="header-section-number">3.2.7</span> Advanced techniques</h3>
 <p>The ever increasing number of factors combined to their importance in asset management has led researchers to craft more subtle methods in order to ``organize’’ the so-called <em>factor zoo</em> and, more importantly, to detect spurious anomalies and compare different asset pricing model specifications. We list a few of them below.
 - <span class="citation">Feng, Giglio, and Xiu (<a href="#ref-feng2019taming" role="doc-biblioref">2020</a>)</span> combine LASSO selection with Fama-MacBeth regressions to test if new factor models are worth it. They quantify the gain of adding one new factor to a set of predefined factors and show that many factors reported in papers published in the 2010 decade do not add much incremental value;<br />
 - <span class="citation">C. Harvey and Liu (<a href="#ref-harvey2017lucky" role="doc-biblioref">2019</a>)</span> (in a similar vein) use bootstrap on orthogonalized factors. They make the case that correlations among predictors is a major issue and their method aims at solving this problem. Their lengthy procedure seeks to test if maximal additional contribution of a candidate variable is significant;<br />
