@@ -484,7 +484,7 @@ are the average values of <span class="math inline">\(Y\)</span>, conditional on
 <div id="treeclass" class="section level3">
 <h3><span class="header-section-number">6.1.2</span> Further details on classification</h3>
 <p>
-Classification exercises are somewhat more complex than regression tasks. The most obvious difference is the measure of dispersion or heterogeneity. This loss function which must take into account the fact that the final output is not a simple number, but a vector. The output <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> has as many elements as there are categories in the label and each element is the probability that the instance belongs to the corresponding category.</p>
+Classification exercises are somewhat more complex than regression tasks. The most obvious difference is the measure of dispersion or heterogeneity. This loss function must take into account the fact that the final output is not a simple number, but a vector. The output <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> has as many elements as there are categories in the label and each element is the probability that the instance belongs to the corresponding category.</p>
 <p>For instance, if there are 3 categories: <em>buy</em>, <em>hold</em> and <em>sell</em>, then each instance would have a label with as many columns as there are classes. Following our example, one label would be (1,0,0) for a <em>buy</em> position for instance. We refer to Section <a href="Data.html#categorical-labels">4.5.2</a> for a introduction on this topic.</p>
 <p>Inside a tree, labels are aggregated at each cluster level. A typical output would look like (0.6,0.1,0.3): they are the proportions of each class represented within the cluster. In this case, the cluster has 60% of <em>buy</em>, 10% of <em>hold</em> and 30% of <em>sell</em>.</p>
 <p>The loss function must take into account this multidimensionality of the label. When building trees, since the aim is to favor homogeneity, the loss penalizes outputs that are not concentrated towards one class. Indeed, facing a diversified output of (0.3,0.4,0.3) is much harder to handle than the concentrated case of (0.8,0.1,0.1).</p>
@@ -497,7 +497,7 @@ Classification exercises are somewhat more complex than regression tasks. The mo
 <li>entropy: <span class="math inline">\(-\sum_{j=1}^J\log(p_j)p_j.\)</span></li>
 </ul>
 <p>The Gini index is nothing but one minus the Herfindahl index which measures the diversification of a portfolio. Trees seek partitions that are the least diversified. The minimum value of the Gini index is zero and reached when one <span class="math inline">\(p_j=1\)</span> and all others are equal to zero. The maximum value is equal to <span class="math inline">\(1-1/J\)</span> and is reached when all <span class="math inline">\(p_j=1/J\)</span>. Similar relationships hold for the other two losses. One drawback of the misclassification error is its lack of differentiability which explains why the other two options are often favored.</p>
-<p>Once the tree is grown, new instances automatically belong to one final leaf. This leaf is associated to the proportions of classes it nests. Usually, to make a prediction, the class with hightest proportion (or probability) is chosen when a new instance is associated with the leaf.</p>
+<p>Once the tree is grown, new instances automatically belong to one final leaf. This leaf is associated to the proportions of classes it nests. Usually, to make a prediction, the class with highest proportion (or probability) is chosen when a new instance is associated with the leaf.</p>
 </div>
 <div id="pruning-criteria" class="section level3">
 <h3><span class="header-section-number">6.1.3</span> Pruning criteria</h3>
@@ -554,7 +554,7 @@ FIGURE 6.2: Simple characteristics-based tree. The dependent variable is the 1 m
 </li>
 <li>have a 3-month market capitalization score above 0.16;<br />
 </li>
-<li>have a score of average daily volume over the past 3 months above 0.085.</li>
+<li>have a score of average daily volume over the past 3 months above 0.85.</li>
 </ul>
 <p>Notice that one peculiarity of trees is their possible heterogeneity in cluster sizes. Sometimes, a few clusters gather almost all of the observations while a few small groups embed some outliers. This is not a favorable property of trees, as small groups are more likely to be flukes and may fail to generalize out-of-sample.</p>
 <p>This is why we imposed restrictions during the construction of the tree. The first one (minbucket = 3500 in the code) imposes that each cluster consists of at least 3500 instances. The second one (minsplit) further imposes that a cluster comprises at least 8000 observations in order to pursue the splitting process. These values logically depend on the size of the training sample. The cp = 0.0001 parameter in the code requires any split to reduce the loss below 0.9999 times its original value before the split. Finally, the maximum depth of three essentially means that there are at most three splits between the root of the tree and any terminal leaf.</p>
@@ -566,7 +566,7 @@ FIGURE 6.2: Simple characteristics-based tree. The dependent variable is the 1 m
 ## 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066</code></pre>
 <p></p>
 <p>Given the figure, we immediately conclude that these first six instances all belong to the second cluster (starting from the left).</p>
-<p>As a verification of the first splits, we plot the smoothed average of future returns, conditionally on market capitalization, past return and trading volume.</p>
+<p>As a verification of the first splits, we plot the smoothed average of future returns, conditionally on market capitalization, price to book and trading volume.</p>
 
 <div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="trees.html#cb48-1"></a>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
 <span id="cb48-2"><a href="trees.html#cb48-2"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_3M_Usd, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
