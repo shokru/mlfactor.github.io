@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-09-18" />
+<meta name="date" content="2020-10-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -158,9 +158,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="3.2.1" data-path="factor.html"><a href="factor.html#challenges"><i class="fa fa-check"></i><b>3.2.1</b> Challenges</a></li>
 <li class="chapter" data-level="3.2.2" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>3.2.2</b> Simple portfolio sorts  </a></li>
 <li class="chapter" data-level="3.2.3" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>3.2.3</b> Factors</a></li>
-<li class="chapter" data-level="3.2.4" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>3.2.4</b> Fama-Macbeth regressions</a></li>
-<li class="chapter" data-level="3.2.5" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>3.2.5</b> Factor competition</a></li>
-<li class="chapter" data-level="3.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>3.2.6</b> Advanced techniques</a></li>
+<li class="chapter" data-level="3.2.4" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>3.2.4</b> Predictive regressions, sorts, and p-value issues</a></li>
+<li class="chapter" data-level="3.2.5" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>3.2.5</b> Fama-Macbeth regressions</a></li>
+<li class="chapter" data-level="3.2.6" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>3.2.6</b> Factor competition</a></li>
+<li class="chapter" data-level="3.2.7" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>3.2.7</b> Advanced techniques</a></li>
 </ul></li>
 <li class="chapter" data-level="3.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>3.3</b> Factors or characteristics?</a></li>
 <li class="chapter" data-level="3.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>3.4</b> Hot topics: momentum, timing and ESG</a><ul>
@@ -484,7 +485,7 @@ are the average values of <span class="math inline">\(Y\)</span>, conditional on
 <div id="treeclass" class="section level3">
 <h3><span class="header-section-number">6.1.2</span> Further details on classification</h3>
 <p>
-Classification exercises are somewhat more complex than regression tasks. The most obvious difference is the measure of dispersion or heterogeneity. This loss function must take into account the fact that the final output is not a simple number, but a vector. The output <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> has as many elements as there are categories in the label and each element is the probability that the instance belongs to the corresponding category.</p>
+Classification exercises are somewhat more complex than regression tasks. The most obvious difference is the measure of dispersion or heterogeneity. This loss function which must take into account the fact that the final output is not a simple number, but a vector. The output <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> has as many elements as there are categories in the label and each element is the probability that the instance belongs to the corresponding category.</p>
 <p>For instance, if there are 3 categories: <em>buy</em>, <em>hold</em> and <em>sell</em>, then each instance would have a label with as many columns as there are classes. Following our example, one label would be (1,0,0) for a <em>buy</em> position for instance. We refer to Section <a href="Data.html#categorical-labels">4.5.2</a> for a introduction on this topic.</p>
 <p>Inside a tree, labels are aggregated at each cluster level. A typical output would look like (0.6,0.1,0.3): they are the proportions of each class represented within the cluster. In this case, the cluster has 60% of <em>buy</em>, 10% of <em>hold</em> and 30% of <em>sell</em>.</p>
 <p>The loss function must take into account this multidimensionality of the label. When building trees, since the aim is to favor homogeneity, the loss penalizes outputs that are not concentrated towards one class. Indeed, facing a diversified output of (0.3,0.4,0.3) is much harder to handle than the concentrated case of (0.8,0.1,0.1).</p>
@@ -525,20 +526,19 @@ When building a tree, the splitting process can be pursued until the full tree i
 <div id="code-and-interpretation" class="section level3">
 <h3><span class="header-section-number">6.1.4</span> Code and interpretation</h3>
 <p>We start with a simple tree and its interpretation. We use the package <em>rpart</em> and its plotting engine <em>rpart.plot</em>. The label is the future 1-month return and the features are all predictors available in the sample. The tree is trained on the full sample.</p>
-<pre><code>## Loading required package: rpart</code></pre>
 
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="trees.html#cb45-1"></a><span class="kw">library</span>(rpart)              <span class="co"># Tree package  </span></span>
-<span id="cb45-2"><a href="trees.html#cb45-2"></a><span class="kw">library</span>(rpart.plot)         <span class="co"># Tree plot package</span></span>
-<span id="cb45-3"><a href="trees.html#cb45-3"></a>formula &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;R1M_Usd ~&quot;</span>, <span class="kw">paste</span>(features, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)) <span class="co"># Defines the model </span></span>
-<span id="cb45-4"><a href="trees.html#cb45-4"></a>formula &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula)                                   <span class="co"># Forcing formula object</span></span>
-<span id="cb45-5"><a href="trees.html#cb45-5"></a>fit_tree &lt;-<span class="st"> </span><span class="kw">rpart</span>(formula,</span>
-<span id="cb45-6"><a href="trees.html#cb45-6"></a>             <span class="dt">data =</span> data_ml,     <span class="co"># Data source: full sample</span></span>
-<span id="cb45-7"><a href="trees.html#cb45-7"></a>             <span class="dt">minbucket =</span> <span class="dv">3500</span>,   <span class="co"># Min nb of obs required in each terminal node (leaf)</span></span>
-<span id="cb45-8"><a href="trees.html#cb45-8"></a>             <span class="dt">minsplit =</span> <span class="dv">8000</span>,    <span class="co"># Min nb of obs required to continue splitting</span></span>
-<span id="cb45-9"><a href="trees.html#cb45-9"></a>             <span class="dt">cp =</span> <span class="fl">0.0001</span>,        <span class="co"># Precision: smaller = more leaves</span></span>
-<span id="cb45-10"><a href="trees.html#cb45-10"></a>             <span class="dt">maxdepth =</span> <span class="dv">3</span>        <span class="co"># Maximum depth (i.e. tree levels)</span></span>
-<span id="cb45-11"><a href="trees.html#cb45-11"></a>             ) </span>
-<span id="cb45-12"><a href="trees.html#cb45-12"></a><span class="kw">rpart.plot</span>(fit_tree)             <span class="co"># Plot the tree</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="trees.html#cb44-1"></a><span class="kw">library</span>(rpart)              <span class="co"># Tree package  </span></span>
+<span id="cb44-2"><a href="trees.html#cb44-2"></a><span class="kw">library</span>(rpart.plot)         <span class="co"># Tree plot package</span></span>
+<span id="cb44-3"><a href="trees.html#cb44-3"></a>formula &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;R1M_Usd ~&quot;</span>, <span class="kw">paste</span>(features, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)) <span class="co"># Defines the model </span></span>
+<span id="cb44-4"><a href="trees.html#cb44-4"></a>formula &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula)                                   <span class="co"># Forcing formula object</span></span>
+<span id="cb44-5"><a href="trees.html#cb44-5"></a>fit_tree &lt;-<span class="st"> </span><span class="kw">rpart</span>(formula,</span>
+<span id="cb44-6"><a href="trees.html#cb44-6"></a>             <span class="dt">data =</span> data_ml,     <span class="co"># Data source: full sample</span></span>
+<span id="cb44-7"><a href="trees.html#cb44-7"></a>             <span class="dt">minbucket =</span> <span class="dv">3500</span>,   <span class="co"># Min nb of obs required in each terminal node (leaf)</span></span>
+<span id="cb44-8"><a href="trees.html#cb44-8"></a>             <span class="dt">minsplit =</span> <span class="dv">8000</span>,    <span class="co"># Min nb of obs required to continue splitting</span></span>
+<span id="cb44-9"><a href="trees.html#cb44-9"></a>             <span class="dt">cp =</span> <span class="fl">0.0001</span>,        <span class="co"># Precision: smaller = more leaves</span></span>
+<span id="cb44-10"><a href="trees.html#cb44-10"></a>             <span class="dt">maxdepth =</span> <span class="dv">3</span>        <span class="co"># Maximum depth (i.e. tree levels)</span></span>
+<span id="cb44-11"><a href="trees.html#cb44-11"></a>             ) </span>
+<span id="cb44-12"><a href="trees.html#cb44-12"></a><span class="kw">rpart.plot</span>(fit_tree)             <span class="co"># Plot the tree</span></span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:rpart1"></span>
 <img src="ML_factor_files/figure-html/rpart1-1.png" alt="Simple characteristics-based tree. The dependent variable is the 1 month future return." width="400px" />
 <p class="caption">
@@ -561,18 +561,18 @@ FIGURE 6.2: Simple characteristics-based tree. The dependent variable is the 1 m
 <p>The complexity of the tree (measured by the number of terminal leaves) is a decreasing function of minbucket, minsplit and cp and an increasing function of maximum depth.</p>
 <p>Once the model has been trained (i.e., the tree is grown), a prediction for any instance is the average value of the label within the cluster where the instance should land.</p>
 
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="trees.html#cb46-1"></a><span class="kw">predict</span>(fit_tree, data_ml[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,]) <span class="co"># Test (prediction) on the first six instances of the sample</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="trees.html#cb45-1"></a><span class="kw">predict</span>(fit_tree, data_ml[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>,]) <span class="co"># Test (prediction) on the first six instances of the sample</span></span></code></pre></div>
 <pre><code>##          1          2          3          4          5          6 
 ## 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066</code></pre>
 <p></p>
 <p>Given the figure, we immediately conclude that these first six instances all belong to the second cluster (starting from the left).</p>
-<p>As a verification of the first splits, we plot the smoothed average of future returns, conditionally on market capitalization, price to book and trading volume.</p>
+<p>As a verification of the first splits, we plot the smoothed average of future returns, conditionally on market capitalization, price-to-book ratio and trading volume.</p>
 
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="trees.html#cb48-1"></a>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
-<span id="cb48-2"><a href="trees.html#cb48-2"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_3M_Usd, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb48-3"><a href="trees.html#cb48-3"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Pb, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Price-to-Book&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb48-4"><a href="trees.html#cb48-4"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Advt_3M_Usd, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Volume&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
-<span id="cb48-5"><a href="trees.html#cb48-5"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Predictor&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dv">11</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">&quot;Characteristic&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="trees.html#cb47-1"></a>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>() <span class="op">+</span></span>
+<span id="cb47-2"><a href="trees.html#cb47-2"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Mkt_Cap_3M_Usd, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Market Cap&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb47-3"><a href="trees.html#cb47-3"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Pb, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Price-to-Book&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb47-4"><a href="trees.html#cb47-4"></a><span class="st">    </span><span class="kw">stat_smooth</span>(<span class="kw">aes</span>(<span class="dt">x =</span> Advt_3M_Usd, <span class="dt">y =</span> R1M_Usd, <span class="dt">color =</span> <span class="st">&quot;Volume&quot;</span>), <span class="dt">se =</span> <span class="ot">FALSE</span>) <span class="op">+</span></span>
+<span id="cb47-5"><a href="trees.html#cb47-5"></a><span class="st">    </span><span class="kw">xlab</span>(<span class="st">&quot;Predictor&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">coord_fixed</span>(<span class="dv">11</span>) <span class="op">+</span><span class="st"> </span><span class="kw">labs</span>(<span class="dt">color =</span> <span class="st">&quot;Characteristic&quot;</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:rpart3mkt"></span>
 <img src="ML_factor_files/figure-html/rpart3mkt-1.png" alt="Average of 1-month future returns, conditionally on market capitalization, price-to-book and volatility scores." width="400px" />
 <p class="caption">
@@ -583,16 +583,16 @@ FIGURE 6.3: Average of 1-month future returns, conditionally on market capitaliz
 <p>The graph shows the relevance of clusters based on market capitalizations and price-to-book ratios. For low score values of these two features, the average return is high (close to +4% on a monthly basis on the left of the curves). The pattern is more pronounced compared to volume for instance.</p>
 <p>Finally, we assess the predictive quality of a single tree on the testing set (the tree is grown on the training set). We use a deeper tree, with a maximum depth of five.</p>
 
-<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="trees.html#cb49-1"></a>fit_tree2 &lt;-<span class="st"> </span><span class="kw">rpart</span>(formula, </span>
-<span id="cb49-2"><a href="trees.html#cb49-2"></a>             <span class="dt">data =</span> training_sample,     <span class="co"># Data source: training sample</span></span>
-<span id="cb49-3"><a href="trees.html#cb49-3"></a>             <span class="dt">minbucket =</span> <span class="dv">1500</span>,           <span class="co"># Min nb of obs required in each terminal node (leaf)</span></span>
-<span id="cb49-4"><a href="trees.html#cb49-4"></a>             <span class="dt">minsplit =</span> <span class="dv">4000</span>,            <span class="co"># Min nb of obs required to continue splitting</span></span>
-<span id="cb49-5"><a href="trees.html#cb49-5"></a>             <span class="dt">cp =</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller cp = more leaves</span></span>
-<span id="cb49-6"><a href="trees.html#cb49-6"></a>             <span class="dt">maxdepth =</span> <span class="dv">5</span>                <span class="co"># Maximum depth (i.e. tree levels)</span></span>
-<span id="cb49-7"><a href="trees.html#cb49-7"></a>             ) </span>
-<span id="cb49-8"><a href="trees.html#cb49-8"></a><span class="kw">mean</span>((<span class="kw">predict</span>(fit_tree2, testing_sample) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="trees.html#cb48-1"></a>fit_tree2 &lt;-<span class="st"> </span><span class="kw">rpart</span>(formula, </span>
+<span id="cb48-2"><a href="trees.html#cb48-2"></a>             <span class="dt">data =</span> training_sample,     <span class="co"># Data source: training sample</span></span>
+<span id="cb48-3"><a href="trees.html#cb48-3"></a>             <span class="dt">minbucket =</span> <span class="dv">1500</span>,           <span class="co"># Min nb of obs required in each terminal node (leaf)</span></span>
+<span id="cb48-4"><a href="trees.html#cb48-4"></a>             <span class="dt">minsplit =</span> <span class="dv">4000</span>,            <span class="co"># Min nb of obs required to continue splitting</span></span>
+<span id="cb48-5"><a href="trees.html#cb48-5"></a>             <span class="dt">cp =</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller cp = more leaves</span></span>
+<span id="cb48-6"><a href="trees.html#cb48-6"></a>             <span class="dt">maxdepth =</span> <span class="dv">5</span>                <span class="co"># Maximum depth (i.e. tree levels)</span></span>
+<span id="cb48-7"><a href="trees.html#cb48-7"></a>             ) </span>
+<span id="cb48-8"><a href="trees.html#cb48-8"></a><span class="kw">mean</span>((<span class="kw">predict</span>(fit_tree2, testing_sample) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></span></code></pre></div>
 <pre><code>## [1] 0.03700039</code></pre>
-<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="trees.html#cb51-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_tree2, testing_sample) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="trees.html#cb50-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_tree2, testing_sample) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
 <pre><code>## [1] 0.5416619</code></pre>
 <p></p>
 <p>The mean squared error is usually hard to interpret. It’s not easy to map an error on returns into the impact on investment decisions. The hit ratio is a more intuitive indicator because it evaluates the proportion of correct guesses (and hence profitable investments). Obviously, it is not perfect: 55% of small gains can be mitigated by 45% of large losses. Nonetheless, it is a popular metric and moreover it corresponds to the usual accuracy measure often computed in binary classification exercises. Here, an accuracy of 0.542 is satisfactory. Even if any number above 50% may seem valuable, it must not be forgotten that transaction costs will curtail benefits. Hence, the benchmark threshold is probably at least at 52%.</p>
@@ -631,17 +631,17 @@ where the left part is the average number of votes based on the <span class="mat
 <p>Several implementations of random forests exist. For simplicity, we choose to work with the original R library, but another choice could be the one developed by h2o, which is a highly efficient meta-environment for machine learning (coded in Java).</p>
 <p>The syntax of randomForest follows that of many ML libraries. The full list of options for some random forest implementations is prohibitively large.<a href="#fn14" class="footnote-ref" id="fnref14"><sup>14</sup></a> Below, we train a model and exhibit the predictions for the first 5 instances of the testing sample.</p>
 
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="trees.html#cb53-1"></a><span class="kw">library</span>(randomForest) </span>
-<span id="cb53-2"><a href="trees.html#cb53-2"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)                                <span class="co"># Sets the random seed</span></span>
-<span id="cb53-3"><a href="trees.html#cb53-3"></a>fit_RF &lt;-<span class="st"> </span><span class="kw">randomForest</span>(formula,             <span class="co"># Same formula as for simple trees!</span></span>
-<span id="cb53-4"><a href="trees.html#cb53-4"></a>                 <span class="dt">data =</span> training_sample,    <span class="co"># Data source: training sample</span></span>
-<span id="cb53-5"><a href="trees.html#cb53-5"></a>                 <span class="dt">sampsize =</span> <span class="dv">10000</span>,          <span class="co"># Size of (random) sample for each tree</span></span>
-<span id="cb53-6"><a href="trees.html#cb53-6"></a>                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></span>
-<span id="cb53-7"><a href="trees.html#cb53-7"></a>                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></span>
-<span id="cb53-8"><a href="trees.html#cb53-8"></a>                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Nb of random trees</span></span>
-<span id="cb53-9"><a href="trees.html#cb53-9"></a>                 <span class="dt">mtry =</span> <span class="dv">30</span>                  <span class="co"># Nb of predictive variables for each tree</span></span>
-<span id="cb53-10"><a href="trees.html#cb53-10"></a>    )</span>
-<span id="cb53-11"><a href="trees.html#cb53-11"></a><span class="kw">predict</span>(fit_RF, testing_sample[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,])       <span class="co"># Prediction over the first 5 test instances </span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="trees.html#cb52-1"></a><span class="kw">library</span>(randomForest) </span>
+<span id="cb52-2"><a href="trees.html#cb52-2"></a><span class="kw">set.seed</span>(<span class="dv">42</span>)                                <span class="co"># Sets the random seed</span></span>
+<span id="cb52-3"><a href="trees.html#cb52-3"></a>fit_RF &lt;-<span class="st"> </span><span class="kw">randomForest</span>(formula,             <span class="co"># Same formula as for simple trees!</span></span>
+<span id="cb52-4"><a href="trees.html#cb52-4"></a>                 <span class="dt">data =</span> training_sample,    <span class="co"># Data source: training sample</span></span>
+<span id="cb52-5"><a href="trees.html#cb52-5"></a>                 <span class="dt">sampsize =</span> <span class="dv">10000</span>,          <span class="co"># Size of (random) sample for each tree</span></span>
+<span id="cb52-6"><a href="trees.html#cb52-6"></a>                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></span>
+<span id="cb52-7"><a href="trees.html#cb52-7"></a>                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></span>
+<span id="cb52-8"><a href="trees.html#cb52-8"></a>                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Nb of random trees</span></span>
+<span id="cb52-9"><a href="trees.html#cb52-9"></a>                 <span class="dt">mtry =</span> <span class="dv">30</span>                  <span class="co"># Nb of predictive variables for each tree</span></span>
+<span id="cb52-10"><a href="trees.html#cb52-10"></a>    )</span>
+<span id="cb52-11"><a href="trees.html#cb52-11"></a><span class="kw">predict</span>(fit_RF, testing_sample[<span class="dv">1</span><span class="op">:</span><span class="dv">5</span>,])       <span class="co"># Prediction over the first 5 test instances </span></span></code></pre></div>
 <pre><code>##            1            2            3            4            5 
 ##  0.009787728  0.012507087  0.008722386  0.009398814 -0.011511758</code></pre>
 <p></p>
@@ -650,29 +650,29 @@ where the left part is the average number of votes based on the <span class="mat
 <p>Unlike for simple trees, it is not possible to simply illustrate the outcome of the learning process (though solutions exist, see Section <a href="interp.html#surr">13.1.1</a>). It could be possible to extract all 40 trees, but a synthetic visualization is out-of-reach. A simplified view can be obtained via variable importance, as is discussed in Section <a href="interp.html#variable-importance">13.1.2</a>.</p>
 <p>Finally, we can assess the accuracy of the model.</p>
 
-<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="trees.html#cb55-1"></a><span class="kw">mean</span>((<span class="kw">predict</span>(fit_RF, testing_sample) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="trees.html#cb54-1"></a><span class="kw">mean</span>((<span class="kw">predict</span>(fit_RF, testing_sample) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></span></code></pre></div>
 <pre><code>## [1] 0.03698197</code></pre>
-<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="trees.html#cb57-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF, testing_sample) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="trees.html#cb56-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF, testing_sample) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
 <pre><code>## [1] 0.5370186</code></pre>
 <p></p>
 <p>The MSE is smaller than 4% and the hit ratio is close to 54%, which is reasonably above both 50% and 52% thresholds.</p>
 <p>Let’s see if we can improve the hit ratio by resorting to a classification exercise. We start by training the model on a new formula (the label is R1M_Usd_C).</p>
 
-<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="trees.html#cb59-1"></a>formula_C &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;R1M_Usd_C ~&quot;</span>, <span class="kw">paste</span>(features, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)) <span class="co"># Defines the model </span></span>
-<span id="cb59-2"><a href="trees.html#cb59-2"></a>formula_C &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula_C)                                   <span class="co"># Forcing formula object</span></span>
-<span id="cb59-3"><a href="trees.html#cb59-3"></a>fit_RF_C &lt;-<span class="st"> </span><span class="kw">randomForest</span>(formula_C,         <span class="co"># New formula! </span></span>
-<span id="cb59-4"><a href="trees.html#cb59-4"></a>                 <span class="dt">data =</span> training_sample,    <span class="co"># Data source: training sample</span></span>
-<span id="cb59-5"><a href="trees.html#cb59-5"></a>                 <span class="dt">sampsize =</span> <span class="dv">20000</span>,          <span class="co"># Size of (random) sample for each tree</span></span>
-<span id="cb59-6"><a href="trees.html#cb59-6"></a>                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></span>
-<span id="cb59-7"><a href="trees.html#cb59-7"></a>                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></span>
-<span id="cb59-8"><a href="trees.html#cb59-8"></a>                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Number of random trees</span></span>
-<span id="cb59-9"><a href="trees.html#cb59-9"></a>                 <span class="dt">mtry =</span> <span class="dv">30</span>                  <span class="co"># Number of predictive variables for each tree </span></span>
-<span id="cb59-10"><a href="trees.html#cb59-10"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="trees.html#cb58-1"></a>formula_C &lt;-<span class="st"> </span><span class="kw">paste</span>(<span class="st">&quot;R1M_Usd_C ~&quot;</span>, <span class="kw">paste</span>(features, <span class="dt">collapse =</span> <span class="st">&quot; + &quot;</span>)) <span class="co"># Defines the model </span></span>
+<span id="cb58-2"><a href="trees.html#cb58-2"></a>formula_C &lt;-<span class="st"> </span><span class="kw">as.formula</span>(formula_C)                                   <span class="co"># Forcing formula object</span></span>
+<span id="cb58-3"><a href="trees.html#cb58-3"></a>fit_RF_C &lt;-<span class="st"> </span><span class="kw">randomForest</span>(formula_C,         <span class="co"># New formula! </span></span>
+<span id="cb58-4"><a href="trees.html#cb58-4"></a>                 <span class="dt">data =</span> training_sample,    <span class="co"># Data source: training sample</span></span>
+<span id="cb58-5"><a href="trees.html#cb58-5"></a>                 <span class="dt">sampsize =</span> <span class="dv">20000</span>,          <span class="co"># Size of (random) sample for each tree</span></span>
+<span id="cb58-6"><a href="trees.html#cb58-6"></a>                 <span class="dt">replace =</span> <span class="ot">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span></span>
+<span id="cb58-7"><a href="trees.html#cb58-7"></a>                 <span class="dt">nodesize =</span> <span class="dv">250</span>,            <span class="co"># Minimum size of terminal cluster</span></span>
+<span id="cb58-8"><a href="trees.html#cb58-8"></a>                 <span class="dt">ntree =</span> <span class="dv">40</span>,                <span class="co"># Number of random trees</span></span>
+<span id="cb58-9"><a href="trees.html#cb58-9"></a>                 <span class="dt">mtry =</span> <span class="dv">30</span>                  <span class="co"># Number of predictive variables for each tree </span></span>
+<span id="cb58-10"><a href="trees.html#cb58-10"></a>    )</span></code></pre></div>
 <p></p>
 <p>We can then assess the proportion of correct (binary) guesses.
 </p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="trees.html#cb60-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF_C, testing_sample) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.4980629</code></pre>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="trees.html#cb59-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_RF_C, testing_sample) <span class="op">==</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd_C) <span class="co"># Hit ratio</span></span></code></pre></div>
+<pre><code>## [1] 0.498832</code></pre>
 <p></p>
 <p>The accuracy is disappointing. There are two potential explanations for this (beyond the possibility of very different patterns in the training and testing sets). The first one is the sample size, which may be too small. The original training set has more than 200,000 observations, hence we retain only one in 10 in the above training specification. We are thus probably sidelining relevant information and the cost can be heavy. The second reason is the number of predictors, which is set to 30, i.e., one third of the total at our disposal. Unfortunately, this leaves room for the algorithm to pick less pertinent predictors. The default numbers of predictors chosen by the routines are <span class="math inline">\(\sqrt{p}\)</span> and <span class="math inline">\(p/3\)</span> for classification and regression tasks, respectively. Here <span class="math inline">\(p\)</span> is the total number of features.</p>
 </div>
@@ -771,15 +771,15 @@ w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
 <h3><span class="header-section-number">6.3.2</span> Illustration</h3>
 <p>Below, we test an implementation of the original Adaboost classifier. As such, we work with the R1M_Usd_C variable and change the model formula. The computational cost of Adaboost is high on large datasets, thus we work with a smaller sample and we only impose three iterations.</p>
 
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="trees.html#cb62-1"></a><span class="kw">library</span>(fastAdaboost)                                                     <span class="co"># Adaboost package </span></span>
-<span id="cb62-2"><a href="trees.html#cb62-2"></a>subsample &lt;-<span class="st"> </span>(<span class="dv">1</span><span class="op">:</span><span class="dv">52000</span>)<span class="op">*</span><span class="dv">4</span>                                                  <span class="co"># Target small sample</span></span>
-<span id="cb62-3"><a href="trees.html#cb62-3"></a>fit_adaboost_C &lt;-<span class="st"> </span><span class="kw">adaboost</span>(formula_C,                                     <span class="co"># Model spec.</span></span>
-<span id="cb62-4"><a href="trees.html#cb62-4"></a>                         <span class="dt">data =</span> <span class="kw">data.frame</span>(training_sample[subsample,]),  <span class="co"># Data source</span></span>
-<span id="cb62-5"><a href="trees.html#cb62-5"></a>                         <span class="dt">nIter =</span> <span class="dv">3</span>)                                       <span class="co"># Number of trees              </span></span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="trees.html#cb61-1"></a><span class="kw">library</span>(fastAdaboost)                                                     <span class="co"># Adaboost package </span></span>
+<span id="cb61-2"><a href="trees.html#cb61-2"></a>subsample &lt;-<span class="st"> </span>(<span class="dv">1</span><span class="op">:</span><span class="dv">52000</span>)<span class="op">*</span><span class="dv">4</span>                                                  <span class="co"># Target small sample</span></span>
+<span id="cb61-3"><a href="trees.html#cb61-3"></a>fit_adaboost_C &lt;-<span class="st"> </span><span class="kw">adaboost</span>(formula_C,                                     <span class="co"># Model spec.</span></span>
+<span id="cb61-4"><a href="trees.html#cb61-4"></a>                         <span class="dt">data =</span> <span class="kw">data.frame</span>(training_sample[subsample,]),  <span class="co"># Data source</span></span>
+<span id="cb61-5"><a href="trees.html#cb61-5"></a>                         <span class="dt">nIter =</span> <span class="dv">3</span>)                                       <span class="co"># Number of trees              </span></span></code></pre></div>
 <p></p>
 <p>Finally, we evaluate the performance of the classifier. </p>
 
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="trees.html#cb63-1"></a><span class="kw">mean</span>(testing_sample<span class="op">$</span>R1M_Usd_C <span class="op">==</span><span class="st"> </span><span class="kw">predict</span>(fit_adaboost_C, testing_sample)<span class="op">$</span>class)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="trees.html#cb62-1"></a><span class="kw">mean</span>(testing_sample<span class="op">$</span>R1M_Usd_C <span class="op">==</span><span class="st"> </span><span class="kw">predict</span>(fit_adaboost_C, testing_sample)<span class="op">$</span>class)</span></code></pre></div>
 <pre><code>## [1] 0.5028202</code></pre>
 <p></p>
 <p>The accuracy (as evaluated by the hit ratio) is clearly not satisfactory. One reason for this may be the restrictions we enforced for the training (smaller sample and only three trees).</p>
@@ -876,17 +876,17 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <p>In this section, we train a model using the <em>XGBoost</em> library. Other options include <em>catboost</em>, <em>gbm</em>, <em>lightgbm</em>, and <em>h2o</em>’s own version of boosted machines. Unlike many other packages, the XGBoost function requires a particular syntax and dedicated formats. The first step is thus to encapsulate the data accordingly.</p>
 <p>Moreover, because training times can be long, we shorten the training sample as advocated in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>. We retain only the 40% most extreme observations (in terms of label values: top 20% and bottom 20%) and work with the small subset of features. In all coding sections dedicated to boosted trees in this book, the models will be trained with only 7 features.</p>
 
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="trees.html#cb65-1"></a><span class="kw">library</span>(xgboost)                                                <span class="co"># The package for boosted trees</span></span>
-<span id="cb65-2"><a href="trees.html#cb65-2"></a>train_features_xgb &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb65-3"><a href="trees.html#cb65-3"></a><span class="st">    </span><span class="kw">filter</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.2</span>) <span class="op">|</span><span class="st"> </span></span>
-<span id="cb65-4"><a href="trees.html#cb65-4"></a><span class="st">               </span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.8</span>)) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Extreme values only!</span></span>
-<span id="cb65-5"><a href="trees.html#cb65-5"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">all_of</span>(features_short)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()       <span class="co"># Independent variable</span></span>
-<span id="cb65-6"><a href="trees.html#cb65-6"></a>train_label_xgb &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span></span>
-<span id="cb65-7"><a href="trees.html#cb65-7"></a><span class="st">    </span><span class="kw">filter</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.2</span>) <span class="op">|</span><span class="st"> </span></span>
-<span id="cb65-8"><a href="trees.html#cb65-8"></a><span class="st">               </span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.8</span>)) <span class="op">%&gt;%</span></span>
-<span id="cb65-9"><a href="trees.html#cb65-9"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                      <span class="co"># Dependent variable</span></span>
-<span id="cb65-10"><a href="trees.html#cb65-10"></a>train_matrix_xgb &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </span>
-<span id="cb65-11"><a href="trees.html#cb65-11"></a>                                <span class="dt">label =</span> train_label_xgb)        <span class="co"># XGB format!</span></span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="trees.html#cb64-1"></a><span class="kw">library</span>(xgboost)                                                <span class="co"># The package for boosted trees</span></span>
+<span id="cb64-2"><a href="trees.html#cb64-2"></a>train_features_xgb &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb64-3"><a href="trees.html#cb64-3"></a><span class="st">    </span><span class="kw">filter</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.2</span>) <span class="op">|</span><span class="st"> </span></span>
+<span id="cb64-4"><a href="trees.html#cb64-4"></a><span class="st">               </span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.8</span>)) <span class="op">%&gt;%</span><span class="st">            </span><span class="co"># Extreme values only!</span></span>
+<span id="cb64-5"><a href="trees.html#cb64-5"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">all_of</span>(features_short)) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()       <span class="co"># Independent variable</span></span>
+<span id="cb64-6"><a href="trees.html#cb64-6"></a>train_label_xgb &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span></span>
+<span id="cb64-7"><a href="trees.html#cb64-7"></a><span class="st">    </span><span class="kw">filter</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.2</span>) <span class="op">|</span><span class="st"> </span></span>
+<span id="cb64-8"><a href="trees.html#cb64-8"></a><span class="st">               </span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.8</span>)) <span class="op">%&gt;%</span></span>
+<span id="cb64-9"><a href="trees.html#cb64-9"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()                      <span class="co"># Dependent variable</span></span>
+<span id="cb64-10"><a href="trees.html#cb64-10"></a>train_matrix_xgb &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </span>
+<span id="cb64-11"><a href="trees.html#cb64-11"></a>                                <span class="dt">label =</span> train_label_xgb)        <span class="co"># XGB format!</span></span></code></pre></div>
 <p></p>
 <p>The second (optional) step is to determine the monotonicity constraints that we want to impose. For simplicity, we will only enforce three constraints on</p>
 <ol style="list-style-type: decimal">
@@ -897,28 +897,28 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <li>past annual returns (positive, because winners outperform losers under the momentum anomaly).</li>
 </ol>
 
-<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="trees.html#cb66-1"></a>mono_const &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(features))                   <span class="co"># Initialize the vector</span></span>
-<span id="cb66-2"><a href="trees.html#cb66-2"></a>mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Mkt_Cap_12M_Usd&quot;</span>)] &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>) <span class="co"># Decreasing in market cap</span></span>
-<span id="cb66-3"><a href="trees.html#cb66-3"></a>mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Pb&quot;</span>)] &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)              <span class="co"># Decreasing in price-to-book</span></span>
-<span id="cb66-4"><a href="trees.html#cb66-4"></a>mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Mom_11M_Usd&quot;</span>)] &lt;-<span class="st"> </span><span class="dv">1</span>        <span class="co"># Increasing in past return</span></span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="trees.html#cb65-1"></a>mono_const &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, <span class="kw">length</span>(features))                   <span class="co"># Initialize the vector</span></span>
+<span id="cb65-2"><a href="trees.html#cb65-2"></a>mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Mkt_Cap_12M_Usd&quot;</span>)] &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>) <span class="co"># Decreasing in market cap</span></span>
+<span id="cb65-3"><a href="trees.html#cb65-3"></a>mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Pb&quot;</span>)] &lt;-<span class="st"> </span>(<span class="op">-</span><span class="dv">1</span>)              <span class="co"># Decreasing in price-to-book</span></span>
+<span id="cb65-4"><a href="trees.html#cb65-4"></a>mono_const[<span class="kw">which</span>(features <span class="op">==</span><span class="st"> &quot;Mom_11M_Usd&quot;</span>)] &lt;-<span class="st"> </span><span class="dv">1</span>        <span class="co"># Increasing in past return</span></span></code></pre></div>
 <p></p>
 <p>The third step is to train the model on the formatted training data. We include the monotonicity constraints and the DART feature (via <em>rate_drop</em>). Just like random forests, boosted trees can grow individual trees on subsets of the data: both row-wise (by selecting random instances) and column-wise (by keeping a smaller portion of predictors). These options are implemented below with the <em>subsample</em> and <em>colsample_bytree</em> in the arguments of the function.</p>
 
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="trees.html#cb67-1"></a>fit_xgb &lt;-<span class="st"> </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> train_matrix_xgb,     <span class="co"># Data source </span></span>
-<span id="cb67-2"><a href="trees.html#cb67-2"></a>              <span class="dt">eta =</span> <span class="fl">0.3</span>,                          <span class="co"># Learning rate</span></span>
-<span id="cb67-3"><a href="trees.html#cb67-3"></a>              <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,           <span class="co"># Objective function</span></span>
-<span id="cb67-4"><a href="trees.html#cb67-4"></a>              <span class="dt">max_depth =</span> <span class="dv">4</span>,                      <span class="co"># Maximum depth of trees</span></span>
-<span id="cb67-5"><a href="trees.html#cb67-5"></a>              <span class="dt">subsample =</span> <span class="fl">0.6</span>,                    <span class="co"># Train on random 60% of sample</span></span>
-<span id="cb67-6"><a href="trees.html#cb67-6"></a>              <span class="dt">colsample_bytree =</span> <span class="fl">0.7</span>,             <span class="co"># Train on random 70% of predictors</span></span>
-<span id="cb67-7"><a href="trees.html#cb67-7"></a>              <span class="dt">lambda =</span> <span class="dv">1</span>,                         <span class="co"># Penalisation of leaf values</span></span>
-<span id="cb67-8"><a href="trees.html#cb67-8"></a>              <span class="dt">gamma =</span> <span class="fl">0.1</span>,                        <span class="co"># Penalisation of number of leaves</span></span>
-<span id="cb67-9"><a href="trees.html#cb67-9"></a>              <span class="dt">nrounds =</span> <span class="dv">30</span>,                       <span class="co"># Number of trees used (rather low here)</span></span>
-<span id="cb67-10"><a href="trees.html#cb67-10"></a>              <span class="dt">monotone_constraints =</span> mono_const,  <span class="co"># Monotonicity constraints</span></span>
-<span id="cb67-11"><a href="trees.html#cb67-11"></a>              <span class="dt">rate_drop =</span> <span class="fl">0.1</span>,                    <span class="co"># Drop rate for DART</span></span>
-<span id="cb67-12"><a href="trees.html#cb67-12"></a>              <span class="dt">verbose =</span> <span class="dv">0</span>                         <span class="co"># No comment from the algo </span></span>
-<span id="cb67-13"><a href="trees.html#cb67-13"></a>    )</span></code></pre></div>
-<pre><code>## [14:26:30] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [14:26:30] WARNING: amalgamation/../src/learner.cc:516: 
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="trees.html#cb66-1"></a>fit_xgb &lt;-<span class="st"> </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> train_matrix_xgb,     <span class="co"># Data source </span></span>
+<span id="cb66-2"><a href="trees.html#cb66-2"></a>              <span class="dt">eta =</span> <span class="fl">0.3</span>,                          <span class="co"># Learning rate</span></span>
+<span id="cb66-3"><a href="trees.html#cb66-3"></a>              <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,           <span class="co"># Objective function</span></span>
+<span id="cb66-4"><a href="trees.html#cb66-4"></a>              <span class="dt">max_depth =</span> <span class="dv">4</span>,                      <span class="co"># Maximum depth of trees</span></span>
+<span id="cb66-5"><a href="trees.html#cb66-5"></a>              <span class="dt">subsample =</span> <span class="fl">0.6</span>,                    <span class="co"># Train on random 60% of sample</span></span>
+<span id="cb66-6"><a href="trees.html#cb66-6"></a>              <span class="dt">colsample_bytree =</span> <span class="fl">0.7</span>,             <span class="co"># Train on random 70% of predictors</span></span>
+<span id="cb66-7"><a href="trees.html#cb66-7"></a>              <span class="dt">lambda =</span> <span class="dv">1</span>,                         <span class="co"># Penalisation of leaf values</span></span>
+<span id="cb66-8"><a href="trees.html#cb66-8"></a>              <span class="dt">gamma =</span> <span class="fl">0.1</span>,                        <span class="co"># Penalisation of number of leaves</span></span>
+<span id="cb66-9"><a href="trees.html#cb66-9"></a>              <span class="dt">nrounds =</span> <span class="dv">30</span>,                       <span class="co"># Number of trees used (rather low here)</span></span>
+<span id="cb66-10"><a href="trees.html#cb66-10"></a>              <span class="dt">monotone_constraints =</span> mono_const,  <span class="co"># Monotonicity constraints</span></span>
+<span id="cb66-11"><a href="trees.html#cb66-11"></a>              <span class="dt">rate_drop =</span> <span class="fl">0.1</span>,                    <span class="co"># Drop rate for DART</span></span>
+<span id="cb66-12"><a href="trees.html#cb66-12"></a>              <span class="dt">verbose =</span> <span class="dv">0</span>                         <span class="co"># No comment from the algo </span></span>
+<span id="cb66-13"><a href="trees.html#cb66-13"></a>    )</span></code></pre></div>
+<pre><code>## [17:45:25] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:45:25] WARNING: amalgamation/../src/learner.cc:516: 
 ## Parameters: { rate_drop } might not be used.
 ## 
 ##   This may not be accurate due to some parameters are only used in language bindings but
@@ -927,37 +927,37 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
 <p></p>
 <p>Finally, we evaluate the performance of the model. Note that before that, a proper formatting of the testing sample is required.</p>
 
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="trees.html#cb69-1"></a>xgb_test &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Test sample =&gt; XGB format</span></span>
-<span id="cb69-2"><a href="trees.html#cb69-2"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">all_of</span>(features_short)) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb69-3"><a href="trees.html#cb69-3"></a><span class="st">    </span><span class="kw">as.matrix</span>() </span>
-<span id="cb69-4"><a href="trees.html#cb69-4"></a><span class="kw">mean</span>((<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></span></code></pre></div>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="trees.html#cb68-1"></a>xgb_test &lt;-<span class="st"> </span>testing_sample <span class="op">%&gt;%</span><span class="st">                                </span><span class="co"># Test sample =&gt; XGB format</span></span>
+<span id="cb68-2"><a href="trees.html#cb68-2"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="kw">all_of</span>(features_short)) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb68-3"><a href="trees.html#cb68-3"></a><span class="st">    </span><span class="kw">as.matrix</span>() </span>
+<span id="cb68-4"><a href="trees.html#cb68-4"></a><span class="kw">mean</span>((<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">-</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd)<span class="op">^</span><span class="dv">2</span>) <span class="co"># MSE</span></span></code></pre></div>
 <pre><code>## [1] 0.03908855</code></pre>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="trees.html#cb71-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="trees.html#cb70-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb, xgb_test) <span class="op">*</span><span class="st"> </span>testing_sample<span class="op">$</span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
 <pre><code>## [1] 0.5077626</code></pre>
 <p></p>
 <p>The performance is comparable to those observed for other predictive tools. As a final exercise, we show one implementation of a classification task under XGBoost. Only the label changes. In XGBoost, labels must be coded with integer number, starting at zero exactly. In R, factors are numerically coded as integer numbers starting from one, hence the mapping is simple.</p>
 
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="trees.html#cb73-1"></a>train_label_C &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb73-2"><a href="trees.html#cb73-2"></a><span class="st">    </span><span class="kw">filter</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.2</span>) <span class="op">|</span><span class="st">          </span><span class="co"># Either low 20% returns </span></span>
-<span id="cb73-3"><a href="trees.html#cb73-3"></a><span class="st">               </span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.8</span>)) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Or top 20% returns</span></span>
-<span id="cb73-4"><a href="trees.html#cb73-4"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd_C)</span>
-<span id="cb73-5"><a href="trees.html#cb73-5"></a>train_matrix_C &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </span>
-<span id="cb73-6"><a href="trees.html#cb73-6"></a>                              <span class="dt">label =</span> <span class="kw">as.numeric</span>(train_label_C <span class="op">==</span><span class="st"> &quot;TRUE&quot;</span>)) <span class="co"># XGB format!</span></span></code></pre></div>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="trees.html#cb72-1"></a>train_label_C &lt;-<span class="st"> </span>training_sample <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb72-2"><a href="trees.html#cb72-2"></a><span class="st">    </span><span class="kw">filter</span>(R1M_Usd <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.2</span>) <span class="op">|</span><span class="st">          </span><span class="co"># Either low 20% returns </span></span>
+<span id="cb72-3"><a href="trees.html#cb72-3"></a><span class="st">               </span>R1M_Usd <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(R1M_Usd, <span class="fl">0.8</span>)) <span class="op">%&gt;%</span><span class="st">   </span><span class="co"># Or top 20% returns</span></span>
+<span id="cb72-4"><a href="trees.html#cb72-4"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd_C)</span>
+<span id="cb72-5"><a href="trees.html#cb72-5"></a>train_matrix_C &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </span>
+<span id="cb72-6"><a href="trees.html#cb72-6"></a>                              <span class="dt">label =</span> <span class="kw">as.numeric</span>(train_label_C <span class="op">==</span><span class="st"> &quot;TRUE&quot;</span>)) <span class="co"># XGB format!</span></span></code></pre></div>
 <p></p>
 <p>When working with categories, the loss function is usually the softmax function (see Section <a href="notdata.html#notations">1.1</a>).</p>
 
-<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="trees.html#cb74-1"></a>fit_xgb_C &lt;-<span class="st">  </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> train_matrix_C,  <span class="co"># Data source (pipe input)</span></span>
-<span id="cb74-2"><a href="trees.html#cb74-2"></a>              <span class="dt">eta =</span> <span class="fl">0.8</span>,                        <span class="co"># Learning rate</span></span>
-<span id="cb74-3"><a href="trees.html#cb74-3"></a>              <span class="dt">objective =</span> <span class="st">&quot;multi:softmax&quot;</span>,      <span class="co"># Objective function</span></span>
-<span id="cb74-4"><a href="trees.html#cb74-4"></a>              <span class="dt">num_class =</span> <span class="dv">2</span>,                    <span class="co"># Number of classes</span></span>
-<span id="cb74-5"><a href="trees.html#cb74-5"></a>              <span class="dt">max_depth =</span> <span class="dv">4</span>,                    <span class="co"># Maximum depth of trees</span></span>
-<span id="cb74-6"><a href="trees.html#cb74-6"></a>              <span class="dt">nrounds =</span> <span class="dv">10</span>,                     <span class="co"># Number of trees used</span></span>
-<span id="cb74-7"><a href="trees.html#cb74-7"></a>              <span class="dt">verbose =</span> <span class="dv">0</span>                       <span class="co"># No warning message </span></span>
-<span id="cb74-8"><a href="trees.html#cb74-8"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="trees.html#cb73-1"></a>fit_xgb_C &lt;-<span class="st">  </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> train_matrix_C,  <span class="co"># Data source (pipe input)</span></span>
+<span id="cb73-2"><a href="trees.html#cb73-2"></a>              <span class="dt">eta =</span> <span class="fl">0.8</span>,                        <span class="co"># Learning rate</span></span>
+<span id="cb73-3"><a href="trees.html#cb73-3"></a>              <span class="dt">objective =</span> <span class="st">&quot;multi:softmax&quot;</span>,      <span class="co"># Objective function</span></span>
+<span id="cb73-4"><a href="trees.html#cb73-4"></a>              <span class="dt">num_class =</span> <span class="dv">2</span>,                    <span class="co"># Number of classes</span></span>
+<span id="cb73-5"><a href="trees.html#cb73-5"></a>              <span class="dt">max_depth =</span> <span class="dv">4</span>,                    <span class="co"># Maximum depth of trees</span></span>
+<span id="cb73-6"><a href="trees.html#cb73-6"></a>              <span class="dt">nrounds =</span> <span class="dv">10</span>,                     <span class="co"># Number of trees used</span></span>
+<span id="cb73-7"><a href="trees.html#cb73-7"></a>              <span class="dt">verbose =</span> <span class="dv">0</span>                       <span class="co"># No warning message </span></span>
+<span id="cb73-8"><a href="trees.html#cb73-8"></a>    )</span></code></pre></div>
 <p></p>
 <p>We can then proceed to the assessment of the quality of the model. We adjust the prediction to the value of the true label and count the proportion of accurate forecasts.</p>
 
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="trees.html#cb75-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb_C, xgb_test) <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="kw">as.numeric</span>(testing_sample<span class="op">$</span>R1M_Usd_C)) <span class="co"># Hit ratio</span></span></code></pre></div>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="trees.html#cb74-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(fit_xgb_C, xgb_test) <span class="op">+</span><span class="st"> </span><span class="dv">1</span> <span class="op">==</span><span class="st"> </span><span class="kw">as.numeric</span>(testing_sample<span class="op">$</span>R1M_Usd_C)) <span class="co"># Hit ratio</span></span></code></pre></div>
 <pre><code>## [1] 0.495613</code></pre>
 <p></p>
 <p>Consistently with the previous classification attempts, the results are underwhelming, as if switching to binary labels incurred a loss of information.</p>
@@ -970,11 +970,11 @@ In the computation of the aggregate loss, it is possible to introduce some flexi
 <p>In factor investing, these weights can very well depend on the feature values (<span class="math inline">\(\mathcal{W}_i=\mathcal{W}_i(\textbf{x}_i)\)</span>). For instance, for one particular characteristic <span class="math inline">\(\textbf{x}^k\)</span>, weights can be increasing thereby giving more importance to assets with high values of this characteristic (e.g., value stocks are favored compared to growth stocks). One other option is to increase weights when the values of the characteristic become more extreme (deep value and deep growth stocks have larger weights). If the features are uniform, the weights can simply be <span class="math inline">\(\mathcal{W}_i(x_i^k)\propto|x_i^k-0.5|\)</span>: firms with median value 0.5 have zero weight and as the feature value shifts towards 0 or 1, the weight increases. Specifying weights on instances biases the learning process just like views introduced à la <span class="citation">Black and Litterman (<a href="#ref-black1992global" role="doc-biblioref">1992</a>)</span> influence the asset allocation process. The difference is that the nudge is performed well ahead of the portfolio choice problem.</p>
 <p>In xgboost, the implementation instance weighting is done very early, in the definition of the xgb.DMatrix:</p>
 
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="trees.html#cb77-1"></a>inst_weights &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="kw">nrow</span>(train_features_xgb))               <span class="co"># Random weights</span></span>
-<span id="cb77-2"><a href="trees.html#cb77-2"></a>inst_weights &lt;-<span class="st"> </span>inst_weights <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(inst_weights)              <span class="co"># Normalization</span></span>
-<span id="cb77-3"><a href="trees.html#cb77-3"></a>train_matrix_xgb &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </span>
-<span id="cb77-4"><a href="trees.html#cb77-4"></a>                                <span class="dt">label =</span> train_label_xgb,</span>
-<span id="cb77-5"><a href="trees.html#cb77-5"></a>                                <span class="dt">weight =</span> inst_weights)        <span class="co"># Weights!</span></span></code></pre></div>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="trees.html#cb76-1"></a>inst_weights &lt;-<span class="st"> </span><span class="kw">runif</span>(<span class="kw">nrow</span>(train_features_xgb))               <span class="co"># Random weights</span></span>
+<span id="cb76-2"><a href="trees.html#cb76-2"></a>inst_weights &lt;-<span class="st"> </span>inst_weights <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(inst_weights)              <span class="co"># Normalization</span></span>
+<span id="cb76-3"><a href="trees.html#cb76-3"></a>train_matrix_xgb &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features_xgb, </span>
+<span id="cb76-4"><a href="trees.html#cb76-4"></a>                                <span class="dt">label =</span> train_label_xgb,</span>
+<span id="cb76-5"><a href="trees.html#cb76-5"></a>                                <span class="dt">weight =</span> inst_weights)        <span class="co"># Weights!</span></span></code></pre></div>
 <p></p>
 <p>Then, in the subsequent stages, the optimization will be performed with these hard-coded weights. The splitting points can be altered (via the total weighted loss in clusters) and the terminal weight values <a href="trees.html#eq:xgbweight">(6.5)</a> are also impacted.</p>
 </div>
