@@ -675,298 +675,155 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 </ol>
 <p>Accordingly, we start with initializations.</p>
 
-<div class="sourceCode" id="cb180"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb180-1"><a href="backtest.html#cb180-1"></a>sep_oos &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2007-01-01&quot;</span>)                            <span class="co"># Starting point for backtest</span></span>
-<span id="cb180-2"><a href="backtest.html#cb180-2"></a>ticks &lt;-<span class="st"> </span>data_ml<span class="op">$</span>stock_id <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># List of all asset ids</span></span>
-<span id="cb180-3"><a href="backtest.html#cb180-3"></a><span class="st">    </span><span class="kw">as.factor</span>() <span class="op">%&gt;%</span></span>
-<span id="cb180-4"><a href="backtest.html#cb180-4"></a><span class="st">    </span><span class="kw">levels</span>()</span>
-<span id="cb180-5"><a href="backtest.html#cb180-5"></a>N &lt;-<span class="st"> </span><span class="kw">length</span>(ticks)                                          <span class="co"># Max number of assets</span></span>
-<span id="cb180-6"><a href="backtest.html#cb180-6"></a>t_oos &lt;-<span class="st"> </span>returns<span class="op">$</span>date[returns<span class="op">$</span>date <span class="op">&gt;</span><span class="st"> </span>sep_oos] <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Out-of-sample dates </span></span>
-<span id="cb180-7"><a href="backtest.html#cb180-7"></a><span class="st">    </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st">                                            </span><span class="co"># Remove duplicates</span></span>
-<span id="cb180-8"><a href="backtest.html#cb180-8"></a><span class="st">    </span><span class="kw">as.Date</span>(<span class="dt">origin =</span> <span class="st">&quot;1970-01-01&quot;</span>)                          <span class="co"># Transform in date format</span></span>
-<span id="cb180-9"><a href="backtest.html#cb180-9"></a>Tt &lt;-<span class="st"> </span><span class="kw">length</span>(t_oos)                                         <span class="co"># Nb of dates, avoid T = TRUE</span></span>
-<span id="cb180-10"><a href="backtest.html#cb180-10"></a>nb_port &lt;-<span class="st"> </span><span class="dv">2</span>                                                <span class="co"># Nb of portfolios/stragegies</span></span>
-<span id="cb180-11"><a href="backtest.html#cb180-11"></a>portf_weights &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim =</span> <span class="kw">c</span>(Tt, nb_port, N))          <span class="co"># Initialize portfolio weights</span></span>
-<span id="cb180-12"><a href="backtest.html#cb180-12"></a>portf_returns &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> Tt, <span class="dt">ncol =</span> nb_port)       <span class="co"># Initialize portfolio returns </span></span></code></pre></div>
+<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="backtest.html#cb181-1"></a>sep_oos &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">&quot;2007-01-01&quot;</span>)                            <span class="co"># Starting point for backtest</span></span>
+<span id="cb181-2"><a href="backtest.html#cb181-2"></a>ticks &lt;-<span class="st"> </span>data_ml<span class="op">$</span>stock_id <span class="op">%&gt;%</span><span class="st">                               </span><span class="co"># List of all asset ids</span></span>
+<span id="cb181-3"><a href="backtest.html#cb181-3"></a><span class="st">    </span><span class="kw">as.factor</span>() <span class="op">%&gt;%</span></span>
+<span id="cb181-4"><a href="backtest.html#cb181-4"></a><span class="st">    </span><span class="kw">levels</span>()</span>
+<span id="cb181-5"><a href="backtest.html#cb181-5"></a>N &lt;-<span class="st"> </span><span class="kw">length</span>(ticks)                                          <span class="co"># Max number of assets</span></span>
+<span id="cb181-6"><a href="backtest.html#cb181-6"></a>t_oos &lt;-<span class="st"> </span>returns<span class="op">$</span>date[returns<span class="op">$</span>date <span class="op">&gt;</span><span class="st"> </span>sep_oos] <span class="op">%&gt;%</span><span class="st">           </span><span class="co"># Out-of-sample dates </span></span>
+<span id="cb181-7"><a href="backtest.html#cb181-7"></a><span class="st">    </span><span class="kw">unique</span>() <span class="op">%&gt;%</span><span class="st">                                            </span><span class="co"># Remove duplicates</span></span>
+<span id="cb181-8"><a href="backtest.html#cb181-8"></a><span class="st">    </span><span class="kw">as.Date</span>(<span class="dt">origin =</span> <span class="st">&quot;1970-01-01&quot;</span>)                          <span class="co"># Transform in date format</span></span>
+<span id="cb181-9"><a href="backtest.html#cb181-9"></a>Tt &lt;-<span class="st"> </span><span class="kw">length</span>(t_oos)                                         <span class="co"># Nb of dates, avoid T = TRUE</span></span>
+<span id="cb181-10"><a href="backtest.html#cb181-10"></a>nb_port &lt;-<span class="st"> </span><span class="dv">2</span>                                                <span class="co"># Nb of portfolios/stragegies</span></span>
+<span id="cb181-11"><a href="backtest.html#cb181-11"></a>portf_weights &lt;-<span class="st"> </span><span class="kw">array</span>(<span class="dv">0</span>, <span class="dt">dim =</span> <span class="kw">c</span>(Tt, nb_port, N))          <span class="co"># Initialize portfolio weights</span></span>
+<span id="cb181-12"><a href="backtest.html#cb181-12"></a>portf_returns &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dt">nrow =</span> Tt, <span class="dt">ncol =</span> nb_port)       <span class="co"># Initialize portfolio returns </span></span></code></pre></div>
 <p></p>
 <p>This first step is crucial, it lays the groundwork for the core of the backtest. We consider only two strategies: one ML-based and the EW (1/N) benchmark. The main (weighting) function will consist of these two components, but we define the sophisticated one in a dedicated wrapper. The ML-based weights are derived from XGBoost predictions with 80 trees, a learning rate of 0.3 and a maximum tree depth of 4. This makes the model complex but not exceedingly so. Once the predictions are obtained, the weighting scheme is simple: it is an EW portfolio over the best half of the stocks (those with above median prediction).</p>
 <p>In the function below, all parameters (e.g., the learning rate, <em>eta</em> or the number of trees <em>nrounds</em>) are hard-coded. They can easily be passed in arguments next to the data inputs. One very important detail is that in contrast to the rest of the book, the label is the 12-month future return. The main reason for this is rooted in the discussion from Section <a href="Data.html#pers">4.6</a>. Also, to speed up the computations, we remove the bulk of the distribution of the labels and keep only the top 20% and bottom 20%, as is advised in <span class="citation">Coqueret and Guida (<a href="#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>. The filtering levels could also be passed as arguments.</p>
 
-<div class="sourceCode" id="cb181"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb181-1"><a href="backtest.html#cb181-1"></a>weights_xgb &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features){ </span>
-<span id="cb181-2"><a href="backtest.html#cb181-2"></a>    train_features &lt;-<span class="st"> </span>train_data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()  <span class="co"># Indep. variable</span></span>
-<span id="cb181-3"><a href="backtest.html#cb181-3"></a>    train_label &lt;-<span class="st"> </span>train_data<span class="op">$</span>R12M_Usd <span class="op">/</span><span class="st"> </span><span class="kw">exp</span>(train_data<span class="op">$</span>Vol1Y_Usd)            <span class="co"># Dep. variable</span></span>
-<span id="cb181-4"><a href="backtest.html#cb181-4"></a>    ind &lt;-<span class="st"> </span><span class="kw">which</span>(train_label <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(train_label,<span class="fl">0.2</span>)<span class="op">|</span><span class="st">                     </span><span class="co"># Filter</span></span>
-<span id="cb181-5"><a href="backtest.html#cb181-5"></a><span class="st">                   </span>train_label <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(train_label, <span class="fl">0.8</span>))</span>
-<span id="cb181-6"><a href="backtest.html#cb181-6"></a>    train_features &lt;-<span class="st"> </span>train_features[ind, ]                                   <span class="co"># Filt&#39;d features</span></span>
-<span id="cb181-7"><a href="backtest.html#cb181-7"></a>    train_label &lt;-<span class="st"> </span>train_label[ind]                                           <span class="co"># Filtered label</span></span>
-<span id="cb181-8"><a href="backtest.html#cb181-8"></a>    train_matrix &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features, <span class="dt">label =</span> train_label)   <span class="co"># XGB format</span></span>
-<span id="cb181-9"><a href="backtest.html#cb181-9"></a>    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb181-10"><a href="backtest.html#cb181-10"></a><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></span>
-<span id="cb181-11"><a href="backtest.html#cb181-11"></a>                  <span class="dt">eta =</span> <span class="fl">0.3</span>,                      <span class="co"># Learning rate</span></span>
-<span id="cb181-12"><a href="backtest.html#cb181-12"></a>                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Number of random trees</span></span>
-<span id="cb181-13"><a href="backtest.html#cb181-13"></a>                  <span class="dt">max_depth =</span> <span class="dv">4</span>,                  <span class="co"># Maximum depth of trees</span></span>
-<span id="cb181-14"><a href="backtest.html#cb181-14"></a>                  <span class="dt">nrounds =</span> <span class="dv">80</span>,                   <span class="co"># Number of trees used</span></span>
-<span id="cb181-15"><a href="backtest.html#cb181-15"></a>                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comments</span></span>
-<span id="cb181-16"><a href="backtest.html#cb181-16"></a>        )</span>
-<span id="cb181-17"><a href="backtest.html#cb181-17"></a>    xgb_test &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Test sample =&gt; XGB format</span></span>
-<span id="cb181-18"><a href="backtest.html#cb181-18"></a><span class="st">        </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb181-19"><a href="backtest.html#cb181-19"></a><span class="st">        </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></span>
-<span id="cb181-20"><a href="backtest.html#cb181-20"></a><span class="st">        </span><span class="kw">xgb.DMatrix</span>()</span>
-<span id="cb181-21"><a href="backtest.html#cb181-21"></a>    </span>
-<span id="cb181-22"><a href="backtest.html#cb181-22"></a>    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, xgb_test)                <span class="co"># Single prediction</span></span>
-<span id="cb181-23"><a href="backtest.html#cb181-23"></a>    w &lt;-<span class="st"> </span>pred <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(pred)                      <span class="co"># Keep only the 50% best predictions</span></span>
-<span id="cb181-24"><a href="backtest.html#cb181-24"></a>    w<span class="op">$</span>weights &lt;-<span class="st"> </span>w <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w)</span>
-<span id="cb181-25"><a href="backtest.html#cb181-25"></a>    w<span class="op">$</span>names &lt;-<span class="st"> </span><span class="kw">unique</span>(test_data<span class="op">$</span>stock_id)</span>
-<span id="cb181-26"><a href="backtest.html#cb181-26"></a>    <span class="kw">return</span>(w)                                     <span class="co"># Best predictions, equally-weighted</span></span>
-<span id="cb181-27"><a href="backtest.html#cb181-27"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="backtest.html#cb182-1"></a>weights_xgb &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features){ </span>
+<span id="cb182-2"><a href="backtest.html#cb182-2"></a>    train_features &lt;-<span class="st"> </span>train_data <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.matrix</span>()  <span class="co"># Indep. variable</span></span>
+<span id="cb182-3"><a href="backtest.html#cb182-3"></a>    train_label &lt;-<span class="st"> </span>train_data<span class="op">$</span>R12M_Usd <span class="op">/</span><span class="st"> </span><span class="kw">exp</span>(train_data<span class="op">$</span>Vol1Y_Usd)            <span class="co"># Dep. variable</span></span>
+<span id="cb182-4"><a href="backtest.html#cb182-4"></a>    ind &lt;-<span class="st"> </span><span class="kw">which</span>(train_label <span class="op">&lt;</span><span class="st"> </span><span class="kw">quantile</span>(train_label,<span class="fl">0.2</span>)<span class="op">|</span><span class="st">                     </span><span class="co"># Filter</span></span>
+<span id="cb182-5"><a href="backtest.html#cb182-5"></a><span class="st">                   </span>train_label <span class="op">&gt;</span><span class="st"> </span><span class="kw">quantile</span>(train_label, <span class="fl">0.8</span>))</span>
+<span id="cb182-6"><a href="backtest.html#cb182-6"></a>    train_features &lt;-<span class="st"> </span>train_features[ind, ]                                   <span class="co"># Filt&#39;d features</span></span>
+<span id="cb182-7"><a href="backtest.html#cb182-7"></a>    train_label &lt;-<span class="st"> </span>train_label[ind]                                           <span class="co"># Filtered label</span></span>
+<span id="cb182-8"><a href="backtest.html#cb182-8"></a>    train_matrix &lt;-<span class="st"> </span><span class="kw">xgb.DMatrix</span>(<span class="dt">data =</span> train_features, <span class="dt">label =</span> train_label)   <span class="co"># XGB format</span></span>
+<span id="cb182-9"><a href="backtest.html#cb182-9"></a>    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb182-10"><a href="backtest.html#cb182-10"></a><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></span>
+<span id="cb182-11"><a href="backtest.html#cb182-11"></a>                  <span class="dt">eta =</span> <span class="fl">0.3</span>,                      <span class="co"># Learning rate</span></span>
+<span id="cb182-12"><a href="backtest.html#cb182-12"></a>                  <span class="dt">objective =</span> <span class="st">&quot;reg:squarederror&quot;</span>, <span class="co"># Number of random trees</span></span>
+<span id="cb182-13"><a href="backtest.html#cb182-13"></a>                  <span class="dt">max_depth =</span> <span class="dv">4</span>,                  <span class="co"># Maximum depth of trees</span></span>
+<span id="cb182-14"><a href="backtest.html#cb182-14"></a>                  <span class="dt">nrounds =</span> <span class="dv">80</span>,                   <span class="co"># Number of trees used</span></span>
+<span id="cb182-15"><a href="backtest.html#cb182-15"></a>                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comments</span></span>
+<span id="cb182-16"><a href="backtest.html#cb182-16"></a>        )</span>
+<span id="cb182-17"><a href="backtest.html#cb182-17"></a>    xgb_test &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                     </span><span class="co"># Test sample =&gt; XGB format</span></span>
+<span id="cb182-18"><a href="backtest.html#cb182-18"></a><span class="st">        </span>dplyr<span class="op">::</span><span class="kw">select</span>(features) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb182-19"><a href="backtest.html#cb182-19"></a><span class="st">        </span><span class="kw">as.matrix</span>() <span class="op">%&gt;%</span></span>
+<span id="cb182-20"><a href="backtest.html#cb182-20"></a><span class="st">        </span><span class="kw">xgb.DMatrix</span>()</span>
+<span id="cb182-21"><a href="backtest.html#cb182-21"></a>    </span>
+<span id="cb182-22"><a href="backtest.html#cb182-22"></a>    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, xgb_test)                <span class="co"># Single prediction</span></span>
+<span id="cb182-23"><a href="backtest.html#cb182-23"></a>    w &lt;-<span class="st"> </span>pred <span class="op">&gt;</span><span class="st"> </span><span class="kw">median</span>(pred)                      <span class="co"># Keep only the 50% best predictions</span></span>
+<span id="cb182-24"><a href="backtest.html#cb182-24"></a>    w<span class="op">$</span>weights &lt;-<span class="st"> </span>w <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w)</span>
+<span id="cb182-25"><a href="backtest.html#cb182-25"></a>    w<span class="op">$</span>names &lt;-<span class="st"> </span><span class="kw">unique</span>(test_data<span class="op">$</span>stock_id)</span>
+<span id="cb182-26"><a href="backtest.html#cb182-26"></a>    <span class="kw">return</span>(w)                                     <span class="co"># Best predictions, equally-weighted</span></span>
+<span id="cb182-27"><a href="backtest.html#cb182-27"></a>}</span></code></pre></div>
 <p></p>
 <p>Compared to the structure proposed in Section <a href="trees.html#boostcode">6.4.6</a>, the differences are that the label is not only based on <strong>long-term</strong> returns, but it also relies on a volatility component. Even though the denominator in the label is the exponential quantile of the volatility, it seems fair to say that it is inspired by the Sharpe ratio and that the model seeks to explain and forecast a risk-adjusted return instead of a <em>raw</em> return. A stock with very low volatility will have its return unchanged in the label, while a stock with very high volatility will see its return divided by a factor close to three (exp(1)=2.718).</p>
 <p>This function is then embedded in the global weighting function which only wraps two schemes: the EW benchmark and the ML-based policy.</p>
 
-<div class="sourceCode" id="cb182"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb182-1"><a href="backtest.html#cb182-1"></a>portf_compo &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features, j){ </span>
-<span id="cb182-2"><a href="backtest.html#cb182-2"></a>    <span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){                                 <span class="co"># This is the benchmark</span></span>
-<span id="cb182-3"><a href="backtest.html#cb182-3"></a>        N &lt;-<span class="st"> </span>test_data<span class="op">$</span>stock_id <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Test data dictates allocation</span></span>
-<span id="cb182-4"><a href="backtest.html#cb182-4"></a><span class="st">            </span><span class="kw">factor</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nlevels</span>()</span>
-<span id="cb182-5"><a href="backtest.html#cb182-5"></a>        w &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>N                                <span class="co"># EW portfolio</span></span>
-<span id="cb182-6"><a href="backtest.html#cb182-6"></a>        w<span class="op">$</span>weights &lt;-<span class="st"> </span><span class="kw">rep</span>(w,N)</span>
-<span id="cb182-7"><a href="backtest.html#cb182-7"></a>        w<span class="op">$</span>names &lt;-<span class="st"> </span><span class="kw">unique</span>(test_data<span class="op">$</span>stock_id)   <span class="co"># Asset names</span></span>
-<span id="cb182-8"><a href="backtest.html#cb182-8"></a>        <span class="kw">return</span>(w)</span>
-<span id="cb182-9"><a href="backtest.html#cb182-9"></a>    }</span>
-<span id="cb182-10"><a href="backtest.html#cb182-10"></a>    <span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">2</span>){                                 <span class="co"># This is the ML strategy.</span></span>
-<span id="cb182-11"><a href="backtest.html#cb182-11"></a>        <span class="kw">return</span>(<span class="kw">weights_xgb</span>(train_data, test_data, features))</span>
-<span id="cb182-12"><a href="backtest.html#cb182-12"></a>    }</span>
-<span id="cb182-13"><a href="backtest.html#cb182-13"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="backtest.html#cb183-1"></a>portf_compo &lt;-<span class="st"> </span><span class="cf">function</span>(train_data, test_data, features, j){ </span>
+<span id="cb183-2"><a href="backtest.html#cb183-2"></a>    <span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">1</span>){                                 <span class="co"># This is the benchmark</span></span>
+<span id="cb183-3"><a href="backtest.html#cb183-3"></a>        N &lt;-<span class="st"> </span>test_data<span class="op">$</span>stock_id <span class="op">%&gt;%</span><span class="st">             </span><span class="co"># Test data dictates allocation</span></span>
+<span id="cb183-4"><a href="backtest.html#cb183-4"></a><span class="st">            </span><span class="kw">factor</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">nlevels</span>()</span>
+<span id="cb183-5"><a href="backtest.html#cb183-5"></a>        w &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">/</span>N                                <span class="co"># EW portfolio</span></span>
+<span id="cb183-6"><a href="backtest.html#cb183-6"></a>        w<span class="op">$</span>weights &lt;-<span class="st"> </span><span class="kw">rep</span>(w,N)</span>
+<span id="cb183-7"><a href="backtest.html#cb183-7"></a>        w<span class="op">$</span>names &lt;-<span class="st"> </span><span class="kw">unique</span>(test_data<span class="op">$</span>stock_id)   <span class="co"># Asset names</span></span>
+<span id="cb183-8"><a href="backtest.html#cb183-8"></a>        <span class="kw">return</span>(w)</span>
+<span id="cb183-9"><a href="backtest.html#cb183-9"></a>    }</span>
+<span id="cb183-10"><a href="backtest.html#cb183-10"></a>    <span class="cf">if</span>(j <span class="op">==</span><span class="st"> </span><span class="dv">2</span>){                                 <span class="co"># This is the ML strategy.</span></span>
+<span id="cb183-11"><a href="backtest.html#cb183-11"></a>        <span class="kw">return</span>(<span class="kw">weights_xgb</span>(train_data, test_data, features))</span>
+<span id="cb183-12"><a href="backtest.html#cb183-12"></a>    }</span>
+<span id="cb183-13"><a href="backtest.html#cb183-13"></a>}</span></code></pre></div>
 <p></p>
 <p>Equipped with this function, we can turn to the main backtesting loop. Given the fact that we use a large-scale model, the computation time for the loop is large (possibly a few hours on a slow machine with CPU). Resorting to functional programming can speed up the loop (see exercise at the end of the chapter). Also, a simple benchmark equally weighted portfolio can be coded with tidyverse functions only.</p>
 
-<div class="sourceCode" id="cb183"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb183-1"><a href="backtest.html#cb183-1"></a>m_offset &lt;-<span class="st"> </span><span class="dv">12</span>                                          <span class="co"># Offset in months for buffer period</span></span>
-<span id="cb183-2"><a href="backtest.html#cb183-2"></a>train_size &lt;-<span class="st"> </span><span class="dv">5</span>                                         <span class="co"># Size of training set in years</span></span>
-<span id="cb183-3"><a href="backtest.html#cb183-3"></a><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>)){                          <span class="co"># Stop before last date: no fwd ret.!</span></span>
-<span id="cb183-4"><a href="backtest.html#cb183-4"></a>    <span class="cf">if</span>(t<span class="op">%%</span><span class="dv">12</span><span class="op">==</span><span class="dv">0</span>){<span class="kw">print</span>(t_oos[t])}                       <span class="co"># Just checking the date status</span></span>
-<span id="cb183-5"><a href="backtest.html#cb183-5"></a>    train_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">&lt;</span><span class="st"> </span>t_oos[t] <span class="op">-</span><span class="st"> </span>m_offset <span class="op">*</span><span class="st"> </span><span class="dv">30</span>,   <span class="co"># Roll window w. buffer</span></span>
-<span id="cb183-6"><a href="backtest.html#cb183-6"></a>                                    date <span class="op">&gt;</span><span class="st"> </span>t_oos[t] <span class="op">-</span><span class="st"> </span>m_offset <span class="op">*</span><span class="st"> </span><span class="dv">30</span> <span class="op">-</span><span class="st"> </span><span class="dv">365</span> <span class="op">*</span><span class="st"> </span>train_size)    </span>
-<span id="cb183-7"><a href="backtest.html#cb183-7"></a>    test_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t])   <span class="co"># Test sample  </span></span>
-<span id="cb183-8"><a href="backtest.html#cb183-8"></a>    realized_returns &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># Computing returns via:</span></span>
-<span id="cb183-9"><a href="backtest.html#cb183-9"></a><span class="st">        </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd)                          <span class="co"># 1M holding period!</span></span>
-<span id="cb183-10"><a href="backtest.html#cb183-10"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nb_port){    </span>
-<span id="cb183-11"><a href="backtest.html#cb183-11"></a>        temp_weights &lt;-<span class="st"> </span><span class="kw">portf_compo</span>(train_data, test_data, features, j) <span class="co"># Weights</span></span>
-<span id="cb183-12"><a href="backtest.html#cb183-12"></a>        ind &lt;-<span class="st"> </span><span class="kw">match</span>(temp_weights<span class="op">$</span>names, ticks) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>()           <span class="co"># Index: test vs all</span></span>
-<span id="cb183-13"><a href="backtest.html#cb183-13"></a>        portf_weights[t,j,ind] &lt;-<span class="st"> </span>temp_weights<span class="op">$</span>weights                  <span class="co"># Allocate weights </span></span>
-<span id="cb183-14"><a href="backtest.html#cb183-14"></a>        portf_returns[t,j] &lt;-<span class="st"> </span><span class="kw">sum</span>(temp_weights<span class="op">$</span>weights <span class="op">*</span><span class="st"> </span>realized_returns) <span class="co"># Compute returns</span></span>
-<span id="cb183-15"><a href="backtest.html#cb183-15"></a>    }</span>
-<span id="cb183-16"><a href="backtest.html#cb183-16"></a>}</span></code></pre></div>
-<pre><code>## [18:17:35] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:17:44] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:17:53] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:02] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:11] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:20] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:30] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:39] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:48] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:18:57] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:19:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [1] &quot;2007-12-31&quot;
-## [18:19:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:19:25] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:19:34] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:19:43] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:19:53] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:02] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:11] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:20] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:30] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:39] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:48] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:20:57] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
+<div class="sourceCode" id="cb184"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb184-1"><a href="backtest.html#cb184-1"></a>m_offset &lt;-<span class="st"> </span><span class="dv">12</span>                                          <span class="co"># Offset in months for buffer period</span></span>
+<span id="cb184-2"><a href="backtest.html#cb184-2"></a>train_size &lt;-<span class="st"> </span><span class="dv">5</span>                                         <span class="co"># Size of training set in years</span></span>
+<span id="cb184-3"><a href="backtest.html#cb184-3"></a><span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>)){                          <span class="co"># Stop before last date: no fwd ret.!</span></span>
+<span id="cb184-4"><a href="backtest.html#cb184-4"></a>    <span class="cf">if</span>(t<span class="op">%%</span><span class="dv">12</span><span class="op">==</span><span class="dv">0</span>){<span class="kw">print</span>(t_oos[t])}                       <span class="co"># Just checking the date status</span></span>
+<span id="cb184-5"><a href="backtest.html#cb184-5"></a>    train_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">&lt;</span><span class="st"> </span>t_oos[t] <span class="op">-</span><span class="st"> </span>m_offset <span class="op">*</span><span class="st"> </span><span class="dv">30</span>,   <span class="co"># Roll window w. buffer</span></span>
+<span id="cb184-6"><a href="backtest.html#cb184-6"></a>                                    date <span class="op">&gt;</span><span class="st"> </span>t_oos[t] <span class="op">-</span><span class="st"> </span>m_offset <span class="op">*</span><span class="st"> </span><span class="dv">30</span> <span class="op">-</span><span class="st"> </span><span class="dv">365</span> <span class="op">*</span><span class="st"> </span>train_size)    </span>
+<span id="cb184-7"><a href="backtest.html#cb184-7"></a>    test_data &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t])   <span class="co"># Test sample  </span></span>
+<span id="cb184-8"><a href="backtest.html#cb184-8"></a>    realized_returns &lt;-<span class="st"> </span>test_data <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># Computing returns via:</span></span>
+<span id="cb184-9"><a href="backtest.html#cb184-9"></a><span class="st">        </span>dplyr<span class="op">::</span><span class="kw">select</span>(R1M_Usd)                          <span class="co"># 1M holding period!</span></span>
+<span id="cb184-10"><a href="backtest.html#cb184-10"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>nb_port){    </span>
+<span id="cb184-11"><a href="backtest.html#cb184-11"></a>        temp_weights &lt;-<span class="st"> </span><span class="kw">portf_compo</span>(train_data, test_data, features, j) <span class="co"># Weights</span></span>
+<span id="cb184-12"><a href="backtest.html#cb184-12"></a>        ind &lt;-<span class="st"> </span><span class="kw">match</span>(temp_weights<span class="op">$</span>names, ticks) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">na.omit</span>()           <span class="co"># Index: test vs all</span></span>
+<span id="cb184-13"><a href="backtest.html#cb184-13"></a>        portf_weights[t,j,ind] &lt;-<span class="st"> </span>temp_weights<span class="op">$</span>weights                  <span class="co"># Allocate weights </span></span>
+<span id="cb184-14"><a href="backtest.html#cb184-14"></a>        portf_returns[t,j] &lt;-<span class="st"> </span><span class="kw">sum</span>(temp_weights<span class="op">$</span>weights <span class="op">*</span><span class="st"> </span>realized_returns) <span class="co"># Compute returns</span></span>
+<span id="cb184-15"><a href="backtest.html#cb184-15"></a>    } </span>
+<span id="cb184-16"><a href="backtest.html#cb184-16"></a>}    </span></code></pre></div>
+<pre><code>## [1] &quot;2007-12-31&quot;
 ## [1] &quot;2008-12-31&quot;
-## [18:21:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:21:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:21:25] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:21:34] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:21:44] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:21:53] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:22:02] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:22:12] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:22:21] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:22:30] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:22:39] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:22:49] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2009-12-31&quot;
-## [18:22:58] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:23:08] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:23:17] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:23:26] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:23:35] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:23:45] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:23:54] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:24:03] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:24:12] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:24:21] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:24:30] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:24:39] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2010-12-31&quot;
-## [18:24:49] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:24:58] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:25:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:25:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:25:25] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:25:34] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:25:43] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:25:52] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:26:01] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:26:11] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:26:20] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:26:29] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2011-12-31&quot;
-## [18:26:38] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:26:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:26:56] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:27:06] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:27:15] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:27:24] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:27:33] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:27:42] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:27:51] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:28:00] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:28:09] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:28:18] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2012-12-31&quot;
-## [18:28:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:28:36] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:28:45] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:28:54] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:03] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:12] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:21] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:31] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:40] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:49] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:29:58] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:30:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2013-12-31&quot;
-## [18:30:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:30:25] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:30:35] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:30:44] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:30:53] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:02] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:11] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:20] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:29] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:38] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:31:56] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2014-12-31&quot;
-## [18:32:05] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:32:14] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:32:24] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:32:33] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:32:42] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:32:51] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:33:00] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:33:09] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:33:18] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:33:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:33:36] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:33:45] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2015-12-31&quot;
-## [18:33:54] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:03] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:13] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:22] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:31] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:40] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:49] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:34:58] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:35:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:35:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:35:25] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:35:34] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
 ## [1] &quot;2016-12-31&quot;
-## [18:35:43] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:35:52] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:01] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:10] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:19] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:29] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:38] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:36:56] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:37:05] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:37:14] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:37:23] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [1] &quot;2017-12-31&quot;
-## [18:37:32] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:37:41] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:37:50] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:37:59] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:38:08] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:38:17] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:38:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:38:36] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:38:45] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:38:54] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:39:03] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:39:12] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
+## [1] &quot;2017-12-31&quot;</code></pre>
 <p></p>
 <p>There are two important comments to be made on the above code. The first comment pertains to the two parameters that are defined in the first lines. They refer to the size of the training sample (5 years) and the length of the buffer period shown in Figure <a href="backtest.html#fig:backtestoos2">12.2</a>. This <strong>buffer period is imperative</strong> because the label is based on a long-term (12-month) return. This lag is compulsory to avoid any forward-looking bias in the backtest.</p>
 <p>Below, we create a function that computes the turnover (variation in weights). It requires both the weight values as well as the returns of all assets because the weights just before a rebalancing depend on the weights assigned in the previous period, as well as on the returns of the assets that have altered these original weights during the holding period.</p>
 
-<div class="sourceCode" id="cb185"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb185-1"><a href="backtest.html#cb185-1"></a>turnover &lt;-<span class="st"> </span><span class="cf">function</span>(weights, asset_returns, t_oos){ </span>
-<span id="cb185-2"><a href="backtest.html#cb185-2"></a>    turn &lt;-<span class="st"> </span><span class="dv">0</span></span>
-<span id="cb185-3"><a href="backtest.html#cb185-3"></a>    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(t_oos)){</span>
-<span id="cb185-4"><a href="backtest.html#cb185-4"></a>        realised_returns &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t]) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>date)</span>
-<span id="cb185-5"><a href="backtest.html#cb185-5"></a>        prior_weights &lt;-<span class="st"> </span>weights[t<span class="dv">-1</span>,] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>realised_returns) <span class="co"># Before rebalancing</span></span>
-<span id="cb185-6"><a href="backtest.html#cb185-6"></a>        turn &lt;-<span class="st"> </span>turn <span class="op">+</span><span class="st"> </span><span class="kw">apply</span>(<span class="kw">abs</span>(weights[t,] <span class="op">-</span><span class="st"> </span>prior_weights<span class="op">/</span><span class="kw">sum</span>(prior_weights)),<span class="dv">1</span>,sum)</span>
-<span id="cb185-7"><a href="backtest.html#cb185-7"></a>    }</span>
-<span id="cb185-8"><a href="backtest.html#cb185-8"></a>    <span class="kw">return</span>(turn<span class="op">/</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>))</span>
-<span id="cb185-9"><a href="backtest.html#cb185-9"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="backtest.html#cb186-1"></a>turnover &lt;-<span class="st"> </span><span class="cf">function</span>(weights, asset_returns, t_oos){ </span>
+<span id="cb186-2"><a href="backtest.html#cb186-2"></a>    turn &lt;-<span class="st"> </span><span class="dv">0</span></span>
+<span id="cb186-3"><a href="backtest.html#cb186-3"></a>    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">length</span>(t_oos)){</span>
+<span id="cb186-4"><a href="backtest.html#cb186-4"></a>        realised_returns &lt;-<span class="st"> </span>returns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t]) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>date)</span>
+<span id="cb186-5"><a href="backtest.html#cb186-5"></a>        prior_weights &lt;-<span class="st"> </span>weights[t<span class="dv">-1</span>,] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>realised_returns) <span class="co"># Before rebalancing</span></span>
+<span id="cb186-6"><a href="backtest.html#cb186-6"></a>        turn &lt;-<span class="st"> </span>turn <span class="op">+</span><span class="st"> </span><span class="kw">apply</span>(<span class="kw">abs</span>(weights[t,] <span class="op">-</span><span class="st"> </span>prior_weights<span class="op">/</span><span class="kw">sum</span>(prior_weights)),<span class="dv">1</span>,sum)</span>
+<span id="cb186-7"><a href="backtest.html#cb186-7"></a>    }</span>
+<span id="cb186-8"><a href="backtest.html#cb186-8"></a>    <span class="kw">return</span>(turn<span class="op">/</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>))</span>
+<span id="cb186-9"><a href="backtest.html#cb186-9"></a>}</span></code></pre></div>
 <p></p>
 <p>Once turnover is defined, we embed it into a function that computes several key indicators.</p>
 
-<div class="sourceCode" id="cb186"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb186-1"><a href="backtest.html#cb186-1"></a>perf_met &lt;-<span class="st"> </span><span class="cf">function</span>(portf_returns, weights, asset_returns, t_oos){ </span>
-<span id="cb186-2"><a href="backtest.html#cb186-2"></a>    avg_ret &lt;-<span class="st"> </span><span class="kw">mean</span>(portf_returns, <span class="dt">na.rm =</span> T)                     <span class="co"># Arithmetic mean </span></span>
-<span id="cb186-3"><a href="backtest.html#cb186-3"></a>    vol &lt;-<span class="st"> </span><span class="kw">sd</span>(portf_returns, <span class="dt">na.rm =</span> T)                           <span class="co"># Volatility</span></span>
-<span id="cb186-4"><a href="backtest.html#cb186-4"></a>    Sharpe_ratio &lt;-<span class="st"> </span>avg_ret <span class="op">/</span><span class="st"> </span>vol                                 <span class="co"># Sharpe ratio</span></span>
-<span id="cb186-5"><a href="backtest.html#cb186-5"></a>    VaR_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">quantile</span>(portf_returns, <span class="fl">0.05</span>)                        <span class="co"># Value-at-risk</span></span>
-<span id="cb186-6"><a href="backtest.html#cb186-6"></a>    turn &lt;-<span class="st"> </span><span class="dv">0</span>                                                     <span class="co"># Initialisation of turnover</span></span>
-<span id="cb186-7"><a href="backtest.html#cb186-7"></a>    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(weights)[<span class="dv">1</span>]){</span>
-<span id="cb186-8"><a href="backtest.html#cb186-8"></a>        realized_returns &lt;-<span class="st"> </span>asset_returns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t]) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>date)</span>
-<span id="cb186-9"><a href="backtest.html#cb186-9"></a>        prior_weights &lt;-<span class="st"> </span>weights[t<span class="dv">-1</span>,] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>realized_returns)</span>
-<span id="cb186-10"><a href="backtest.html#cb186-10"></a>        turn &lt;-<span class="st"> </span>turn <span class="op">+</span><span class="st"> </span><span class="kw">apply</span>(<span class="kw">abs</span>(weights[t,] <span class="op">-</span><span class="st"> </span>prior_weights<span class="op">/</span><span class="kw">sum</span>(prior_weights)),<span class="dv">1</span>,sum)</span>
-<span id="cb186-11"><a href="backtest.html#cb186-11"></a>    }</span>
-<span id="cb186-12"><a href="backtest.html#cb186-12"></a>    turn &lt;-<span class="st"> </span>turn<span class="op">/</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>)                                <span class="co"># Average over time</span></span>
-<span id="cb186-13"><a href="backtest.html#cb186-13"></a>    met &lt;-<span class="st"> </span><span class="kw">data.frame</span>(avg_ret, vol, Sharpe_ratio, VaR_<span class="dv">5</span>, turn)    <span class="co"># Aggregation of all of this</span></span>
-<span id="cb186-14"><a href="backtest.html#cb186-14"></a>    <span class="kw">rownames</span>(met) &lt;-<span class="st"> &quot;metrics&quot;</span></span>
-<span id="cb186-15"><a href="backtest.html#cb186-15"></a>    <span class="kw">return</span>(met)</span>
-<span id="cb186-16"><a href="backtest.html#cb186-16"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="backtest.html#cb187-1"></a>perf_met &lt;-<span class="st"> </span><span class="cf">function</span>(portf_returns, weights, asset_returns, t_oos){ </span>
+<span id="cb187-2"><a href="backtest.html#cb187-2"></a>    avg_ret &lt;-<span class="st"> </span><span class="kw">mean</span>(portf_returns, <span class="dt">na.rm =</span> T)                     <span class="co"># Arithmetic mean </span></span>
+<span id="cb187-3"><a href="backtest.html#cb187-3"></a>    vol &lt;-<span class="st"> </span><span class="kw">sd</span>(portf_returns, <span class="dt">na.rm =</span> T)                           <span class="co"># Volatility</span></span>
+<span id="cb187-4"><a href="backtest.html#cb187-4"></a>    Sharpe_ratio &lt;-<span class="st"> </span>avg_ret <span class="op">/</span><span class="st"> </span>vol                                 <span class="co"># Sharpe ratio</span></span>
+<span id="cb187-5"><a href="backtest.html#cb187-5"></a>    VaR_<span class="dv">5</span> &lt;-<span class="st"> </span><span class="kw">quantile</span>(portf_returns, <span class="fl">0.05</span>)                        <span class="co"># Value-at-risk</span></span>
+<span id="cb187-6"><a href="backtest.html#cb187-6"></a>    turn &lt;-<span class="st"> </span><span class="dv">0</span>                                                     <span class="co"># Initialisation of turnover</span></span>
+<span id="cb187-7"><a href="backtest.html#cb187-7"></a>    <span class="cf">for</span>(t <span class="cf">in</span> <span class="dv">2</span><span class="op">:</span><span class="kw">dim</span>(weights)[<span class="dv">1</span>]){</span>
+<span id="cb187-8"><a href="backtest.html#cb187-8"></a>        realized_returns &lt;-<span class="st"> </span>asset_returns <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">filter</span>(date <span class="op">==</span><span class="st"> </span>t_oos[t]) <span class="op">%&gt;%</span><span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(<span class="op">-</span>date)</span>
+<span id="cb187-9"><a href="backtest.html#cb187-9"></a>        prior_weights &lt;-<span class="st"> </span>weights[t<span class="dv">-1</span>,] <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">+</span><span class="st"> </span>realized_returns)</span>
+<span id="cb187-10"><a href="backtest.html#cb187-10"></a>        turn &lt;-<span class="st"> </span>turn <span class="op">+</span><span class="st"> </span><span class="kw">apply</span>(<span class="kw">abs</span>(weights[t,] <span class="op">-</span><span class="st"> </span>prior_weights<span class="op">/</span><span class="kw">sum</span>(prior_weights)),<span class="dv">1</span>,sum)</span>
+<span id="cb187-11"><a href="backtest.html#cb187-11"></a>    }</span>
+<span id="cb187-12"><a href="backtest.html#cb187-12"></a>    turn &lt;-<span class="st"> </span>turn<span class="op">/</span>(<span class="kw">length</span>(t_oos)<span class="op">-</span><span class="dv">1</span>)                                <span class="co"># Average over time</span></span>
+<span id="cb187-13"><a href="backtest.html#cb187-13"></a>    met &lt;-<span class="st"> </span><span class="kw">data.frame</span>(avg_ret, vol, Sharpe_ratio, VaR_<span class="dv">5</span>, turn)    <span class="co"># Aggregation of all of this</span></span>
+<span id="cb187-14"><a href="backtest.html#cb187-14"></a>    <span class="kw">rownames</span>(met) &lt;-<span class="st"> &quot;metrics&quot;</span></span>
+<span id="cb187-15"><a href="backtest.html#cb187-15"></a>    <span class="kw">return</span>(met)</span>
+<span id="cb187-16"><a href="backtest.html#cb187-16"></a>}</span></code></pre></div>
 <p></p>
 <p>Lastly, we build a function that loops on the various strategies.</p>
 
-<div class="sourceCode" id="cb187"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb187-1"><a href="backtest.html#cb187-1"></a>perf_met_multi &lt;-<span class="st"> </span><span class="cf">function</span>(portf_returns, weights, asset_returns, t_oos, strat_name){</span>
-<span id="cb187-2"><a href="backtest.html#cb187-2"></a>    J &lt;-<span class="st"> </span><span class="kw">dim</span>(weights)[<span class="dv">2</span>]              <span class="co"># Number of strategies </span></span>
-<span id="cb187-3"><a href="backtest.html#cb187-3"></a>    met &lt;-<span class="st"> </span><span class="kw">c</span>()                        <span class="co"># Initialization of metrics</span></span>
-<span id="cb187-4"><a href="backtest.html#cb187-4"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){                    <span class="co"># One very ugly loop</span></span>
-<span id="cb187-5"><a href="backtest.html#cb187-5"></a>        temp_met &lt;-<span class="st"> </span><span class="kw">perf_met</span>(portf_returns[, j], weights[, j, ], asset_returns, t_oos)</span>
-<span id="cb187-6"><a href="backtest.html#cb187-6"></a>        met &lt;-<span class="st"> </span><span class="kw">rbind</span>(met, temp_met)</span>
-<span id="cb187-7"><a href="backtest.html#cb187-7"></a>    }</span>
-<span id="cb187-8"><a href="backtest.html#cb187-8"></a>    <span class="kw">row.names</span>(met) &lt;-<span class="st"> </span>strat_name      <span class="co"># Stores the name of the strat</span></span>
-<span id="cb187-9"><a href="backtest.html#cb187-9"></a>    <span class="kw">return</span>(met)</span>
-<span id="cb187-10"><a href="backtest.html#cb187-10"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="backtest.html#cb188-1"></a>perf_met_multi &lt;-<span class="st"> </span><span class="cf">function</span>(portf_returns, weights, asset_returns, t_oos, strat_name){</span>
+<span id="cb188-2"><a href="backtest.html#cb188-2"></a>    J &lt;-<span class="st"> </span><span class="kw">dim</span>(weights)[<span class="dv">2</span>]              <span class="co"># Number of strategies </span></span>
+<span id="cb188-3"><a href="backtest.html#cb188-3"></a>    met &lt;-<span class="st"> </span><span class="kw">c</span>()                        <span class="co"># Initialization of metrics</span></span>
+<span id="cb188-4"><a href="backtest.html#cb188-4"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="op">:</span>J){                    <span class="co"># One very ugly loop</span></span>
+<span id="cb188-5"><a href="backtest.html#cb188-5"></a>        temp_met &lt;-<span class="st"> </span><span class="kw">perf_met</span>(portf_returns[, j], weights[, j, ], asset_returns, t_oos)</span>
+<span id="cb188-6"><a href="backtest.html#cb188-6"></a>        met &lt;-<span class="st"> </span><span class="kw">rbind</span>(met, temp_met)</span>
+<span id="cb188-7"><a href="backtest.html#cb188-7"></a>    }</span>
+<span id="cb188-8"><a href="backtest.html#cb188-8"></a>    <span class="kw">row.names</span>(met) &lt;-<span class="st"> </span>strat_name      <span class="co"># Stores the name of the strat</span></span>
+<span id="cb188-9"><a href="backtest.html#cb188-9"></a>    <span class="kw">return</span>(met)</span>
+<span id="cb188-10"><a href="backtest.html#cb188-10"></a>}</span></code></pre></div>
 <p></p>
 <p>Given the weights and returns of the portfolios, it remains to compute the returns of the assets to plug them in the aggregate metrics function.</p>
 
-<div class="sourceCode" id="cb188"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb188-1"><a href="backtest.html#cb188-1"></a>asset_returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Compute return matrix: start from data</span></span>
-<span id="cb188-2"><a href="backtest.html#cb188-2"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(date, stock_id, R1M_Usd) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Keep 3 attributes </span></span>
-<span id="cb188-3"><a href="backtest.html#cb188-3"></a><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)           <span class="co"># Shape in matrix format</span></span>
-<span id="cb188-4"><a href="backtest.html#cb188-4"></a>asset_returns[<span class="kw">is.na</span>(asset_returns)] &lt;-<span class="st"> </span><span class="dv">0</span>              <span class="co"># Zero returns for missing points</span></span>
-<span id="cb188-5"><a href="backtest.html#cb188-5"></a></span>
-<span id="cb188-6"><a href="backtest.html#cb188-6"></a>met &lt;-<span class="st"> </span><span class="kw">perf_met_multi</span>(<span class="dt">portf_returns =</span> portf_returns,  <span class="co"># Computes performance metrics</span></span>
-<span id="cb188-7"><a href="backtest.html#cb188-7"></a>                      <span class="dt">weights =</span> portf_weights, </span>
-<span id="cb188-8"><a href="backtest.html#cb188-8"></a>                      <span class="dt">asset_returns =</span> asset_returns,</span>
-<span id="cb188-9"><a href="backtest.html#cb188-9"></a>                      <span class="dt">t_oos =</span> t_oos,</span>
-<span id="cb188-10"><a href="backtest.html#cb188-10"></a>                      <span class="dt">strat_name =</span> <span class="kw">c</span>(<span class="st">&quot;EW&quot;</span>, <span class="st">&quot;XGB_SR&quot;</span>))</span>
-<span id="cb188-11"><a href="backtest.html#cb188-11"></a>met                                                   <span class="co"># Displays perf metrics</span></span></code></pre></div>
+<div class="sourceCode" id="cb189"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb189-1"><a href="backtest.html#cb189-1"></a>asset_returns &lt;-<span class="st"> </span>data_ml <span class="op">%&gt;%</span><span class="st">                          </span><span class="co"># Compute return matrix: start from data</span></span>
+<span id="cb189-2"><a href="backtest.html#cb189-2"></a><span class="st">    </span>dplyr<span class="op">::</span><span class="kw">select</span>(date, stock_id, R1M_Usd) <span class="op">%&gt;%</span><span class="st">        </span><span class="co"># Keep 3 attributes </span></span>
+<span id="cb189-3"><a href="backtest.html#cb189-3"></a><span class="st">    </span><span class="kw">spread</span>(<span class="dt">key =</span> stock_id, <span class="dt">value =</span> R1M_Usd)           <span class="co"># Shape in matrix format</span></span>
+<span id="cb189-4"><a href="backtest.html#cb189-4"></a>asset_returns[<span class="kw">is.na</span>(asset_returns)] &lt;-<span class="st"> </span><span class="dv">0</span>              <span class="co"># Zero returns for missing points</span></span>
+<span id="cb189-5"><a href="backtest.html#cb189-5"></a></span>
+<span id="cb189-6"><a href="backtest.html#cb189-6"></a>met &lt;-<span class="st"> </span><span class="kw">perf_met_multi</span>(<span class="dt">portf_returns =</span> portf_returns,  <span class="co"># Computes performance metrics</span></span>
+<span id="cb189-7"><a href="backtest.html#cb189-7"></a>                      <span class="dt">weights =</span> portf_weights, </span>
+<span id="cb189-8"><a href="backtest.html#cb189-8"></a>                      <span class="dt">asset_returns =</span> asset_returns,</span>
+<span id="cb189-9"><a href="backtest.html#cb189-9"></a>                      <span class="dt">t_oos =</span> t_oos,</span>
+<span id="cb189-10"><a href="backtest.html#cb189-10"></a>                      <span class="dt">strat_name =</span> <span class="kw">c</span>(<span class="st">&quot;EW&quot;</span>, <span class="st">&quot;XGB_SR&quot;</span>))</span>
+<span id="cb189-11"><a href="backtest.html#cb189-11"></a>met                                                   <span class="co"># Displays perf metrics</span></span></code></pre></div>
 <pre><code>##            avg_ret        vol Sharpe_ratio       VaR_5      turn
 ## EW     0.009697248 0.05642917    0.1718481 -0.07712509 0.0714512
 ## XGB_SR 0.012602882 0.06376845    0.1976351 -0.08335864 0.5679932</code></pre>
@@ -974,22 +831,22 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p>The ML-based strategy performs finally well! The gain is mostly obtained by the average return, while the volatility is higher than that of the benchmark. The net effect is that the Sharpe ratio is improved compared to the benchmark. The augmentation is not breathtaking, but (hence?) it seems reasonable. It is noteworthy to underline that turnover is substantially higher for the sophisticated strategy. Removing costs in the numerator (say, 0.005 times the turnover, as in <span class="citation">Goto and Xu (<a href="#ref-goto2015improving" role="doc-biblioref">2015</a>)</span>, which is a conservative figure) only mildly reduces the superiority in Sharpe ratio of the ML-based strategy.</p>
 <p>Finally, it is always tempting to plot the corresponding portfolio values and we display two related graphs in Figure <a href="backtest.html#fig:backtest6">12.3</a>.</p>
 
-<div class="sourceCode" id="cb190"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb190-1"><a href="backtest.html#cb190-1"></a><span class="kw">library</span>(lubridate) <span class="co"># Date management</span></span>
-<span id="cb190-2"><a href="backtest.html#cb190-2"></a><span class="kw">library</span>(cowplot)   <span class="co"># Plot grid management</span></span>
-<span id="cb190-3"><a href="backtest.html#cb190-3"></a>g1 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">date =</span> t_oos,  </span>
-<span id="cb190-4"><a href="backtest.html#cb190-4"></a>      <span class="dt">benchmark =</span> <span class="kw">cumprod</span>(<span class="dv">1</span><span class="op">+</span>portf_returns[,<span class="dv">1</span>]),</span>
-<span id="cb190-5"><a href="backtest.html#cb190-5"></a>      <span class="dt">ml_based =</span> <span class="kw">cumprod</span>(<span class="dv">1</span><span class="op">+</span>portf_returns[,<span class="dv">2</span>])) <span class="op">%&gt;%</span></span>
-<span id="cb190-6"><a href="backtest.html#cb190-6"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> strat, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span></span>
-<span id="cb190-7"><a href="backtest.html#cb190-7"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> strat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="kw">theme_grey</span>()</span>
-<span id="cb190-8"><a href="backtest.html#cb190-8"></a>g2 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(t_oos),  </span>
-<span id="cb190-9"><a href="backtest.html#cb190-9"></a>             <span class="dt">benchmark =</span> portf_returns[,<span class="dv">1</span>],</span>
-<span id="cb190-10"><a href="backtest.html#cb190-10"></a>             <span class="dt">ml_based =</span> portf_returns[,<span class="dv">2</span>]) <span class="op">%&gt;%</span></span>
-<span id="cb190-11"><a href="backtest.html#cb190-11"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> strat, <span class="dt">value =</span> value, <span class="op">-</span>year) <span class="op">%&gt;%</span></span>
-<span id="cb190-12"><a href="backtest.html#cb190-12"></a><span class="st">    </span><span class="kw">group_by</span>(year, strat) <span class="op">%&gt;%</span></span>
-<span id="cb190-13"><a href="backtest.html#cb190-13"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">avg_return =</span> <span class="kw">mean</span>(value)) <span class="op">%&gt;%</span></span>
-<span id="cb190-14"><a href="backtest.html#cb190-14"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_return, <span class="dt">fill =</span> strat)) <span class="op">+</span><span class="st"> </span></span>
-<span id="cb190-15"><a href="backtest.html#cb190-15"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</span>
-<span id="cb190-16"><a href="backtest.html#cb190-16"></a><span class="kw">plot_grid</span>(g1,g2, <span class="dt">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="backtest.html#cb191-1"></a><span class="kw">library</span>(lubridate) <span class="co"># Date management</span></span>
+<span id="cb191-2"><a href="backtest.html#cb191-2"></a><span class="kw">library</span>(cowplot)   <span class="co"># Plot grid management</span></span>
+<span id="cb191-3"><a href="backtest.html#cb191-3"></a>g1 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">date =</span> t_oos,  </span>
+<span id="cb191-4"><a href="backtest.html#cb191-4"></a>      <span class="dt">benchmark =</span> <span class="kw">cumprod</span>(<span class="dv">1</span><span class="op">+</span>portf_returns[,<span class="dv">1</span>]),</span>
+<span id="cb191-5"><a href="backtest.html#cb191-5"></a>      <span class="dt">ml_based =</span> <span class="kw">cumprod</span>(<span class="dv">1</span><span class="op">+</span>portf_returns[,<span class="dv">2</span>])) <span class="op">%&gt;%</span></span>
+<span id="cb191-6"><a href="backtest.html#cb191-6"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> strat, <span class="dt">value =</span> value, <span class="op">-</span>date) <span class="op">%&gt;%</span></span>
+<span id="cb191-7"><a href="backtest.html#cb191-7"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> date, <span class="dt">y =</span> value, <span class="dt">color =</span> strat)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="kw">theme_grey</span>()</span>
+<span id="cb191-8"><a href="backtest.html#cb191-8"></a>g2 &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">year =</span> lubridate<span class="op">::</span><span class="kw">year</span>(t_oos),  </span>
+<span id="cb191-9"><a href="backtest.html#cb191-9"></a>             <span class="dt">benchmark =</span> portf_returns[,<span class="dv">1</span>],</span>
+<span id="cb191-10"><a href="backtest.html#cb191-10"></a>             <span class="dt">ml_based =</span> portf_returns[,<span class="dv">2</span>]) <span class="op">%&gt;%</span></span>
+<span id="cb191-11"><a href="backtest.html#cb191-11"></a><span class="st">    </span><span class="kw">gather</span>(<span class="dt">key =</span> strat, <span class="dt">value =</span> value, <span class="op">-</span>year) <span class="op">%&gt;%</span></span>
+<span id="cb191-12"><a href="backtest.html#cb191-12"></a><span class="st">    </span><span class="kw">group_by</span>(year, strat) <span class="op">%&gt;%</span></span>
+<span id="cb191-13"><a href="backtest.html#cb191-13"></a><span class="st">    </span><span class="kw">summarise</span>(<span class="dt">avg_return =</span> <span class="kw">mean</span>(value)) <span class="op">%&gt;%</span></span>
+<span id="cb191-14"><a href="backtest.html#cb191-14"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> year, <span class="dt">y =</span> avg_return, <span class="dt">fill =</span> strat)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb191-15"><a href="backtest.html#cb191-15"></a><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">position =</span> <span class="st">&quot;dodge&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_grey</span>()</span>
+<span id="cb191-16"><a href="backtest.html#cb191-16"></a><span class="kw">plot_grid</span>(g1,g2, <span class="dt">nrow =</span> <span class="dv">2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:backtest6"></span>
 <img src="ML_factor_files/figure-html/backtest6-1.png" alt="Graphical representation of the performance of the portfolios." width="672" />
 <p class="caption">
@@ -1004,23 +861,23 @@ FIGURE 12.3: Graphical representation of the performance of the portfolios.
 <p>
 To end this chapter, we quantify the concepts of Section <a href="backtest.html#backov">12.4.2</a>. First, we build a function that is able to generate performance metrics for simple strategies that can be evaluated in batches. The strategies are pure factor bets and depend on three inputs: the chosen characteristic (e.g., market capitalization), a threshold level (quantile of the characteristic) and a direction (long position in the top or bottom of the distribution).</p>
 
-<div class="sourceCode" id="cb191"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb191-1"><a href="backtest.html#cb191-1"></a>strat &lt;-<span class="st"> </span><span class="cf">function</span>(data, feature, thresh, direction){</span>
-<span id="cb191-2"><a href="backtest.html#cb191-2"></a>    data_tmp &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(data, feature, date, R1M_Usd)       <span class="co"># Data</span></span>
-<span id="cb191-3"><a href="backtest.html#cb191-3"></a>    <span class="kw">colnames</span>(data_tmp)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;feature&quot;</span>                            <span class="co"># Colname</span></span>
-<span id="cb191-4"><a href="backtest.html#cb191-4"></a>    data_tmp <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb191-5"><a href="backtest.html#cb191-5"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">decision =</span> direction <span class="op">*</span><span class="st"> </span>feature <span class="op">&gt;</span><span class="st"> </span>direction <span class="op">*</span><span class="st"> </span>thresh) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Investment decision</span></span>
-<span id="cb191-6"><a href="backtest.html#cb191-6"></a><span class="st">        </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># Date-by-date  analysis    </span></span>
-<span id="cb191-7"><a href="backtest.html#cb191-7"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">nb =</span> <span class="kw">sum</span>(decision),                                  <span class="co"># Nb assets in portfolio</span></span>
-<span id="cb191-8"><a href="backtest.html#cb191-8"></a>               <span class="dt">w =</span> decision <span class="op">/</span><span class="st"> </span>nb,                                   <span class="co"># Weights of assets</span></span>
-<span id="cb191-9"><a href="backtest.html#cb191-9"></a>               <span class="dt">return =</span> w <span class="op">*</span><span class="st"> </span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Asset contribution</span></span>
-<span id="cb191-10"><a href="backtest.html#cb191-10"></a><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">p_return =</span> <span class="kw">sum</span>(return)) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># Portfolio return</span></span>
-<span id="cb191-11"><a href="backtest.html#cb191-11"></a><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(p_return), <span class="dt">sd =</span> <span class="kw">sd</span>(p_return), <span class="dt">SR =</span> avg<span class="op">/</span>sd) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Perf. metrics</span></span>
-<span id="cb191-12"><a href="backtest.html#cb191-12"></a><span class="st">        </span><span class="kw">return</span>()</span>
-<span id="cb191-13"><a href="backtest.html#cb191-13"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="backtest.html#cb192-1"></a>strat &lt;-<span class="st"> </span><span class="cf">function</span>(data, feature, thresh, direction){</span>
+<span id="cb192-2"><a href="backtest.html#cb192-2"></a>    data_tmp &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(data, feature, date, R1M_Usd)       <span class="co"># Data</span></span>
+<span id="cb192-3"><a href="backtest.html#cb192-3"></a>    <span class="kw">colnames</span>(data_tmp)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;feature&quot;</span>                            <span class="co"># Colname</span></span>
+<span id="cb192-4"><a href="backtest.html#cb192-4"></a>    data_tmp <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb192-5"><a href="backtest.html#cb192-5"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">decision =</span> direction <span class="op">*</span><span class="st"> </span>feature <span class="op">&gt;</span><span class="st"> </span>direction <span class="op">*</span><span class="st"> </span>thresh) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Investment decision</span></span>
+<span id="cb192-6"><a href="backtest.html#cb192-6"></a><span class="st">        </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># Date-by-date  analysis    </span></span>
+<span id="cb192-7"><a href="backtest.html#cb192-7"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">nb =</span> <span class="kw">sum</span>(decision),                                  <span class="co"># Nb assets in portfolio</span></span>
+<span id="cb192-8"><a href="backtest.html#cb192-8"></a>               <span class="dt">w =</span> decision <span class="op">/</span><span class="st"> </span>nb,                                   <span class="co"># Weights of assets</span></span>
+<span id="cb192-9"><a href="backtest.html#cb192-9"></a>               <span class="dt">return =</span> w <span class="op">*</span><span class="st"> </span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">                            </span><span class="co"># Asset contribution</span></span>
+<span id="cb192-10"><a href="backtest.html#cb192-10"></a><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">p_return =</span> <span class="kw">sum</span>(return)) <span class="op">%&gt;%</span><span class="st">                       </span><span class="co"># Portfolio return</span></span>
+<span id="cb192-11"><a href="backtest.html#cb192-11"></a><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">avg =</span> <span class="kw">mean</span>(p_return), <span class="dt">sd =</span> <span class="kw">sd</span>(p_return), <span class="dt">SR =</span> avg<span class="op">/</span>sd) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Perf. metrics</span></span>
+<span id="cb192-12"><a href="backtest.html#cb192-12"></a><span class="st">        </span><span class="kw">return</span>()</span>
+<span id="cb192-13"><a href="backtest.html#cb192-13"></a>}</span></code></pre></div>
 <p></p>
 <p>Then, we test the function on a triplet of arguments. We pick the price-to-book (Pb) ratio. The position is positive and the threshold is 0.3, which means that the strategy buys the stocks that have a Pb value above the 0.3 quantile of the distribution.</p>
 
-<div class="sourceCode" id="cb192"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb192-1"><a href="backtest.html#cb192-1"></a><span class="kw">strat</span>(data_ml, <span class="st">&quot;Pb&quot;</span>, <span class="fl">0.3</span>, <span class="dv">1</span>)   <span class="co"># Large cap</span></span></code></pre></div>
+<div class="sourceCode" id="cb193"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb193-1"><a href="backtest.html#cb193-1"></a><span class="kw">strat</span>(data_ml, <span class="st">&quot;Pb&quot;</span>, <span class="fl">0.3</span>, <span class="dv">1</span>)   <span class="co"># Large cap</span></span></code></pre></div>
 <pre><code>## # A tibble: 1 x 3
 ##      avg     sd    SR
 ##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
@@ -1028,27 +885,27 @@ To end this chapter, we quantify the concepts of Section <a href="backtest.html#
 <p></p>
 <p>The output keeps three quantities that will be useful to compute the statistic <a href="backtest.html#eq:tSR">(12.5)</a>. We must now generate these indicators for many strategies. We start by creating the grid of parameters.</p>
 
-<div class="sourceCode" id="cb194"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb194-1"><a href="backtest.html#cb194-1"></a>feature &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Div_Yld&quot;</span>, <span class="st">&quot;Ebit_Bv&quot;</span>, <span class="st">&quot;Mkt_Cap_6M_Usd&quot;</span>, <span class="st">&quot;Mom_11M_Usd&quot;</span>, <span class="st">&quot;Pb&quot;</span>, <span class="st">&quot;Vol1Y_Usd&quot;</span>)  </span>
-<span id="cb194-2"><a href="backtest.html#cb194-2"></a>thresh &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.2</span>,<span class="fl">0.8</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)                                <span class="co"># Threshold values values</span></span>
-<span id="cb194-3"><a href="backtest.html#cb194-3"></a>direction &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>)                                            <span class="co"># Decision direction</span></span>
-<span id="cb194-4"><a href="backtest.html#cb194-4"></a>pars &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(feature, thresh, direction)                 <span class="co"># The grid</span></span>
-<span id="cb194-5"><a href="backtest.html#cb194-5"></a>feature &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>()                          <span class="co"># re-features</span></span>
-<span id="cb194-6"><a href="backtest.html#cb194-6"></a>thresh &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]                                              <span class="co"># re-thresholds</span></span>
-<span id="cb194-7"><a href="backtest.html#cb194-7"></a>direction &lt;-<span class="st"> </span>pars[,<span class="dv">3</span>]                                           <span class="co"># re-directions</span></span></code></pre></div>
+<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="backtest.html#cb195-1"></a>feature &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Div_Yld&quot;</span>, <span class="st">&quot;Ebit_Bv&quot;</span>, <span class="st">&quot;Mkt_Cap_6M_Usd&quot;</span>, <span class="st">&quot;Mom_11M_Usd&quot;</span>, <span class="st">&quot;Pb&quot;</span>, <span class="st">&quot;Vol1Y_Usd&quot;</span>)  </span>
+<span id="cb195-2"><a href="backtest.html#cb195-2"></a>thresh &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="fl">0.2</span>,<span class="fl">0.8</span>, <span class="dt">by =</span> <span class="fl">0.1</span>)                                <span class="co"># Threshold values values</span></span>
+<span id="cb195-3"><a href="backtest.html#cb195-3"></a>direction &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>)                                            <span class="co"># Decision direction</span></span>
+<span id="cb195-4"><a href="backtest.html#cb195-4"></a>pars &lt;-<span class="st"> </span><span class="kw">expand.grid</span>(feature, thresh, direction)                 <span class="co"># The grid</span></span>
+<span id="cb195-5"><a href="backtest.html#cb195-5"></a>feature &lt;-<span class="st"> </span>pars[,<span class="dv">1</span>] <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as.character</span>()                          <span class="co"># re-features</span></span>
+<span id="cb195-6"><a href="backtest.html#cb195-6"></a>thresh &lt;-<span class="st"> </span>pars[,<span class="dv">2</span>]                                              <span class="co"># re-thresholds</span></span>
+<span id="cb195-7"><a href="backtest.html#cb195-7"></a>direction &lt;-<span class="st"> </span>pars[,<span class="dv">3</span>]                                           <span class="co"># re-directions</span></span></code></pre></div>
 <p></p>
 <p>This makes 84 strategies in total. We can proceed to see how they fare. We plot the corresponding Sharpe ratios below in Figure <a href="backtest.html#fig:backov3">12.4</a>. The top plot shows the strategies that invest in the bottoms of the distributions of characteristics while the bottom plot pertains to the portfolios that are long in the lower parts of these distributions.</p>
 
-<div class="sourceCode" id="cb195"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb195-1"><a href="backtest.html#cb195-1"></a>grd &lt;-<span class="st"> </span><span class="kw">pmap</span>(<span class="kw">list</span>(feature, thresh, direction),      <span class="co"># Parameters for the grid search</span></span>
-<span id="cb195-2"><a href="backtest.html#cb195-2"></a>            strat,                                 <span class="co"># Function on which to apply the grid search</span></span>
-<span id="cb195-3"><a href="backtest.html#cb195-3"></a>            <span class="dt">data =</span> data_ml                         <span class="co"># Data source/input</span></span>
-<span id="cb195-4"><a href="backtest.html#cb195-4"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb195-5"><a href="backtest.html#cb195-5"></a><span class="st">    </span><span class="kw">unlist</span>() <span class="op">%&gt;%</span></span>
-<span id="cb195-6"><a href="backtest.html#cb195-6"></a><span class="st">    </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> T)</span>
-<span id="cb195-7"><a href="backtest.html#cb195-7"></a>grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(feature, thresh, direction, grd)              <span class="co"># Gather &amp; reformat results </span></span>
-<span id="cb195-8"><a href="backtest.html#cb195-8"></a><span class="kw">colnames</span>(grd)[<span class="dv">4</span><span class="op">:</span><span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;sd&quot;</span>, <span class="st">&quot;SR&quot;</span>)                     <span class="co"># Change colnames</span></span>
-<span id="cb195-9"><a href="backtest.html#cb195-9"></a>grd &lt;-<span class="st"> </span>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(direction), as.factor)            <span class="co"># Change type: factor (for plot)</span></span>
-<span id="cb195-10"><a href="backtest.html#cb195-10"></a>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> thresh, <span class="dt">y =</span> SR, <span class="dt">color =</span> feature)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></span>
-<span id="cb195-11"><a href="backtest.html#cb195-11"></a><span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(direction<span class="op">~</span>.) </span></code></pre></div>
+<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="backtest.html#cb196-1"></a>grd &lt;-<span class="st"> </span><span class="kw">pmap</span>(<span class="kw">list</span>(feature, thresh, direction),      <span class="co"># Parameters for the grid search</span></span>
+<span id="cb196-2"><a href="backtest.html#cb196-2"></a>            strat,                                 <span class="co"># Function on which to apply the grid search</span></span>
+<span id="cb196-3"><a href="backtest.html#cb196-3"></a>            <span class="dt">data =</span> data_ml                         <span class="co"># Data source/input</span></span>
+<span id="cb196-4"><a href="backtest.html#cb196-4"></a>) <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb196-5"><a href="backtest.html#cb196-5"></a><span class="st">    </span><span class="kw">unlist</span>() <span class="op">%&gt;%</span></span>
+<span id="cb196-6"><a href="backtest.html#cb196-6"></a><span class="st">    </span><span class="kw">matrix</span>(<span class="dt">ncol =</span> <span class="dv">3</span>, <span class="dt">byrow =</span> T)</span>
+<span id="cb196-7"><a href="backtest.html#cb196-7"></a>grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(feature, thresh, direction, grd)              <span class="co"># Gather &amp; reformat results </span></span>
+<span id="cb196-8"><a href="backtest.html#cb196-8"></a><span class="kw">colnames</span>(grd)[<span class="dv">4</span><span class="op">:</span><span class="dv">6</span>] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;mean&quot;</span>, <span class="st">&quot;sd&quot;</span>, <span class="st">&quot;SR&quot;</span>)                     <span class="co"># Change colnames</span></span>
+<span id="cb196-9"><a href="backtest.html#cb196-9"></a>grd &lt;-<span class="st"> </span>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate_at</span>(<span class="kw">vars</span>(direction), as.factor)            <span class="co"># Change type: factor (for plot)</span></span>
+<span id="cb196-10"><a href="backtest.html#cb196-10"></a>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> thresh, <span class="dt">y =</span> SR, <span class="dt">color =</span> feature)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></span>
+<span id="cb196-11"><a href="backtest.html#cb196-11"></a><span class="st">    </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_line</span>() <span class="op">+</span><span class="st"> </span><span class="kw">facet_grid</span>(direction<span class="op">~</span>.) </span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:backov3"></span>
 <img src="ML_factor_files/figure-html/backov3-1.png" alt="Sharpe ratios of all backtested strategies." width="750" />
 <p class="caption">
@@ -1058,34 +915,34 @@ FIGURE 12.4: Sharpe ratios of all backtested strategies.
 <p></p>
 <p>The last step is to compute the statistic <a href="backtest.html#eq:tSR">(12.5)</a>. We code it here:</p>
 
-<div class="sourceCode" id="cb196"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb196-1"><a href="backtest.html#cb196-1"></a>DSR &lt;-<span class="st"> </span><span class="cf">function</span>(SR, Tt, M, g3, g4, SR_m, SR_v){ <span class="co"># First, we build the function</span></span>
-<span id="cb196-2"><a href="backtest.html#cb196-2"></a>    gamma &lt;-<span class="st"> </span><span class="op">-</span><span class="kw">digamma</span>(<span class="dv">1</span>)                        <span class="co"># Euler-Mascheroni constant</span></span>
-<span id="cb196-3"><a href="backtest.html#cb196-3"></a>    SR_star &lt;-<span class="st"> </span>SR_m <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(SR_v)<span class="op">*</span>((<span class="dv">1</span><span class="op">-</span>gamma)<span class="op">*</span><span class="kw">qnorm</span>(<span class="dv">1-1</span><span class="op">/</span>M) <span class="op">+</span><span class="st"> </span>gamma<span class="op">*</span><span class="kw">qnorm</span>(<span class="dv">1-1</span><span class="op">/</span>M<span class="op">/</span><span class="kw">exp</span>(<span class="dv">1</span>))) <span class="co"># SR*</span></span>
-<span id="cb196-4"><a href="backtest.html#cb196-4"></a>    num &lt;-<span class="st"> </span>(SR<span class="op">-</span>SR_star) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(Tt<span class="dv">-1</span>)            <span class="co"># Numerator</span></span>
-<span id="cb196-5"><a href="backtest.html#cb196-5"></a>    den &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>g3<span class="op">*</span>SR <span class="op">+</span><span class="st"> </span>(g4<span class="dv">-1</span>)<span class="op">/</span><span class="dv">4</span><span class="op">*</span>SR<span class="op">^</span><span class="dv">2</span>)      <span class="co"># Denominator</span></span>
-<span id="cb196-6"><a href="backtest.html#cb196-6"></a>    <span class="kw">return</span>(<span class="kw">pnorm</span>(num<span class="op">/</span>den))</span>
-<span id="cb196-7"><a href="backtest.html#cb196-7"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="backtest.html#cb197-1"></a>DSR &lt;-<span class="st"> </span><span class="cf">function</span>(SR, Tt, M, g3, g4, SR_m, SR_v){ <span class="co"># First, we build the function</span></span>
+<span id="cb197-2"><a href="backtest.html#cb197-2"></a>    gamma &lt;-<span class="st"> </span><span class="op">-</span><span class="kw">digamma</span>(<span class="dv">1</span>)                        <span class="co"># Euler-Mascheroni constant</span></span>
+<span id="cb197-3"><a href="backtest.html#cb197-3"></a>    SR_star &lt;-<span class="st"> </span>SR_m <span class="op">+</span><span class="st"> </span><span class="kw">sqrt</span>(SR_v)<span class="op">*</span>((<span class="dv">1</span><span class="op">-</span>gamma)<span class="op">*</span><span class="kw">qnorm</span>(<span class="dv">1-1</span><span class="op">/</span>M) <span class="op">+</span><span class="st"> </span>gamma<span class="op">*</span><span class="kw">qnorm</span>(<span class="dv">1-1</span><span class="op">/</span>M<span class="op">/</span><span class="kw">exp</span>(<span class="dv">1</span>))) <span class="co"># SR*</span></span>
+<span id="cb197-4"><a href="backtest.html#cb197-4"></a>    num &lt;-<span class="st"> </span>(SR<span class="op">-</span>SR_star) <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(Tt<span class="dv">-1</span>)            <span class="co"># Numerator</span></span>
+<span id="cb197-5"><a href="backtest.html#cb197-5"></a>    den &lt;-<span class="st"> </span><span class="kw">sqrt</span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>g3<span class="op">*</span>SR <span class="op">+</span><span class="st"> </span>(g4<span class="dv">-1</span>)<span class="op">/</span><span class="dv">4</span><span class="op">*</span>SR<span class="op">^</span><span class="dv">2</span>)      <span class="co"># Denominator</span></span>
+<span id="cb197-6"><a href="backtest.html#cb197-6"></a>    <span class="kw">return</span>(<span class="kw">pnorm</span>(num<span class="op">/</span>den))</span>
+<span id="cb197-7"><a href="backtest.html#cb197-7"></a>}</span></code></pre></div>
 <p></p>
 <p>All that remains to do is to evaluate the arguments of the function. The “best” strategy is the one on the top left corner of Figure <a href="backtest.html#fig:backov3">12.4</a> and it is based on market capitalization.</p>
 
-<div class="sourceCode" id="cb197"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb197-1"><a href="backtest.html#cb197-1"></a>M &lt;-<span class="st"> </span><span class="kw">nrow</span>(pars)             <span class="co"># Number of strategies we tested</span></span>
-<span id="cb197-2"><a href="backtest.html#cb197-2"></a>SR &lt;-<span class="st"> </span><span class="kw">max</span>(grd<span class="op">$</span>SR)           <span class="co"># The SR we want to test</span></span>
-<span id="cb197-3"><a href="backtest.html#cb197-3"></a>SR_m &lt;-<span class="st"> </span><span class="kw">mean</span>(grd<span class="op">$</span>SR)        <span class="co"># Average SR across all strategies</span></span>
-<span id="cb197-4"><a href="backtest.html#cb197-4"></a>SR_v &lt;-<span class="st"> </span><span class="kw">var</span>(grd<span class="op">$</span>SR)         <span class="co"># Std dev of SR</span></span>
-<span id="cb197-5"><a href="backtest.html#cb197-5"></a><span class="co"># Below, we compute the returns of the strategy by recycling the code of the strat() function</span></span>
-<span id="cb197-6"><a href="backtest.html#cb197-6"></a>data_tmp &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(data_ml, <span class="st">&quot;Mkt_Cap_6M_Usd&quot;</span>, date, R1M_Usd) <span class="co"># feature = Mkt_Cap  </span></span>
-<span id="cb197-7"><a href="backtest.html#cb197-7"></a><span class="kw">colnames</span>(data_tmp)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;feature&quot;</span></span>
-<span id="cb197-8"><a href="backtest.html#cb197-8"></a>returns_DSR &lt;-<span class="st">  </span>data_tmp <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb197-9"><a href="backtest.html#cb197-9"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">decision =</span> feature <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Investment decision: 0.2 is the best threshold</span></span>
-<span id="cb197-10"><a href="backtest.html#cb197-10"></a><span class="st">        </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># Date-by-date computations</span></span>
-<span id="cb197-11"><a href="backtest.html#cb197-11"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">nb =</span> <span class="kw">sum</span>(decision),           <span class="co"># Nb assets in portfolio</span></span>
-<span id="cb197-12"><a href="backtest.html#cb197-12"></a>               <span class="dt">w =</span> decision <span class="op">/</span><span class="st"> </span>nb,            <span class="co"># Portfolio weights</span></span>
-<span id="cb197-13"><a href="backtest.html#cb197-13"></a>               <span class="dt">return =</span> w <span class="op">*</span><span class="st"> </span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Asset contribution to return</span></span>
-<span id="cb197-14"><a href="backtest.html#cb197-14"></a><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">p_return =</span> <span class="kw">sum</span>(return))    <span class="co"># Portfolio return</span></span>
-<span id="cb197-15"><a href="backtest.html#cb197-15"></a>g3 &lt;-<span class="st"> </span><span class="kw">skewness</span>(returns_DSR<span class="op">$</span>p_return)         <span class="co"># Function from the e1071 package</span></span>
-<span id="cb197-16"><a href="backtest.html#cb197-16"></a>g4 &lt;-<span class="st"> </span><span class="kw">kurtosis</span>(returns_DSR<span class="op">$</span>p_return) <span class="op">+</span><span class="st"> </span><span class="dv">3</span>     <span class="co"># Function from the e1071 package</span></span>
-<span id="cb197-17"><a href="backtest.html#cb197-17"></a>Tt &lt;-<span class="st"> </span><span class="kw">nrow</span>(returns_DSR)                      <span class="co"># Number of dates</span></span>
-<span id="cb197-18"><a href="backtest.html#cb197-18"></a><span class="kw">DSR</span>(SR, Tt, M, g3, g4, SR_m, SR_v)           <span class="co"># The sought value!</span></span></code></pre></div>
+<div class="sourceCode" id="cb198"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb198-1"><a href="backtest.html#cb198-1"></a>M &lt;-<span class="st"> </span><span class="kw">nrow</span>(pars)             <span class="co"># Number of strategies we tested</span></span>
+<span id="cb198-2"><a href="backtest.html#cb198-2"></a>SR &lt;-<span class="st"> </span><span class="kw">max</span>(grd<span class="op">$</span>SR)           <span class="co"># The SR we want to test</span></span>
+<span id="cb198-3"><a href="backtest.html#cb198-3"></a>SR_m &lt;-<span class="st"> </span><span class="kw">mean</span>(grd<span class="op">$</span>SR)        <span class="co"># Average SR across all strategies</span></span>
+<span id="cb198-4"><a href="backtest.html#cb198-4"></a>SR_v &lt;-<span class="st"> </span><span class="kw">var</span>(grd<span class="op">$</span>SR)         <span class="co"># Std dev of SR</span></span>
+<span id="cb198-5"><a href="backtest.html#cb198-5"></a><span class="co"># Below, we compute the returns of the strategy by recycling the code of the strat() function</span></span>
+<span id="cb198-6"><a href="backtest.html#cb198-6"></a>data_tmp &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw">select</span>(data_ml, <span class="st">&quot;Mkt_Cap_6M_Usd&quot;</span>, date, R1M_Usd) <span class="co"># feature = Mkt_Cap  </span></span>
+<span id="cb198-7"><a href="backtest.html#cb198-7"></a><span class="kw">colnames</span>(data_tmp)[<span class="dv">1</span>] &lt;-<span class="st"> &quot;feature&quot;</span></span>
+<span id="cb198-8"><a href="backtest.html#cb198-8"></a>returns_DSR &lt;-<span class="st">  </span>data_tmp <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb198-9"><a href="backtest.html#cb198-9"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">decision =</span> feature <span class="op">&lt;</span><span class="st"> </span><span class="fl">0.2</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="co"># Investment decision: 0.2 is the best threshold</span></span>
+<span id="cb198-10"><a href="backtest.html#cb198-10"></a><span class="st">        </span><span class="kw">group_by</span>(date) <span class="op">%&gt;%</span><span class="st">                   </span><span class="co"># Date-by-date computations</span></span>
+<span id="cb198-11"><a href="backtest.html#cb198-11"></a><span class="st">        </span><span class="kw">mutate</span>(<span class="dt">nb =</span> <span class="kw">sum</span>(decision),           <span class="co"># Nb assets in portfolio</span></span>
+<span id="cb198-12"><a href="backtest.html#cb198-12"></a>               <span class="dt">w =</span> decision <span class="op">/</span><span class="st"> </span>nb,            <span class="co"># Portfolio weights</span></span>
+<span id="cb198-13"><a href="backtest.html#cb198-13"></a>               <span class="dt">return =</span> w <span class="op">*</span><span class="st"> </span>R1M_Usd) <span class="op">%&gt;%</span><span class="st">     </span><span class="co"># Asset contribution to return</span></span>
+<span id="cb198-14"><a href="backtest.html#cb198-14"></a><span class="st">        </span><span class="kw">summarise</span>(<span class="dt">p_return =</span> <span class="kw">sum</span>(return))    <span class="co"># Portfolio return</span></span>
+<span id="cb198-15"><a href="backtest.html#cb198-15"></a>g3 &lt;-<span class="st"> </span><span class="kw">skewness</span>(returns_DSR<span class="op">$</span>p_return)         <span class="co"># Function from the e1071 package</span></span>
+<span id="cb198-16"><a href="backtest.html#cb198-16"></a>g4 &lt;-<span class="st"> </span><span class="kw">kurtosis</span>(returns_DSR<span class="op">$</span>p_return) <span class="op">+</span><span class="st"> </span><span class="dv">3</span>     <span class="co"># Function from the e1071 package</span></span>
+<span id="cb198-17"><a href="backtest.html#cb198-17"></a>Tt &lt;-<span class="st"> </span><span class="kw">nrow</span>(returns_DSR)                      <span class="co"># Number of dates</span></span>
+<span id="cb198-18"><a href="backtest.html#cb198-18"></a><span class="kw">DSR</span>(SR, Tt, M, g3, g4, SR_m, SR_v)           <span class="co"># The sought value!</span></span></code></pre></div>
 <pre><code>## [1] 0.6676416</code></pre>
 <p></p>
 <p>The value 0.6676416 is not high enough (it does not reach the 90% or 95% threshold) to make the strategy significantly superior to the other ones that were considered in the batch of tests. </p>
