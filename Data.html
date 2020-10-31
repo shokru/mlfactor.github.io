@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-10-09" />
+<meta name="date" content="2020-10-30" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -652,7 +652,7 @@ We invite the interested reader to have a look at the recent work of <span class
 <div id="simple-labels" class="section level3">
 <h3><span class="header-section-number">4.5.1</span> Simple labels</h3>
 <p>
-There are several ways to define labels when constructing portfolio policies. Of course, the finality is the portfolio weight, but it is rarely considered as the best choice for the label.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a></p>
+There are several ways to define labels when constructing portfolio policies. Of course, the finality is the portfolio weight, but it is rarely considered as the best choice for the label.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a></p>
 <p>Usual labels in factor investing are the following:</p>
 <ul>
 <li>raw asset returns;<br />
@@ -778,7 +778,7 @@ These two properties are desirable. The first reduces the risk of fitting to sma
 </li>
 <li>smooth label and feature.</li>
 </ol>
-<p>Of all of these options, the last one is probably preferable because it is more robust, all things being equal.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a> By <em>all things being equal</em>, we mean that in each case, a model is capable of extracting some relevant pattern. A pattern that holds between two slowly moving series is more likely to persist in time. Thus, since features are often highly autocorrelated (cf Figure <a href="Data.html#fig:histcorr">4.3</a>), combining them with smooth labels is probably a good idea. To illustrate how critical this point is, we will purposefully use 1-month returns in most of the examples of the book and show that the corresponding results are often disappointing. These returns are very weakly autocorrelated while 6-month or 12-month returns are much more persistent and are better choices for labels.</p>
+<p>Of all of these options, the last one is probably preferable because it is more robust, all things being equal.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> By <em>all things being equal</em>, we mean that in each case, a model is capable of extracting some relevant pattern. A pattern that holds between two slowly moving series is more likely to persist in time. Thus, since features are often highly autocorrelated (cf Figure <a href="Data.html#fig:histcorr">4.3</a>), combining them with smooth labels is probably a good idea. To illustrate how critical this point is, we will purposefully use 1-month returns in most of the examples of the book and show that the corresponding results are often disappointing. These returns are very weakly autocorrelated while 6-month or 12-month returns are much more persistent and are better choices for labels.</p>
 <p>Theoretically, it is possible to understand why that may be the case. For simplicity, let us assume a single feature <span class="math inline">\(x\)</span> that explains returns <span class="math inline">\(r\)</span>: <span class="math inline">\(r_{t+1}=f(x_t)+e_{t+1}\)</span>. If <span class="math inline">\(x_t\)</span> is highly autocorrelated and the noise embeded in <span class="math inline">\(e_{t+1}\)</span> is not too large, then the two-period ahead return <span class="math inline">\((1+r_{t+1})(1+r_{t+2})-1\)</span> may carry more signal than <span class="math inline">\(r_{t+1}\)</span> because the relationship with <span class="math inline">\(x_t\)</span> has diffused and compounded through time. Consequently, it may also be beneficial to embed memory considerations directly into the modelling function, as is done for instance in <span class="citation">Matthew F Dixon (<a href="#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span>. We discuss some practicalities related to autocorrelations in the next section.</p>
 </div>
 </div>
@@ -879,7 +879,7 @@ If this expression is not too complicated to compute, the learner can query the 
 </div>
 <div id="impact-of-rescaling-toy-example" class="section level3">
 <h3><span class="header-section-number">4.8.2</span> Impact of rescaling: toy example</h3>
-<p>To illustrate the impact of choosing one particular rescaling method,<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
+<p>To illustrate the impact of choosing one particular rescaling method,<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
 
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="Data.html#cb28-1"></a>firm &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="dv">1</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">2</span>,<span class="dv">3</span>), <span class="kw">rep</span>(<span class="dv">3</span>,<span class="dv">3</span>))             <span class="co"># Firms (3 lines for each)</span></span>
 <span id="cb28-2"><a href="Data.html#cb28-2"></a>date &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>),<span class="dv">3</span>)                             <span class="co"># Dates</span></span>
@@ -1399,10 +1399,10 @@ cap_u
 </div>
 <div class="footnotes">
 <hr />
-<ol start="9">
-<li id="fn9"><p>Some methodologies do map firm attributes into final weights, e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric" role="doc-biblioref">2009</a>)</span> and <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics" role="doc-biblioref">2016</a>)</span>, but these are outside the scope of the book.<a href="Data.html#fnref9" class="footnote-back">↩︎</a></p></li>
-<li id="fn10"><p>This is of course not the case for inference relying on linear models. Memory generates many problems and complicates the study of estimators. We refer to <span class="citation">Hjalmarsson (<a href="#ref-hjalmarsson2011new" role="doc-biblioref">2011</a>)</span> and <span class="citation">Xu (<a href="#ref-xu2020testing" role="doc-biblioref">2020</a>)</span> for theoretical and empirical results on this matter.<a href="Data.html#fnref10" class="footnote-back">↩︎</a></p></li>
-<li id="fn11"><p>For a more thorough technical discussion on the impact of feature engineering, we refer to <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting" role="doc-biblioref">2016</a>)</span>.<a href="Data.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<ol start="10">
+<li id="fn10"><p>Some methodologies do map firm attributes into final weights, e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric" role="doc-biblioref">2009</a>)</span> and <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics" role="doc-biblioref">2016</a>)</span>, but these are outside the scope of the book.<a href="Data.html#fnref10" class="footnote-back">↩︎</a></p></li>
+<li id="fn11"><p>This is of course not the case for inference relying on linear models. Memory generates many problems and complicates the study of estimators. We refer to <span class="citation">Hjalmarsson (<a href="#ref-hjalmarsson2011new" role="doc-biblioref">2011</a>)</span> and <span class="citation">Xu (<a href="#ref-xu2020testing" role="doc-biblioref">2020</a>)</span> for theoretical and empirical results on this matter.<a href="Data.html#fnref11" class="footnote-back">↩︎</a></p></li>
+<li id="fn12"><p>For a more thorough technical discussion on the impact of feature engineering, we refer to <span class="citation">Galili and Meilijson (<a href="#ref-galili2016splitting" role="doc-biblioref">2016</a>)</span>.<a href="Data.html#fnref12" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
             </section>
