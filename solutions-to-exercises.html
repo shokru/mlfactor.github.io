@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-11-20" />
+<meta name="date" content="2020-11-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -807,30 +807,30 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 
 <div class="sourceCode" id="cb280"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb280-1"><a href="solutions-to-exercises.html#cb280-1"></a><span class="kw">summary</span>(model_ae)                      <span class="co"># See model details / architecture</span></span></code></pre></div>
 <pre><code>## Model: &quot;model_1&quot;
-## ________________________________________________________________________________________________________________________________
-## Layer (type)                              Output Shape                Param #        Connected to                               
-## ================================================================================================================================
-## aux_input (InputLayer)                    [(None, 793, 7)]            0                                                         
-## ________________________________________________________________________________________________________________________________
-## layer_1_l (Dense)                         (None, 793, 8)              64             aux_input[0][0]                            
-## ________________________________________________________________________________________________________________________________
-## main_input (InputLayer)                   [(None, 793)]               0                                                         
-## ________________________________________________________________________________________________________________________________
-## layer_2_l (Dense)                         (None, 793, 4)              36             layer_1_l[0][0]                            
-## ________________________________________________________________________________________________________________________________
-## layer_1_r (Dense)                         (None, 8)                   6352           main_input[0][0]                           
-## ________________________________________________________________________________________________________________________________
-## layer_3_l (Permute)                       (None, 4, 793)              0              layer_2_l[0][0]                            
-## ________________________________________________________________________________________________________________________________
-## layer_2_r (Dense)                         (None, 4)                   36             layer_1_r[0][0]                            
-## ________________________________________________________________________________________________________________________________
-## main_output (Dot)                         (None, 793)                 0              layer_3_l[0][0]                            
-##                                                                                      layer_2_r[0][0]                            
-## ================================================================================================================================
+## __________________________________________________________________________________________
+## Layer (type)                 Output Shape        Param #    Connected to                  
+## ==========================================================================================
+## aux_input (InputLayer)       [(None, 793, 7)]    0                                        
+## __________________________________________________________________________________________
+## layer_1_l (Dense)            (None, 793, 8)      64         aux_input[0][0]               
+## __________________________________________________________________________________________
+## main_input (InputLayer)      [(None, 793)]       0                                        
+## __________________________________________________________________________________________
+## layer_2_l (Dense)            (None, 793, 4)      36         layer_1_l[0][0]               
+## __________________________________________________________________________________________
+## layer_1_r (Dense)            (None, 8)           6352       main_input[0][0]              
+## __________________________________________________________________________________________
+## layer_3_l (Permute)          (None, 4, 793)      0          layer_2_l[0][0]               
+## __________________________________________________________________________________________
+## layer_2_r (Dense)            (None, 4)           36         layer_1_r[0][0]               
+## __________________________________________________________________________________________
+## main_output (Dot)            (None, 793)         0          layer_3_l[0][0]               
+##                                                             layer_2_r[0][0]               
+## ==========================================================================================
 ## Total params: 6,488
 ## Trainable params: 6,488
 ## Non-trainable params: 0
-## ________________________________________________________________________________________________________________________________</code></pre>
+## __________________________________________________________________________________________</code></pre>
 <div class="sourceCode" id="cb282"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb282-1"><a href="solutions-to-exercises.html#cb282-1"></a>model_ae <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(                  <span class="co"># Learning parameters</span></span>
 <span id="cb282-2"><a href="solutions-to-exercises.html#cb282-2"></a>    <span class="dt">optimizer =</span> <span class="st">&quot;rmsprop&quot;</span>,</span>
 <span id="cb282-3"><a href="solutions-to-exercises.html#cb282-3"></a>    <span class="dt">loss =</span> <span class="st">&quot;mse&quot;</span></span>
@@ -957,37 +957,37 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 
 <div class="sourceCode" id="cb293"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb293-1"><a href="solutions-to-exercises.html#cb293-1"></a><span class="kw">summary</span>(model_ens)                      <span class="co"># See model details / architecture</span></span></code></pre></div>
 <pre><code>## Model: &quot;model_2&quot;
-## ________________________________________________________________________________________________________________________________
-## Layer (type)                              Output Shape                Param #        Connected to                               
-## ================================================================================================================================
-## first_input (InputLayer)                  [(None, 31)]                0                                                         
-## ________________________________________________________________________________________________________________________________
-## second_input (InputLayer)                 [(None, 31)]                0                                                         
-## ________________________________________________________________________________________________________________________________
-## third_input (InputLayer)                  [(None, 31)]                0                                                         
-## ________________________________________________________________________________________________________________________________
-## layer_1 (Dense)                           (None, 8)                   256            first_input[0][0]                          
-## ________________________________________________________________________________________________________________________________
-## layer_2 (Dense)                           (None, 8)                   256            second_input[0][0]                         
-## ________________________________________________________________________________________________________________________________
-## layer_3 (Dense)                           (None, 8)                   256            third_input[0][0]                          
-## ________________________________________________________________________________________________________________________________
-## dense_21 (Dense)                          (None, 2)                   18             layer_1[0][0]                              
-## ________________________________________________________________________________________________________________________________
-## dense_22 (Dense)                          (None, 2)                   18             layer_2[0][0]                              
-## ________________________________________________________________________________________________________________________________
-## dense_23 (Dense)                          (None, 2)                   18             layer_3[0][0]                              
-## ________________________________________________________________________________________________________________________________
-## concatenate (Concatenate)                 (None, 6)                   0              dense_21[0][0]                             
-##                                                                                      dense_22[0][0]                             
-##                                                                                      dense_23[0][0]                             
-## ________________________________________________________________________________________________________________________________
-## main_output (Dense)                       (None, 2)                   14             concatenate[0][0]                          
-## ================================================================================================================================
+## __________________________________________________________________________________________
+## Layer (type)                 Output Shape        Param #    Connected to                  
+## ==========================================================================================
+## first_input (InputLayer)     [(None, 31)]        0                                        
+## __________________________________________________________________________________________
+## second_input (InputLayer)    [(None, 31)]        0                                        
+## __________________________________________________________________________________________
+## third_input (InputLayer)     [(None, 31)]        0                                        
+## __________________________________________________________________________________________
+## layer_1 (Dense)              (None, 8)           256        first_input[0][0]             
+## __________________________________________________________________________________________
+## layer_2 (Dense)              (None, 8)           256        second_input[0][0]            
+## __________________________________________________________________________________________
+## layer_3 (Dense)              (None, 8)           256        third_input[0][0]             
+## __________________________________________________________________________________________
+## dense_21 (Dense)             (None, 2)           18         layer_1[0][0]                 
+## __________________________________________________________________________________________
+## dense_22 (Dense)             (None, 2)           18         layer_2[0][0]                 
+## __________________________________________________________________________________________
+## dense_23 (Dense)             (None, 2)           18         layer_3[0][0]                 
+## __________________________________________________________________________________________
+## concatenate (Concatenate)    (None, 6)           0          dense_21[0][0]                
+##                                                             dense_22[0][0]                
+##                                                             dense_23[0][0]                
+## __________________________________________________________________________________________
+## main_output (Dense)          (None, 2)           14         concatenate[0][0]             
+## ==========================================================================================
 ## Total params: 836
 ## Trainable params: 836
 ## Non-trainable params: 0
-## ________________________________________________________________________________________________________________________________</code></pre>
+## __________________________________________________________________________________________</code></pre>
 <div class="sourceCode" id="cb295"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb295-1"><a href="solutions-to-exercises.html#cb295-1"></a>model_ens <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">compile</span>(                  <span class="co"># Learning parameters</span></span>
 <span id="cb295-2"><a href="solutions-to-exercises.html#cb295-2"></a>    <span class="dt">optimizer =</span> <span class="kw">optimizer_adam</span>(),</span>
 <span id="cb295-3"><a href="solutions-to-exercises.html#cb295-3"></a>    <span class="dt">loss =</span> <span class="st">&quot;binary_crossentropy&quot;</span>,</span>
@@ -1158,12 +1158,12 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <span id="cb309-12"><a href="solutions-to-exercises.html#cb309-12"></a><span class="st">                              </span>dplyr<span class="op">::</span><span class="kw">select</span>(features_short) <span class="op">%&gt;%</span><span class="st"> </span></span>
 <span id="cb309-13"><a href="solutions-to-exercises.html#cb309-13"></a><span class="st">                              </span><span class="kw">as.matrix</span>()) <span class="op">%&gt;%</span></span>
 <span id="cb309-14"><a href="solutions-to-exercises.html#cb309-14"></a><span class="st">    </span><span class="kw">head</span>(<span class="dv">5</span>)</span></code></pre></div>
-<pre><code>##          [,1]     [,2]         [,3]       [,4]
-## [1,] 1.305148 1.233874 -0.010493457 0.05434123
-## [2,] 1.296151 1.237349  0.008217514 0.09244907
-## [3,] 1.312760 1.265122 -0.021983802 0.05296227
-## [4,] 1.312474 1.265865 -0.026997447 0.05011398
-## [5,] 1.313504 1.257679 -0.034882247 0.04659653</code></pre>
+<pre><code>##           [,1]     [,2]       [,3]       [,4]
+## [1,] 0.2843989 1.406849 0.09524134 0.03505152
+## [2,] 0.2766070 1.393375 0.08641297 0.04052800
+## [3,] 0.3077793 1.410884 0.09010640 0.04165304
+## [4,] 0.3148387 1.412069 0.09050339 0.04056954
+## [5,] 0.3096870 1.408344 0.09838399 0.02505291</code></pre>
 
 
 
@@ -2323,6 +2323,9 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 </div>
 <div>
 <p>Hsu, Po-Hsuan, Qiheng Han, Wensheng Wu, and Zhiguang Cao. 2018. “Asset Allocation Strategies, Data Snooping, and the 1/N Rule.” <em>Journal of Banking &amp; Finance</em> 97: 257–69.</p>
+</div>
+<div>
+<p>Huang, Dashan, Huacheng Zhang, Guofu Zhou, and Yingzi Zhu. 2020. “Fundamental Extrapolation and Stock Returns.” <em>SSRN Working Paper</em> 3678363.</p>
 </div>
 <div>
 <p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>

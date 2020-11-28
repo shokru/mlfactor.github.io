@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-11-20" />
+<meta name="date" content="2020-11-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -810,7 +810,7 @@ The <span class="math inline">\(\hat{\gamma}_{t,k}\)</span> estimate the premia 
 <span class="math display">\[t_k=\frac{\hat{\gamma}_k}{\hat{\sigma_k}/\sqrt{T}}\]</span>
 is often used in pure Gaussian contexts to assess whether or not the factor is significant (<span class="math inline">\(\hat{\sigma}_k\)</span> is the standard deviation of the <span class="math inline">\(\hat{\gamma}_{t,k}\)</span>).</p>
 <p>We refer to <span class="citation">Jagannathan and Wang (<a href="#ref-jagannathan1998asymptotic" role="doc-biblioref">1998</a>)</span> and <span class="citation">Petersen (<a href="#ref-petersen2009estimating" role="doc-biblioref">2009</a>)</span> for technical discussions on the biases and losses in accuracy that can be induced by standard ordinary least squares (OLS) estimations. Moreover, as the <span class="math inline">\(\hat{\beta}_{i,k}\)</span> in the second-pass regression are <em>estimates</em>, a second level of errors can arise (the so-called errors in variables). The interested reader will find some extensions and solutions in <span class="citation">Shanken (<a href="#ref-shanken1992estimation" role="doc-biblioref">1992</a>)</span>, <span class="citation">Ang, Liu, and Schwarz (<a href="#ref-ang2018using" role="doc-biblioref">2018</a>)</span> and <span class="citation">Jegadeesh et al. (<a href="#ref-jegadeesh2019empirical" role="doc-biblioref">2019</a>)</span>.</p>
-<p>Below, we perform <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk" role="doc-biblioref">1973</a>)</span> regressions on our sample. We start by the first pass: individual estimation of betas. We build a dedicated function below and use some functional programming to automate the process.</p>
+<p>Below, we perform <span class="citation">Fama and MacBeth (<a href="#ref-fama1973risk" role="doc-biblioref">1973</a>)</span> regressions on our sample. We start by the first pass: individual estimation of betas. We build a dedicated function below and use some functional programming to automate the process. We stick to the original implementation of the estimation and perform synchronous regressions.</p>
 
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="factor.html#cb15-1"></a>nb_factors &lt;-<span class="st"> </span><span class="dv">5</span>                                                     <span class="co"># Number of factors</span></span>
 <span id="cb15-2"><a href="factor.html#cb15-2"></a>data_FM &lt;-<span class="st"> </span><span class="kw">left_join</span>(data_ml <span class="op">%&gt;%</span><span class="st">                                    </span><span class="co"># Join the 2 datasets</span></span>
@@ -818,7 +818,7 @@ is often used in pure Gaussian contexts to assess whether or not the factor is s
 <span id="cb15-4"><a href="factor.html#cb15-4"></a><span class="st">                         </span><span class="kw">filter</span>(stock_id <span class="op">%in%</span><span class="st"> </span>stock_ids_short),     <span class="co"># ... over some stocks)</span></span>
 <span id="cb15-5"><a href="factor.html#cb15-5"></a>                     FF_factors, </span>
 <span id="cb15-6"><a href="factor.html#cb15-6"></a>                     <span class="dt">by =</span> <span class="st">&quot;date&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb15-7"><a href="factor.html#cb15-7"></a><span class="st">    </span><span class="kw">group_by</span>(stock_id) <span class="op">%&gt;%</span></span>
+<span id="cb15-7"><a href="factor.html#cb15-7"></a><span class="st">    </span><span class="kw">group_by</span>(stock_id) <span class="op">%&gt;%</span><span class="st">                                          </span><span class="co"># Grouping</span></span>
 <span id="cb15-8"><a href="factor.html#cb15-8"></a><span class="st">    </span><span class="kw">mutate</span>(<span class="dt">R1M_Usd =</span> <span class="kw">lag</span>(R1M_Usd)) <span class="op">%&gt;%</span><span class="st">                              </span><span class="co"># Lag returns</span></span>
 <span id="cb15-9"><a href="factor.html#cb15-9"></a><span class="st">    </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span></span>
 <span id="cb15-10"><a href="factor.html#cb15-10"></a><span class="st">    </span><span class="kw">na.omit</span>() <span class="op">%&gt;%</span><span class="st">                                                   </span><span class="co"># Remove missing points</span></span>
@@ -1460,7 +1460,7 @@ The interesting metric is then the test statistic associated to the estimation o
 <span id="cb19-11"><a href="factor.html#cb19-11"></a><span class="st">    </span><span class="kw">data.frame</span>(<span class="dt">row.names =</span> factors)</span>
 <span id="cb19-12"><a href="factor.html#cb19-12"></a><span class="co"># alphas # To see the alphas (optional)</span></span></code></pre></div>
 
-<p>We obtain the vector of <span class="math inline">\(\alpha\)</span> values from Equation (). Below, we format these figures along with <span class="math inline">\(p\)</span>-value thresholds and export them in a summary table. The significance levels of coefficients is coded as follows: <span class="math inline">\(0&lt;(***)&lt;0.001&lt;(**)&lt;0.01&lt;(*)&lt;0.05\)</span>.</p>
+<p>We obtain the vector of <span class="math inline">\(\alpha\)</span> values from Equation (<a href="factor.html#eq:faccompet">(3.4)</a>). Below, we format these figures along with <span class="math inline">\(p\)</span>-value thresholds and export them in a summary table. The significance levels of coefficients is coded as follows: <span class="math inline">\(0&lt;(***)&lt;0.001&lt;(**)&lt;0.01&lt;(*)&lt;0.05\)</span>.</p>
 
 <div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="factor.html#cb20-1"></a>results &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># Coefs</span></span>
 <span id="cb20-2"><a href="factor.html#cb20-2"></a>signif  &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="ot">NA</span>, <span class="dt">nrow =</span> <span class="kw">length</span>(factors), <span class="dt">ncol =</span> <span class="kw">length</span>(factors) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>)   <span class="co"># p-values</span></span>
@@ -1708,7 +1708,7 @@ We gather below a very short list of papers that suggests conflicting results:</
 <div id="the-links-with-machine-learning" class="section level2">
 <h2><span class="header-section-number">3.5</span> The links with machine learning</h2>
 <p>Given the exponential increase in data availability, the obvious temptation of any asset manager is to try to infer future returns from the abundance of attributes available at the firm level. We allude to classical data like accounting ratios and to alternative data, such as sentiment. This task is precisely the aim of Machine Learning. Given a large set of predictor variables (<span class="math inline">\(\mathbf{X}\)</span>), the goal is to predict a proxy for future performance <span class="math inline">\(\mathbf{y}\)</span> through a model of the form <a href="intro.html#eq:ML">(2.1)</a>.</p>
-<p>If fundamental data (accounting ratios, earnings, relative valuations, etc.) help predict returns, then one refinement is to predict this fundamental data upfront. This may allow to anticipate changes or gain informational edges. Recent contributions in this directions include <span class="citation">Cao and You (<a href="#ref-cao2020fundamental" role="doc-biblioref">2020</a>)</span> and huang2020fundamental.</p>
+<p>If fundamental data (accounting ratios, earnings, relative valuations, etc.) help predict returns, then one refinement is to predict this fundamental data upfront. This may allow to anticipate changes or gain informational edges. Recent contributions in this directions include <span class="citation">Cao and You (<a href="#ref-cao2020fundamental" role="doc-biblioref">2020</a>)</span> and <span class="citation">Huang et al. (<a href="#ref-huang2020fundamental" role="doc-biblioref">2020</a>)</span>.</p>
 <p>Some earlier attempts have already been made that aim to explain and predict returns with firm attributes (e.g., <span class="citation">Brandt, Santa-Clara, and Valkanov (<a href="#ref-brandt2009parametric" role="doc-biblioref">2009</a>)</span>, <span class="citation">Hjalmarsson and Manchev (<a href="#ref-hjalmarsson2012characteristic" role="doc-biblioref">2012</a>)</span>, <span class="citation">Ammann, Coqueret, and Schade (<a href="#ref-ammann2016characteristics" role="doc-biblioref">2016</a>)</span>, <span class="citation">DeMiguel et al. (<a href="#ref-martin2018transaction" role="doc-biblioref">2020</a>)</span> and <span class="citation">McGee and Olmo (<a href="#ref-mcgee2020optimal" role="doc-biblioref">2020</a>)</span>), but not with any ML intent or focus originally. In retrospect, these approaches do share some links with ML tools. The general formulation is the following. At time <span class="math inline">\(T\)</span>, the agent or investor seeks to solve the following program:
 <span class="math display">\[\begin{align*}
 \underset{\boldsymbol{\theta}_T}{\max} \ \mathbb{E}_T\left[ u(r_{p,T+1})\right] = \underset{\boldsymbol{\theta}_T}{\max} \ \mathbb{E}_T\left[ u\left(\left(\bar{\textbf{w}}_T+\textbf{x}_T\boldsymbol{\theta}_T\right)&#39;\textbf{r}_{T+1}\right)\right] , 
@@ -2232,6 +2232,9 @@ only the characteristics <span class="math inline">\(\textbf{x}_{t-1,n}\)</span>
 </div>
 <div id="ref-hou2019replicating">
 <p>Hou, Kewei, Chen Xue, and Lu Zhang. 2020. “Replicating Anomalies.” <em>Review of Financial Studies</em> 33 (5): 2019–2133.</p>
+</div>
+<div id="ref-huang2020fundamental">
+<p>Huang, Dashan, Huacheng Zhang, Guofu Zhou, and Yingzi Zhu. 2020. “Fundamental Extrapolation and Stock Returns.” <em>SSRN Working Paper</em> 3678363.</p>
 </div>
 <div id="ref-huang2005forecasting">
 <p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>

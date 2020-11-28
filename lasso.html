@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-11-20" />
+<meta name="date" content="2020-11-28" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -628,16 +628,27 @@ T(1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\mathbf{r}&#39;_1\mathbf{r}_1-\frac{(\mathb
 (1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\sigma_{\mathbf{r}_1}^2- \mathbf{c}&#39;\mathbf{C}^{-1}\mathbf{c} 
 \end{align*}\]</span>
 where in the fourth equality we have plugged <span class="math inline">\(\hat{a}_1=\frac{\mathbf{1&#39;}_T}{T}(\mathbf{r}_1-\mathbf{R}_{-1}\mathbf{C}^{-1}\mathbf{c})\)</span>. Note that there is probably a simpler proof, see, e.g., section 3.5 in <span class="citation">Greene (<a href="#ref-greene2018econometric" role="doc-biblioref">2018</a>)</span>.</p>
-<p>Combining (), () and (), we get that the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span> is equal to
+<p>Combining (<a href="lasso.html#eq:sparse1">(5.9)</a>, (<a href="lasso.html#eq:sparse2">(5.11)</a>) and (<a href="lasso.html#eq:sparse3">(5.12)</a>), we get that the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span> is equal to
 <span class="math display" id="eq:sparsehedgeeq2">\[\begin{equation}
 \tag{5.13}
 \frac{1}{\sigma^2_{\epsilon_1}}\times \left[ 1 \quad  -\hat{\boldsymbol{\beta}}_1&#39;\right].
 \end{equation}\]</span></p>
 <p>Given the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, it suffices to multiply by <span class="math inline">\(\boldsymbol{\mu}\)</span> to get the portfolio weight in the first asset (up to a scaling constant).</p>
 <p>There is a nice economic intuition behind the above results which justifies the term “sparse hedging”. We take the case of the minimum variance portfolio, for which <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>. In Equation <a href="lasso.html#eq:sparseeq">(5.10)</a>, we try to explain the return of asset 1 with that of all other assets. In the above equation, up to a scaling constant, the portfolio has a unit position in the first asset and <span class="math inline">\(-\hat{\boldsymbol{\beta}}_1\)</span> positions in all other assets. Hence, the purpose of all other assets is clearly to hedge the return of the first one. In fact, these positions are aimed at minimizing the squared errors of the aggregate portfolio for the first asset (these errors are exactly <span class="math inline">\(\mathbf{\epsilon}_1\)</span>). Moreover, the scaling factor <span class="math inline">\(\sigma^{-2}_{\epsilon_1}\)</span> is also simple to interpret: the more we trust the regression output (because of a small <span class="math inline">\(\sigma^{2}_{\epsilon_1}\)</span>), the more we invest in the hedging portfolio of the asset.</p>
-<p>This reasoning is easily generalized for any line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, which can be obtained by regressing the returns of asset <span class="math inline">\(i\)</span> on the returns of all other assets. If the allocation scheme has the form () for given values of <span class="math inline">\(\boldsymbol{\mu}\)</span>, then the pseudo-code for the sparse portfolio strategy is the following.</p>
-At each date (which we omit for notational convenience),
-
+<p>This reasoning is easily generalized for any line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, which can be obtained by regressing the returns of asset <span class="math inline">\(i\)</span> on the returns of all other assets. If the allocation scheme has the form (<a href="lasso.html#eq:MSR">(5.8)</a>) for given values of <span class="math inline">\(\boldsymbol{\mu}\)</span>, then the pseudo-code for the sparse portfolio strategy is the following.</p>
+<p>At each date (which we omit for notational convenience),</p>
+<ul>
+<li>For all stocks <span class="math inline">\(i\)</span>,<br />
+</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>estimate the elasticnet regression over the <span class="math inline">\(t=1,\dots,T\)</span> samples to get the <span class="math inline">\(i^{th}\)</span> line of <span class="math inline">\(\hat{\mathbf{\Sigma}}^{-1}\)</span>:
+<span class="math display">\[ \small \left[\hat{\mathbf{\Sigma}}^{-1}\right]_{i,\cdot}= \underset{\mathbf{\beta}_{i|}}{\text{argmin}}\, \left\{\sum_{t=1}^T\left( r_{i,t}-a_i+\sum_{n\neq i}^N\beta_{i|n}r_{n,t}\right)^2+\lambda \alpha ||  \mathbf{\beta}_{i|}||_1+\lambda (1-\alpha)||\mathbf{\beta}_{i|}||_2^2\right\}
+\]</span><br />
+</li>
+<li>to get the weights of asset <span class="math inline">\(i\)</span>, we compute the <span class="math inline">\(\mathbf{\mu}\)</span>-weighted sum:
+<span class="math inline">\(w_i= \sigma_{\epsilon_i}^{-2}\left(\mu_i- \sum_{j\neq i}\mathbf{\beta}_{i|j}\mu_j\right)\)</span>,</li>
+</ol>
 <p>where we recall that the vectors <span class="math inline">\(\mathbf{\beta}_{i|}=[\mathbf{\beta}_{i|1},\dots,\mathbf{\beta}_{i|i-1},\mathbf{\beta}_{i|i+1},\dots,\mathbf{\beta}_{i|N}]\)</span> are the coefficients from regressing the returns of asset <span class="math inline">\(i\)</span> against the returns of all other assets.<br />
 The introduction of the <strong>penalization norms</strong> is the new ingredient, compared to the original approach of <span class="citation">Stevens (<a href="#ref-stevens1998inverse" role="doc-biblioref">1998</a>)</span>. The benefits are twofold: first, introducing constraints yields weights that are more robust and less subject to errors in the estimates of <span class="math inline">\(\mathbf{\mu}\)</span>; second, because of sparsity, weights are more stable, less leveraged and thus the strategy is less impacted by transaction costs. Before we turn to numerical applications, we mention a more direct route to the estimation of a <strong>robust inverse covariance matrix</strong>: the Graphical LASSO. The GLASSO estimates the precision matrix (inverse covariance matrix) via maximum likelihood while imposing constraints/penalizations on the weights of the matrix. When the penalization is strong enough, this yields a sparse matrix, i.e., a matrix in which some and possibly many coefficients are zero. We refer to the original article <span class="citation">Friedman, Hastie, and Tibshirani (<a href="#ref-friedman2008sparse" role="doc-biblioref">2008</a>)</span> for more details on this subject.</p>
 </div>
