@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-12-13" />
+<meta name="date" content="2021-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -493,11 +493,11 @@ In this chapter we adopt the following notations. We work with <span class="math
 &amp;=\frac{\sigma^2}{M}+\frac{1}{M^2}\sum_{n\neq m} \rho \sigma^2 \\
 &amp; =\rho \sigma^2 +\frac{\sigma^2(1-\rho)}{M}
 \end{align*}\]</span>
-where while the second term converges to zero as <span class="math inline">\(M\)</span> increases, the second term remains and is <strong>linearly increasing</strong> with <span class="math inline">\(\rho\)</span>. In passing, because variances are always positive, this result implies that the common pairwise correlation between <span class="math inline">\(M\)</span> variables is bounded below by <span class="math inline">\(-(M-1)^{-1}\)</span>. This result is interesting but rarely found in textbooks.</p>
+where while the second term converges to zero as <span class="math inline">\(M\)</span> increases, the first term remains and is <strong>linearly increasing</strong> with <span class="math inline">\(\rho\)</span>. In passing, because variances are always positive, this result implies that the common pairwise correlation between <span class="math inline">\(M\)</span> variables is bounded below by <span class="math inline">\(-(M-1)^{-1}\)</span>. This result is interesting but rarely found in textbooks.</p>
 <p>One improvement proposed to circumvent the trouble caused by correlations, advocated in a seminal publication (<span class="citation">Breiman (<a href="#ref-breiman1996stacked" role="doc-biblioref">1996</a>)</span>), is to enforce positivity constraints on the weights and solve</p>
 <p><span class="math display">\[\underset{\textbf{w}}{\text{argmin}} \ \textbf{w}&#39;\textbf{E}&#39;\textbf{E}\textbf{w} , \quad \text{s.t.} \quad \left\{ 
 \begin{array}{l} \textbf{w}&#39;\textbf{1}_M=1 \\ w_m \ge 0 \quad \forall m \end{array}\right. .\]</span></p>
-<p>Mechanically, if several models are highly correlated, the constraint will impose that only one of them will have a nonzero weight. If there are many models, then just a few of them will be selected by the minimization program. In the context of portfolio optimization, <span class="citation">Jagannathan and Ma (<a href="#ref-jagannathan2003risk" role="doc-biblioref">2003</a>)</span> have shown the benefits of constraint in the construction mean-variance allocations. In our setting, the constraint will similarly help discriminate wisely among the ‘best’ models.</p>
+<p>Mechanically, if several models are highly correlated, the constraint will impose that only one of them will have a nonzero weight. If there are many models, then just a few of them will be selected by the minimization program. In the context of portfolio optimization, <span class="citation">Jagannathan and Ma (<a href="#ref-jagannathan2003risk" role="doc-biblioref">2003</a>)</span> have shown the counter-intuitive benefits of constraints in the construction of mean-variance allocations. In our setting, the constraint will similarly help discriminate wisely among the ‘best’ models.</p>
 <p>In the literature, forecast combination and model averaging (which are synonyms of ensembles) have been tested on stock markets as early as in <span class="citation">Von Holstein (<a href="#ref-von1972probabilistic" role="doc-biblioref">1972</a>)</span>. Surprisingly, the articles were not published in Finance journals but rather in fields such as Management (<span class="citation">Virtanen and Yli-Olli (<a href="#ref-virtanen1987forecasting" role="doc-biblioref">1987</a>)</span>, <span class="citation">Wang et al. (<a href="#ref-wang2012stock" role="doc-biblioref">2012</a>)</span>), Economics and Econometrics (<span class="citation">Donaldson and Kamstra (<a href="#ref-donaldson1996forecast" role="doc-biblioref">1996</a>)</span>, <span class="citation">Clark and McCracken (<a href="#ref-clark2009improving" role="doc-biblioref">2009</a>)</span>, <span class="citation">Mascio, Fabozzi, and Zumwalt (<a href="#ref-mascio2020market" role="doc-biblioref">2020</a>)</span>), Operations Reasearch (<span class="citation">Huang, Nakamori, and Wang (<a href="#ref-huang2005forecasting" role="doc-biblioref">2005</a>)</span>, <span class="citation">Leung, Daouk, and Chen (<a href="#ref-leung2001using" role="doc-biblioref">2001</a>)</span>, and <span class="citation">Bonaccolto and Paterlini (<a href="#ref-bonaccolto2019developing" role="doc-biblioref">2019</a>)</span>), and Computer Science (<span class="citation">Harrald and Kamstra (<a href="#ref-harrald1997evolving" role="doc-biblioref">1997</a>)</span>, <span class="citation">Hassan, Nath, and Kirley (<a href="#ref-hassan2007fusion" role="doc-biblioref">2007</a>)</span>).</p>
 <p>In the general forecasting literature, many alternative (refined) methods for combining forecasts have been studied. Trimmed opinion pools (<span class="citation">Grushka-Cockayne, Jose, and Lichtendahl Jr (<a href="#ref-grushka2016ensembles" role="doc-biblioref">2016</a>)</span>) compute averages over the predictions that are not too extreme. Ensembles with weights that depend on previous past errors are developed in <span class="citation">Pike and Vazquez-Grande (<a href="#ref-pike2020combining" role="doc-biblioref">2020</a>)</span>. We refer to <span class="citation">Gaba, Tsetlin, and Winkler (<a href="#ref-gaba2017combining" role="doc-biblioref">2017</a>)</span> for a more exhaustive list of combinations as well as for an empirical study of their respective efficiency.
 Overall, findings are mixed and the heuristic simple average is, as usual, hard to beat (see, e.g., <span class="citation">Genre et al. (<a href="#ref-genre2013combining" role="doc-biblioref">2013</a>)</span>).</p>
@@ -515,17 +515,17 @@ Overall, findings are mixed and the heuristic simple average is, as usual, hard 
 <span id="cb145-7"><a href="ensemble.html#cb145-7"></a><span class="kw">colnames</span>(E) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)                               <span class="co"># Names</span></span>
 <span id="cb145-8"><a href="ensemble.html#cb145-8"></a><span class="kw">cor</span>(E)                                                                               <span class="co"># Cor. mat.</span></span></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9966708
-## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9974647
-## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9973743
-## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9279639
-## NN      0.9966708 0.9974647 0.9973743 0.9279639 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9959023
+## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9967690
+## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9969161
+## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9272872
+## NN      0.9959023 0.9967690 0.9969161 0.9272872 1.0000000</code></pre>
 
 <p>As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. The minimum correlation (though above 95%!) is obtained by the boosted tree models. Below, we compare the training accuracy of models by computing the average absolute value of errors.</p>
 
 <div class="sourceCode" id="cb147"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb147-1"><a href="ensemble.html#cb147-1"></a><span class="kw">apply</span>(<span class="kw">abs</span>(E), <span class="dv">2</span>, mean) <span class="co"># Mean absolute error or columns of E </span></span></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.08345916 0.08362133 0.08327121 0.08986993 0.08361419</code></pre>
+## 0.08345916 0.08362133 0.08327121 0.08986993 0.08377519</code></pre>
 
 <p>The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non-constrained) weights for the combination of models.</p>
 
@@ -533,11 +533,11 @@ Overall, findings are mixed and the heuristic simple average is, as usual, hard 
 <span id="cb149-2"><a href="ensemble.html#cb149-2"></a>w_ensemble &lt;-<span class="st"> </span>w_ensemble <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(w_ensemble)</span>
 <span id="cb149-3"><a href="ensemble.html#cb149-3"></a>w_ensemble</span></code></pre></div>
 <pre><code>##                  [,1]
-## Pen_reg -0.6076305147
-## Tree    -0.1793471960
-## RF       1.2539836397
-## XGB     -0.0009132654
-## NN       0.5339073364</code></pre>
+## Pen_reg -0.5484464207
+## Tree    -0.2082960828
+## RF       1.2474962219
+## XGB      0.0002269404
+## NN       0.5090193412</code></pre>
 
 <p>Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and ‘short’ a few models in order to compensate. As one could expect, the model with the largest negative weights (Pen_reg) has a very high correlation with the random forest algorithm (0.997).</p>
 <p>Note that the weights are of course computed with <strong>training errors</strong>. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.</p>
@@ -551,29 +551,29 @@ Overall, findings are mixed and the heuristic simple average is, as usual, hard 
 <span id="cb151-7"><a href="ensemble.html#cb151-7"></a><span class="kw">colnames</span>(E_test) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Pen_reg&quot;</span>, <span class="st">&quot;Tree&quot;</span>, <span class="st">&quot;RF&quot;</span>, <span class="st">&quot;XGB&quot;</span>, <span class="st">&quot;NN&quot;</span>)</span>
 <span id="cb151-8"><a href="ensemble.html#cb151-8"></a><span class="kw">apply</span>(<span class="kw">abs</span>(E_test), <span class="dv">2</span>, mean)             <span class="co"># Mean absolute error or columns of E </span></span></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.06618181 0.06653527 0.06710349 0.07170802 0.06704153</code></pre>
+## 0.06618181 0.06653527 0.06710349 0.07170802 0.06729393</code></pre>
 
 <p>The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.</p>
 
 <div class="sourceCode" id="cb153"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb153-1"><a href="ensemble.html#cb153-1"></a>err_EW_test &lt;-<span class="st"> </span><span class="kw">apply</span>(E_test, <span class="dv">1</span>, mean)  <span class="co"># Equally weighted combination</span></span>
 <span id="cb153-2"><a href="ensemble.html#cb153-2"></a><span class="kw">mean</span>(<span class="kw">abs</span>(err_EW_test))</span></code></pre></div>
-<pre><code>## [1] 0.06692261</code></pre>
+<pre><code>## [1] 0.06692849</code></pre>
 
 <p>Because the errors are very correlated, the equally weighted combination of forecasts yields an average error which lies ‘in the middle’ of individual errors. The diversification benefits are too small. Let us now test the ‘optimal’ combination <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M&#39;\textbf{E}&#39;\textbf{E})^{-1}\textbf{1}_M}\)</span>.</p>
 
 <div class="sourceCode" id="cb155"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb155-1"><a href="ensemble.html#cb155-1"></a>err_opt_test &lt;-<span class="st"> </span>E_test <span class="op">%*%</span><span class="st"> </span>w_ensemble   <span class="co"># Optimal unconstrained combination</span></span>
 <span id="cb155-2"><a href="ensemble.html#cb155-2"></a><span class="kw">mean</span>(<span class="kw">abs</span>(err_opt_test))</span></code></pre></div>
-<pre><code>## [1] 0.06840906</code></pre>
+<pre><code>## [1] 0.0684453</code></pre>
 
 <p>Again, the result is disappointing because of the lack of diversification across models. The correlations between errors are high not only on the training sample, but also on the testing sample, as shown below.</p>
 
 <div class="sourceCode" id="cb157"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb157-1"><a href="ensemble.html#cb157-1"></a><span class="kw">cor</span>(E_test)</span></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9962756
-## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9973963
-## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9975854
-## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9614823
-## NN      0.9962756 0.9973963 0.9975854 0.9614823 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9947457
+## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9962452
+## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9967999
+## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9622469
+## NN      0.9947457 0.9962452 0.9967999 0.9622469 1.0000000</code></pre>
 
 <p>The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of <span class="citation">Breiman (<a href="#ref-breiman1996stacked" role="doc-biblioref">1996</a>)</span> using the <em>quadprog</em> package. If we write <span class="math inline">\(\mathbf{\Sigma}\)</span> for the covariance matrix of errors, we seek
 <span class="math display">\[\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}&#39;\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}&#39;\mathbf{w}=1, \quad w_i\ge 0,\]</span>
@@ -596,7 +596,7 @@ The constraints will be handled as:</p>
 <span id="cb159-8"><a href="ensemble.html#cb159-8"></a>              <span class="dt">meq =</span> <span class="dv">1</span>                   <span class="co"># 1 line of equality constraints, others = inequalities</span></span>
 <span id="cb159-9"><a href="ensemble.html#cb159-9"></a>              )</span>
 <span id="cb159-10"><a href="ensemble.html#cb159-10"></a>w_const<span class="op">$</span>solution <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">round</span>(<span class="dv">3</span>)           <span class="co"># Solution</span></span></code></pre></div>
-<pre><code>## [1] 0.000 0.000 0.843 0.000 0.157</code></pre>
+<pre><code>## [1] 0.000 0.000 0.715 0.000 0.285</code></pre>
 
 <p>Compared to the unconstrained solution, the weights are sparse and concentrated in one or two models, usually those with small training sample errors.</p>
 </div>
@@ -697,12 +697,12 @@ We test this idea below, using aggregate data from the Federal Reserve of Saint 
 <span id="cb169-12"><a href="ensemble.html#cb169-12"></a><span class="st">    </span><span class="kw">left_join</span>(ts)                                     <span class="co"># Add termspread</span></span>
 <span id="cb169-13"><a href="ensemble.html#cb169-13"></a><span class="kw">head</span>(ens_data)                                        <span class="co"># Show first lines</span></span></code></pre></div>
 <pre><code>##         date err_NN_test      Index CPIAUCSL   inflation termspread
-## 1 2014-01-31 -0.14576055 2014-01-01  235.288 0.002424175       2.47
-## 2 2014-02-28  0.07848305 2014-02-01  235.547 0.001100779       2.38
-## 3 2014-03-31 -0.01045204 2014-03-01  236.028 0.002042055       2.32
-## 4 2014-04-30 -0.07229971 2014-04-01  236.468 0.001864186       2.29
-## 5 2014-05-31 -0.08401957 2014-05-01  236.918 0.001903006       2.17
-## 6 2014-06-30  0.04657004 2014-06-01  237.231 0.001321132       2.15</code></pre>
+## 1 2014-01-31 -0.16228498 2014-01-01  235.288 0.002424175       2.47
+## 2 2014-02-28  0.06625936 2014-02-01  235.547 0.001100779       2.38
+## 3 2014-03-31 -0.04509568 2014-03-01  236.028 0.002042055       2.32
+## 4 2014-04-30 -0.11326333 2014-04-01  236.468 0.001864186       2.29
+## 5 2014-05-31 -0.10650504 2014-05-01  236.918 0.001903006       2.17
+## 6 2014-06-30  0.03095965 2014-06-01  237.231 0.001321132       2.15</code></pre>
 
 <p>We can now build a tree that tries to explain the accuracy of models as a function of macro-variables.</p>
 
@@ -773,7 +773,7 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
 <span id="cb175-10"><a href="ensemble.html#cb175-10"></a>              <span class="dt">max_depth =</span> <span class="dv">4</span>,                                    <span class="co"># Maximum depth of trees</span></span>
 <span id="cb175-11"><a href="ensemble.html#cb175-11"></a>              <span class="dt">nrounds =</span> <span class="dv">18</span>                                      <span class="co"># Number of trees used</span></span>
 <span id="cb175-12"><a href="ensemble.html#cb175-12"></a>    )</span></code></pre></div>
-<pre><code>## [14:47:26] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
+<pre><code>## [18:03:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
 <div class="sourceCode" id="cb177"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb177-1"><a href="ensemble.html#cb177-1"></a>err_ens_<span class="dv">2011</span> &lt;-<span class="st"> </span><span class="kw">predict</span>(fit_ens_<span class="dv">2011</span>, xgb_test) <span class="op">-</span><span class="st">  </span>testing_sample<span class="op">$</span>R1M_Usd <span class="co"># Prediction errors</span></span></code></pre></div>
 
 <p>Finally, the last model is a simple neural network.</p>
@@ -805,10 +805,10 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
 <span id="cb179-4"><a href="ensemble.html#cb179-4"></a>                        err_ens_<span class="dv">2013</span>)</span>
 <span id="cb179-5"><a href="ensemble.html#cb179-5"></a><span class="kw">cor</span>(E_subtraining)</span></code></pre></div>
 <pre><code>##              err_ens_2007 err_ens_2009 err_ens_2011 err_ens_2013
-## err_ens_2007    1.0000000    0.9542497    0.6460091    0.9995353
-## err_ens_2009    0.9542497    1.0000000    0.6317006    0.9569083
-## err_ens_2011    0.6460091    0.6317006    1.0000000    0.6459764
-## err_ens_2013    0.9995353    0.9569083    0.6459764    1.0000000</code></pre>
+## err_ens_2007    1.0000000    0.9542497    0.6460091    0.9985960
+## err_ens_2009    0.9542497    1.0000000    0.6317006    0.9594582
+## err_ens_2011    0.6460091    0.6317006    1.0000000    0.6459776
+## err_ens_2013    0.9985960    0.9594582    0.6459776    1.0000000</code></pre>
 
 <p>The results are overall disappointing. Only one model manages to extract patterns that are somewhat different from the other ones, resulting in a 65% correlation across the board. Neural networks (on 2013 data) and penalized regressions (2007) remain highly correlated. One possible explanation could be that the models capture mainly noise and little signal. Working with long-term labels like annual returns could help improve diversification across models.  </p>
 </div>

@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2020-12-13" />
+<meta name="date" content="2021-01-03" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -471,10 +471,11 @@ R^2(\textbf{y},\tilde{\textbf{y}})=1- \frac{\sum_{i=1}^I(y_i-\tilde{y}_i)^2}{\su
 \end{equation}\]</span>
  
 where <span class="math inline">\(\bar{y}\)</span> is the sample average of the label. One important difference with the classical <span class="math inline">\(R^2\)</span> is that the above quantity can be computed on the <strong>testing sample</strong> and not on the <strong>training sample</strong>. In this case, the <span class="math inline">\(R^2\)</span> can be negative when the mean squared error in the numerator is larger than the (biased) variance of the testing sample. Sometimes, the average value <span class="math inline">\(\bar{y}\)</span> is omitted in the denominator (as in <span class="citation">Gu, Kelly, and Xiu (<a href="#ref-gu2018empirical" role="doc-biblioref">2020</a><a href="#ref-gu2018empirical" role="doc-biblioref">b</a>)</span> for instance). The benefit of removing the average value is that it compares the predictions of the model to a zero prediction. This is particularly relevant with returns because the simplest prediction of all is the constant zero value and the <span class="math inline">\(R^2\)</span> can then measure if the model beats this naive benchmark. A zero prediction is always preferable to a sample average because the latter can be very much period dependent. Also, removing <span class="math inline">\(\bar{y}\)</span> in the denominator makes the metric more conservative as it mechanically reduces the <span class="math inline">\(R^2\)</span>.</p>
-<p>Beyond the simple indicators detailed above, several exotic extensions exist and they all consist in altering the error before taking the averages. Two notable examples are the Mean Absolute Percentage Error (MAPE) and the Mean Square Percentage Error (MSPE). Instead of looking at the raw error, they compute the error relative to the original value (to be predicted). Hence, the error is expressed in a percentage score and the averages are simply equal to:</p>
-<p><span class="math display" id="eq:MSPE" id=\tag{10.4}\[\begin{align} (#eq:MAPE) 
-\text{MAPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left|\frac{y_i-\tilde{y}_i}{y_i}\right|,  \\ \tag{10.5} 
-\text{MSPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left(\frac{y_i-\tilde{y}_i}{y_i}\right)^2,
+<p>Beyond the simple indicators detailed above, several exotic extensions exist and they all consist in altering the error before taking the averages. Two notable examples are the Mean Absolute Percentage Error (MAPE) and the Mean Square Percentage Error (MSPE). Instead of looking at the raw error, they compute the error relative to the original value (to be predicted). Hence, the error is expressed in a percentage score and the averages are simply equal to:
+<span class="math display" id="eq:MSPE" id="eq:MAPE">\[\begin{align}
+\tag{10.4}  
+\text{MAPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left|\frac{y_i-\tilde{y}_i}{y_i}\right|, \\ \tag{10.5}
+\text{MSPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left(\frac{y_i-\tilde{y}_i}{y_i}\right)^2, 
 \end{align}\]</span></p>
 <p>where the latter can be scaled by a square root if need be. When the label is positive with possibly large values, it is possible to scale the magnitude of errors, which can be very large. One way to do this is to resort to the Root Mean Squared Logarithmic Error (RMSLE), defined below:</p>
 <p><span class="math display" id="eq:RMSLE">\[\begin{equation}
@@ -567,7 +568,8 @@ The <strong>variance-bias tradeoff</strong> is one of the core concepts in super
 <p>but the model that is estimated yields</p>
 <p><span class="math display">\[y_i=\hat{f}(\textbf{x}_i)+\hat{\epsilon}_i. \]</span></p>
 <p>Given an unknown sample <span class="math inline">\(\textbf{x}\)</span>, the decomposition of the average squared error is</p>
-<p><span class="math display" id="eq:biasvaria\tag{10.7}n} (#eq:biasvariance)
+<p><span class="math display" id="eq:biasvariance">\[\begin{align}
+ \tag{10.7}
 \mathbb{E}[\hat{\epsilon}^2]&amp;=\mathbb{E}[(y-\hat{f}(\textbf{x}))^2]=\mathbb{E}[(f(\textbf{x})+\epsilon-\hat{f}(\textbf{x}))^2]   \\
 &amp;= \underbrace{\mathbb{E}[(f(\textbf{x})-\hat{f}(\textbf{x}))^2]}_{\text{total quadratic error}}+\underbrace{\mathbb{E}[\epsilon^2]}_{\text{irreducible error}} \nonumber \\
 &amp;= \mathbb{E}[\hat{f}(\textbf{x})^2]+\mathbb{E}[f(\textbf{x})^2]-2\mathbb{E}[f(\textbf{x})\hat{f}(\textbf{x})]+\sigma^2\nonumber\\
@@ -691,7 +693,7 @@ Obviously, the easiest way to avoid overfitting is to resist the temptation of c
 <p>For <strong>regressions</strong>, there are two simple ways to deal with overfitting. The first is the number of parameters, that is, the number of predictors. Sometimes, it can be better to only select a subsample of features, especially if some of them are highly correlated (often, a threshold of 70% is considered as too high for absolute correlations between features). The second solution is penalization (via LASSO, ridge or elasticnet), which helps reduce the magnitude of estimates and thus of the variance of predictions.</p>
 <p>For tree-based methods, there are a variety of ways to reduce the risk of overfitting. When dealing with <strong>simple trees</strong>, the only way to proceed is to limit the number of leaves. This can be done in many ways. First, by imposing a maximum depth. If it is equal to <span class="math inline">\(d\)</span>, then the tree can have at most <span class="math inline">\(2^d\)</span> terminal nodes. It is often advised not to go beyond <span class="math inline">\(d=6\)</span>. The complexity parameter in <em>rpart</em> (cp) is another way to shrink the size of trees: any new split must lead to a reduction in loss at least equal to cp. If not, the split is not deemed useful and is thus not performed. Thus when cp is large, the tree is not grown. The last two parameters available in <em>rpart</em> are the minimum number of instances required in each leaf and the minimum number of instances per cluster requested in order to continue the splitting process. The higher (i.e., the more coercive) these figures are, the harder it is to grow complex trees.</p>
 <p>In addition to these options, <strong>random forests</strong> allow to control for the number of trees in the forest. Theoretically (see <span class="citation">Breiman (<a href="#ref-breiman2001random" role="doc-biblioref">2001</a>)</span>), this parameter is not supposed to impact the risk of overfitting because new trees only help reduce the total error via diversification. In practice, and for the sake of computation times, it is not recommended to go beyond 1,000 trees. Two other hyperparameters are the subsample size (on which each learner is trained) and the number of features retained for learning. They do not have a straightforward impact on bias and tradeoff, but rather on raw performace. For instance, if subsamples are too small, the trees will not learn enough. Same problem if the number of features is too low. On the other hand, choosing a large number of predictors (i.e., close to the total number) may lead to high correlations between each learner’s prediction because the overlap in information contained in the training samples may be high.</p>
-<p><strong>Boosted trees</strong> have other options that can help alleviate the risk of overfitting. The most obvious one is the learning rate, which discounts the impact of each new tree by <span class="math inline">\(\eta \in (0,1)\)</span>. When the learning rate is high, the algorithm learns too quickly and is prone to sticking close to the training data. When it’s low, the model learns very progressively, which can be efficient if there are sufficiently many trees in the ensemble. Indeed, the learning rate and the number of trees must be chosen synchronously: if both are low, the ensemble will learn nothing and if both are large, it will overfit. The arsenal of boosted tree parameters does not stop there. The penalizations, both of score values and of the number of leaves, are naturally a tool to prevent the model from going to deep in the particularities of the training sample. Finally, constraints of monotonicity like those mentioned in Section <a href="trees.html#boostext">6.4.5</a> are also an efficient way to impose some structure on the model and force it to detect particular patterns.</p>
+<p><strong>Boosted trees</strong> have other options that can help alleviate the risk of overfitting. The most obvious one is the learning rate, which discounts the impact of each new tree by <span class="math inline">\(\eta \in (0,1)\)</span>. When the learning rate is high, the algorithm learns too quickly and is prone to sticking close to the training data. When it’s low, the model learns very progressively, which can be efficient if there are sufficiently many trees in the ensemble. Indeed, the learning rate and the number of trees must be chosen synchronously: if both are low, the ensemble will learn nothing and if both are large, it will overfit. The arsenal of boosted tree parameters does not stop there. The penalizations, both of score values and of the number of leaves, are naturally a tool to prevent the model from going too deep in the particularities of the training sample. Finally, constraints of monotonicity like those mentioned in Section <a href="trees.html#boostext">6.4.5</a> are also an efficient way to impose some structure on the model and force it to detect particular patterns.</p>
 <p>Lastly <strong>neural networks</strong> also have many options aimed at protecting them against overfitting. Just like for boosted trees, some of them are the learning rate and the penalization of weights and biases (via their norm). Constraints, like nonnegative constraints, can also help when the model theoretically requires positive inputs. Finally, dropout is always a direct way to reduce the dimension (number of parameters) of a network.</p>
 </div>
 </div>
@@ -708,7 +710,7 @@ Obviously, the easiest way to avoid overfitting is to resist the temptation of c
 \tag{10.9}
 \textbf{p}_*=\underset{\textbf{p}}{\text{argmin}} \ O(\textbf{p}).
 \end{equation}\]</span></p>
-<p>The main problem with this optimization is that the computation of <span class="math inline">\(O(\textbf{p})\)</span> is very costly. Therefore, it is critical to choose each trial for <span class="math inline">\(\textbf{b}\)</span> wisely. One key assumption of BO is that the distribution of <span class="math inline">\(O\)</span> is Gaussian and that <span class="math inline">\(O\)</span> can be proxied by a linear combination of the <span class="math inline">\(p_l\)</span>. Said differently, the aim is to build a Bayesian linear regression between the input <span class="math inline">\(\textbf{p}\)</span> and the output (dependent variable) <span class="math inline">\(O\)</span>. Once a model has been estimated, the information that is concentrated in the posterior density of <span class="math inline">\(O\)</span> is used to make an educated guess at where to look for new values of <span class="math inline">\(\textbf{p}\)</span>.</p>
+<p>The main problem with this optimization is that the computation of <span class="math inline">\(O(\textbf{p})\)</span> is very costly. Therefore, it is critical to choose each trial for <span class="math inline">\(\textbf{p}\)</span> wisely. One key assumption of BO is that the distribution of <span class="math inline">\(O\)</span> is Gaussian and that <span class="math inline">\(O\)</span> can be proxied by a linear combination of the <span class="math inline">\(p_l\)</span>. Said differently, the aim is to build a Bayesian linear regression between the input <span class="math inline">\(\textbf{p}\)</span> and the output (dependent variable) <span class="math inline">\(O\)</span>. Once a model has been estimated, the information that is concentrated in the posterior density of <span class="math inline">\(O\)</span> is used to make an educated guess at where to look for new values of <span class="math inline">\(\textbf{p}\)</span>.</p>
 <p>This educated guess is made based on a so-called <strong>acquisition function</strong>. Suppose we have tested <span class="math inline">\(m\)</span> values for <span class="math inline">\(\textbf{p}\)</span>, which we write <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The current best parameter is written <span class="math inline">\(\textbf{p}_m^*=\underset{1\le k\le m}{\text{argmin}} \ O(\textbf{p}^{(k)})\)</span>. If we test a new point <span class="math inline">\(\textbf{p}\)</span>, then it will lead to an improvement only if <span class="math inline">\(O(\textbf{p})&lt;O(\textbf{p}_m^*)\)</span>, that is if the new objective improves the minimum value that we already know. The average value of this improvement is
 <span class="math display" id="eq:acquisition">\[\begin{equation}
 \tag{10.10}
@@ -726,11 +728,11 @@ which corresponds to the maximum location of the expected improvement. Instead o
 </li>
 <li><strong>step 2a</strong>: compute sequentially the posterior density of <span class="math inline">\(O\)</span> on all available points.<br />
 </li>
-<li><strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{m+1}\)</span> given in Equation <a href="valtune.html#eq:EI">(10.11)</a>.<br />
+<li><strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{(m+1)}\)</span> given in Equation <a href="valtune.html#eq:EI">(10.11)</a>.<br />
 </li>
-<li><strong>step 2c</strong>: compute the new objective value <span class="math inline">\(O(\textbf{p}^{m+1})\)</span>.<br />
+<li><strong>step 2c</strong>: compute the new objective value <span class="math inline">\(O(\textbf{p}^{(m+1)})\)</span>.<br />
 </li>
-<li><strong>step 3</strong>: repeat steps 2a to 2c as much as deemed reasonable and return the <span class="math inline">\(\textbf{p}^{m}\)</span> that yields the smallest objective value.</li>
+<li><strong>step 3</strong>: repeat steps 2a to 2c as much as deemed reasonable and return the <span class="math inline">\(\textbf{p}^{(m)}\)</span> that yields the smallest objective value.</li>
 </ul>
 <p>The interested reader can have a look at <span class="citation">Snoek, Larochelle, and Adams (<a href="#ref-snoek2012practical" role="doc-biblioref">2012</a>)</span> and <span class="citation">Frazier (<a href="#ref-frazier2018tutorial" role="doc-biblioref">2018</a>)</span> for more details on the numerical facets of this method.</p>
 <p>Finally, for the sake of completeness, we mention a last way to tune hyperparameters. Since the optimization scheme is <span class="math inline">\(\underset{\textbf{p}}{\text{argmin}} \ O(\textbf{p})\)</span>, a natural way to proceed would be to use the sensitivity of <span class="math inline">\(O\)</span> with respect to <span class="math inline">\(\textbf{p}\)</span>. Indeed, if the gradient <span class="math inline">\(\frac{\partial O}{\partial p_l}\)</span> is known, then a gradient descent will always improve the objective value. The problem is that it is hard to compute a reliable gradient (finite differences can become costly). Nonetheless, some methods (e.g., <span class="citation">Maclaurin, Duvenaud, and Adams (<a href="#ref-maclaurin2015gradient" role="doc-biblioref">2015</a>)</span>) have been applied successfully to optimize over large dimensional parameter spaces.</p>
@@ -792,81 +794,81 @@ In order to illustrate the process of grid search, we will try to find the best 
 <span id="cb135-5"><a href="valtune.html#cb135-5"></a>            <span class="dt">test_features =</span> xgb_test,               <span class="co"># Input for function: test features</span></span>
 <span id="cb135-6"><a href="valtune.html#cb135-6"></a>            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd     <span class="co"># Input for function: test labels (returns) </span></span>
 <span id="cb135-7"><a href="valtune.html#cb135-7"></a>)</span></code></pre></div>
-<pre><code>## [18:11:45] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:46] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:46] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:48] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:50] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:53] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:55] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:11:58] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:01] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:06] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:11] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:21] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:26] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:26] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:28] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:28] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:31] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:33] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:36] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:38] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:41] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:46] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:51] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:12:56] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:01] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:06] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:06] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:08] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:08] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:11] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:13] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:16] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:18] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:21] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:26] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:31] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:36] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:41] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:46] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:47] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:48] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:48] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:49] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:52] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:54] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:56] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:13:59] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:02] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:07] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:12] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:17] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:22] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:27] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:28] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:28] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:29] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:29] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:31] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:34] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:36] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:39] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:41] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:46] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:51] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:14:56] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.
-## [18:15:00] WARNING: amalgamation/../src/objective/regression_obj.cu:170: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
+<pre><code>## [17:00:18] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:18] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:20] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:21] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:23] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:26] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:30] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:37] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:40] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:47] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:53] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:00:59] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:05] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:10] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:11] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:12] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:12] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:13] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:13] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:16] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:21] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:24] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:27] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:32] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:38] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:44] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:49] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:55] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:01:58] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:01] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:04] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:07] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:10] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:16] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:23] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:35] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:45] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:51] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:02:58] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:01] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:01] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:02] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:02] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:03] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:06] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:09] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:13] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:17] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:21] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:26] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:34] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:41] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:49] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:55] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:55] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:03:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:00] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:03] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:06] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:09] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:12] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:25] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:30] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
+## [17:04:41] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
 <div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="valtune.html#cb137-1"></a>grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(eta, nrounds, lambda, <span class="dt">error =</span> <span class="kw">unlist</span>(grd)) <span class="co"># Dataframe with all results</span></span></code></pre></div>
 
 <p>Once the squared mean errors have been gathered, it is possible to plot them. We chose to work with 3 parameters on purpose because their influence can be simultaneuously plotted on one graph.</p>
