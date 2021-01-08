@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2021-01-03" />
+<meta name="date" content="2021-01-08" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -775,7 +775,7 @@ FIGURE 7.7: Output from a trained neural network (regression task).
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="NN.html#cb83-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(model, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.5201117</code></pre>
+<pre><code>## [1] 0.5427159</code></pre>
 
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -904,7 +904,7 @@ In Keras, it is possible to define user-specified loss functions. This may be in
 <p>The curves may go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns.</p>
 
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="NN.html#cb93-1"></a><span class="kw">mean</span>(<span class="kw">predict</span>(model_custom, NN_test_features) <span class="op">*</span><span class="st"> </span>NN_test_labels <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.4468864</code></pre>
+<pre><code>## [1] 0.5460346</code></pre>
 
 <p>The outcome could be improved. There are several directions that could help. One of them is arguably that the model should be dynamic and not static (see Chapter <a href="backtest.html#backtest">12</a>).</p>
 </div>
@@ -1025,7 +1025,7 @@ FIGURE 7.10: Output from a trained recurrent neural network (regression task).
 
 <div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="NN.html#cb100-1"></a>pred_rnn &lt;-<span class="st"> </span><span class="kw">predict</span>(new_model, test_features_rnn, <span class="dt">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></span>
 <span id="cb100-2"><a href="NN.html#cb100-2"></a><span class="kw">mean</span>(<span class="kw">c</span>(<span class="kw">t</span>(<span class="kw">as.matrix</span>(pred_rnn))) <span class="op">*</span><span class="st"> </span>test_labels_rnn <span class="op">&gt;</span><span class="st"> </span><span class="dv">0</span>)           <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.5019059</code></pre>
+<pre><code>## [1] 0.4957154</code></pre>
 
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 <p>Before we close this section on RNNs, we mention a new type architecture, called <span class="math inline">\(\alpha\)</span>-RNN which are simpler compared to LSTMs and GRUs. They consist in vanilla RNNs to which a simple autocorrelation is added to generate long term memory. We refer to the paper <span class="citation">Matthew F Dixon (<a href="#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span> for more details on this subject.</p>
