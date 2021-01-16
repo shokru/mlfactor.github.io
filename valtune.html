@@ -24,7 +24,7 @@
 <meta name="author" content="Guillaume Coqueret and Tony Guida" />
 
 
-<meta name="date" content="2021-01-08" />
+<meta name="date" content="2021-01-16" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -771,19 +771,19 @@ In order to illustrate the process of grid search, we will try to find the best 
 
 <div class="sourceCode" id="cb134"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb134-1"><a href="valtune.html#cb134-1"></a>grid_par &lt;-<span class="st"> </span><span class="cf">function</span>(train_matrix, test_features, test_label, eta, nrounds, lambda){</span>
 <span id="cb134-2"><a href="valtune.html#cb134-2"></a>    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb134-3"><a href="valtune.html#cb134-3"></a><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></span>
-<span id="cb134-4"><a href="valtune.html#cb134-4"></a>                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></span>
-<span id="cb134-5"><a href="valtune.html#cb134-5"></a>                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></span>
-<span id="cb134-6"><a href="valtune.html#cb134-6"></a>                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></span>
-<span id="cb134-7"><a href="valtune.html#cb134-7"></a>                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></span>
-<span id="cb134-8"><a href="valtune.html#cb134-8"></a>                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></span>
-<span id="cb134-9"><a href="valtune.html#cb134-9"></a>                  <span class="dt">nrounds =</span> nrounds,              <span class="co"># Number of trees used</span></span>
-<span id="cb134-10"><a href="valtune.html#cb134-10"></a>                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></span>
+<span id="cb134-3"><a href="valtune.html#cb134-3"></a><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                            <span class="co"># Data source (pipe input)</span></span>
+<span id="cb134-4"><a href="valtune.html#cb134-4"></a>                  <span class="dt">eta =</span> eta,                           <span class="co"># Learning rate</span></span>
+<span id="cb134-5"><a href="valtune.html#cb134-5"></a>                  <span class="dt">objective =</span> <span class="st">&quot;reg:squarederror&quot;</span>,  <span class="co"># Objective function</span></span>
+<span id="cb134-6"><a href="valtune.html#cb134-6"></a>                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                       <span class="co"># Maximum depth of trees</span></span>
+<span id="cb134-7"><a href="valtune.html#cb134-7"></a>                  <span class="dt">lambda =</span> lambda,                     <span class="co"># Penalisation of leaf values</span></span>
+<span id="cb134-8"><a href="valtune.html#cb134-8"></a>                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                         <span class="co"># Penalisation of number of leaves</span></span>
+<span id="cb134-9"><a href="valtune.html#cb134-9"></a>                  <span class="dt">nrounds =</span> nrounds,                   <span class="co"># Number of trees used</span></span>
+<span id="cb134-10"><a href="valtune.html#cb134-10"></a>                  <span class="dt">verbose =</span> <span class="dv">0</span>                          <span class="co"># No comment from algo</span></span>
 <span id="cb134-11"><a href="valtune.html#cb134-11"></a>        )</span>
 <span id="cb134-12"><a href="valtune.html#cb134-12"></a>    </span>
 <span id="cb134-13"><a href="valtune.html#cb134-13"></a>    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Predictions based on model &amp; test values</span></span>
 <span id="cb134-14"><a href="valtune.html#cb134-14"></a>    <span class="kw">return</span>(<span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>))             <span class="co"># Mean squared error</span></span>
-<span id="cb134-15"><a href="valtune.html#cb134-15"></a>}</span></code></pre></div>
+<span id="cb134-15"><a href="valtune.html#cb134-15"></a>} </span></code></pre></div>
 
 <p>The grid_par function can then be processed by the functional programming tool <strong>pmap</strong> that is going to perform the loop on parameter values automatically.</p>
 
@@ -793,91 +793,16 @@ In order to illustrate the process of grid search, we will try to find the best 
 <span id="cb135-4"><a href="valtune.html#cb135-4"></a>            <span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for function: training data</span></span>
 <span id="cb135-5"><a href="valtune.html#cb135-5"></a>            <span class="dt">test_features =</span> xgb_test,               <span class="co"># Input for function: test features</span></span>
 <span id="cb135-6"><a href="valtune.html#cb135-6"></a>            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd     <span class="co"># Input for function: test labels (returns) </span></span>
-<span id="cb135-7"><a href="valtune.html#cb135-7"></a>)</span></code></pre></div>
-<pre><code>## [17:00:18] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:18] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:20] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:21] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:23] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:26] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:30] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:37] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:40] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:47] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:53] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:00:59] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:05] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:10] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:11] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:12] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:12] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:13] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:13] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:16] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:21] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:24] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:27] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:32] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:38] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:44] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:49] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:55] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:01:58] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:01] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:04] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:07] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:10] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:16] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:23] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:35] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:45] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:51] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:02:58] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:01] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:01] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:02] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:02] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:03] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:06] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:09] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:13] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:17] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:21] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:26] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:34] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:41] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:49] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:55] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:55] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:56] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:03:57] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:00] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:03] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:06] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:09] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:12] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:19] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:25] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:30] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.
-## [17:04:41] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
-<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="valtune.html#cb137-1"></a>grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(eta, nrounds, lambda, <span class="dt">error =</span> <span class="kw">unlist</span>(grd)) <span class="co"># Dataframe with all results</span></span></code></pre></div>
+<span id="cb135-7"><a href="valtune.html#cb135-7"></a>) </span>
+<span id="cb135-8"><a href="valtune.html#cb135-8"></a>grd &lt;-<span class="st"> </span><span class="kw">data.frame</span>(eta, nrounds, lambda, <span class="dt">error =</span> <span class="kw">unlist</span>(grd)) <span class="co"># Dataframe with all results</span></span></code></pre></div>
 
 <p>Once the squared mean errors have been gathered, it is possible to plot them. We chose to work with 3 parameters on purpose because their influence can be simultaneuously plotted on one graph.</p>
 
-<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="valtune.html#cb138-1"></a>grd<span class="op">$</span>eta &lt;-<span class="st"> </span><span class="kw">as.factor</span>(eta)                                  <span class="co"># Params as categories (for plot)</span></span>
-<span id="cb138-2"><a href="valtune.html#cb138-2"></a>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> eta, <span class="dt">y =</span> error, <span class="dt">fill =</span> eta)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></span>
-<span id="cb138-3"><a href="valtune.html#cb138-3"></a><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></span>
-<span id="cb138-4"><a href="valtune.html#cb138-4"></a><span class="st">    </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(nrounds), <span class="dt">cols =</span> <span class="kw">vars</span>(lambda)) <span class="op">+</span></span>
-<span id="cb138-5"><a href="valtune.html#cb138-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">6</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="valtune.html#cb136-1"></a>grd<span class="op">$</span>eta &lt;-<span class="st"> </span><span class="kw">as.factor</span>(eta)                                  <span class="co"># Params as categories (for plot)</span></span>
+<span id="cb136-2"><a href="valtune.html#cb136-2"></a>grd <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> eta, <span class="dt">y =</span> error, <span class="dt">fill =</span> eta)) <span class="op">+</span><span class="st">      </span><span class="co"># Plot!</span></span>
+<span id="cb136-3"><a href="valtune.html#cb136-3"></a><span class="st">    </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="op">+</span></span>
+<span id="cb136-4"><a href="valtune.html#cb136-4"></a><span class="st">    </span><span class="kw">facet_grid</span>(<span class="dt">rows =</span> <span class="kw">vars</span>(nrounds), <span class="dt">cols =</span> <span class="kw">vars</span>(lambda)) <span class="op">+</span></span>
+<span id="cb136-5"><a href="valtune.html#cb136-5"></a><span class="st">    </span><span class="kw">theme</span>(<span class="dt">axis.text.x =</span> <span class="kw">element_text</span>(<span class="dt">size =</span> <span class="dv">6</span>))</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:gridvisu"></span>
 <img src="ML_factor_files/figure-html/gridvisu-1.png" alt="Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda." width="550px" />
 <p class="caption">
@@ -894,54 +819,54 @@ FIGURE 10.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 There are several packages in R that relate to Bayesian optimization. We work with <em>rBayesianOptimization</em>, which is general purpose but also needs more coding involvement.</p>
 <p>Just as for the grid search, we need to code the objective function on which the hyperparameters will be optimized. Under <em>rBayesianOptimization</em>, the output has to have a particular form, with a score and a prediction variable. The function will <em>maximize</em> the score, hence we will define it as <em>minus</em> the mean squared error.</p>
 
-<div class="sourceCode" id="cb139"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb139-1"><a href="valtune.html#cb139-1"></a>bayes_par_opt &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for func: train data</span></span>
-<span id="cb139-2"><a href="valtune.html#cb139-2"></a>            <span class="dt">test_features =</span> xgb_test,                             <span class="co"># Input for func: test feats</span></span>
-<span id="cb139-3"><a href="valtune.html#cb139-3"></a>            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd,                  <span class="co"># Input for func: test label</span></span>
-<span id="cb139-4"><a href="valtune.html#cb139-4"></a>            eta, nrounds, lambda){                                <span class="co"># Input for func params</span></span>
-<span id="cb139-5"><a href="valtune.html#cb139-5"></a>    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb139-6"><a href="valtune.html#cb139-6"></a><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></span>
-<span id="cb139-7"><a href="valtune.html#cb139-7"></a>                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></span>
-<span id="cb139-8"><a href="valtune.html#cb139-8"></a>                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></span>
-<span id="cb139-9"><a href="valtune.html#cb139-9"></a>                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></span>
-<span id="cb139-10"><a href="valtune.html#cb139-10"></a>                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></span>
-<span id="cb139-11"><a href="valtune.html#cb139-11"></a>                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></span>
-<span id="cb139-12"><a href="valtune.html#cb139-12"></a>                  <span class="dt">nrounds =</span> <span class="kw">round</span>(nrounds),       <span class="co"># Number of trees used</span></span>
-<span id="cb139-13"><a href="valtune.html#cb139-13"></a>                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></span>
-<span id="cb139-14"><a href="valtune.html#cb139-14"></a>        )</span>
-<span id="cb139-15"><a href="valtune.html#cb139-15"></a></span>
-<span id="cb139-16"><a href="valtune.html#cb139-16"></a>    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Forecast based on fitted model &amp; test values</span></span>
-<span id="cb139-17"><a href="valtune.html#cb139-17"></a>    <span class="kw">list</span>(<span class="dt">Score =</span> <span class="op">-</span><span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>),      <span class="co"># Minus RMSE</span></span>
-<span id="cb139-18"><a href="valtune.html#cb139-18"></a>         <span class="dt">Pred =</span> pred)                             <span class="co"># Predictions on test set</span></span>
-<span id="cb139-19"><a href="valtune.html#cb139-19"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb137"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb137-1"><a href="valtune.html#cb137-1"></a>bayes_par_opt &lt;-<span class="st"> </span><span class="cf">function</span>(<span class="dt">train_matrix =</span> train_matrix_xgb,        <span class="co"># Input for func: train data</span></span>
+<span id="cb137-2"><a href="valtune.html#cb137-2"></a>            <span class="dt">test_features =</span> xgb_test,                             <span class="co"># Input for func: test feats</span></span>
+<span id="cb137-3"><a href="valtune.html#cb137-3"></a>            <span class="dt">test_label =</span> testing_sample<span class="op">$</span>R1M_Usd,                  <span class="co"># Input for func: test label</span></span>
+<span id="cb137-4"><a href="valtune.html#cb137-4"></a>            eta, nrounds, lambda){                                <span class="co"># Input for func params</span></span>
+<span id="cb137-5"><a href="valtune.html#cb137-5"></a>    fit &lt;-<span class="st"> </span>train_matrix <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb137-6"><a href="valtune.html#cb137-6"></a><span class="st">        </span><span class="kw">xgb.train</span>(<span class="dt">data =</span> .,                       <span class="co"># Data source (pipe input)</span></span>
+<span id="cb137-7"><a href="valtune.html#cb137-7"></a>                  <span class="dt">eta =</span> eta,                      <span class="co"># Learning rate</span></span>
+<span id="cb137-8"><a href="valtune.html#cb137-8"></a>                  <span class="dt">objective =</span> <span class="st">&quot;reg:linear&quot;</span>,       <span class="co"># Objective function</span></span>
+<span id="cb137-9"><a href="valtune.html#cb137-9"></a>                  <span class="dt">max_depth =</span> <span class="dv">5</span>,                  <span class="co"># Maximum depth of trees</span></span>
+<span id="cb137-10"><a href="valtune.html#cb137-10"></a>                  <span class="dt">lambda =</span> lambda,                <span class="co"># Penalisation of leaf values</span></span>
+<span id="cb137-11"><a href="valtune.html#cb137-11"></a>                  <span class="dt">gamma =</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span></span>
+<span id="cb137-12"><a href="valtune.html#cb137-12"></a>                  <span class="dt">nrounds =</span> <span class="kw">round</span>(nrounds),       <span class="co"># Number of trees used</span></span>
+<span id="cb137-13"><a href="valtune.html#cb137-13"></a>                  <span class="dt">verbose =</span> <span class="dv">0</span>                     <span class="co"># No comment from algo</span></span>
+<span id="cb137-14"><a href="valtune.html#cb137-14"></a>        )</span>
+<span id="cb137-15"><a href="valtune.html#cb137-15"></a></span>
+<span id="cb137-16"><a href="valtune.html#cb137-16"></a>    pred &lt;-<span class="st"> </span><span class="kw">predict</span>(fit, test_features)           <span class="co"># Forecast based on fitted model &amp; test values</span></span>
+<span id="cb137-17"><a href="valtune.html#cb137-17"></a>    <span class="kw">list</span>(<span class="dt">Score =</span> <span class="op">-</span><span class="kw">mean</span>((pred<span class="op">-</span>test_label)<span class="op">^</span><span class="dv">2</span>),      <span class="co"># Minus RMSE</span></span>
+<span id="cb137-18"><a href="valtune.html#cb137-18"></a>         <span class="dt">Pred =</span> pred)                             <span class="co"># Predictions on test set</span></span>
+<span id="cb137-19"><a href="valtune.html#cb137-19"></a>}</span></code></pre></div>
 
 <p>Once the objective function is defined, it can be plugged into the Bayesian optimizer.</p>
 
-<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="valtune.html#cb140-1"></a><span class="kw">library</span>(rBayesianOptimization)</span>
-<span id="cb140-2"><a href="valtune.html#cb140-2"></a>bayes_opt &lt;-<span class="st"> </span><span class="kw">BayesianOptimization</span>(bayes_par_opt,           <span class="co"># Function to maximize</span></span>
-<span id="cb140-3"><a href="valtune.html#cb140-3"></a>                     <span class="dt">bounds =</span> <span class="kw">list</span>(<span class="dt">eta =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>),      <span class="co"># Bounds for eta</span></span>
-<span id="cb140-4"><a href="valtune.html#cb140-4"></a>                                   <span class="dt">lambda =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">15</span>),    <span class="co"># Bounds for lambda</span></span>
-<span id="cb140-5"><a href="valtune.html#cb140-5"></a>                                   <span class="dt">nrounds =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">100</span>)),  <span class="co"># Bounds for nrounds</span></span>
-<span id="cb140-6"><a href="valtune.html#cb140-6"></a>                     <span class="dt">init_points =</span> <span class="dv">10</span>,            <span class="co"># Nb initial points for first estimation</span></span>
-<span id="cb140-7"><a href="valtune.html#cb140-7"></a>                     <span class="dt">n_iter =</span> <span class="dv">24</span>,                 <span class="co"># Nb optimization steps/trials</span></span>
-<span id="cb140-8"><a href="valtune.html#cb140-8"></a>                     <span class="dt">acq =</span> <span class="st">&quot;ei&quot;</span>,                  <span class="co"># Acquisition function = expected improvement</span></span>
-<span id="cb140-9"><a href="valtune.html#cb140-9"></a>                     <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="valtune.html#cb138-1"></a><span class="kw">library</span>(rBayesianOptimization)</span>
+<span id="cb138-2"><a href="valtune.html#cb138-2"></a>bayes_opt &lt;-<span class="st"> </span><span class="kw">BayesianOptimization</span>(bayes_par_opt,           <span class="co"># Function to maximize</span></span>
+<span id="cb138-3"><a href="valtune.html#cb138-3"></a>                     <span class="dt">bounds =</span> <span class="kw">list</span>(<span class="dt">eta =</span> <span class="kw">c</span>(<span class="fl">0.2</span>, <span class="fl">0.8</span>),      <span class="co"># Bounds for eta</span></span>
+<span id="cb138-4"><a href="valtune.html#cb138-4"></a>                                   <span class="dt">lambda =</span> <span class="kw">c</span>(<span class="fl">0.5</span>, <span class="dv">15</span>),    <span class="co"># Bounds for lambda</span></span>
+<span id="cb138-5"><a href="valtune.html#cb138-5"></a>                                   <span class="dt">nrounds =</span> <span class="kw">c</span>(<span class="dv">10</span>, <span class="dv">100</span>)),  <span class="co"># Bounds for nrounds</span></span>
+<span id="cb138-6"><a href="valtune.html#cb138-6"></a>                     <span class="dt">init_points =</span> <span class="dv">10</span>,            <span class="co"># Nb initial points for first estimation</span></span>
+<span id="cb138-7"><a href="valtune.html#cb138-7"></a>                     <span class="dt">n_iter =</span> <span class="dv">24</span>,                 <span class="co"># Nb optimization steps/trials</span></span>
+<span id="cb138-8"><a href="valtune.html#cb138-8"></a>                     <span class="dt">acq =</span> <span class="st">&quot;ei&quot;</span>,                  <span class="co"># Acquisition function = expected improvement</span></span>
+<span id="cb138-9"><a href="valtune.html#cb138-9"></a>                     <span class="dt">verbose =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
 <pre><code>## 
 ##  Best Parameters Found: 
 ## Round = 4    eta = 0.3718    lambda = 6.2302 nrounds = 12.9980   Value = -0.0375</code></pre>
-<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="valtune.html#cb142-1"></a>bayes_opt<span class="op">$</span>Best_Par</span></code></pre></div>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="valtune.html#cb140-1"></a>bayes_opt<span class="op">$</span>Best_Par</span></code></pre></div>
 <pre><code>##        eta     lambda    nrounds 
 ##  0.3718497  6.2301516 12.9980352</code></pre>
 
 <p>The final parameters indicate that it is advised to resist overfitting: small number of learners and large penalization seem to be the best choices.</p>
 <p>To confirm these results, we plot the relationship between the loss (up to the sign) and two hyperparameters. Each point corresponds to a value tested in the optimization. The best values are clearly to the left of the left graph and to the right of the right graph and the pattern is reliably pronounced. According to these graphs, it seems indeed wiser to pick a smaller number of trees and a larger penalization factor (to maximize minus the loss).</p>
 
-<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="valtune.html#cb144-1"></a><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>) <span class="co"># Package for combining plots</span></span>
-<span id="cb144-2"><a href="valtune.html#cb144-2"></a>plot_rounds &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb144-3"><a href="valtune.html#cb144-3"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> nrounds, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span>
-<span id="cb144-4"><a href="valtune.html#cb144-4"></a>plot_lambda &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></span>
-<span id="cb144-5"><a href="valtune.html#cb144-5"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span>
-<span id="cb144-6"><a href="valtune.html#cb144-6"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
-<span id="cb144-7"><a href="valtune.html#cb144-7"></a><span class="kw">ggarrange</span>(plot_rounds, plot_lambda, <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="valtune.html#cb142-1"></a><span class="kw">library</span>(<span class="st">&quot;ggpubr&quot;</span>) <span class="co"># Package for combining plots</span></span>
+<span id="cb142-2"><a href="valtune.html#cb142-2"></a>plot_rounds &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb142-3"><a href="valtune.html#cb142-3"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> nrounds, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb142-4"><a href="valtune.html#cb142-4"></a>plot_lambda &lt;-<span class="st"> </span>bayes_opt<span class="op">$</span>History <span class="op">%&gt;%</span><span class="st"> </span></span>
+<span id="cb142-5"><a href="valtune.html#cb142-5"></a><span class="st">    </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> lambda, <span class="dt">y =</span> Value)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>)</span>
+<span id="cb142-6"><a href="valtune.html#cb142-6"></a><span class="kw">par</span>(<span class="dt">mar =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb142-7"><a href="valtune.html#cb142-7"></a><span class="kw">ggarrange</span>(plot_rounds, plot_lambda, <span class="dt">ncol =</span> <span class="dv">2</span>)</span></code></pre></div>
 <div class="figure" style="text-align: center"><span id="fig:bayesoptfig"></span>
 <img src="ML_factor_files/figure-html/bayesoptfig-1.png" alt="Relationship between (minus) the loss and hyperparameter values." width="450px" />
 <p class="caption">
