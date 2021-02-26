@@ -834,7 +834,7 @@ FIGURE 7.7: Output from a trained neural network (regression task).
 <p>In order to obtain the parameters of the model, the user can call get_weights(model).<a href="#fn19" class="footnote-ref" id="fnref19"><sup>19</sup></a> We do not execute the code here because the size of the output is much too large, as there are thousands of weights.</p>
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
 <div class="sourceCode" id="cb83"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb83-1"><a href="NN.html#cb83-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(model, NN_test_features) <span class="sc">*</span> NN_test_labels <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.545707</code></pre>
+<pre><code>## [1] 0.5350387</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -955,7 +955,7 @@ In Keras, it is possible to define user-specified loss functions. This may be in
 <p></p>
 <p>The curves may go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns.</p>
 <div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="NN.html#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">predict</span>(model_custom, NN_test_features) <span class="sc">*</span> NN_test_labels <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.5460346</code></pre>
+<pre><code>## [1] 0.4468722</code></pre>
 <p></p>
 <p>The outcome could be improved. There are several directions that could help. One of them is arguably that the model should be dynamic and not static (see Chapter <a href="backtest.html#backtest">12</a>).</p>
 </div>
@@ -1070,7 +1070,7 @@ FIGURE 7.10: Output from a trained recurrent neural network (regression task).
 <p>Finally, once the new model is ready, and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.</p>
 <div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="NN.html#cb100-1" aria-hidden="true" tabindex="-1"></a>pred_rnn <span class="ot">&lt;-</span> <span class="fu">predict</span>(new_model, test_features_rnn, <span class="at">batch_size =</span> nb_stocks) <span class="co"># Predictions</span></span>
 <span id="cb100-2"><a href="NN.html#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">c</span>(<span class="fu">t</span>(<span class="fu">as.matrix</span>(pred_rnn))) <span class="sc">*</span> test_labels_rnn <span class="sc">&gt;</span> <span class="dv">0</span>)           <span class="co"># Hit ratio</span></span></code></pre></div>
-<pre><code>## [1] 0.4988106</code></pre>
+<pre><code>## [1] 0.4976212</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 <p>Before we close this section on RNNs, we mention a new type architecture, called <span class="math inline">\(\alpha\)</span>-RNN which are simpler compared to LSTMs and GRUs. They consist in vanilla RNNs to which a simple autocorrelation is added to generate long term memory. We refer to the paper <span class="citation"><a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">Matthew F. Dixon</a> (<a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span> for more details on this subject.</p>
@@ -1091,7 +1091,7 @@ FIGURE 7.10: Output from a trained recurrent neural network (regression task).
 <p>
 Another interesting layer type is the Gated Linear Unit (GLU). Given a matrix input <span class="math inline">\(\textbf{X}\)</span>, the GLU yields
 <span class="math display">\[\text{GLU}(\textbf{X}) = (\textbf{XW} + \textbf{b}) \cdot \sigma(\textbf{XW} + \textbf{b}),\]</span>
-where <span class="math inline">\(\cdot\)</span> is the Hadamard (element-wise) matrix product and <span class="math inline">\(\sigma\)</span> is the sigmoid function (GLUs can be generalized to other easily differentiable functions).</p>
+where “<span class="math inline">\(\cdot\)</span>” is the Hadamard (element-wise) matrix product and <span class="math inline">\(\sigma\)</span> is the sigmoid function (GLUs can be generalized to other easily differentiable functions).</p>
 </div>
 <div id="sparsemax-activation" class="section level3" number="7.6.2">
 <h3><span class="header-section-number">7.6.2</span> Sparsemax activation</h3>
@@ -1215,10 +1215,10 @@ FIGURE 7.14: Scheme of the autoencoder pricing model.
 <ol start="2" style="list-style-type: decimal">
 <li>The purpose of the exercise is to demonstrate the universal approximation of simple NNs. Let’s take a simple function, say sin(x) over the interval [0,6]. Use a simple feed-forward neural network with one layer and 16 units to mimic this function. Then try with 128 units and see how it improves the fit.</li>
 </ol>
-<div class="figure" style="text-align: center">
-<img src="ML_factor_files/figure-html/exo_UA-1.png" alt="Goal: approximate this simple function." width="400px" />
+<div class="figure" style="text-align: center"><span id="fig:exoUA"></span>
+<img src="ML_factor_files/figure-html/exoUA-1.png" alt="Goal: approximate this simple function." width="400px" />
 <p class="caption">
-(#fig:exo_UA)Goal: approximate this simple function.
+FIGURE 7.15: Goal: approximate this simple function.
 </p>
 </div>
 

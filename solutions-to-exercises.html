@@ -902,13 +902,13 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 <span id="cb281-8"><a href="solutions-to-exercises.html#cb281-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="fu">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)            <span class="co"># Output metric</span></span>
 <span id="cb281-9"><a href="solutions-to-exercises.html#cb281-9" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb281-10"><a href="solutions-to-exercises.html#cb281-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_ua)                                 <span class="co"># A simple model!</span></span></code></pre></div>
-<pre><code>## Model: &quot;sequential_28&quot;
+<pre><code>## Model: &quot;sequential_7&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_75 (Dense)                        (None, 16)                          32            
+## dense_22 (Dense)                        (None, 16)                          32            
 ## __________________________________________________________________________________________
-## dense_74 (Dense)                        (None, 1)                           17            
+## dense_21 (Dense)                        (None, 1)                           17            
 ## ==========================================================================================
 ## Total params: 49
 ## Trainable params: 49
@@ -918,52 +918,46 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 <span id="cb283-2"><a href="solutions-to-exercises.html#cb283-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="at">by =</span> <span class="fl">0.001</span>) <span class="sc">%&gt;%</span> <span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">1</span>),              <span class="co"># Training data = x</span></span>
 <span id="cb283-3"><a href="solutions-to-exercises.html#cb283-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sin</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="at">by =</span> <span class="fl">0.001</span>)) <span class="sc">%&gt;%</span> <span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">1</span>),         <span class="co"># Training label = y</span></span>
 <span id="cb283-4"><a href="solutions-to-exercises.html#cb283-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">epochs =</span> <span class="dv">30</span>, <span class="at">batch_size =</span> <span class="dv">64</span>                             <span class="co"># Training parameters</span></span>
-<span id="cb283-5"><a href="solutions-to-exercises.html#cb283-5" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb283-6"><a href="solutions-to-exercises.html#cb283-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fu">predict</span>(model_ua, x)) <span class="sc">%&gt;%</span></span>
-<span id="cb283-7"><a href="solutions-to-exercises.html#cb283-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb283-8"><a href="solutions-to-exercises.html#cb283-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> sin, <span class="at">color =</span> <span class="st">&quot;#9999FF&quot;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:ex82a"></span>
-<img src="ML_factor_files/figure-html/ex82a-1.png" alt="Case with 16 units. The sine function in light blue and approximation in black." width="5" />
-<p class="caption">
-FIGURE 18.12: Case with 16 units. The sine function in light blue and approximation in black.
-</p>
-</div>
+<span id="cb283-5"><a href="solutions-to-exercises.html#cb283-5" aria-hidden="true" tabindex="-1"></a>) </span></code></pre></div>
 <p></p>
-<p>In full disclosure, to improve the fit, we also increase the sample size.</p>
-<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="solutions-to-exercises.html#cb284-1" aria-hidden="true" tabindex="-1"></a>model_ua <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>()</span>
-<span id="cb284-2"><a href="solutions-to-exercises.html#cb284-2" aria-hidden="true" tabindex="-1"></a>model_ua <span class="sc">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span></span>
+<p>In full disclosure, to improve the fit, we also increase the sample size. We show the improvement in the figure below.</p>
+<div class="sourceCode" id="cb284"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb284-1"><a href="solutions-to-exercises.html#cb284-1" aria-hidden="true" tabindex="-1"></a>model_ua2 <span class="ot">&lt;-</span> <span class="fu">keras_model_sequential</span>()</span>
+<span id="cb284-2"><a href="solutions-to-exercises.html#cb284-2" aria-hidden="true" tabindex="-1"></a>model_ua2 <span class="sc">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span></span>
 <span id="cb284-3"><a href="solutions-to-exercises.html#cb284-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">128</span>, <span class="at">activation =</span> <span class="st">&#39;sigmoid&#39;</span>, <span class="at">input_shape =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span></span>
 <span id="cb284-4"><a href="solutions-to-exercises.html#cb284-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">layer_dense</span>(<span class="at">units =</span> <span class="dv">1</span>) <span class="co"># </span></span>
-<span id="cb284-5"><a href="solutions-to-exercises.html#cb284-5" aria-hidden="true" tabindex="-1"></a>model_ua <span class="sc">%&gt;%</span> <span class="fu">compile</span>(                             <span class="co"># Model specification</span></span>
+<span id="cb284-5"><a href="solutions-to-exercises.html#cb284-5" aria-hidden="true" tabindex="-1"></a>model_ua2 <span class="sc">%&gt;%</span> <span class="fu">compile</span>(                             <span class="co"># Model specification</span></span>
 <span id="cb284-6"><a href="solutions-to-exercises.html#cb284-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">loss =</span> <span class="st">&#39;mean_squared_error&#39;</span>,                  <span class="co"># Loss function</span></span>
 <span id="cb284-7"><a href="solutions-to-exercises.html#cb284-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">optimizer =</span> <span class="fu">optimizer_rmsprop</span>(),              <span class="co"># Optimisation method (weight updating)</span></span>
 <span id="cb284-8"><a href="solutions-to-exercises.html#cb284-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="fu">c</span>(<span class="st">&#39;mean_absolute_error&#39;</span>)            <span class="co"># Output metric</span></span>
 <span id="cb284-9"><a href="solutions-to-exercises.html#cb284-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb284-10"><a href="solutions-to-exercises.html#cb284-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_ua)                                 <span class="co"># A simple model!</span></span></code></pre></div>
-<pre><code>## Model: &quot;sequential_29&quot;
+<span id="cb284-10"><a href="solutions-to-exercises.html#cb284-10" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_ua2)                                 <span class="co"># A simple model!</span></span></code></pre></div>
+<pre><code>## Model: &quot;sequential_8&quot;
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_77 (Dense)                        (None, 128)                         256           
+## dense_24 (Dense)                        (None, 128)                         256           
 ## __________________________________________________________________________________________
-## dense_76 (Dense)                        (None, 1)                           129           
+## dense_23 (Dense)                        (None, 1)                           129           
 ## ==========================================================================================
 ## Total params: 385
 ## Trainable params: 385
 ## Non-trainable params: 0
 ## __________________________________________________________________________________________</code></pre>
-<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="solutions-to-exercises.html#cb286-1" aria-hidden="true" tabindex="-1"></a>fit_ua <span class="ot">&lt;-</span> model_ua <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode" id="cb286"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb286-1"><a href="solutions-to-exercises.html#cb286-1" aria-hidden="true" tabindex="-1"></a>fit_ua2 <span class="ot">&lt;-</span> model_ua2 <span class="sc">%&gt;%</span> </span>
 <span id="cb286-2"><a href="solutions-to-exercises.html#cb286-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="at">by =</span> <span class="fl">0.0002</span>) <span class="sc">%&gt;%</span> <span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">1</span>),            <span class="co"># Training data = x</span></span>
 <span id="cb286-3"><a href="solutions-to-exercises.html#cb286-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">sin</span>(<span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">6</span>, <span class="at">by =</span> <span class="fl">0.0002</span>)) <span class="sc">%&gt;%</span> <span class="fu">matrix</span>(<span class="at">ncol =</span> <span class="dv">1</span>),       <span class="co"># Training label = y</span></span>
 <span id="cb286-4"><a href="solutions-to-exercises.html#cb286-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">epochs =</span> <span class="dv">60</span>, <span class="at">batch_size =</span> <span class="dv">64</span>                            <span class="co"># Training parameters</span></span>
 <span id="cb286-5"><a href="solutions-to-exercises.html#cb286-5" aria-hidden="true" tabindex="-1"></a>) </span>
-<span id="cb286-6"><a href="solutions-to-exercises.html#cb286-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fu">predict</span>(model_ua, x)) <span class="sc">%&gt;%</span></span>
-<span id="cb286-7"><a href="solutions-to-exercises.html#cb286-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y)) <span class="sc">+</span> <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">1.2</span>) <span class="sc">+</span></span>
-<span id="cb286-8"><a href="solutions-to-exercises.html#cb286-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> sin, <span class="at">color =</span> <span class="st">&quot;#9999FF&quot;</span>)</span></code></pre></div>
-<div class="figure"><span id="fig:ex82b"></span>
-<img src="ML_factor_files/figure-html/ex82b-1.png" alt="Case with 128 units. The sine function in light blue and approximation in black." width="5" />
+<span id="cb286-6"><a href="solutions-to-exercises.html#cb286-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> x) <span class="sc">%&gt;%</span></span>
+<span id="cb286-7"><a href="solutions-to-exercises.html#cb286-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>() <span class="sc">+</span> </span>
+<span id="cb286-8"><a href="solutions-to-exercises.html#cb286-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fu">predict</span>(model_ua, x), <span class="at">color =</span> <span class="st">&quot;Small model&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb286-9"><a href="solutions-to-exercises.html#cb286-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> <span class="fu">predict</span>(model_ua2, x), <span class="at">color =</span> <span class="st">&quot;Large model&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb286-10"><a href="solutions-to-exercises.html#cb286-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_function</span>(<span class="at">fun =</span> sin, <span class="fu">aes</span>(<span class="at">color =</span> <span class="st">&quot;sin(x) function&quot;</span>)) <span class="sc">+</span> </span>
+<span id="cb286-11"><a href="solutions-to-exercises.html#cb286-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">&quot;#9999FF&quot;</span>, <span class="st">&quot;#FFFF99&quot;</span>, <span class="st">&quot;#000000&quot;</span>))</span></code></pre></div>
+<div class="figure" style="text-align: center"><span id="fig:ex82b"></span>
+<img src="ML_factor_files/figure-html/ex82b-1.png" alt="Case with 128 units. The sine function in light blue and approximation in black." width="400px" />
 <p class="caption">
-FIGURE 18.13: Case with 128 units. The sine function in light blue and approximation in black.
+FIGURE 18.12: Case with 128 units. The sine function in light blue and approximation in black.
 </p>
 </div>
 <p></p>
@@ -1072,7 +1066,7 @@ FIGURE 18.13: Case with 128 units. The sine function in light blue and approxima
 <span id="cb296-21"><a href="solutions-to-exercises.html#cb296-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">outputs =</span> <span class="fu">c</span>(main_output)</span>
 <span id="cb296-22"><a href="solutions-to-exercises.html#cb296-22" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <p></p>
-<p>Lastly, we can train and evaluate (see Figure <a href="solutions-to-exercises.html#fig:ex12c">18.14</a>).</p>
+<p>Lastly, we can train and evaluate (see Figure <a href="solutions-to-exercises.html#fig:ex12c">18.13</a>).</p>
 <div class="sourceCode" id="cb297"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb297-1"><a href="solutions-to-exercises.html#cb297-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model_ens)                      <span class="co"># See model details / architecture</span></span></code></pre></div>
 <pre><code>## Model: &quot;model_2&quot;
 ## __________________________________________________________________________________________
@@ -1090,15 +1084,15 @@ FIGURE 18.13: Case with 128 units. The sine function in light blue and approxima
 ## __________________________________________________________________________________________
 ## layer_3 (Dense)              (None, 8)           256        third_input[0][0]             
 ## __________________________________________________________________________________________
-## dense_21 (Dense)             (None, 2)           18         layer_1[0][0]                 
+## dense_25 (Dense)             (None, 2)           18         layer_1[0][0]                 
 ## __________________________________________________________________________________________
-## dense_22 (Dense)             (None, 2)           18         layer_2[0][0]                 
+## dense_26 (Dense)             (None, 2)           18         layer_2[0][0]                 
 ## __________________________________________________________________________________________
-## dense_23 (Dense)             (None, 2)           18         layer_3[0][0]                 
+## dense_27 (Dense)             (None, 2)           18         layer_3[0][0]                 
 ## __________________________________________________________________________________________
-## concatenate (Concatenate)    (None, 6)           0          dense_21[0][0]                
-##                                                             dense_22[0][0]                
-##                                                             dense_23[0][0]                
+## concatenate (Concatenate)    (None, 6)           0          dense_25[0][0]                
+##                                                             dense_26[0][0]                
+##                                                             dense_27[0][0]                
 ## __________________________________________________________________________________________
 ## main_output (Dense)          (None, 2)           14         concatenate[0][0]             
 ## ==========================================================================================
@@ -1126,7 +1120,7 @@ FIGURE 18.13: Case with 128 units. The sine function in light blue and approxima
 <div class="figure" style="text-align: center"><span id="fig:ex12c"></span>
 <img src="ML_factor_files/figure-html/ex12c-1.png" alt="Learning an integrated ensemble." width="432" />
 <p class="caption">
-FIGURE 18.14: Learning an integrated ensemble.
+FIGURE 18.13: Learning an integrated ensemble.
 </p>
 </div>
 <p></p>
@@ -1136,7 +1130,7 @@ FIGURE 18.14: Learning an integrated ensemble.
 <div id="ew-portfolios-with-the-tidyverse" class="section level3" number="18.8.1">
 <h3><span class="header-section-number">18.8.1</span> EW portfolios with the tidyverse</h3>
 <p></p>
-<p>This one is incredibly easy; it’s simpler and more compact but close in spirit to the code that generates Figure <a href="factor.html#fig:factportsort">3.1</a>. The returns are plotted in Figure <a href="solutions-to-exercises.html#fig:ex130a">18.15</a>.
+<p>This one is incredibly easy; it’s simpler and more compact but close in spirit to the code that generates Figure <a href="factor.html#fig:factportsort">3.1</a>. The returns are plotted in Figure <a href="solutions-to-exercises.html#fig:ex130a">18.14</a>.
 </p>
 <div class="sourceCode" id="cb300"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb300-1"><a href="solutions-to-exercises.html#cb300-1" aria-hidden="true" tabindex="-1"></a>data_ml <span class="sc">%&gt;%</span></span>
 <span id="cb300-2"><a href="solutions-to-exercises.html#cb300-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(date) <span class="sc">%&gt;%</span>                     <span class="co"># Group by date</span></span>
@@ -1145,7 +1139,7 @@ FIGURE 18.14: Learning an integrated ensemble.
 <div class="figure" style="text-align: center"><span id="fig:ex130a"></span>
 <img src="ML_factor_files/figure-html/ex130a-1.png" alt="Time series of returns." width="384" />
 <p class="caption">
-FIGURE 18.15: Time series of returns.
+FIGURE 18.14: Time series of returns.
 </p>
 </div>
 <p></p>
@@ -1211,11 +1205,11 @@ FIGURE 18.15: Time series of returns.
 <div class="figure" style="text-align: center"><span id="fig:ex131d"></span>
 <img src="ML_factor_files/figure-html/ex131d-1.png" alt="Indicators related to portfolio weights." width="432" />
 <p class="caption">
-FIGURE 18.16: Indicators related to portfolio weights.
+FIGURE 18.15: Indicators related to portfolio weights.
 </p>
 </div>
 <p></p>
-<p>In Figure <a href="solutions-to-exercises.html#fig:ex131d">18.16</a>, each panel displays an indicator. In the first panel, we see that diversification increases with <span class="math inline">\(k_D\)</span>: indeed, as this number increases, the portfolio converges to uniform (EW) values. The parameter <span class="math inline">\(\lambda\)</span> has a minor impact. The second panel naturally shows the inverse effect for leverage: as diversification increases with <span class="math inline">\(k_D\)</span>, leverage (i.e., total negative positions - shortsales) decreases. Finally, the last panel shows that in-sample volatility is however largely driven by the risk aversion parameter. As <span class="math inline">\(\lambda\)</span> increases, volatility logically decreases. For small values of <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(k_D\)</span> is negatively related to volatility but the pattern reverses for large values of <span class="math inline">\(\lambda\)</span>. This is because the equally weighted portfolio is less risky than very leveraged mean-variance policies, but more risky than the minimum-variance portfolio.</p>
+<p>In Figure <a href="solutions-to-exercises.html#fig:ex131d">18.15</a>, each panel displays an indicator. In the first panel, we see that diversification increases with <span class="math inline">\(k_D\)</span>: indeed, as this number increases, the portfolio converges to uniform (EW) values. The parameter <span class="math inline">\(\lambda\)</span> has a minor impact. The second panel naturally shows the inverse effect for leverage: as diversification increases with <span class="math inline">\(k_D\)</span>, leverage (i.e., total negative positions - shortsales) decreases. Finally, the last panel shows that in-sample volatility is however largely driven by the risk aversion parameter. As <span class="math inline">\(\lambda\)</span> increases, volatility logically decreases. For small values of <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(k_D\)</span> is negatively related to volatility but the pattern reverses for large values of <span class="math inline">\(\lambda\)</span>. This is because the equally weighted portfolio is less risky than very leveraged mean-variance policies, but more risky than the minimum-variance portfolio.</p>
 </div>
 <div id="functional-programming-in-the-backtest" class="section level3" number="18.8.3">
 <h3><span class="header-section-number">18.8.3</span> Functional programming in the backtest</h3>
@@ -1269,12 +1263,12 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <span id="cb313-12"><a href="solutions-to-exercises.html#cb313-12" aria-hidden="true" tabindex="-1"></a>                              dplyr<span class="sc">::</span><span class="fu">select</span>(features_short) <span class="sc">%&gt;%</span> </span>
 <span id="cb313-13"><a href="solutions-to-exercises.html#cb313-13" aria-hidden="true" tabindex="-1"></a>                              <span class="fu">as.matrix</span>()) <span class="sc">%&gt;%</span></span>
 <span id="cb313-14"><a href="solutions-to-exercises.html#cb313-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">head</span>(<span class="dv">5</span>)</span></code></pre></div>
-<pre><code>##            [,1]      [,2]       [,3]      [,4]
-## [1,] -0.2748264 0.5762203 -0.8922539 -1.598233
-## [2,] -0.2985277 0.5948302 -0.8447673 -1.636480
-## [3,] -0.2693574 0.5722269 -0.8877414 -1.576207
-## [4,] -0.2654351 0.5669595 -0.8905863 -1.567984
-## [5,] -0.2584469 0.5571529 -0.8994310 -1.555121</code></pre>
+<pre><code>##           [,1]     [,2]       [,3]     [,4]
+## [1,] 0.5316158 1.302692 -0.1250517 1.121579
+## [2,] 0.4990323 1.301484 -0.1411032 1.093366
+## [3,] 0.5332335 1.315158 -0.1170880 1.115050
+## [4,] 0.5368979 1.316540 -0.1153512 1.117882
+## [5,] 0.5459459 1.317879 -0.1090993 1.135014</code></pre>
 <p></p>
 <p></p>
 </div>
