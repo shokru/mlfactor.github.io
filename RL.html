@@ -1,531 +1,95 @@
 <!DOCTYPE html>
-<html lang="" xml:lang="">
+<html lang="en">
 <head>
-
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <title>Chapter 16 Reinforcement learning | Machine Learning for Factor Investing</title>
-  <meta name="description" content="Chapter 16 Reinforcement learning | Machine Learning for Factor Investing" />
-  <meta name="generator" content="bookdown 0.21 and GitBook 2.6.7" />
-
-  <meta property="og:title" content="Chapter 16 Reinforcement learning | Machine Learning for Factor Investing" />
-  <meta property="og:type" content="book" />
-  
-  
-  
-  
-
-  <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="Chapter 16 Reinforcement learning | Machine Learning for Factor Investing" />
-  
-  
-  
-
-<meta name="author" content="Guillaume Coqueret and Tony Guida" />
-
-
-<meta name="date" content="2021-04-11" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-  
-  
-<link rel="prev" href="unsup.html"/>
-<link rel="next" href="data-description.html"/>
-<script src="libs/header-attrs-2.5/header-attrs.js"></script>
-<script src="libs/jquery-2.2.3/jquery.min.js"></script>
-<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
-<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
-
-
-
-
-
-
-
-
-
-<link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
-<script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
-<script src="libs/kePrint-0.0.1/kePrint.js"></script>
-<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
-
-
-<style type="text/css">
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-</style>
-
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 16 Reinforcement learning | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.8/header-attrs.js"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.5.3/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.3.9000/tabs.js"></script><script src="libs/bs3compat-0.2.3.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
 </head>
+<body data-spy="scroll" data-target="#toc">
 
-<body>
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
-
-
-  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
-
-    <div class="book-summary">
-      <nav role="navigation">
-
-<ul class="summary">
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i>Preface</a>
-<ul>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#what-this-book-is-not-about"><i class="fa fa-check"></i>What this book is not about</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#the-targeted-audience"><i class="fa fa-check"></i>The targeted audience</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#how-this-book-is-structured"><i class="fa fa-check"></i>How this book is structured</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#companion-website"><i class="fa fa-check"></i>Companion website</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#why-r"><i class="fa fa-check"></i>Why R?</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#coding-instructions"><i class="fa fa-check"></i>Coding instructions</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#acknowledgments"><i class="fa fa-check"></i>Acknowledgments</a></li>
-<li class="chapter" data-level="" data-path="preface.html"><a href="preface.html#future-developments"><i class="fa fa-check"></i>Future developments</a></li>
-</ul></li>
-<li class="part"><span><b>I Introduction</b></span></li>
-<li class="chapter" data-level="1" data-path="notdata.html"><a href="notdata.html"><i class="fa fa-check"></i><b>1</b> Notations and data</a>
-<ul>
-<li class="chapter" data-level="1.1" data-path="notdata.html"><a href="notdata.html#notations"><i class="fa fa-check"></i><b>1.1</b> Notations</a></li>
-<li class="chapter" data-level="1.2" data-path="notdata.html"><a href="notdata.html#dataset"><i class="fa fa-check"></i><b>1.2</b> Dataset</a></li>
-</ul></li>
-<li class="chapter" data-level="2" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>2</b> Introduction</a>
-<ul>
-<li class="chapter" data-level="2.1" data-path="intro.html"><a href="intro.html#context"><i class="fa fa-check"></i><b>2.1</b> Context</a></li>
-<li class="chapter" data-level="2.2" data-path="intro.html"><a href="intro.html#portfolio-construction-the-workflow"><i class="fa fa-check"></i><b>2.2</b> Portfolio construction: the workflow</a></li>
-<li class="chapter" data-level="2.3" data-path="intro.html"><a href="intro.html#machine-learning-is-no-magic-wand"><i class="fa fa-check"></i><b>2.3</b> Machine learning is no magic wand</a></li>
-</ul></li>
-<li class="chapter" data-level="3" data-path="factor.html"><a href="factor.html"><i class="fa fa-check"></i><b>3</b> Factor investing and asset pricing anomalies</a>
-<ul>
-<li class="chapter" data-level="3.1" data-path="factor.html"><a href="factor.html#introduction"><i class="fa fa-check"></i><b>3.1</b> Introduction</a></li>
-<li class="chapter" data-level="3.2" data-path="factor.html"><a href="factor.html#detecting-anomalies"><i class="fa fa-check"></i><b>3.2</b> Detecting anomalies</a>
-<ul>
-<li class="chapter" data-level="3.2.1" data-path="factor.html"><a href="factor.html#challenges"><i class="fa fa-check"></i><b>3.2.1</b> Challenges</a></li>
-<li class="chapter" data-level="3.2.2" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>3.2.2</b> Simple portfolio sorts  </a></li>
-<li class="chapter" data-level="3.2.3" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>3.2.3</b> Factors</a></li>
-<li class="chapter" data-level="3.2.4" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>3.2.4</b> Predictive regressions, sorts, and p-value issues</a></li>
-<li class="chapter" data-level="3.2.5" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>3.2.5</b> Fama-Macbeth regressions</a></li>
-<li class="chapter" data-level="3.2.6" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>3.2.6</b> Factor competition</a></li>
-<li class="chapter" data-level="3.2.7" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>3.2.7</b> Advanced techniques</a></li>
-</ul></li>
-<li class="chapter" data-level="3.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>3.3</b> Factors or characteristics?</a></li>
-<li class="chapter" data-level="3.4" data-path="factor.html"><a href="factor.html#hot-topics-momentum-timing-and-esg"><i class="fa fa-check"></i><b>3.4</b> Hot topics: momentum, timing and ESG</a>
-<ul>
-<li class="chapter" data-level="3.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>3.4.1</b> Factor momentum</a></li>
-<li class="chapter" data-level="3.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>3.4.2</b> Factor timing</a></li>
-<li class="chapter" data-level="3.4.3" data-path="factor.html"><a href="factor.html#the-green-factors"><i class="fa fa-check"></i><b>3.4.3</b> The green factors</a></li>
-</ul></li>
-<li class="chapter" data-level="3.5" data-path="factor.html"><a href="factor.html#the-links-with-machine-learning"><i class="fa fa-check"></i><b>3.5</b> The links with machine learning</a>
-<ul>
-<li class="chapter" data-level="3.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>3.5.1</b> A short list of recent references</a></li>
-<li class="chapter" data-level="3.5.2" data-path="factor.html"><a href="factor.html#explicit-connections-with-asset-pricing-models"><i class="fa fa-check"></i><b>3.5.2</b> Explicit connections with asset pricing models</a></li>
-</ul></li>
-<li class="chapter" data-level="3.6" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>3.6</b> Coding exercises</a></li>
-</ul></li>
-<li class="chapter" data-level="4" data-path="Data.html"><a href="Data.html"><i class="fa fa-check"></i><b>4</b> Data preprocessing</a>
-<ul>
-<li class="chapter" data-level="4.1" data-path="Data.html"><a href="Data.html#know-your-data"><i class="fa fa-check"></i><b>4.1</b> Know your data</a></li>
-<li class="chapter" data-level="4.2" data-path="Data.html"><a href="Data.html#missing-data"><i class="fa fa-check"></i><b>4.2</b> Missing data</a></li>
-<li class="chapter" data-level="4.3" data-path="Data.html"><a href="Data.html#outlier-detection"><i class="fa fa-check"></i><b>4.3</b> Outlier detection</a></li>
-<li class="chapter" data-level="4.4" data-path="Data.html"><a href="Data.html#feateng"><i class="fa fa-check"></i><b>4.4</b> Feature engineering</a>
-<ul>
-<li class="chapter" data-level="4.4.1" data-path="Data.html"><a href="Data.html#feature-selection"><i class="fa fa-check"></i><b>4.4.1</b> Feature selection</a></li>
-<li class="chapter" data-level="4.4.2" data-path="Data.html"><a href="Data.html#scaling"><i class="fa fa-check"></i><b>4.4.2</b> Scaling the predictors</a></li>
-</ul></li>
-<li class="chapter" data-level="4.5" data-path="Data.html"><a href="Data.html#labelling"><i class="fa fa-check"></i><b>4.5</b> Labelling</a>
-<ul>
-<li class="chapter" data-level="4.5.1" data-path="Data.html"><a href="Data.html#simple-labels"><i class="fa fa-check"></i><b>4.5.1</b> Simple labels</a></li>
-<li class="chapter" data-level="4.5.2" data-path="Data.html"><a href="Data.html#categorical-labels"><i class="fa fa-check"></i><b>4.5.2</b> Categorical labels</a></li>
-<li class="chapter" data-level="4.5.3" data-path="Data.html"><a href="Data.html#the-triple-barrier-method"><i class="fa fa-check"></i><b>4.5.3</b> The triple barrier method</a></li>
-<li class="chapter" data-level="4.5.4" data-path="Data.html"><a href="Data.html#filtering-the-sample"><i class="fa fa-check"></i><b>4.5.4</b> Filtering the sample</a></li>
-<li class="chapter" data-level="4.5.5" data-path="Data.html"><a href="Data.html#horizons"><i class="fa fa-check"></i><b>4.5.5</b> Return horizons</a></li>
-</ul></li>
-<li class="chapter" data-level="4.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>4.6</b> Handling persistence</a></li>
-<li class="chapter" data-level="4.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>4.7</b> Extensions</a>
-<ul>
-<li class="chapter" data-level="4.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>4.7.1</b> Transforming features</a></li>
-<li class="chapter" data-level="4.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>4.7.2</b> Macro-economic variables</a></li>
-<li class="chapter" data-level="4.7.3" data-path="Data.html"><a href="Data.html#active-learning"><i class="fa fa-check"></i><b>4.7.3</b> Active learning</a></li>
-</ul></li>
-<li class="chapter" data-level="4.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>4.8</b> Additional code and results</a>
-<ul>
-<li class="chapter" data-level="4.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>4.8.1</b> Impact of rescaling: graphical representation</a></li>
-<li class="chapter" data-level="4.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>4.8.2</b> Impact of rescaling: toy example</a></li>
-</ul></li>
-<li class="chapter" data-level="4.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>4.9</b> Coding exercises</a></li>
-</ul></li>
-<li class="part"><span><b>II Common supervised algorithms</b></span></li>
-<li class="chapter" data-level="5" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>5</b> Penalized regressions and sparse hedging for minimum variance portfolios</a>
-<ul>
-<li class="chapter" data-level="5.1" data-path="lasso.html"><a href="lasso.html#penalized-regressions"><i class="fa fa-check"></i><b>5.1</b> Penalized regressions</a>
-<ul>
-<li class="chapter" data-level="5.1.1" data-path="lasso.html"><a href="lasso.html#penreg"><i class="fa fa-check"></i><b>5.1.1</b> Simple regressions</a></li>
-<li class="chapter" data-level="5.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>5.1.2</b> Forms of penalizations</a></li>
-<li class="chapter" data-level="5.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>5.1.3</b> Illustrations</a></li>
-</ul></li>
-<li class="chapter" data-level="5.2" data-path="lasso.html"><a href="lasso.html#sparse-hedging-for-minimum-variance-portfolios"><i class="fa fa-check"></i><b>5.2</b> Sparse hedging for minimum variance portfolios</a>
-<ul>
-<li class="chapter" data-level="5.2.1" data-path="lasso.html"><a href="lasso.html#presentation-and-derivations"><i class="fa fa-check"></i><b>5.2.1</b> Presentation and derivations</a></li>
-<li class="chapter" data-level="5.2.2" data-path="lasso.html"><a href="lasso.html#sparseex"><i class="fa fa-check"></i><b>5.2.2</b> Example</a></li>
-</ul></li>
-<li class="chapter" data-level="5.3" data-path="lasso.html"><a href="lasso.html#predictive-regressions"><i class="fa fa-check"></i><b>5.3</b> Predictive regressions</a>
-<ul>
-<li class="chapter" data-level="5.3.1" data-path="lasso.html"><a href="lasso.html#literature-review-and-principle"><i class="fa fa-check"></i><b>5.3.1</b> Literature review and principle</a></li>
-<li class="chapter" data-level="5.3.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>5.3.2</b> Code and results</a></li>
-</ul></li>
-<li class="chapter" data-level="5.4" data-path="lasso.html"><a href="lasso.html#coding-exercise"><i class="fa fa-check"></i><b>5.4</b> Coding exercise</a></li>
-</ul></li>
-<li class="chapter" data-level="6" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>6</b> Tree-based methods</a>
-<ul>
-<li class="chapter" data-level="6.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>6.1</b> Simple trees</a>
-<ul>
-<li class="chapter" data-level="6.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>6.1.1</b> Principle</a></li>
-<li class="chapter" data-level="6.1.2" data-path="trees.html"><a href="trees.html#treeclass"><i class="fa fa-check"></i><b>6.1.2</b> Further details on classification</a></li>
-<li class="chapter" data-level="6.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>6.1.3</b> Pruning criteria</a></li>
-<li class="chapter" data-level="6.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>6.1.4</b> Code and interpretation</a></li>
-</ul></li>
-<li class="chapter" data-level="6.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>6.2</b> Random forests</a>
-<ul>
-<li class="chapter" data-level="6.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>6.2.1</b> Principle</a></li>
-<li class="chapter" data-level="6.2.2" data-path="trees.html"><a href="trees.html#code-and-results-1"><i class="fa fa-check"></i><b>6.2.2</b> Code and results</a></li>
-</ul></li>
-<li class="chapter" data-level="6.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>6.3</b> Boosted trees: Adaboost</a>
-<ul>
-<li class="chapter" data-level="6.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>6.3.1</b> Methodology</a></li>
-<li class="chapter" data-level="6.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>6.3.2</b> Illustration</a></li>
-</ul></li>
-<li class="chapter" data-level="6.4" data-path="trees.html"><a href="trees.html#boosted-trees-extreme-gradient-boosting"><i class="fa fa-check"></i><b>6.4</b> Boosted trees: extreme gradient boosting</a>
-<ul>
-<li class="chapter" data-level="6.4.1" data-path="trees.html"><a href="trees.html#managing-loss"><i class="fa fa-check"></i><b>6.4.1</b> Managing loss</a></li>
-<li class="chapter" data-level="6.4.2" data-path="trees.html"><a href="trees.html#penalization"><i class="fa fa-check"></i><b>6.4.2</b> Penalization</a></li>
-<li class="chapter" data-level="6.4.3" data-path="trees.html"><a href="trees.html#aggregation"><i class="fa fa-check"></i><b>6.4.3</b> Aggregation</a></li>
-<li class="chapter" data-level="6.4.4" data-path="trees.html"><a href="trees.html#tree-structure"><i class="fa fa-check"></i><b>6.4.4</b> Tree structure</a></li>
-<li class="chapter" data-level="6.4.5" data-path="trees.html"><a href="trees.html#boostext"><i class="fa fa-check"></i><b>6.4.5</b> Extensions</a></li>
-<li class="chapter" data-level="6.4.6" data-path="trees.html"><a href="trees.html#boostcode"><i class="fa fa-check"></i><b>6.4.6</b> Code and results</a></li>
-<li class="chapter" data-level="6.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>6.4.7</b> Instance weighting</a></li>
-</ul></li>
-<li class="chapter" data-level="6.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>6.5</b> Discussion</a></li>
-<li class="chapter" data-level="6.6" data-path="trees.html"><a href="trees.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.6</b> Coding exercises</a></li>
-</ul></li>
-<li class="chapter" data-level="7" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>7</b> Neural networks</a>
-<ul>
-<li class="chapter" data-level="7.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>7.1</b> The original perceptron</a></li>
-<li class="chapter" data-level="7.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron"><i class="fa fa-check"></i><b>7.2</b> Multilayer perceptron</a>
-<ul>
-<li class="chapter" data-level="7.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>7.2.1</b> Introduction and notations</a></li>
-<li class="chapter" data-level="7.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>7.2.2</b> Universal approximation</a></li>
-<li class="chapter" data-level="7.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>7.2.3</b> Learning via back-propagation</a></li>
-<li class="chapter" data-level="7.2.4" data-path="NN.html"><a href="NN.html#NNclass"><i class="fa fa-check"></i><b>7.2.4</b> Further details on classification</a></li>
-</ul></li>
-<li class="chapter" data-level="7.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>7.3</b> How deep we should go and other practical issues</a>
-<ul>
-<li class="chapter" data-level="7.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>7.3.1</b> Architectural choices</a></li>
-<li class="chapter" data-level="7.3.2" data-path="NN.html"><a href="NN.html#frequency-of-weight-updates-and-learning-duration"><i class="fa fa-check"></i><b>7.3.2</b> Frequency of weight updates and learning duration</a></li>
-<li class="chapter" data-level="7.3.3" data-path="NN.html"><a href="NN.html#penalizations-and-dropout"><i class="fa fa-check"></i><b>7.3.3</b> Penalizations and dropout</a></li>
-</ul></li>
-<li class="chapter" data-level="7.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>7.4</b> Code samples and comments for vanilla MLP</a>
-<ul>
-<li class="chapter" data-level="7.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>7.4.1</b> Regression example</a></li>
-<li class="chapter" data-level="7.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>7.4.2</b> Classification example</a></li>
-<li class="chapter" data-level="7.4.3" data-path="NN.html"><a href="NN.html#custloss"><i class="fa fa-check"></i><b>7.4.3</b> Custom losses</a></li>
-</ul></li>
-<li class="chapter" data-level="7.5" data-path="NN.html"><a href="NN.html#RNN"><i class="fa fa-check"></i><b>7.5</b> Recurrent networks</a>
-<ul>
-<li class="chapter" data-level="7.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>7.5.1</b> Presentation</a></li>
-<li class="chapter" data-level="7.5.2" data-path="NN.html"><a href="NN.html#code-and-results-2"><i class="fa fa-check"></i><b>7.5.2</b> Code and results</a></li>
-</ul></li>
-<li class="chapter" data-level="7.6" data-path="NN.html"><a href="NN.html#tabular-networks-tabnets"><i class="fa fa-check"></i><b>7.6</b> Tabular networks (TabNets)</a>
-<ul>
-<li class="chapter" data-level="7.6.1" data-path="NN.html"><a href="NN.html#the-zoo-of-layers"><i class="fa fa-check"></i><b>7.6.1</b> The zoo of layers</a></li>
-<li class="chapter" data-level="7.6.2" data-path="NN.html"><a href="NN.html#sparsemax-activation"><i class="fa fa-check"></i><b>7.6.2</b> Sparsemax activation</a></li>
-<li class="chapter" data-level="7.6.3" data-path="NN.html"><a href="NN.html#feature-selection-1"><i class="fa fa-check"></i><b>7.6.3</b> Feature selection</a></li>
-<li class="chapter" data-level="7.6.4" data-path="NN.html"><a href="NN.html#the-full-architecture"><i class="fa fa-check"></i><b>7.6.4</b> The full architecture</a></li>
-<li class="chapter" data-level="7.6.5" data-path="NN.html"><a href="NN.html#code-and-results-3"><i class="fa fa-check"></i><b>7.6.5</b> Code and results</a></li>
-</ul></li>
-<li class="chapter" data-level="7.7" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>7.7</b> Other common architectures</a>
-<ul>
-<li class="chapter" data-level="7.7.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>7.7.1</b> Generative adversarial networks</a></li>
-<li class="chapter" data-level="7.7.2" data-path="NN.html"><a href="NN.html#autoencoders"><i class="fa fa-check"></i><b>7.7.2</b> Autoencoders</a></li>
-<li class="chapter" data-level="7.7.3" data-path="NN.html"><a href="NN.html#CNN"><i class="fa fa-check"></i><b>7.7.3</b> A word on convolutional networks</a></li>
-</ul></li>
-<li class="chapter" data-level="7.8" data-path="NN.html"><a href="NN.html#coding-exercises-3"><i class="fa fa-check"></i><b>7.8</b> Coding exercises</a></li>
-</ul></li>
-<li class="chapter" data-level="8" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>8</b> Support vector machines</a>
-<ul>
-<li class="chapter" data-level="8.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>8.1</b> SVM for classification</a></li>
-<li class="chapter" data-level="8.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>8.2</b> SVM for regression</a></li>
-<li class="chapter" data-level="8.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>8.3</b> Practice</a></li>
-<li class="chapter" data-level="8.4" data-path="svm.html"><a href="svm.html#coding-exercises-4"><i class="fa fa-check"></i><b>8.4</b> Coding exercises</a></li>
-</ul></li>
-<li class="chapter" data-level="9" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>9</b> Bayesian methods</a>
-<ul>
-<li class="chapter" data-level="9.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>9.1</b> The Bayesian framework</a></li>
-<li class="chapter" data-level="9.2" data-path="bayes.html"><a href="bayes.html#bayesian-sampling"><i class="fa fa-check"></i><b>9.2</b> Bayesian sampling</a>
-<ul>
-<li class="chapter" data-level="9.2.1" data-path="bayes.html"><a href="bayes.html#gibbs-sampling"><i class="fa fa-check"></i><b>9.2.1</b> Gibbs sampling</a></li>
-<li class="chapter" data-level="9.2.2" data-path="bayes.html"><a href="bayes.html#metropolis-hastings-sampling"><i class="fa fa-check"></i><b>9.2.2</b> Metropolis-Hastings sampling</a></li>
-</ul></li>
-<li class="chapter" data-level="9.3" data-path="bayes.html"><a href="bayes.html#bayesian-linear-regression"><i class="fa fa-check"></i><b>9.3</b> Bayesian linear regression</a></li>
-<li class="chapter" data-level="9.4" data-path="bayes.html"><a href="bayes.html#naive-bayes-classifier"><i class="fa fa-check"></i><b>9.4</b> Naive Bayes classifier</a></li>
-<li class="chapter" data-level="9.5" data-path="bayes.html"><a href="bayes.html#BART"><i class="fa fa-check"></i><b>9.5</b> Bayesian additive trees</a>
-<ul>
-<li class="chapter" data-level="9.5.1" data-path="bayes.html"><a href="bayes.html#general-formulation"><i class="fa fa-check"></i><b>9.5.1</b> General formulation</a></li>
-<li class="chapter" data-level="9.5.2" data-path="bayes.html"><a href="bayes.html#priors"><i class="fa fa-check"></i><b>9.5.2</b> Priors</a></li>
-<li class="chapter" data-level="9.5.3" data-path="bayes.html"><a href="bayes.html#sampling-and-predictions"><i class="fa fa-check"></i><b>9.5.3</b> Sampling and predictions</a></li>
-<li class="chapter" data-level="9.5.4" data-path="bayes.html"><a href="bayes.html#code"><i class="fa fa-check"></i><b>9.5.4</b> Code</a></li>
-</ul></li>
-</ul></li>
-<li class="part"><span><b>III From predictions to portfolios</b></span></li>
-<li class="chapter" data-level="10" data-path="valtune.html"><a href="valtune.html"><i class="fa fa-check"></i><b>10</b> Validating and tuning</a>
-<ul>
-<li class="chapter" data-level="10.1" data-path="valtune.html"><a href="valtune.html#mlmetrics"><i class="fa fa-check"></i><b>10.1</b> Learning metrics</a>
-<ul>
-<li class="chapter" data-level="10.1.1" data-path="valtune.html"><a href="valtune.html#regression-analysis"><i class="fa fa-check"></i><b>10.1.1</b> Regression analysis</a></li>
-<li class="chapter" data-level="10.1.2" data-path="valtune.html"><a href="valtune.html#classification-analysis"><i class="fa fa-check"></i><b>10.1.2</b> Classification analysis</a></li>
-</ul></li>
-<li class="chapter" data-level="10.2" data-path="valtune.html"><a href="valtune.html#validation"><i class="fa fa-check"></i><b>10.2</b> Validation</a>
-<ul>
-<li class="chapter" data-level="10.2.1" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-theory"><i class="fa fa-check"></i><b>10.2.1</b> The variance-bias tradeoff: theory</a></li>
-<li class="chapter" data-level="10.2.2" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-illustration"><i class="fa fa-check"></i><b>10.2.2</b> The variance-bias tradeoff: illustration</a></li>
-<li class="chapter" data-level="10.2.3" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-principle"><i class="fa fa-check"></i><b>10.2.3</b> The risk of overfitting: principle</a></li>
-<li class="chapter" data-level="10.2.4" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-some-solutions"><i class="fa fa-check"></i><b>10.2.4</b> The risk of overfitting: some solutions</a></li>
-</ul></li>
-<li class="chapter" data-level="10.3" data-path="valtune.html"><a href="valtune.html#the-search-for-good-hyperparameters"><i class="fa fa-check"></i><b>10.3</b> The search for good hyperparameters</a>
-<ul>
-<li class="chapter" data-level="10.3.1" data-path="valtune.html"><a href="valtune.html#methods"><i class="fa fa-check"></i><b>10.3.1</b> Methods</a></li>
-<li class="chapter" data-level="10.3.2" data-path="valtune.html"><a href="valtune.html#example-grid-search"><i class="fa fa-check"></i><b>10.3.2</b> Example: grid search</a></li>
-<li class="chapter" data-level="10.3.3" data-path="valtune.html"><a href="valtune.html#example-bayesian-optimization"><i class="fa fa-check"></i><b>10.3.3</b> Example: Bayesian optimization</a></li>
-</ul></li>
-<li class="chapter" data-level="10.4" data-path="valtune.html"><a href="valtune.html#short-discussion-on-validation-in-backtests"><i class="fa fa-check"></i><b>10.4</b> Short discussion on validation in backtests</a></li>
-</ul></li>
-<li class="chapter" data-level="11" data-path="ensemble.html"><a href="ensemble.html"><i class="fa fa-check"></i><b>11</b> Ensemble models</a>
-<ul>
-<li class="chapter" data-level="11.1" data-path="ensemble.html"><a href="ensemble.html#linear-ensembles"><i class="fa fa-check"></i><b>11.1</b> Linear ensembles</a>
-<ul>
-<li class="chapter" data-level="11.1.1" data-path="ensemble.html"><a href="ensemble.html#principles"><i class="fa fa-check"></i><b>11.1.1</b> Principles</a></li>
-<li class="chapter" data-level="11.1.2" data-path="ensemble.html"><a href="ensemble.html#example"><i class="fa fa-check"></i><b>11.1.2</b> Example</a></li>
-</ul></li>
-<li class="chapter" data-level="11.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>11.2</b> Stacked ensembles</a>
-<ul>
-<li class="chapter" data-level="11.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>11.2.1</b> Two-stage training</a></li>
-<li class="chapter" data-level="11.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-4"><i class="fa fa-check"></i><b>11.2.2</b> Code and results</a></li>
-</ul></li>
-<li class="chapter" data-level="11.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>11.3</b> Extensions</a>
-<ul>
-<li class="chapter" data-level="11.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>11.3.1</b> Exogenous variables</a></li>
-<li class="chapter" data-level="11.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>11.3.2</b> Shrinking inter-model correlations</a></li>
-</ul></li>
-<li class="chapter" data-level="11.4" data-path="ensemble.html"><a href="ensemble.html#exercise"><i class="fa fa-check"></i><b>11.4</b> Exercise</a></li>
-</ul></li>
-<li class="chapter" data-level="12" data-path="backtest.html"><a href="backtest.html"><i class="fa fa-check"></i><b>12</b> Portfolio backtesting</a>
-<ul>
-<li class="chapter" data-level="12.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>12.1</b> Setting the protocol</a></li>
-<li class="chapter" data-level="12.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>12.2</b> Turning signals into portfolio weights</a></li>
-<li class="chapter" data-level="12.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>12.3</b> Performance metrics</a>
-<ul>
-<li class="chapter" data-level="12.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>12.3.1</b> Discussion</a></li>
-<li class="chapter" data-level="12.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>12.3.2</b> Pure performance and risk indicators</a></li>
-<li class="chapter" data-level="12.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>12.3.3</b> Factor-based evaluation</a></li>
-<li class="chapter" data-level="12.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>12.3.4</b> Risk-adjusted measures</a></li>
-<li class="chapter" data-level="12.3.5" data-path="backtest.html"><a href="backtest.html#transaction-costs-and-turnover"><i class="fa fa-check"></i><b>12.3.5</b> Transaction costs and turnover</a></li>
-</ul></li>
-<li class="chapter" data-level="12.4" data-path="backtest.html"><a href="backtest.html#common-errors-and-issues"><i class="fa fa-check"></i><b>12.4</b> Common errors and issues</a>
-<ul>
-<li class="chapter" data-level="12.4.1" data-path="backtest.html"><a href="backtest.html#forward-looking-data"><i class="fa fa-check"></i><b>12.4.1</b> Forward looking data</a></li>
-<li class="chapter" data-level="12.4.2" data-path="backtest.html"><a href="backtest.html#backov"><i class="fa fa-check"></i><b>12.4.2</b> Backtest overfitting</a></li>
-<li class="chapter" data-level="12.4.3" data-path="backtest.html"><a href="backtest.html#simple-safeguards"><i class="fa fa-check"></i><b>12.4.3</b> Simple safeguards</a></li>
-</ul></li>
-<li class="chapter" data-level="12.5" data-path="backtest.html"><a href="backtest.html#implication-of-non-stationarity-forecasting-is-hard"><i class="fa fa-check"></i><b>12.5</b> Implication of non-stationarity: forecasting is hard</a>
-<ul>
-<li class="chapter" data-level="12.5.1" data-path="backtest.html"><a href="backtest.html#general-comments"><i class="fa fa-check"></i><b>12.5.1</b> General comments</a></li>
-<li class="chapter" data-level="12.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>12.5.2</b> The no free lunch theorem</a></li>
-</ul></li>
-<li class="chapter" data-level="12.6" data-path="backtest.html"><a href="backtest.html#first-example-a-complete-backtest"><i class="fa fa-check"></i><b>12.6</b> First example: a complete backtest</a></li>
-<li class="chapter" data-level="12.7" data-path="backtest.html"><a href="backtest.html#second-example-backtest-overfitting"><i class="fa fa-check"></i><b>12.7</b> Second example: backtest overfitting</a></li>
-<li class="chapter" data-level="12.8" data-path="backtest.html"><a href="backtest.html#coding-exercises-5"><i class="fa fa-check"></i><b>12.8</b> Coding exercises</a></li>
-</ul></li>
-<li class="part"><span><b>IV Further important topics</b></span></li>
-<li class="chapter" data-level="13" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>13</b> Interpretability</a>
-<ul>
-<li class="chapter" data-level="13.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>13.1</b> Global interpretations</a>
-<ul>
-<li class="chapter" data-level="13.1.1" data-path="interp.html"><a href="interp.html#surr"><i class="fa fa-check"></i><b>13.1.1</b> Simple models as surrogates</a></li>
-<li class="chapter" data-level="13.1.2" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>13.1.2</b> Variable importance (tree-based)</a></li>
-<li class="chapter" data-level="13.1.3" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>13.1.3</b> Variable importance (agnostic)</a></li>
-<li class="chapter" data-level="13.1.4" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>13.1.4</b> Partial dependence plot</a></li>
-</ul></li>
-<li class="chapter" data-level="13.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>13.2</b> Local interpretations</a>
-<ul>
-<li class="chapter" data-level="13.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>13.2.1</b> LIME</a></li>
-<li class="chapter" data-level="13.2.2" data-path="interp.html"><a href="interp.html#shapley-values"><i class="fa fa-check"></i><b>13.2.2</b> Shapley values</a></li>
-<li class="chapter" data-level="13.2.3" data-path="interp.html"><a href="interp.html#breakdown"><i class="fa fa-check"></i><b>13.2.3</b> Breakdown</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="14" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>14</b> Two key concepts: causality and non-stationarity</a>
-<ul>
-<li class="chapter" data-level="14.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>14.1</b> Causality</a>
-<ul>
-<li class="chapter" data-level="14.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>14.1.1</b> Granger causality</a></li>
-<li class="chapter" data-level="14.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>14.1.2</b> Causal additive models</a></li>
-<li class="chapter" data-level="14.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>14.1.3</b> Structural time series models</a></li>
-</ul></li>
-<li class="chapter" data-level="14.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>14.2</b> Dealing with changing environments</a>
-<ul>
-<li class="chapter" data-level="14.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-yet-another-illustration"><i class="fa fa-check"></i><b>14.2.1</b> Non-stationarity: yet another illustration</a></li>
-<li class="chapter" data-level="14.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>14.2.2</b> Online learning</a></li>
-<li class="chapter" data-level="14.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>14.2.3</b> Homogeneous transfer learning</a></li>
-</ul></li>
-</ul></li>
-<li class="chapter" data-level="15" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>15</b> Unsupervised learning</a>
-<ul>
-<li class="chapter" data-level="15.1" data-path="unsup.html"><a href="unsup.html#corpred"><i class="fa fa-check"></i><b>15.1</b> The problem with correlated predictors</a></li>
-<li class="chapter" data-level="15.2" data-path="unsup.html"><a href="unsup.html#principal-component-analysis-and-autoencoders"><i class="fa fa-check"></i><b>15.2</b> Principal component analysis and autoencoders</a>
-<ul>
-<li class="chapter" data-level="15.2.1" data-path="unsup.html"><a href="unsup.html#a-bit-of-algebra"><i class="fa fa-check"></i><b>15.2.1</b> A bit of algebra</a></li>
-<li class="chapter" data-level="15.2.2" data-path="unsup.html"><a href="unsup.html#pca"><i class="fa fa-check"></i><b>15.2.2</b> PCA</a></li>
-<li class="chapter" data-level="15.2.3" data-path="unsup.html"><a href="unsup.html#ae"><i class="fa fa-check"></i><b>15.2.3</b> Autoencoders</a></li>
-<li class="chapter" data-level="15.2.4" data-path="unsup.html"><a href="unsup.html#application"><i class="fa fa-check"></i><b>15.2.4</b> Application</a></li>
-</ul></li>
-<li class="chapter" data-level="15.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>15.3</b> Clustering via k-means</a></li>
-<li class="chapter" data-level="15.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>15.4</b> Nearest neighbors</a></li>
-<li class="chapter" data-level="15.5" data-path="unsup.html"><a href="unsup.html#coding-exercise-1"><i class="fa fa-check"></i><b>15.5</b> Coding exercise</a></li>
-</ul></li>
-<li class="chapter" data-level="16" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>16</b> Reinforcement learning</a>
-<ul>
-<li class="chapter" data-level="16.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>16.1</b> Theoretical layout</a>
-<ul>
-<li class="chapter" data-level="16.1.1" data-path="RL.html"><a href="RL.html#general-framework"><i class="fa fa-check"></i><b>16.1.1</b> General framework</a></li>
-<li class="chapter" data-level="16.1.2" data-path="RL.html"><a href="RL.html#q-learning"><i class="fa fa-check"></i><b>16.1.2</b> Q-learning</a></li>
-<li class="chapter" data-level="16.1.3" data-path="RL.html"><a href="RL.html#sarsa"><i class="fa fa-check"></i><b>16.1.3</b> SARSA</a></li>
-</ul></li>
-<li class="chapter" data-level="16.2" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>16.2</b> The curse of dimensionality</a></li>
-<li class="chapter" data-level="16.3" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>16.3</b> Policy gradient</a>
-<ul>
-<li class="chapter" data-level="16.3.1" data-path="RL.html"><a href="RL.html#principle-2"><i class="fa fa-check"></i><b>16.3.1</b> Principle</a></li>
-<li class="chapter" data-level="16.3.2" data-path="RL.html"><a href="RL.html#extensions-2"><i class="fa fa-check"></i><b>16.3.2</b> Extensions</a></li>
-</ul></li>
-<li class="chapter" data-level="16.4" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>16.4</b> Simple examples</a>
-<ul>
-<li class="chapter" data-level="16.4.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>16.4.1</b> Q-learning with simulations</a></li>
-<li class="chapter" data-level="16.4.2" data-path="RL.html"><a href="RL.html#RLemp2"><i class="fa fa-check"></i><b>16.4.2</b> Q-learning with market data</a></li>
-</ul></li>
-<li class="chapter" data-level="16.5" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>16.5</b> Concluding remarks</a></li>
-<li class="chapter" data-level="16.6" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>16.6</b> Exercises</a></li>
-</ul></li>
-<li class="part"><span><b>V Appendix</b></span></li>
-<li class="chapter" data-level="17" data-path="data-description.html"><a href="data-description.html"><i class="fa fa-check"></i><b>17</b> Data description</a></li>
-<li class="chapter" data-level="18" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html"><i class="fa fa-check"></i><b>18</b> Solutions to exercises</a>
-<ul>
-<li class="chapter" data-level="18.1" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-3"><i class="fa fa-check"></i><b>18.1</b> Chapter 3</a></li>
-<li class="chapter" data-level="18.2" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-4"><i class="fa fa-check"></i><b>18.2</b> Chapter 4</a></li>
-<li class="chapter" data-level="18.3" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-5"><i class="fa fa-check"></i><b>18.3</b> Chapter 5</a></li>
-<li class="chapter" data-level="18.4" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-6"><i class="fa fa-check"></i><b>18.4</b> Chapter 6</a></li>
-<li class="chapter" data-level="18.5" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-7-the-autoencoder-model-universal-approximation"><i class="fa fa-check"></i><b>18.5</b> Chapter 7: the autoencoder model &amp; universal approximation</a></li>
-<li class="chapter" data-level="18.6" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-8"><i class="fa fa-check"></i><b>18.6</b> Chapter 8</a></li>
-<li class="chapter" data-level="18.7" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-11-ensemble-neural-network"><i class="fa fa-check"></i><b>18.7</b> Chapter 11: ensemble neural network</a></li>
-<li class="chapter" data-level="18.8" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-12"><i class="fa fa-check"></i><b>18.8</b> Chapter 12</a>
-<ul>
-<li class="chapter" data-level="18.8.1" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#ew-portfolios-with-the-tidyverse"><i class="fa fa-check"></i><b>18.8.1</b> EW portfolios with the tidyverse</a></li>
-<li class="chapter" data-level="18.8.2" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>18.8.2</b> Advanced weighting function</a></li>
-<li class="chapter" data-level="18.8.3" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>18.8.3</b> Functional programming in the backtest</a></li>
-</ul></li>
-<li class="chapter" data-level="18.9" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-15"><i class="fa fa-check"></i><b>18.9</b> Chapter 15</a></li>
-<li class="chapter" data-level="18.10" data-path="solutions-to-exercises.html"><a href="solutions-to-exercises.html#chapter-16"><i class="fa fa-check"></i><b>18.10</b> Chapter 16</a></li>
-</ul></li>
-</ul>
-
-      </nav>
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
     </div>
 
-    <div class="book-body">
-      <div class="body-inner">
-        <div class="book-header" role="navigation">
-          <h1>
-            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning for Factor Investing</a>
-          </h1>
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="active" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
         </div>
-
-        <div class="page-wrapper" tabindex="-1" role="main">
-          <div class="page-inner">
-
-            <section class="normal" id="section-">
-<div id="RL" class="section level1" number="16">
-<h1><span class="header-section-number">Chapter 16</span> Reinforcement learning</h1>
-<p>Due to its increasing popularity within the Machine Learning community, we dedicate a chapter to reinforcement learning (RL). In 2019 only, more than 25 papers dedicated to RL have been submitted to (or updated on) arXiv under the <strong>q:fin</strong> (quantitative finance) classification. Applications to trading include <span class="citation"><a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">Xiong et al.</a> (<a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-theate2020application" role="doc-biblioref">Théate and Ernst</a> (<a href="solutions-to-exercises.html#ref-theate2020application" role="doc-biblioref">2020</a>)</span>. Market microstructure is a focal framework (<span class="citation"><a href="solutions-to-exercises.html#ref-wei2019model" role="doc-biblioref">Wei et al.</a> (<a href="solutions-to-exercises.html#ref-wei2019model" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-ferreira2020reinforced" role="doc-biblioref">Ferreira</a> (<a href="solutions-to-exercises.html#ref-ferreira2020reinforced" role="doc-biblioref">2020</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-karpe2020multi" role="doc-biblioref">Karpe et al.</a> (<a href="solutions-to-exercises.html#ref-karpe2020multi" role="doc-biblioref">2020</a>)</span>).<br />
-Moreover, an early survey of RL-based portfolios is compiled in <span class="citation"><a href="solutions-to-exercises.html#ref-sato2019model" role="doc-biblioref">Sato</a> (<a href="solutions-to-exercises.html#ref-sato2019model" role="doc-biblioref">2019</a>)</span> (see also <span class="citation"><a href="solutions-to-exercises.html#ref-zhang2020deep" role="doc-biblioref">Z. Zhang, Zohren, and Roberts</a> (<a href="solutions-to-exercises.html#ref-zhang2020deep" role="doc-biblioref">2020</a>)</span>) and general financial applications are discussed in <span class="citation"><a href="solutions-to-exercises.html#ref-kolm2019modern" role="doc-biblioref">Kolm and Ritter</a> (<a href="solutions-to-exercises.html#ref-kolm2019modern" role="doc-biblioref">2019b</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-meng2019reinforcement" role="doc-biblioref">Meng and Khushi</a> (<a href="solutions-to-exercises.html#ref-meng2019reinforcement" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-charpentier2020reinforcement" role="doc-biblioref">Charpentier, Elie, and Remlinger</a> (<a href="solutions-to-exercises.html#ref-charpentier2020reinforcement" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-mosavi2020comprehensive" role="doc-biblioref">Mosavi et al.</a> (<a href="solutions-to-exercises.html#ref-mosavi2020comprehensive" role="doc-biblioref">2020</a>)</span>. This shows again that RL has recently gained traction among the quantitative finance community.<a href="#fn34" class="footnote-ref" id="fnref34"><sup>34</sup></a></p>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="RL" class="section level1" number="16">
+<h1>
+<span class="header-section-number">16</span> Reinforcement learning<a class="anchor" aria-label="anchor" href="#RL"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>Due to its increasing popularity within the Machine Learning community, we dedicate a chapter to reinforcement learning (RL). In 2019 only, more than 25 papers dedicated to RL have been submitted to (or updated on) arXiv under the <strong>q:fin</strong> (quantitative finance) classification. Applications to trading include <span class="citation"><a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">Xiong et al.</a> (<a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-theate2020application" role="doc-biblioref">Théate and Ernst</a> (<a href="solutions-to-exercises.html#ref-theate2020application" role="doc-biblioref">2020</a>)</span>. Market microstructure is a focal framework (<span class="citation"><a href="solutions-to-exercises.html#ref-wei2019model" role="doc-biblioref">Wei et al.</a> (<a href="solutions-to-exercises.html#ref-wei2019model" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-ferreira2020reinforced" role="doc-biblioref">Ferreira</a> (<a href="solutions-to-exercises.html#ref-ferreira2020reinforced" role="doc-biblioref">2020</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-karpe2020multi" role="doc-biblioref">Karpe et al.</a> (<a href="solutions-to-exercises.html#ref-karpe2020multi" role="doc-biblioref">2020</a>)</span>).<br>
+Moreover, an early survey of RL-based portfolios is compiled in <span class="citation"><a href="solutions-to-exercises.html#ref-sato2019model" role="doc-biblioref">Sato</a> (<a href="solutions-to-exercises.html#ref-sato2019model" role="doc-biblioref">2019</a>)</span> (see also <span class="citation"><a href="solutions-to-exercises.html#ref-zhang2020deep" role="doc-biblioref">Z. Zhang, Zohren, and Roberts</a> (<a href="solutions-to-exercises.html#ref-zhang2020deep" role="doc-biblioref">2020</a>)</span>) and general financial applications are discussed in <span class="citation"><a href="solutions-to-exercises.html#ref-kolm2019modern" role="doc-biblioref">Kolm and Ritter</a> (<a href="solutions-to-exercises.html#ref-kolm2019modern" role="doc-biblioref">2019b</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-meng2019reinforcement" role="doc-biblioref">Meng and Khushi</a> (<a href="solutions-to-exercises.html#ref-meng2019reinforcement" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-charpentier2020reinforcement" role="doc-biblioref">Charpentier, Elie, and Remlinger</a> (<a href="solutions-to-exercises.html#ref-charpentier2020reinforcement" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-mosavi2020comprehensive" role="doc-biblioref">Mosavi et al.</a> (<a href="solutions-to-exercises.html#ref-mosavi2020comprehensive" role="doc-biblioref">2020</a>)</span>. This shows again that RL has recently gained traction among the quantitative finance community.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Like neural networks, reinforcement learning methods have also been recently developed for derivatives pricing and hedging, see for instance &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-kolm2019dynamic" role="doc-biblioref"&gt;Kolm and Ritter&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-kolm2019dynamic" role="doc-biblioref"&gt;2019a&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-du2020deep" role="doc-biblioref"&gt;J. Du et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-du2020deep" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>34</sup></a></p>
 <p>While RL is a framework much more than a particular algorithm, its efficient application in portfolio management is not straightforward, as we will show.</p>
 <div id="theoretical-layout" class="section level2" number="16.1">
-<h2><span class="header-section-number">16.1</span> Theoretical layout</h2>
+<h2>
+<span class="header-section-number">16.1</span> Theoretical layout<a class="anchor" aria-label="anchor" href="#theoretical-layout"><i class="fas fa-link"></i></a>
+</h2>
 <div id="general-framework" class="section level3" number="16.1.1">
-<h3><span class="header-section-number">16.1.1</span> General framework</h3>
+<h3>
+<span class="header-section-number">16.1.1</span> General framework<a class="anchor" aria-label="anchor" href="#general-framework"><i class="fas fa-link"></i></a>
+</h3>
 <p>In this section, we introduce the core concepts of RL and follow relatively closely the notations (and layout) of
 <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span>, which is widely considered as a solid reference in the field, along with <span class="citation"><a href="solutions-to-exercises.html#ref-bertsekas2017dynamic" role="doc-biblioref">Bertsekas</a> (<a href="solutions-to-exercises.html#ref-bertsekas2017dynamic" role="doc-biblioref">2017</a>)</span>. One central tool in the field is called the <strong>Markov Decision Process</strong> (MDP, see Chapter 3 in <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span>). </p>
 <p>MDPs, like all RL frameworks, involve the interaction between an <strong>agent</strong> (e.g., a trader or portfolio manager) and an <strong>environment</strong> (e.g., a financial market). The agent performs <strong>actions</strong> that may alter the state of environment and gets a reward (possibly negative) for each action. This short sequence can be repeated an arbitrary number of times, as is shown in Figure <a href="RL.html#fig:mdpscheme">16.1</a>.</p>
-<div class="figure" style="text-align: center"><span id="fig:mdpscheme"></span>
-<img src="images/MDP_scheme.png" alt="Scheme of Markov Decision Process. R, S and A stand for reward, state and action, respectively." width="500px" />
-<p class="caption">
+<div class="figure" style="text-align: center">
+<span id="fig:mdpscheme"></span>
+<img src="images/MDP_scheme.png" alt="Scheme of Markov Decision Process. R, S and A stand for reward, state and action, respectively." width="500px"><p class="caption">
 FIGURE 16.1: Scheme of Markov Decision Process. R, S and A stand for reward, state and action, respectively.
 </p>
 </div>
@@ -533,17 +97,17 @@ FIGURE 16.1: Scheme of Markov Decision Process. R, S and A stand for reward, sta
 <p>We pursue our exposé with finite MDPs; they are the most common in the literature and their formal treatment is simpler. The relative simplicity of MDPs helps grasp the concepts that are common to other RL techniques. As is often the case with Markovian objects, the key notion is that of <strong>transition probability</strong>:</p>
 <p><span class="math display" id="eq:transprob">\[\begin{equation}
 \tag{16.1}
-p(s&#39;,r|s,a)=\mathbb{P}\left[S_t=s&#39;,R_t=r | S_{t-1}=s,A_{t-1}=a \right],
+p(s',r|s,a)=\mathbb{P}\left[S_t=s',R_t=r | S_{t-1}=s,A_{t-1}=a \right],
 \end{equation}\]</span></p>
-<p>which is the probability of reaching state <span class="math inline">\(s&#39;\)</span> and reward <span class="math inline">\(r\)</span> at time <span class="math inline">\(t\)</span>, conditionally on being in state <span class="math inline">\(s\)</span> and performing action <span class="math inline">\(a\)</span> at time <span class="math inline">\(t-1\)</span>. The finite sets of states and actions will be denoted with <span class="math inline">\(\mathcal{S}\)</span> and <span class="math inline">\(\mathcal{A}\)</span> henceforth.
+<p>which is the probability of reaching state <span class="math inline">\(s'\)</span> and reward <span class="math inline">\(r\)</span> at time <span class="math inline">\(t\)</span>, conditionally on being in state <span class="math inline">\(s\)</span> and performing action <span class="math inline">\(a\)</span> at time <span class="math inline">\(t-1\)</span>. The finite sets of states and actions will be denoted with <span class="math inline">\(\mathcal{S}\)</span> and <span class="math inline">\(\mathcal{A}\)</span> henceforth.
 Sometimes, this probability is averaged over the set of rewards which gives the following decomposition:
 <span class="math display" id="eq:transprob2\tag{16.2}}  (#eq:transprob2)
-\sum_r rp(s&#39;,r|s,a)&amp;=\mathcal{P}_{ss&#39;}^a \mathcal{R}_{ss&#39;}^a, \quad \text{ where } \\
-\mathcal{P}_{ss&#39;}^a &amp;=\mathbb{P}\left[S_t=s&#39; | S_{t-1}=s,A_{t-1}=a \right],  \quad \text{ and } \nonumber \\
- \mathcal{R}_{ss&#39;}^a &amp;= \mathbb{E}\left[R_t | S_{t-1}=s,S_t=s&#39;, A_{t-1}=a \right]. \nonumber
-\end{align}\]</span></p>
-<p>The goal of the agent is to maximize some function of the stream of rewards. This gain is usually defined as
-<span class="math display" id="eq:gain6">\[\begin{align}
+\sum_r rp(s',r|s,a)&amp;=\mathcal{P}_{ss'}^a \mathcal{R}_{ss'}^a, \quad \text{ where } \\
+\mathcal{P}_{ss'}^a &amp;=\mathbb{P}\left[S_t=s' | S_{t-1}=s,A_{t-1}=a \right],  \quad \text{ and } \nonumber \\
+ \mathcal{R}_{ss'}^a &amp;= \mathbb{E}\left[R_t | S_{t-1}=s,S_t=s', A_{t-1}=a \right]. \nonumber
+\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The goal of the agent is to maximize some function of the stream of rewards. This gain is usually defined as
+&lt;span class=" math display>\[\begin{align}
 G_t&amp;=\sum_{k=0}^T\gamma^kR_{t+k+1} \nonumber \\   \tag{16.3}
 &amp;=R_{t+1} +\gamma G_{t+1},
 \end{align}\]</span></p>
@@ -564,31 +128,32 @@ q_\pi(s,a)=\mathbb{E}_\pi\left[ G_t | S_t=s, \ A_t=a \right].
 <p>The optimal <span class="math inline">\(v_\pi\)</span> and <span class="math inline">\(q_\pi\)</span> are straightforwardly defined as
 <span class="math display">\[v_*(s)=\underset{\pi}{\max} \, v_\pi(s), \ \forall s\in \mathcal{S}, \quad \text{ and } \quad q_*(s,a) =\underset{\pi}{\max} \, q_\pi(s,a), \ \forall (s,a)\in \mathcal{S}\times \mathcal{A}.\]</span></p>
 <p>If only <span class="math inline">\(v_*(s)\)</span> is known, then the agent must span the set of actions and find those that yield the maximum value for any given state <span class="math inline">\(s\)</span>.</p>
-<p>Finding these optimal values is a very complicated task and many articles are dedicated to solving this challenge. One reason why finding the best <span class="math inline">\(q_\pi(s,a)\)</span> is difficult is because it depends on two elements (<span class="math inline">\(s\)</span> and <span class="math inline">\(a\)</span>) on one side and <span class="math inline">\(\pi\)</span> on the other. Usually, for a fixed policy <span class="math inline">\(\pi\)</span>, it can be time consuming to evaluate <span class="math inline">\(q_\pi(s,a)\)</span> for a given stream of actions, states and rewards. Once <span class="math inline">\(q_\pi(s,a)\)</span> is estimated, then a new policy <span class="math inline">\(\pi&#39;\)</span> must be tested and evaluated to determine if it is better than the original one.
+<p>Finding these optimal values is a very complicated task and many articles are dedicated to solving this challenge. One reason why finding the best <span class="math inline">\(q_\pi(s,a)\)</span> is difficult is because it depends on two elements (<span class="math inline">\(s\)</span> and <span class="math inline">\(a\)</span>) on one side and <span class="math inline">\(\pi\)</span> on the other. Usually, for a fixed policy <span class="math inline">\(\pi\)</span>, it can be time consuming to evaluate <span class="math inline">\(q_\pi(s,a)\)</span> for a given stream of actions, states and rewards. Once <span class="math inline">\(q_\pi(s,a)\)</span> is estimated, then a new policy <span class="math inline">\(\pi'\)</span> must be tested and evaluated to determine if it is better than the original one.
 Thus, this iterative search for a good policy can take long. For more details on policy improvement and value function updating, we recommend chapter 4 of <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span> which is dedicated to dynamic programming.</p>
 </div>
 <div id="q-learning" class="section level3" number="16.1.2">
-<h3><span class="header-section-number">16.1.2</span> Q-learning</h3>
+<h3>
+<span class="header-section-number">16.1.2</span> Q-learning<a class="anchor" aria-label="anchor" href="#q-learning"><i class="fas fa-link"></i></a>
+</h3>
 <p>
 An interesting shortcut to the problem of finding <span class="math inline">\(v_*(s)\)</span> and <span class="math inline">\(q_*(s,a)\)</span> is to remove the dependence on the policy. Consequently, there is then of course no need to iteratively improve it. The central relationship that is required to do this is the so-called Bellman equation that is satisfied by <span class="math inline">\(q_\pi(s,a)\)</span>. We detail its derivation below. First of all, we recall that
 <span class="math display">\[\begin{align*}
 q_\pi(s,a) &amp;= \mathbb{E}_\pi[G_t|S_t=s,A_t=a] \\
 &amp;= \mathbb{E}_\pi[R_{t+1}+ \gamma G_{t+1}|S_t=s,A_t=a],
 \end{align*}\]</span>
-where the second equality stems from <a href="RL.html#eq:gain6">(16.3)</a>. The expression <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]\)</span> can be further decomposed. Since the expectation runs over <span class="math inline">\(\pi\)</span>, we need to sum over all possible actions <span class="math inline">\(a&#39;\)</span> and states <span class="math inline">\(s&#39;\)</span> and resort to <span class="math inline">\(\pi(a&#39;,s&#39;)\)</span>. In addition, the sum on the <span class="math inline">\(s&#39;\)</span> and <span class="math inline">\(r\)</span> arguments of the probability <span class="math inline">\(p(s&#39;,r|s,a)=\mathbb{P}\left[S_{t+1}=s&#39;,R_{t+1}=r | S_t=s,A_t=a \right]\)</span> gives access to the distribution of the random couple <span class="math inline">\((S_{t+1},R_{t+1})\)</span> so that in the end <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]=\sum_{a&#39;, r,s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) r\)</span>. A similar reasoning applies to the second portion of <span class="math inline">\(q_\pi\)</span> and:
+where the second equality stems from <a href="RL.html#eq:gain6">(16.3)</a>. The expression <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]\)</span> can be further decomposed. Since the expectation runs over <span class="math inline">\(\pi\)</span>, we need to sum over all possible actions <span class="math inline">\(a'\)</span> and states <span class="math inline">\(s'\)</span> and resort to <span class="math inline">\(\pi(a',s')\)</span>. In addition, the sum on the <span class="math inline">\(s'\)</span> and <span class="math inline">\(r\)</span> arguments of the probability <span class="math inline">\(p(s',r|s,a)=\mathbb{P}\left[S_{t+1}=s',R_{t+1}=r | S_t=s,A_t=a \right]\)</span> gives access to the distribution of the random couple <span class="math inline">\((S_{t+1},R_{t+1})\)</span> so that in the end <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]=\sum_{a', r,s'}\pi(a',s')p(s',r|s,a) r\)</span>. A similar reasoning applies to the second portion of <span class="math inline">\(q_\pi\)</span> and:
 <span class="math display" id="eq:bellman">\[\begin{align}
-q_\pi(s,a) &amp;=\sum_{a&#39;,r, s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) \left[ r+\gamma \mathbb{E}_\pi[ G_{t+1}|S_t=s&#39;,A_t=a&#39;]\right] \nonumber \\  \tag{16.6}
-&amp;=\sum_{a&#39;,r,s&#39;}\pi(a&#39;,s&#39;)p(s&#39;,r|s,a) \left[ r+\gamma q_\pi(s&#39;,a&#39;)\right].
+q_\pi(s,a) &amp;=\sum_{a',r, s'}\pi(a',s')p(s',r|s,a) \left[ r+\gamma \mathbb{E}_\pi[ G_{t+1}|S_t=s',A_t=a']\right] \nonumber \\  \tag{16.6}
+&amp;=\sum_{a',r,s'}\pi(a',s')p(s',r|s,a) \left[ r+\gamma q_\pi(s',a')\right].
 \end{align}\]</span></p>
-<p>This equation links <span class="math inline">\(q_\pi(s,a)\)</span> to the future <span class="math inline">\(q_\pi(s&#39;,a&#39;)\)</span> from the states and actions <span class="math inline">\((s&#39;,a&#39;)\)</span> that are accessible from <span class="math inline">\((s,a)\)</span>.</p>
+<p>This equation links <span class="math inline">\(q_\pi(s,a)\)</span> to the future <span class="math inline">\(q_\pi(s',a')\)</span> from the states and actions <span class="math inline">\((s',a')\)</span> that are accessible from <span class="math inline">\((s,a)\)</span>.</p>
 <p>Notably, Equation <a href="RL.html#eq:bellman">(16.6)</a> is also true for the optimal action-value function <span class="math inline">\(q_*=\underset{\pi}{\max} \, q_\pi(s,a)\)</span>:</p>
 <p><span class="math display" id="eq:bellmanq">\[\begin{align}
-q_*(s,a) &amp;= \underset{a&#39;}{\max} \sum_{r,s&#39;}p(s&#39;,r|s,a) \left[ r+\gamma q_*(s&#39;,a&#39;)\right], \\ 
-&amp;= \mathbb{E}_{\pi^*}[r|s,a]+ \gamma \, \sum_{r,s&#39;}p(s&#39;,r|s,a) \left(  \underset{a&#39;}{\max}  q_*(s&#39;,a&#39;) \right)  \tag{16.7}
+q_*(s,a) &amp;= \underset{a'}{\max} \sum_{r,s'}p(s',r|s,a) \left[ r+\gamma q_*(s',a')\right], \\ 
+&amp;= \mathbb{E}_{\pi^*}[r|s,a]+ \gamma \, \sum_{r,s'}p(s',r|s,a) \left(  \underset{a'}{\max}  q_*(s',a') \right)  \tag{16.7}
 \end{align}\]</span></p>
 <p>because one optimal policy is one that maximizes <span class="math inline">\(q_\pi(s,a)\)</span>, for a given state <span class="math inline">\(s\)</span> and over all possible actions <span class="math inline">\(a\)</span>. This expression is central to a cornerstone algorithm in reinforcement learning called <span class="math inline">\(Q\)</span>-learning (the formal proof of convergence is outlined in <span class="citation"><a href="solutions-to-exercises.html#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan</a> (<a href="solutions-to-exercises.html#ref-watkins1992q" role="doc-biblioref">1992</a>)</span>). In <span class="math inline">\(Q\)</span>-learning, the state-action function no longer depends on policy and is written with capital <span class="math inline">\(Q\)</span>. The process is the following:</p>
-<p>Initialize values <span class="math inline">\(Q(s,a)\)</span> for all states <span class="math inline">\(s\)</span> and actions <span class="math inline">\(a\)</span>. For each episode:<br />
-<span class="math display">\[ (\textbf{QL}) \quad \left\{
+<p>Initialize values <span class="math inline">\(Q(s,a)\)</span> for all states <span class="math inline">\(s\)</span> and actions <span class="math inline">\(a\)</span>. For each episode:<br><span class="math display">\[ (\textbf{QL}) \quad \left\{
 \begin{array}{l}
 \text{0. Initialize state } S_0 \text{ and for each iteration } i \text{ until the end of the episode;}   \\
 \text{1. observe state } s_i;    \\
@@ -620,7 +185,9 @@ a_i=\left\{ \begin{array}{c l}
 <p>Thus, with probability <span class="math inline">\(\epsilon\)</span>, the algorithm explores and with probability <span class="math inline">\(1-\epsilon\)</span>, it exploits the current knowledge of the expected reward and picks the best action. Because all actions have a non-zero probability of being chosen, the policy is called “soft.” Indeed, then best action has a probability of selection equal to <span class="math inline">\(1-\epsilon(1-\text{card}(\mathcal{A})^{-1})\)</span>, while all other actions are picked with probability <span class="math inline">\(\epsilon/\text{card}(\mathcal{A})\)</span>.</p>
 </div>
 <div id="sarsa" class="section level3" number="16.1.3">
-<h3><span class="header-section-number">16.1.3</span> SARSA</h3>
+<h3>
+<span class="header-section-number">16.1.3</span> SARSA<a class="anchor" aria-label="anchor" href="#sarsa"><i class="fas fa-link"></i></a>
+</h3>
 <p>
 In <span class="math inline">\(Q\)</span>-learning, the algorithm seeks to find the action-value function of the optimal policy. Thus, the policy that is followed to pick actions is different from the one that is learned (via <span class="math inline">\(Q\)</span>). Such algorithms are called <em>off-policy</em>. <em>On-policy</em> algorithms seek to improve the estimation of the action-value function <span class="math inline">\(q_\pi\)</span> by continuously acting according to the policy <span class="math inline">\(\pi\)</span>. One canonical example of on-policy learning is the SARSA method which requires two consecutive states and actions <strong>SA</strong>R<strong>SA</strong>. The way the quintuple <span class="math inline">\((S_t,A_t,R_{t+1}, S_{t+1}, A_{t+1})\)</span> is processed is presented below.</p>
 <p>The main difference between <span class="math inline">\(Q\)</span> learning and SARSA is the update rule. In SARSA, it is given by
@@ -638,29 +205,35 @@ Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, \su
 </div>
 </div>
 <div id="the-curse-of-dimensionality" class="section level2" number="16.2">
-<h2><span class="header-section-number">16.2</span> The curse of dimensionality</h2>
-<p>Let us first recall that reinforcement learning is a framework that is not linked to a particular algorithm. In fact, different tools can very well co-exist in a RL task (AlphaGo combined both tree methods and neural networks, see <span class="citation"><a href="solutions-to-exercises.html#ref-silver2016mastering" role="doc-biblioref">Silver et al.</a> (<a href="solutions-to-exercises.html#ref-silver2016mastering" role="doc-biblioref">2016</a>)</span>). Nonetheless, any RL attempt will always rely on the three key concepts: the states, actions and rewards. In factor investing, they are fairly easy to identify, though there is always room for interpretation. Actions are evidently defined by portfolio compositions. The states can be viewed as the current values that describe the economy: as a first-order approximation, it can be assumed that the feature levels fulfill this role (possibly conditioned or complemented with macro-economic data). The rewards are even more straightforward. Returns or any relevant performance metric<a href="#fn35" class="footnote-ref" id="fnref35"><sup>35</sup></a> can account for rewards.</p>
+<h2>
+<span class="header-section-number">16.2</span> The curse of dimensionality<a class="anchor" aria-label="anchor" href="#the-curse-of-dimensionality"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let us first recall that reinforcement learning is a framework that is not linked to a particular algorithm. In fact, different tools can very well co-exist in a RL task (AlphaGo combined both tree methods and neural networks, see <span class="citation"><a href="solutions-to-exercises.html#ref-silver2016mastering" role="doc-biblioref">Silver et al.</a> (<a href="solutions-to-exercises.html#ref-silver2016mastering" role="doc-biblioref">2016</a>)</span>). Nonetheless, any RL attempt will always rely on the three key concepts: the states, actions and rewards. In factor investing, they are fairly easy to identify, though there is always room for interpretation. Actions are evidently defined by portfolio compositions. The states can be viewed as the current values that describe the economy: as a first-order approximation, it can be assumed that the feature levels fulfill this role (possibly conditioned or complemented with macro-economic data). The rewards are even more straightforward. Returns or any relevant performance metric<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;e.g., Sharpe ratio which is for instance used in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref"&gt;Moody et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref"&gt;1998&lt;/a&gt;)&lt;/span&gt;, &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref"&gt;Bertoluzzo and Corazza&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref"&gt;2012&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref"&gt;Aboussalah and Lee&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt; or drawdown-based ratios, as in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-almahdi2017adaptive" role="doc-biblioref"&gt;Almahdi and Yang&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-almahdi2017adaptive" role="doc-biblioref"&gt;2017&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>35</sup></a> can account for rewards.</p>
 <p>A major problem lies in the dimensionality of both states and actions. Assuming an absence of leverage (no negative weights), the actions take values on the simplex
 <span class="math display" id="eq:simplex">\[\begin{equation}
 \tag{16.13}
 \mathbb{S}_N=\left\{ \mathbf{x} \in \mathbb{R}^N\left|\sum_{n=1}^Nx_n=1, \ x_n\ge 0, \ \forall n=1,\dots,N \right.\right\}
 \end{equation}\]</span>
 and assuming that all features have been uniformized, their space is <span class="math inline">\([0,1]^{NK}\)</span>. Needless to say, the dimensions of both spaces are numerically impractical.</p>
-<p>A simple solution to this problem is discretization: each space is divided into a small number of categories. Some authors do take this route. In <span class="citation"><a href="solutions-to-exercises.html#ref-yang2018investor" role="doc-biblioref">S. Y. Yang, Yu, and Almahdi</a> (<a href="solutions-to-exercises.html#ref-yang2018investor" role="doc-biblioref">2018</a>)</span>, the state space is discretized into three values depending on volatility, and actions are also split into three categories. <span class="citation"><a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">Bertoluzzo and Corazza</a> (<a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">2012</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">Xiong et al.</a> (<a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-taghian2020learning" role="doc-biblioref">Taghian, Asadi, and Safabakhsh</a> (<a href="solutions-to-exercises.html#ref-taghian2020learning" role="doc-biblioref">2020</a>)</span> also choose three possible actions (buy, hold, sell). In <span class="citation"><a href="solutions-to-exercises.html#ref-almahdi2019constrained" role="doc-biblioref">Almahdi and Yang</a> (<a href="solutions-to-exercises.html#ref-almahdi2019constrained" role="doc-biblioref">2019</a>)</span>, the learner is expected to yield binary signals for buying or shorting. <span class="citation"><a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">Garcı́a-Galicia, Carsteanu, and Clempner</a> (<a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">2019</a>)</span> consider a larger state space (8 elements) but restrict the action set to 3 options.<a href="#fn36" class="footnote-ref" id="fnref36"><sup>36</sup></a> In terms of the state space, all articles assume that the state of the economy is determined by prices (or returns).</p>
+<p>A simple solution to this problem is discretization: each space is divided into a small number of categories. Some authors do take this route. In <span class="citation"><a href="solutions-to-exercises.html#ref-yang2018investor" role="doc-biblioref">S. Y. Yang, Yu, and Almahdi</a> (<a href="solutions-to-exercises.html#ref-yang2018investor" role="doc-biblioref">2018</a>)</span>, the state space is discretized into three values depending on volatility, and actions are also split into three categories. <span class="citation"><a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">Bertoluzzo and Corazza</a> (<a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">2012</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">Xiong et al.</a> (<a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-taghian2020learning" role="doc-biblioref">Taghian, Asadi, and Safabakhsh</a> (<a href="solutions-to-exercises.html#ref-taghian2020learning" role="doc-biblioref">2020</a>)</span> also choose three possible actions (buy, hold, sell). In <span class="citation"><a href="solutions-to-exercises.html#ref-almahdi2019constrained" role="doc-biblioref">Almahdi and Yang</a> (<a href="solutions-to-exercises.html#ref-almahdi2019constrained" role="doc-biblioref">2019</a>)</span>, the learner is expected to yield binary signals for buying or shorting. <span class="citation"><a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">Garcı́a-Galicia, Carsteanu, and Clempner</a> (<a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">2019</a>)</span> consider a larger state space (8 elements) but restrict the action set to 3 options.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Some recent papers consider arbitrary weights (e.g., &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-jiang2017deep" role="doc-biblioref"&gt;Z. Jiang, Xu, and Liang&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-jiang2017deep" role="doc-biblioref"&gt;2017&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref"&gt;Yu et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;) for a limited number of assets.&lt;/p&gt;'><sup>36</sup></a> In terms of the state space, all articles assume that the state of the economy is determined by prices (or returns).</p>
 <p>One strong limitation of these approaches is the marked simplification they imply. Realistic discretizations are numerically intractable when investing in multiple assets. Indeed, splitting the unit interval in <span class="math inline">\(h\)</span> points yields <span class="math inline">\(h^{NK}\)</span> possibilities for feature values. The number of options for weight combinations is exponentially increasing with <span class="math inline">\(N\)</span>. As an example: just 10 possible values for 10 features of 10 stocks yield <span class="math inline">\(10^{100}\)</span> permutations.</p>
 <p>The problems mentioned above are of course not restricted to portfolio construction. Many solutions have been proposed to solve Markov Decision Processes in continuous spaces. We refer for instance to Section 4 in <span class="citation"><a href="solutions-to-exercises.html#ref-powell2011review" role="doc-biblioref">Powell and Ma</a> (<a href="solutions-to-exercises.html#ref-powell2011review" role="doc-biblioref">2011</a>)</span> for a review of early methods (outside finance).</p>
 <p>This curse of dimensionality is accompanied by the fundamental question of training data. Two options are conceivable: market data versus simulations. Under a given controlled generator of samples, it is hard to imagine that the algorithm will beat the solution that maximizes a given utility function. If anything, it should converge towards the static optimal solution under a stationary data generating process (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">Chaouki et al.</a> (<a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">2020</a>)</span> for trading tasks), which is by the way a very strong modelling assumption.</p>
 <p>This leaves market data as a preferred solution but even with large datasets, there is little chance to cover all the (actions, states) combinations mentioned above. Characteristics-based datasets have depths that run through a few decades of monthly data, which means several hundreds of time-stamps at most. This is by far too limited to allow for a reliable learning process. It is always possible to generate synthetic data (as in <span class="citation"><a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref">Yu et al.</a> (<a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref">2019</a>)</span>), but it is unclear that this will solidly improve the performance of the algorithm.</p>
 </div>
 <div id="policy-gradient" class="section level2" number="16.3">
-<h2><span class="header-section-number">16.3</span> Policy gradient</h2>
+<h2>
+<span class="header-section-number">16.3</span> Policy gradient<a class="anchor" aria-label="anchor" href="#policy-gradient"><i class="fas fa-link"></i></a>
+</h2>
 <div id="principle-2" class="section level3" number="16.3.1">
-<h3><span class="header-section-number">16.3.1</span> Principle</h3>
+<h3>
+<span class="header-section-number">16.3.1</span> Principle<a class="anchor" aria-label="anchor" href="#principle-2"><i class="fas fa-link"></i></a>
+</h3>
 <p>
 Beyond the discretization of action and state spaces, a powerful trick is <strong>parametrization</strong>. When <span class="math inline">\(a\)</span> and <span class="math inline">\(s\)</span> can take discrete values, action-value functions must be computed for all pairs <span class="math inline">\((a,s)\)</span>, which can be prohibitively cumbersome. An elegant way to circumvent this problem is to assume that the policy is driven by a relatively modest number of parameters. The learning process is then focused on optimizing this set of parameters <span class="math inline">\(\boldsymbol{\theta}\)</span>. We then write <span class="math inline">\(\pi_{\boldsymbol{\theta}}(a,s)\)</span> for the probability of choosing action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span>. One intuitive way to define <span class="math inline">\(\pi_{\boldsymbol{\theta}}(a,s)\)</span> is to resort to a soft-max form:
 <span class="math display" id="eq:policyex">\[\begin{equation}
 \tag{16.14}
-\pi_{\boldsymbol{\theta}}(a,s) = \frac{e^{\boldsymbol{\theta}&#39;\textbf{h}(a,s)}}{\sum_{b}e^{\boldsymbol{\theta}&#39;\textbf{h}(b,s)}},
+\pi_{\boldsymbol{\theta}}(a,s) = \frac{e^{\boldsymbol{\theta}'\textbf{h}(a,s)}}{\sum_{b}e^{\boldsymbol{\theta}'\textbf{h}(b,s)}},
 \end{equation}\]</span>
 where the output of function <span class="math inline">\(\textbf{h}(a,s)\)</span>, which has the same dimension as <span class="math inline">\(\boldsymbol{\theta}\)</span> is called a feature vector representing the pair <span class="math inline">\((a,s)\)</span>. Typically, <span class="math inline">\(\textbf{h}\)</span> can very well be a simple neural network with two input units and an output dimension equal to the length of <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
 <p>One desired property for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is that it be differentiable with respect to <span class="math inline">\(\boldsymbol{\theta}\)</span> so that <span class="math inline">\(\boldsymbol{\theta}\)</span> can be improved via some gradient method. The most simple and intuitive results about policy gradients are known in the case of episodic tasks (finite horizon) for which it is sought to maximize the average gain <span class="math inline">\(\mathbb{E}_{\boldsymbol{\theta}}[G_t]\)</span> where the gain is defined in Equation <a href="RL.html#eq:gain6">(16.3)</a>. The expectation is computed according to a particular policy that depends on <span class="math inline">\(\boldsymbol{\theta}\)</span>, this is why we use a simple subscript. One central result is the so-called policy gradient theorem which states that</p>
@@ -677,7 +250,9 @@ where the output of function <span class="math inline">\(\textbf{h}(a,s)\)</span
 This simple update rule is known as the <strong>REINFORCE</strong> algorithm. One improvement of this simple idea is to add a baseline, and we refer to section 13.4 of <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span> for a detailed account on this topic.</p>
 </div>
 <div id="extensions-2" class="section level3" number="16.3.2">
-<h3><span class="header-section-number">16.3.2</span> Extensions</h3>
+<h3>
+<span class="header-section-number">16.3.2</span> Extensions<a class="anchor" aria-label="anchor" href="#extensions-2"><i class="fas fa-link"></i></a>
+</h3>
 <p>A popular extension of REINFORCE is the so-called <strong>actor-critic</strong> (AC) method which combines policy gradient with <span class="math inline">\(Q\)</span>- or <span class="math inline">\(v\)</span>-learning. The AC algorithm can be viewed as some kind of mix between policy gradient and SARSA. A central requirement is that the state-value function <span class="math inline">\(v(\cdot)\)</span> be a differentiable function of some parameter vector <span class="math inline">\(\textbf{w}\)</span> (it is often taken to be a neural network). The update rule is then </p>
 <p><span class="math display" id="eq:ascentAC">\[\begin{equation}
 \tag{16.17}
@@ -711,66 +286,74 @@ where <span class="math inline">\(||\cdot||\)</span> is the Euclidean norm and <
 \end{equation}\]</span>
 which is simply the exponential of the first version. With some algebra, it is possible to derive the policy gradients. The policies <span class="math inline">\(\pi^j_{\boldsymbol{\theta}_t}\)</span> are defined by the Equations <span class="math inline">\((\textbf{Fj})\)</span> above. Let <span class="math inline">\(\digamma\)</span> denote the digamma function. Let <span class="math inline">\(\textbf{1}\)</span> denote the <span class="math inline">\(\mathbb{R}^N\)</span> vector of all ones. We have
 <span class="math display">\[\begin{align*}
-\frac{\nabla_{\boldsymbol{\theta}_t} \pi^1_{\boldsymbol{\theta}_t}}{\pi^1_{\boldsymbol{\theta}_t}}&amp;= \sum_{n=1}^N \left( \digamma \left( \textbf{1}&#39;\textbf{X}_t\boldsymbol{\theta}_t \right) - \digamma(\textbf{x}_{t,n}\boldsymbol{\theta}_t) + \ln w_n \right) \textbf{x}_{t,n}&#39; \\
-\frac{\nabla_{\boldsymbol{\theta}_t} \pi^2_{\boldsymbol{\theta}_t}}{\pi^2_{\boldsymbol{\theta}_t}}&amp;= \sum_{n=1}^N \left( \digamma \left( \textbf{1}&#39;e^{\textbf{X}_{t}\boldsymbol{\theta}_t} \right) - \digamma(e^{\textbf{x}_{t,n}\boldsymbol{\theta}_t}) + \ln w_n \right) e^{\textbf{x}_{t,n}\boldsymbol{\theta}_t} \textbf{x}_{t,n}&#39; 
+\frac{\nabla_{\boldsymbol{\theta}_t} \pi^1_{\boldsymbol{\theta}_t}}{\pi^1_{\boldsymbol{\theta}_t}}&amp;= \sum_{n=1}^N \left( \digamma \left( \textbf{1}'\textbf{X}_t\boldsymbol{\theta}_t \right) - \digamma(\textbf{x}_{t,n}\boldsymbol{\theta}_t) + \ln w_n \right) \textbf{x}_{t,n}' \\
+\frac{\nabla_{\boldsymbol{\theta}_t} \pi^2_{\boldsymbol{\theta}_t}}{\pi^2_{\boldsymbol{\theta}_t}}&amp;= \sum_{n=1}^N \left( \digamma \left( \textbf{1}'e^{\textbf{X}_{t}\boldsymbol{\theta}_t} \right) - \digamma(e^{\textbf{x}_{t,n}\boldsymbol{\theta}_t}) + \ln w_n \right) e^{\textbf{x}_{t,n}\boldsymbol{\theta}_t} \textbf{x}_{t,n}' 
 \end{align*}\]</span>
 where <span class="math inline">\(e^{\textbf{X}}\)</span> is the element-wise exponential of a matrix <span class="math inline">\(\textbf{X}\)</span>.</p>
-<p>The allocation can then either be made by direct sampling, or using the mean of the distribution <span class="math inline">\((\textbf{1}&#39;\boldsymbol{\alpha})^{-1}\boldsymbol{\alpha}\)</span>. Lastly, a technical note: Dirichlet distributions can only be used for small portfolios because the scaling constant in the density becomes numerically intractable for large values of <span class="math inline">\(N\)</span> (e.g., above 50). More details on this idea are laid out in <span class="citation"><a href="solutions-to-exercises.html#ref-andre2020dirichlet" role="doc-biblioref">André and Coqueret</a> (<a href="solutions-to-exercises.html#ref-andre2020dirichlet" role="doc-biblioref">2020</a>)</span>.</p>
+<p>The allocation can then either be made by direct sampling, or using the mean of the distribution <span class="math inline">\((\textbf{1}'\boldsymbol{\alpha})^{-1}\boldsymbol{\alpha}\)</span>. Lastly, a technical note: Dirichlet distributions can only be used for small portfolios because the scaling constant in the density becomes numerically intractable for large values of <span class="math inline">\(N\)</span> (e.g., above 50). More details on this idea are laid out in <span class="citation"><a href="solutions-to-exercises.html#ref-andre2020dirichlet" role="doc-biblioref">André and Coqueret</a> (<a href="solutions-to-exercises.html#ref-andre2020dirichlet" role="doc-biblioref">2020</a>)</span>.</p>
 </div>
 </div>
 <div id="simple-examples" class="section level2" number="16.4">
-<h2><span class="header-section-number">16.4</span> Simple examples</h2>
+<h2>
+<span class="header-section-number">16.4</span> Simple examples<a class="anchor" aria-label="anchor" href="#simple-examples"><i class="fas fa-link"></i></a>
+</h2>
 <div id="q-learning-with-simulations" class="section level3" number="16.4.1">
-<h3><span class="header-section-number">16.4.1</span> Q-learning with simulations</h3>
+<h3>
+<span class="header-section-number">16.4.1</span> Q-learning with simulations<a class="anchor" aria-label="anchor" href="#q-learning-with-simulations"><i class="fas fa-link"></i></a>
+</h3>
 <p>
 To illustrate the gist of the problems mentioned above, we propose two implementations of <span class="math inline">\(Q\)</span>-learning. For simplicity, the first one is based on simulations. This helps understand the learning process in a simplified framework. We consider two assets: one risky and one riskless, with return equal to zero. The returns for the risky process follow an autoregressive model of order one (AR(1)): <span class="math inline">\(r_{t+1}=a+\rho r_t+\epsilon_{t+1}\)</span> with <span class="math inline">\(|\rho|&lt;1\)</span> and <span class="math inline">\(\epsilon\)</span> following a standard white noise with variance <span class="math inline">\(\sigma^2\)</span>. In practice, individual (monthly) returns are seldom autocorrelated, but adjusting the autocorrelation helps understand if the algorithm learns correctly (see exercise below).</p>
 <p>The environment consists only in observing the past return <span class="math inline">\(r_t\)</span>. Since we seek to estimate the <span class="math inline">\(Q\)</span> function, we need to discretize this state variable. The simplest choice is to resort to a binary variable: equal to -1 (negative) if <span class="math inline">\(r_t&lt;0\)</span> and to +1 (positive) if <span class="math inline">\(r_t\ge 0\)</span>. The actions are summarized by the quantity invested in the risky asset. It can take 5 values: 0 (risk-free portfolio), 0.25, 0.5, 0.75 and 1 (fully invested in the risky asset). This is for instance the same choice as in <span class="citation"><a href="solutions-to-exercises.html#ref-pendharkar2018trading" role="doc-biblioref">Pendharkar and Cusatis</a> (<a href="solutions-to-exercises.html#ref-pendharkar2018trading" role="doc-biblioref">2018</a>)</span>.</p>
 <p>The landscape of R libraries for RL is surprisingly sparse. We resort to the package <em>ReinforcementLearning</em> which has an intuitive implementation of <span class="math inline">\(Q\)</span>-learning (another option would be the <em>reinforcelearn</em> package). It requires a dataset with the usual inputs: state, action, reward and subsequent state. We start by simulating the returns: they drive the states and the rewards (portfolio returns). The actions are sampled randomly. Technically, the main function of the package requires that states and actions be of character type. The data is built in the chunk below.</p>
-<div class="sourceCode" id="cb240"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb240-1"><a href="RL.html#cb240-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ReinforcementLearning)                              <span class="co"># Package for RL</span></span>
-<span id="cb240-2"><a href="RL.html#cb240-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)                                                <span class="co"># Fixing the random seed</span></span>
-<span id="cb240-3"><a href="RL.html#cb240-3" aria-hidden="true" tabindex="-1"></a>n_sample <span class="ot">&lt;-</span> <span class="dv">10</span><span class="sc">^</span><span class="dv">5</span>                                            <span class="co"># Number of samples to be generated</span></span>
-<span id="cb240-4"><a href="RL.html#cb240-4" aria-hidden="true" tabindex="-1"></a>rho <span class="ot">&lt;-</span> <span class="fl">0.8</span>                                                  <span class="co"># Autoregressive parameter</span></span>
-<span id="cb240-5"><a href="RL.html#cb240-5" aria-hidden="true" tabindex="-1"></a>sd <span class="ot">&lt;-</span> <span class="fl">0.4</span>                                                   <span class="co"># Std. dev. of noise</span></span>
-<span id="cb240-6"><a href="RL.html#cb240-6" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fl">0.06</span> <span class="sc">*</span> rho                                             <span class="co"># Scaled mean of returns</span></span>
-<span id="cb240-7"><a href="RL.html#cb240-7" aria-hidden="true" tabindex="-1"></a>data_RL <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">returns =</span> a<span class="sc">/</span>rho <span class="sc">+</span> <span class="fu">arima.sim</span>(<span class="at">n =</span> n_sample, <span class="co"># Returns via AR(1) simulation</span></span>
-<span id="cb240-8"><a href="RL.html#cb240-8" aria-hidden="true" tabindex="-1"></a>                                      <span class="fu">list</span>(<span class="at">ar =</span> rho),       </span>
-<span id="cb240-9"><a href="RL.html#cb240-9" aria-hidden="true" tabindex="-1"></a>                                      <span class="at">sd =</span> sd),</span>
-<span id="cb240-10"><a href="RL.html#cb240-10" aria-hidden="true" tabindex="-1"></a>                  <span class="at">action =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n_sample)<span class="sc">*</span><span class="dv">4</span>)<span class="sc">/</span><span class="dv">4</span>) <span class="sc">%&gt;%</span>  <span class="co"># Random action (portfolio)</span></span>
-<span id="cb240-11"><a href="RL.html#cb240-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">new_state =</span> <span class="fu">if_else</span>(returns <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="st">&quot;neg&quot;</span>, <span class="st">&quot;pos&quot;</span>),  <span class="co"># Coding of state</span></span>
-<span id="cb240-12"><a href="RL.html#cb240-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">reward =</span> returns <span class="sc">*</span> action,                       <span class="co"># Reward = portfolio return</span></span>
-<span id="cb240-13"><a href="RL.html#cb240-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">state =</span> <span class="fu">lag</span>(new_state),                          <span class="co"># Next state</span></span>
-<span id="cb240-14"><a href="RL.html#cb240-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">action =</span> <span class="fu">as.character</span>(action)) <span class="sc">%&gt;%</span> </span>
-<span id="cb240-15"><a href="RL.html#cb240-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">na.omit</span>()                                               <span class="co"># Remove one missing state</span></span>
-<span id="cb240-16"><a href="RL.html#cb240-16" aria-hidden="true" tabindex="-1"></a>data_RL <span class="sc">%&gt;%</span> <span class="fu">head</span>()                                          <span class="co"># Show first lines</span></span></code></pre></div>
-<pre><code>## [38;5;246m# A tibble: 6 x 5[39m
+<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ReinforcementLearning</span><span class="op">)</span>                              <span class="co"># Package for RL</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>                                                <span class="co"># Fixing the random seed</span>
+<span class="va">n_sample</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">^</span><span class="fl">5</span>                                            <span class="co"># Number of samples to be generated</span>
+<span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.8</span>                                                  <span class="co"># Autoregressive parameter</span>
+<span class="va">sd</span> <span class="op">&lt;-</span> <span class="fl">0.4</span>                                                   <span class="co"># Std. dev. of noise</span>
+<span class="va">a</span> <span class="op">&lt;-</span> <span class="fl">0.06</span> <span class="op">*</span> <span class="va">rho</span>                                             <span class="co"># Scaled mean of returns</span>
+<span class="va">data_RL</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>returns <span class="op">=</span> <span class="va">a</span><span class="op">/</span><span class="va">rho</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/arima.sim.html">arima.sim</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n_sample</span>, <span class="co"># Returns via AR(1) simulation</span>
+                                      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ar <span class="op">=</span> <span class="va">rho</span><span class="op">)</span>,       
+                                      sd <span class="op">=</span> <span class="va">sd</span><span class="op">)</span>,
+                  action <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">n_sample</span><span class="op">)</span><span class="op">*</span><span class="fl">4</span><span class="op">)</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># Random action (portfolio)</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>new_state <span class="op">=</span> <span class="fu">if_else</span><span class="op">(</span><span class="va">returns</span> <span class="op">&lt;</span> <span class="fl">0</span>, <span class="st">"neg"</span>, <span class="st">"pos"</span><span class="op">)</span>,  <span class="co"># Coding of state</span>
+           reward <span class="op">=</span> <span class="va">returns</span> <span class="op">*</span> <span class="va">action</span>,                       <span class="co"># Reward = portfolio return</span>
+           state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lag.html">lag</a></span><span class="op">(</span><span class="va">new_state</span><span class="op">)</span>,                          <span class="co"># Next state</span>
+           action <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">action</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span>                                               <span class="co"># Remove one missing state</span>
+<span class="va">data_RL</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="op">)</span>                                          <span class="co"># Show first lines</span></code></pre></div>
+<pre><code>##  [38;5;246m# A tibble: 6 x 5 [39m
 ##   returns action new_state  reward state
-##     [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;chr&gt;[39m[23m  [3m[38;5;246m&lt;chr&gt;[39m[23m       [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;chr&gt;[39m[23m
-## [38;5;250m1[39m  -[31m0[39m[31m.[39m[31m474[39m 0.5    neg       -[31m0[39m[31m.[39m[31m237[39m  neg  
-## [38;5;250m2[39m  -[31m0[39m[31m.[39m[31m185[39m 0.25   neg       -[31m0[39m[31m.[39m[31m0[39m[31m46[4m3[24m[39m neg  
-## [38;5;250m3[39m   0.146 0.25   pos        0.036[4m4[24m neg  
-## [38;5;250m4[39m   0.543 0.75   pos        0.407  pos  
-## [38;5;250m5[39m   0.202 0.75   pos        0.152  pos  
-## [38;5;250m6[39m   0.376 0.25   pos        0.094[4m0[24m pos</code></pre>
+##      [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;chr&gt; [39m [23m        [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m
+##  [38;5;250m1 [39m  - [31m0 [39m [31m. [39m [31m474 [39m 0.5    neg       - [31m0 [39m [31m. [39m [31m237 [39m  neg  
+##  [38;5;250m2 [39m  - [31m0 [39m [31m. [39m [31m185 [39m 0.25   neg       - [31m0 [39m [31m. [39m [31m0 [39m [31m46 [4m3 [24m [39m neg  
+##  [38;5;250m3 [39m   0.146 0.25   pos        0.036 [4m4 [24m neg  
+##  [38;5;250m4 [39m   0.543 0.75   pos        0.407  pos  
+##  [38;5;250m5 [39m   0.202 0.75   pos        0.152  pos  
+##  [38;5;250m6 [39m   0.376 0.25   pos        0.094 [4m0 [24m pos</code></pre>
 <p></p>
 <p>There are 3 parameters in the implementation of the <em>Q</em>-learning algorithm:</p>
 <ul>
-<li><span class="math inline">\(\eta\)</span>, which is the learning rate in the updating Equation <a href="RL.html#eq:QLupdate">(16.8)</a>. In <em>ReinforcementLearning</em>, this is coded as <em>alpha</em>;<br />
+<li>
+<span class="math inline">\(\eta\)</span>, which is the learning rate in the updating Equation <a href="RL.html#eq:QLupdate">(16.8)</a>. In <em>ReinforcementLearning</em>, this is coded as <em>alpha</em>;<br>
 </li>
-<li><span class="math inline">\(\gamma\)</span>, the discounting rate for the rewards (also shown in Equation <a href="RL.html#eq:QLupdate">(16.8)</a>);<br />
+<li>
+<span class="math inline">\(\gamma\)</span>, the discounting rate for the rewards (also shown in Equation <a href="RL.html#eq:QLupdate">(16.8)</a>);<br>
 </li>
 <li>and <span class="math inline">\(\epsilon\)</span>, which controls the rate of exploration versus exploitation (see Equation <a href="RL.html#eq:egreedy">(16.10)</a>).</li>
 </ul>
-<div class="sourceCode" id="cb242"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb242-1"><a href="RL.html#cb242-1" aria-hidden="true" tabindex="-1"></a>control <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">alpha =</span> <span class="fl">0.1</span>,                       <span class="co"># Learning rate</span></span>
-<span id="cb242-2"><a href="RL.html#cb242-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">gamma =</span> <span class="fl">0.7</span>,                       <span class="co"># Discount factor for rewards</span></span>
-<span id="cb242-3"><a href="RL.html#cb242-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">epsilon =</span> <span class="fl">0.1</span>)                     <span class="co"># Exploration rate</span></span>
-<span id="cb242-4"><a href="RL.html#cb242-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb242-5"><a href="RL.html#cb242-5" aria-hidden="true" tabindex="-1"></a>fit_RL <span class="ot">&lt;-</span> <span class="fu">ReinforcementLearning</span>(data_RL,           <span class="co"># Main RL function</span></span>
-<span id="cb242-6"><a href="RL.html#cb242-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">s =</span> <span class="st">&quot;state&quot;</span>, </span>
-<span id="cb242-7"><a href="RL.html#cb242-7" aria-hidden="true" tabindex="-1"></a>                               <span class="at">a =</span> <span class="st">&quot;action&quot;</span>, </span>
-<span id="cb242-8"><a href="RL.html#cb242-8" aria-hidden="true" tabindex="-1"></a>                               <span class="at">r =</span> <span class="st">&quot;reward&quot;</span>, </span>
-<span id="cb242-9"><a href="RL.html#cb242-9" aria-hidden="true" tabindex="-1"></a>                               <span class="at">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </span>
-<span id="cb242-10"><a href="RL.html#cb242-10" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> control)</span>
-<span id="cb242-11"><a href="RL.html#cb242-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit_RL)   <span class="co"># Show the output</span></span></code></pre></div>
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span>,                       <span class="co"># Learning rate</span>
+                gamma <span class="op">=</span> <span class="fl">0.7</span>,                       <span class="co"># Discount factor for rewards</span>
+                epsilon <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>                     <span class="co"># Exploration rate</span>
+
+<span class="va">fit_RL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ReinforcementLearning/man/ReinforcementLearning.html">ReinforcementLearning</a></span><span class="op">(</span><span class="va">data_RL</span>,           <span class="co"># Main RL function</span>
+                               s <span class="op">=</span> <span class="st">"state"</span>, 
+                               a <span class="op">=</span> <span class="st">"action"</span>, 
+                               r <span class="op">=</span> <span class="st">"reward"</span>, 
+                               s_new <span class="op">=</span> <span class="st">"new_state"</span>, 
+                               control <span class="op">=</span> <span class="va">control</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit_RL</span><span class="op">)</span>   <span class="co"># Show the output</span></code></pre></div>
 <pre><code>## State-Action function Q
 ##          0.25         0         1      0.75      0.5
 ## neg 0.2473169 0.4216894 0.1509653 0.1734538 0.229004
@@ -778,7 +361,7 @@ To illustrate the gist of the problems mentioned above, we propose two implement
 ## 
 ## Policy
 ## neg pos 
-## &quot;0&quot; &quot;1&quot; 
+## "0" "1" 
 ## 
 ## Reward (last iteration)
 ## [1] 2588.659</code></pre>
@@ -787,52 +370,56 @@ To illustrate the gist of the problems mentioned above, we propose two implement
 <p>Basically, the algorithm has simply learned that positive (<em>resp.</em> negative) returns are more likely to follow positive (<em>resp</em>. negative) returns. While this is somewhat reassuring, it is by no means impressive, and much simpler tools would yield similar conclusions and guidance.</p>
 </div>
 <div id="RLemp2" class="section level3" number="16.4.2">
-<h3><span class="header-section-number">16.4.2</span> Q-learning with market data</h3>
+<h3>
+<span class="header-section-number">16.4.2</span> Q-learning with market data<a class="anchor" aria-label="anchor" href="#RLemp2"><i class="fas fa-link"></i></a>
+</h3>
 <p></p>
-<p>The second application is based on the financial dataset. To reduce the dimensionality of the problem, we will assume that:<br />
-- only one feature (price-to-book ratio) captures the state of the environment. This feature is processed so that is has only a limited number of possible values;<br />
-- actions take values over a discrete set consisting of three positions: +1 (buy the market), -1 (sell the market) and 0 (hold no risky positions);<br />
+<p>The second application is based on the financial dataset. To reduce the dimensionality of the problem, we will assume that:<br>
+- only one feature (price-to-book ratio) captures the state of the environment. This feature is processed so that is has only a limited number of possible values;<br>
+- actions take values over a discrete set consisting of three positions: +1 (buy the market), -1 (sell the market) and 0 (hold no risky positions);<br>
 - only two assets are traded: those with stock_id equal to 3 and 4 - they both have 245 days of trading data.</p>
 <p>The construction of the dataset is unelegantly coded below.</p>
-<div class="sourceCode" id="cb244"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb244-1"><a href="RL.html#cb244-1" aria-hidden="true" tabindex="-1"></a>return_3 <span class="ot">&lt;-</span> data_ml <span class="sc">%&gt;%</span> <span class="fu">filter</span>(stock_id <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(R1M_Usd)  <span class="co"># Return of asset 3</span></span>
-<span id="cb244-2"><a href="RL.html#cb244-2" aria-hidden="true" tabindex="-1"></a>return_4 <span class="ot">&lt;-</span> data_ml <span class="sc">%&gt;%</span> <span class="fu">filter</span>(stock_id <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(R1M_Usd)  <span class="co"># Return of asset 4</span></span>
-<span id="cb244-3"><a href="RL.html#cb244-3" aria-hidden="true" tabindex="-1"></a>pb_3 <span class="ot">&lt;-</span> data_ml <span class="sc">%&gt;%</span> <span class="fu">filter</span>(stock_id <span class="sc">==</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(Pb)           <span class="co"># P/B ratio of asset 3</span></span>
-<span id="cb244-4"><a href="RL.html#cb244-4" aria-hidden="true" tabindex="-1"></a>pb_4 <span class="ot">&lt;-</span> data_ml <span class="sc">%&gt;%</span> <span class="fu">filter</span>(stock_id <span class="sc">==</span> <span class="dv">4</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(Pb)           <span class="co"># P/B ratio of asset 4</span></span>
-<span id="cb244-5"><a href="RL.html#cb244-5" aria-hidden="true" tabindex="-1"></a>action_3 <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="fu">length</span>(pb_3))<span class="sc">*</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>                     <span class="co"># Action for asset 3 (random)</span></span>
-<span id="cb244-6"><a href="RL.html#cb244-6" aria-hidden="true" tabindex="-1"></a>action_4 <span class="ot">&lt;-</span> <span class="fu">floor</span>(<span class="fu">runif</span>(<span class="fu">length</span>(pb_4))<span class="sc">*</span><span class="dv">3</span>) <span class="sc">-</span> <span class="dv">1</span>                     <span class="co"># Action for asset 4 (random)</span></span>
-<span id="cb244-7"><a href="RL.html#cb244-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb244-8"><a href="RL.html#cb244-8" aria-hidden="true" tabindex="-1"></a>RL_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(return_3, return_4,                            <span class="co"># Building the dataset</span></span>
-<span id="cb244-9"><a href="RL.html#cb244-9" aria-hidden="true" tabindex="-1"></a>                  pb_3, pb_4,</span>
-<span id="cb244-10"><a href="RL.html#cb244-10" aria-hidden="true" tabindex="-1"></a>                  action_3, action_4) <span class="sc">%&gt;%</span></span>
-<span id="cb244-11"><a href="RL.html#cb244-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">action =</span> <span class="fu">paste</span>(action_3, action_4),                   <span class="co"># Uniting actions</span></span>
-<span id="cb244-12"><a href="RL.html#cb244-12" aria-hidden="true" tabindex="-1"></a>           <span class="at">pb_3 =</span> <span class="fu">round</span>(<span class="dv">5</span> <span class="sc">*</span> pb_3),                               <span class="co"># Simplifying states (P/B)</span></span>
-<span id="cb244-13"><a href="RL.html#cb244-13" aria-hidden="true" tabindex="-1"></a>           <span class="at">pb_4 =</span> <span class="fu">round</span>(<span class="dv">5</span> <span class="sc">*</span> pb_4),                               <span class="co"># Simplifying states (P/B)</span></span>
-<span id="cb244-14"><a href="RL.html#cb244-14" aria-hidden="true" tabindex="-1"></a>           <span class="at">state =</span> <span class="fu">paste</span>(pb_3, pb_4),                            <span class="co"># Uniting states</span></span>
-<span id="cb244-15"><a href="RL.html#cb244-15" aria-hidden="true" tabindex="-1"></a>           <span class="at">reward =</span> action_3<span class="sc">*</span>return_3 <span class="sc">+</span> action_4<span class="sc">*</span>return_4,       <span class="co"># Computing rewards</span></span>
-<span id="cb244-16"><a href="RL.html#cb244-16" aria-hidden="true" tabindex="-1"></a>           <span class="at">new_state =</span> <span class="fu">lead</span>(state)) <span class="sc">%&gt;%</span>                          <span class="co"># Infer new state</span></span>
-<span id="cb244-17"><a href="RL.html#cb244-17" aria-hidden="true" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>pb_3, <span class="sc">-</span>pb_4, <span class="sc">-</span>action_3,                       <span class="co"># Remove superfluous vars.</span></span>
-<span id="cb244-18"><a href="RL.html#cb244-18" aria-hidden="true" tabindex="-1"></a>                  <span class="sc">-</span>action_4, <span class="sc">-</span>return_3, <span class="sc">-</span>return_4) </span>
-<span id="cb244-19"><a href="RL.html#cb244-19" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(RL_data)                                                    <span class="co"># Showing the result</span></span></code></pre></div>
-<pre><code>## [38;5;246m# A tibble: 6 x 4[39m
+<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">return_3</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pull</span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span>  <span class="co"># Return of asset 3</span>
+<span class="va">return_4</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pull</span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span>  <span class="co"># Return of asset 4</span>
+<span class="va">pb_3</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pull</span><span class="op">(</span><span class="va">Pb</span><span class="op">)</span>           <span class="co"># P/B ratio of asset 3</span>
+<span class="va">pb_4</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">pull</span><span class="op">(</span><span class="va">Pb</span><span class="op">)</span>           <span class="co"># P/B ratio of asset 4</span>
+<span class="va">action_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pb_3</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>                     <span class="co"># Action for asset 3 (random)</span>
+<span class="va">action_4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pb_4</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>                     <span class="co"># Action for asset 4 (random)</span>
+
+<span class="va">RL_data</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span><span class="va">return_3</span>, <span class="va">return_4</span>,                            <span class="co"># Building the dataset</span>
+                  <span class="va">pb_3</span>, <span class="va">pb_4</span>,
+                  <span class="va">action_3</span>, <span class="va">action_4</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>action <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">action_3</span>, <span class="va">action_4</span><span class="op">)</span>,                   <span class="co"># Uniting actions</span>
+           pb_3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">5</span> <span class="op">*</span> <span class="va">pb_3</span><span class="op">)</span>,                               <span class="co"># Simplifying states (P/B)</span>
+           pb_4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">5</span> <span class="op">*</span> <span class="va">pb_4</span><span class="op">)</span>,                               <span class="co"># Simplifying states (P/B)</span>
+           state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">pb_3</span>, <span class="va">pb_4</span><span class="op">)</span>,                            <span class="co"># Uniting states</span>
+           reward <span class="op">=</span> <span class="va">action_3</span><span class="op">*</span><span class="va">return_3</span> <span class="op">+</span> <span class="va">action_4</span><span class="op">*</span><span class="va">return_4</span>,       <span class="co"># Computing rewards</span>
+           new_state <span class="op">=</span> <span class="fu">lead</span><span class="op">(</span><span class="va">state</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>                          <span class="co"># Infer new state</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pb_3</span>, <span class="op">-</span><span class="va">pb_4</span>, <span class="op">-</span><span class="va">action_3</span>,                       <span class="co"># Remove superfluous vars.</span>
+                  <span class="op">-</span><span class="va">action_4</span>, <span class="op">-</span><span class="va">return_3</span>, <span class="op">-</span><span class="va">return_4</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="va">RL_data</span><span class="op">)</span>                                                    <span class="co"># Showing the result</span></code></pre></div>
+<pre><code>##  [38;5;246m# A tibble: 6 x 4 [39m
 ##   action state reward new_state
-##   [3m[38;5;246m&lt;chr&gt;[39m[23m  [3m[38;5;246m&lt;chr&gt;[39m[23m  [3m[38;5;246m&lt;dbl&gt;[39m[23m [3m[38;5;246m&lt;chr&gt;[39m[23m    
-## [38;5;250m1[39m -1 -1  1 1   -[31m0[39m[31m.[39m[31m0[39m[31m61[39m 1 1      
-## [38;5;250m2[39m 0 1    1 1    0     1 1      
-## [38;5;250m3[39m -1 0   1 1   -[31m0[39m[31m.[39m[31m0[39m[31m18[39m 1 1      
-## [38;5;250m4[39m 0 -1   1 1    0.011 1 1      
-## [38;5;250m5[39m -1 1   1 1   -[31m0[39m[31m.[39m[31m0[39m[31m36[39m 1 1      
-## [38;5;250m6[39m -1 -1  1 1   -[31m0[39m[31m.[39m[31m0[39m[31m56[39m 1 1</code></pre>
+##    [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;chr&gt; [39m [23m   [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;chr&gt; [39m [23m    
+##  [38;5;250m1 [39m -1 -1  1 1   - [31m0 [39m [31m. [39m [31m0 [39m [31m61 [39m 1 1      
+##  [38;5;250m2 [39m 0 1    1 1    0     1 1      
+##  [38;5;250m3 [39m -1 0   1 1   - [31m0 [39m [31m. [39m [31m0 [39m [31m18 [39m 1 1      
+##  [38;5;250m4 [39m 0 -1   1 1    0.011 1 1      
+##  [38;5;250m5 [39m -1 1   1 1   - [31m0 [39m [31m. [39m [31m0 [39m [31m36 [39m 1 1      
+##  [38;5;250m6 [39m -1 -1  1 1   - [31m0 [39m [31m. [39m [31m0 [39m [31m56 [39m 1 1</code></pre>
 <p></p>
 <p>Actions and states have to be merged to yield all possible combinations. To simplify the states, we round 5 times the price-to-book ratios.</p>
 <p>We keep the same hyperparameters as in the previous example. Columns below stand for actions: the first (<span class="math inline">\(resp.\)</span> second) number notes the position in the first (<span class="math inline">\(resp.\)</span> second) asset. The rows correspond to states. The scaled P/B ratios are separated by a point (e.g., “X2.3” means that the first (<span class="math inline">\(resp.\)</span> second) asset has a scaled P/B of 2 (<span class="math inline">\(resp.\)</span> 3).</p>
-<div class="sourceCode" id="cb246"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb246-1"><a href="RL.html#cb246-1" aria-hidden="true" tabindex="-1"></a>fit_RL2 <span class="ot">&lt;-</span> <span class="fu">ReinforcementLearning</span>(RL_data,           <span class="co"># Main RL function</span></span>
-<span id="cb246-2"><a href="RL.html#cb246-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">s =</span> <span class="st">&quot;state&quot;</span>, </span>
-<span id="cb246-3"><a href="RL.html#cb246-3" aria-hidden="true" tabindex="-1"></a>                               <span class="at">a =</span> <span class="st">&quot;action&quot;</span>, </span>
-<span id="cb246-4"><a href="RL.html#cb246-4" aria-hidden="true" tabindex="-1"></a>                               <span class="at">r =</span> <span class="st">&quot;reward&quot;</span>, </span>
-<span id="cb246-5"><a href="RL.html#cb246-5" aria-hidden="true" tabindex="-1"></a>                               <span class="at">s_new =</span> <span class="st">&quot;new_state&quot;</span>, </span>
-<span id="cb246-6"><a href="RL.html#cb246-6" aria-hidden="true" tabindex="-1"></a>                               <span class="at">control =</span> control)</span>
-<span id="cb246-7"><a href="RL.html#cb246-7" aria-hidden="true" tabindex="-1"></a>fit_RL2<span class="sc">$</span>Q <span class="ot">&lt;-</span> <span class="fu">round</span>(fit_RL2<span class="sc">$</span>Q, <span class="dv">3</span>) <span class="co"># Round the Q-matrix</span></span>
-<span id="cb246-8"><a href="RL.html#cb246-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(fit_RL2)                   <span class="co"># Show the output </span></span></code></pre></div>
+<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_RL2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ReinforcementLearning/man/ReinforcementLearning.html">ReinforcementLearning</a></span><span class="op">(</span><span class="va">RL_data</span>,           <span class="co"># Main RL function</span>
+                               s <span class="op">=</span> <span class="st">"state"</span>, 
+                               a <span class="op">=</span> <span class="st">"action"</span>, 
+                               r <span class="op">=</span> <span class="st">"reward"</span>, 
+                               s_new <span class="op">=</span> <span class="st">"new_state"</span>, 
+                               control <span class="op">=</span> <span class="va">control</span><span class="op">)</span>
+<span class="va">fit_RL2</span><span class="op">$</span><span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">fit_RL2</span><span class="op">$</span><span class="va">Q</span>, <span class="fl">3</span><span class="op">)</span> <span class="co"># Round the Q-matrix</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit_RL2</span><span class="op">)</span>                   <span class="co"># Show the output </span></code></pre></div>
 <pre><code>## State-Action function Q
 ##       0 0    0 1   0 -1  -1 -1   -1 0   -1 1   1 -1    1 0    1 1
 ## 0 2 0.000  0.000  0.000 -0.017  0.000  0.000  0.000  0.002  0.000
@@ -847,7 +434,7 @@ To illustrate the gist of the problems mentioned above, we propose two implement
 ## 
 ## Policy
 ##     0 2     0 3     3 1     2 1     2 2     2 3     1 1     1 2     1 3 
-##   &quot;1 0&quot;  &quot;1 -1&quot;  &quot;0 -1&quot;  &quot;1 -1&quot; &quot;-1 -1&quot;  &quot;-1 1&quot;   &quot;0 0&quot; &quot;-1 -1&quot;   &quot;1 1&quot; 
+##   "1 0"  "1 -1"  "0 -1"  "1 -1" "-1 -1"  "-1 1"   "0 0" "-1 -1"   "1 1" 
 ## 
 ## Reward (last iteration)
 ## [1] -1.296</code></pre>
@@ -857,94 +444,90 @@ To illustrate the gist of the problems mentioned above, we propose two implement
 </div>
 </div>
 <div id="concluding-remarks" class="section level2" number="16.5">
-<h2><span class="header-section-number">16.5</span> Concluding remarks</h2>
+<h2>
+<span class="header-section-number">16.5</span> Concluding remarks<a class="anchor" aria-label="anchor" href="#concluding-remarks"><i class="fas fa-link"></i></a>
+</h2>
 <p>Reinforcement learning has been applied to financial problems for a long time. Early contributions in the late 1990s include <span class="citation"><a href="solutions-to-exercises.html#ref-neuneier1996optimal" role="doc-biblioref">Neuneier</a> (<a href="solutions-to-exercises.html#ref-neuneier1996optimal" role="doc-biblioref">1996</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-moody1997optimization" role="doc-biblioref">Moody and Wu</a> (<a href="solutions-to-exercises.html#ref-moody1997optimization" role="doc-biblioref">1997</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref">Moody et al.</a> (<a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref">1998</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-neuneier1998enhancing" role="doc-biblioref">Neuneier</a> (<a href="solutions-to-exercises.html#ref-neuneier1998enhancing" role="doc-biblioref">1998</a>)</span>. Since then, many researchers in the computer science field have sought to apply RL techniques to portfolio problems. The advent of massive datasets and the increase in dimensionality make it hard for RL tools to adapt well to very rich environments that are encountered in factor investing.</p>
 <p>Recently, some approaches seek to adapt RL to continuous action spaces (<span class="citation"><a href="solutions-to-exercises.html#ref-wang2019continuous" role="doc-biblioref">H. Wang and Zhou</a> (<a href="solutions-to-exercises.html#ref-wang2019continuous" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">Aboussalah and Lee</a> (<a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">2020</a>)</span>) but not to high-dimensional state spaces. These spaces are those required in factor investing because all firms yield hundreds of data points characterizing their economic situation. In addition, applications of RL in financial frameworks have a particularity compared to many typical RL tasks: in financial markets, actions of agents have <strong>no impact on the environment</strong> (unless the agent is able to perform massive trades, which is rare and ill-advised because it pushes prices in the wrong direction). This lack of impact of actions may possibly mitigate the efficiency of traditional RL approaches.</p>
 <p>Those are challenges that will need to be solved in order for RL to become competitive with alternative (supervised) methods. Nevertheless, the progressive (online-like) way RL works seems suitable for non-stationary environments: the algorithm slowly shifts paradigms as new data arrives. In stationary environments, it has been shown that RL manages to converge to optimal solutions (<span class="citation"><a href="solutions-to-exercises.html#ref-kong2019new" role="doc-biblioref">Kong et al.</a> (<a href="solutions-to-exercises.html#ref-kong2019new" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">Chaouki et al.</a> (<a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">2020</a>)</span>). Therefore, in non-stationary markets, RL could be a recourse to build dynamic predictions that adapt to changing macroeconomic conditions. More research needs to be carried out in this field on large dimensional datasets.</p>
 <p>We end this chapter by underlining that reinforcement learning has also been used to estimate complex theoretical models (<span class="citation"><a href="solutions-to-exercises.html#ref-halperin2018market" role="doc-biblioref">Halperin and Feldshteyn</a> (<a href="solutions-to-exercises.html#ref-halperin2018market" role="doc-biblioref">2018</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">Garcı́a-Galicia, Carsteanu, and Clempner</a> (<a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">2019</a>)</span>). The research in the field is incredibly diversified and is orientated towards many directions. It is likely that captivating work will be published in the near future.</p>
 </div>
 <div id="exercises" class="section level2" number="16.6">
-<h2><span class="header-section-number">16.6</span> Exercises</h2>
+<h2>
+<span class="header-section-number">16.6</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises"><i class="fas fa-link"></i></a>
+</h2>
 <ol style="list-style-type: decimal">
 <li><p>Test what happens if the process for generating returns has a negative autocorrelation. What is the impact on the <span class="math inline">\(Q\)</span> function and the policy?</p></li>
 <li><p>Keeping the same 2 assets as in Section <a href="RL.html#RLemp2">16.4.2</a>, increases the size of RL_data by testing <strong>all possible action combinations</strong> for each original data point. Re-run the <span class="math inline">\(Q\)</span>-learning function and see what happens.</p></li>
 </ol>
-
 </div>
 </div>
 
 
 
-<div class="footnotes">
-<hr />
-<ol start="34">
-<li id="fn34"><p>Like neural networks, reinforcement learning methods have also been recently developed for derivatives pricing and hedging, see for instance <span class="citation"><a href="solutions-to-exercises.html#ref-kolm2019dynamic" role="doc-biblioref">Kolm and Ritter</a> (<a href="solutions-to-exercises.html#ref-kolm2019dynamic" role="doc-biblioref">2019a</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-du2020deep" role="doc-biblioref">J. Du et al.</a> (<a href="solutions-to-exercises.html#ref-du2020deep" role="doc-biblioref">2020</a>)</span>.<a href="RL.html#fnref34" class="footnote-back">↩︎</a></p></li>
-<li id="fn35"><p>e.g., Sharpe ratio which is for instance used in <span class="citation"><a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref">Moody et al.</a> (<a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref">1998</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">Bertoluzzo and Corazza</a> (<a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">2012</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">Aboussalah and Lee</a> (<a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">2020</a>)</span> or drawdown-based ratios, as in <span class="citation"><a href="solutions-to-exercises.html#ref-almahdi2017adaptive" role="doc-biblioref">Almahdi and Yang</a> (<a href="solutions-to-exercises.html#ref-almahdi2017adaptive" role="doc-biblioref">2017</a>)</span>.<a href="RL.html#fnref35" class="footnote-back">↩︎</a></p></li>
-<li id="fn36"><p>Some recent papers consider arbitrary weights (e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-jiang2017deep" role="doc-biblioref">Z. Jiang, Xu, and Liang</a> (<a href="solutions-to-exercises.html#ref-jiang2017deep" role="doc-biblioref">2017</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref">Yu et al.</a> (<a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref">2019</a>)</span>) for a limited number of assets.<a href="RL.html#fnref36" class="footnote-back">↩︎</a></p></li>
-</ol>
-</div>
-            </section>
+.container-fluid main {
+max-width: 60rem;
+}
 
-          </div>
-        </div>
-      </div>
-<a href="unsup.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-<a href="data-description.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
-    </div>
+<div class="chapter-nav">
+<div class="prev"><a href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></div>
+<div class="next"><a href="data-description.html"><span class="header-section-number">17</span> Data description</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#RL"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li>
+<a class="nav-link" href="#theoretical-layout"><span class="header-section-number">16.1</span> Theoretical layout</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#general-framework"><span class="header-section-number">16.1.1</span> General framework</a></li>
+<li><a class="nav-link" href="#q-learning"><span class="header-section-number">16.1.2</span> Q-learning</a></li>
+<li><a class="nav-link" href="#sarsa"><span class="header-section-number">16.1.3</span> SARSA</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#the-curse-of-dimensionality"><span class="header-section-number">16.2</span> The curse of dimensionality</a></li>
+<li>
+<a class="nav-link" href="#policy-gradient"><span class="header-section-number">16.3</span> Policy gradient</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#principle-2"><span class="header-section-number">16.3.1</span> Principle</a></li>
+<li><a class="nav-link" href="#extensions-2"><span class="header-section-number">16.3.2</span> Extensions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#simple-examples"><span class="header-section-number">16.4</span> Simple examples</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q-learning-with-simulations"><span class="header-section-number">16.4.1</span> Q-learning with simulations</a></li>
+<li><a class="nav-link" href="#RLemp2"><span class="header-section-number">16.4.2</span> Q-learning with market data</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#concluding-remarks"><span class="header-section-number">16.5</span> Concluding remarks</a></li>
+<li><a class="nav-link" href="#exercises"><span class="header-section-number">16.6</span> Exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+</div>
+
+  
+
+  
+
+</div>
+ <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-05-25.</p>
   </div>
-<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
-<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
-<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
-<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
-<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
-<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
-<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
-<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
-<script>
-gitbook.require(["gitbook"], function(gitbook) {
-gitbook.start({
-"sharing": {
-"github": false,
-"facebook": false,
-"twitter": true,
-"linkedin": true,
-"weibo": false,
-"instapaper": false,
-"vk": false,
-"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
-},
-"fontsettings": {
-"theme": "white",
-"family": "sans",
-"size": 2
-},
-"edit": null,
-"history": {
-"link": null,
-"text": null
-},
-"view": {
-"link": null,
-"text": null
-},
-"download": null,
-"toc": {
-"collapse": "section",
-"scroll_highlight": true
-},
-"toolbar": {
-"position": "fixed",
-"download": false
-},
-"search": true,
-"info": true
-});
-});
-</script>
 
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
   (function () {
     var script = document.createElement("script");
     script.type = "text/javascript";
@@ -958,5 +541,4 @@ gitbook.start({
   })();
 </script>
 </body>
-
 </html>
