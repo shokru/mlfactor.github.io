@@ -223,7 +223,7 @@ where <span class="math inline">\(h&gt;0\)</span> is some arbitrarily small numb
 We can then proceed:</p>
 <p><span class="math display">\[\begin{align}
 \frac{\partial D(\tilde{y}_i)}{\partial w_{k,j}^{(L)}}&amp;=\frac{\partial D(\tilde{y}_i)}{\partial v^{(L)}_{i,k}}\frac{\partial v^{(L)}_{i,k}}{\partial w_{k,j}^{(L)}} = \frac{\partial D(\tilde{y}_i)}{\partial v^{(L)}_{i,k}}o^{(L-1)}_{i,j}\\
-&amp;=\frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}} \frac{\partial o^{(L)}_{i,k} }{\partial v^{(L)}_{i,k}}  o^{(L-1)}_{i,j} = \frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}}  (f^{(L)})'(v_{i,k}^{(L)})  o^{(lL1)}_{i,j} \\
+&amp;=\frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}} \frac{\partial o^{(L)}_{i,k} }{\partial v^{(L)}_{i,k}}  o^{(L-1)}_{i,j} = \frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}}  (f^{(L)})'(v_{i,k}^{(L)})  o^{(L-1)}_{i,j} \\
 &amp;=\underbrace{D'(\tilde{y}_i) \left(f^{(L+1)} \right)'\left(v^{(L+1)}_{i,k}  \right)}_{\text{computed above!}} w^{(L+1)}_k (f^{(L)})'(v_{i,k}^{(L)})  o^{(L-1)}_{i,j},
 \end{align}\]</span></p>
 <p>where, as we show in the last line, one part of the derivative was already computed in the previous step (Equation <a href="NN.html#eq:backprop1">(7.3)</a>). Hence, we can recycle this number and only focus on the right part of the expression.</p>
@@ -250,7 +250,7 @@ FIGURE 7.6: Diagram of back-propagation.
 <span class="math display" id="eq:gradmom">\[\begin{align}
 \tag{7.4}
 \textbf{W}_{t+1} &amp; \leftarrow  \textbf{W}_{t} - \textbf{m}_t \quad \text{with} \nonumber \\
- \textbf{m}_t &amp; \leftarrow \eta  \frac{\partial D(\tilde{y}_i)}{\partial \textbf{W}_{t}}+\gamma \textbf{m}_{t-1},
+\textbf{m}_t &amp; \leftarrow \eta  \frac{\partial D(\tilde{y}_i)}{\partial \textbf{W}_{t}}+\gamma \textbf{m}_{t-1},
 \end{align}\]</span>
 where <span class="math inline">\(t\)</span> is the index of the weight update. The idea of momentum is to speed up the convergence by including a memory term of the last adjustment (<span class="math inline">\(\textbf{m}_{t-1}\)</span>) and going in the same direction in the current update. The parameter <span class="math inline">\(\gamma\)</span> is often taken to be 0.9.</p>
 <p>More complex and enhanced methods have progressively been developed:<br>
@@ -355,12 +355,12 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <span class="header-section-number">7.4.1</span> Regression example<a class="anchor" aria-label="anchor" href="#regression-example"><i class="fas fa-link"></i></a>
 </h3>
 <p>Before we head to the core of the NN, a short stage of data preparation is required. Just as for penalized regressions (glmnet package) and boosted trees (xgboost package), the data must be sorted into four parts which are the combination of two dichotomies: training versus testing and labels versus features. We define the corresponding variables below. For simplicity, the first example is a regression exercise. A classification task will be detailed below.</p>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">NN_train_features</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span>    <span class="co"># Training features</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                                                      <span class="co"># Matrix = important</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                                                      <span class="co"># Matrix = important</span>
 <span class="va">NN_train_labels</span> <span class="op">&lt;-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>                           <span class="co"># Training labels</span>
 <span class="va">NN_test_features</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>, <span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span>      <span class="co"># Testing features</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                                                      <span class="co"># Matrix = important</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                                                      <span class="co"># Matrix = important</span>
 <span class="va">NN_test_labels</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>                             <span class="co"># Testing labels</span></code></pre></div>
 <p></p>
 <p>In Keras, the training of neural networks is performed through three steps:</p>
@@ -372,32 +372,32 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <li>Train by specifying the batch sizes and number of rounds (epochs).</li>
 </ol>
 <p>We start with a very simple architecture with two hidden layers.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://keras.rstudio.com">keras</a></span><span class="op">)</span>
 <span class="co"># install_keras() # To complete installation</span>
 <span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model</span> <span class="op">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># No activation means linear activation: f(x) = x.</span></code></pre></div>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># No activation means linear activation: f(x) = x.</span></code></pre></div>
 <p></p>
 <p>The definition of the structure is very intuitive and uses the <em>sequential</em> syntax in which one input is iteratively transformed by a layer until the last iteration which gives the output. Each layer depends on two parameters: the number of units and the activation function that is applied to the output of the layer. One important point is the input_shape parameter for the first layer. It is required for the first layer and is equal to the number of features. For the subsequent layers, the input_shape is dictated by the number of units of the previous layer; hence it is not required. The activations that are currently available are listed on <a href="https://keras.io/activations/" class="uri">https://keras.io/activations/</a>. We use the hyperbolic tangent in the second-to-last layer because it yields both positive and negative outputs. Of course, the last layer can generate negative values as well, but it’s preferable to satisfy this property one step ahead of the final output.</p>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>                             <span class="co"># Model specification</span>
-    loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
-    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
+  loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>                                 <span class="co"># Model architecture</span></code></pre></div>
-<pre><code>## Model: "sequential_57"
+<pre><code>## Model: "sequential"
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_186 (Dense)                       (None, 16)                          1504          
+## dense_2 (Dense)                         (None, 16)                          1504          
 ## __________________________________________________________________________________________
-## dense_185 (Dense)                       (None, 8)                           136           
+## dense_1 (Dense)                         (None, 8)                           136           
 ## __________________________________________________________________________________________
-## dense_184 (Dense)                       (None, 1)                           9             
+## dense (Dense)                           (None, 1)                           9             
 ## ==========================================================================================
 ## Total params: 1,649
 ## Trainable params: 1,649
@@ -407,13 +407,13 @@ where the subscripts <span class="math inline">\(k\)</span> and <span class="mat
 <p>The summary of the model lists the layers in their order from input to output (forward pass). Because we are working with 93 features, the number of parameters for the first layer (16 units) is 93 plus one (for the bias) multiplied by 16, which makes 1504. For the second layer, the number of inputs is equal to the size of the output from the previous layer (16). Hence given the fact that the second layer has 8 units, the total number of parameters is (16+1)*8 = 136.</p>
 <p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>, some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross-entropy, see Equation <a href="NN.html#eq:crossentropy">(7.5)</a>). The RMS propragation optimizer is the classical mini-batch back-propagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
 <p>The final stage fits the model to the data and requires some additional training parameters:</p>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_NN</span> <span class="op">&lt;-</span> <span class="va">model</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                       <span class="co"># Training features</span>
-        <span class="va">NN_train_labels</span>,                                         <span class="co"># Training labels</span>
-        epochs <span class="op">=</span> <span class="fl">10</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Training parameters</span>
-        validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, <span class="va">NN_test_labels</span><span class="op">)</span> <span class="co"># Test data</span>
-<span class="op">)</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                       <span class="co"># Training features</span>
+      <span class="va">NN_train_labels</span>,                                         <span class="co"># Training labels</span>
+      epochs <span class="op">=</span> <span class="fl">10</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Training parameters</span>
+      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, <span class="va">NN_test_labels</span><span class="op">)</span> <span class="co"># Test data</span>
+  <span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN</span><span class="op">)</span>                                                     <span class="co"># Plot, evidently!</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span id="fig:NN3"></span>
@@ -427,9 +427,9 @@ FIGURE 7.7: Output from a trained neural network (regression task).
 <p>The second graph shows the same behavior but is computed using the metric function. The correlation (in absolute terms) between the two curves (loss and metric) is usually high. If one of them is flat, the other should be as well.</p>
 <p>In order to obtain the parameters of the model, the user can call get_weights(model).<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In case of package conflicts, use keras::get_weights(model). Indeed, another package in the machine learning landscape, &lt;em&gt;yardstick&lt;/em&gt;, uses the function name “get_weights.”&lt;/p&gt;"><sup>19</sup></a> We do not execute the code here because the size of the output is much too large, as there are thousands of weights.</p>
 <p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">*</span> <span class="va">NN_test_labels</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
-<pre><code>## [1] 0.5455219</code></pre>
+<pre><code>## [1] 0.5455931</code></pre>
 <p></p>
 <p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
 </div>
@@ -439,24 +439,24 @@ FIGURE 7.7: Output from a trained neural network (regression task).
 </h3>
 <p>
 We pursue our exploration of neural networks with a much more detailed example. The aim is to carry out a classification task on the binary label R1M_Usd_C. Before we proceed, we need to format the label properly. To this purpose, we resort to one-hot encoding (see Section <a href="Data.html#categorical-labels">4.5.2</a>).</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.decisionpatterns.com">dummies</a></span><span class="op">)</span>                                            <span class="co"># Package for one-hot encoding</span>
 <span class="va">NN_train_labels_C</span> <span class="op">&lt;-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/dummies/man/dummy.html">dummy</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># One-hot encoding of the label</span>
 <span class="va">NN_test_labels_C</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/dummies/man/dummy.html">dummy</a></span><span class="op">(</span><span class="op">)</span>    <span class="co"># One-hot encoding of the label</span></code></pre></div>
 <p></p>
 <p>The labels NN_train_labels_C and NN_test_labels_C have two columns: the first flags the instances with above median returns and the second flags those with below median returns. Note that we do not alter the feature variables: they remain unchanged. Below, we set the structure of the networks with many additional features compared to the first one.</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model_C</span> <span class="op">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'tanh'</span>,               <span class="co"># Nb units &amp; activation</span>
-                input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span>,         <span class="co"># Size of input</span>
-                kernel_initializer <span class="op">=</span> <span class="st">"random_normal"</span>,          <span class="co"># Initialization of weights</span>
-                kernel_constraint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/constraints.html">constraint_nonneg</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># Weights should be nonneg</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dropout.html">layer_dropout</a></span><span class="op">(</span>rate <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">%&gt;%</span>                             <span class="co"># Dropping out 25% units</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'elu'</span>,                 <span class="co"># Nb units &amp; activation</span>
-                bias_initializer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/initializer_constant.html">initializer_constant</a></span><span class="op">(</span><span class="fl">0.2</span><span class="op">)</span>,  <span class="co"># Initialization of biases</span>
-                kernel_regularizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/regularizer_l1.html">regularizer_l2</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Penalization of weights </span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>             <span class="co"># Softmax for categorical output</span></code></pre></div>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'tanh'</span>,               <span class="co"># Nb units &amp; activation</span>
+              input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span>,         <span class="co"># Size of input</span>
+              kernel_initializer <span class="op">=</span> <span class="st">"random_normal"</span>,          <span class="co"># Initialization of weights</span>
+              kernel_constraint <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/constraints.html">constraint_nonneg</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>   <span class="co"># Weights should be nonneg</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dropout.html">layer_dropout</a></span><span class="op">(</span>rate <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op">%&gt;%</span>                             <span class="co"># Dropping out 25% units</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'elu'</span>,                 <span class="co"># Nb units &amp; activation</span>
+              bias_initializer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/initializer_constant.html">initializer_constant</a></span><span class="op">(</span><span class="fl">0.2</span><span class="op">)</span>,  <span class="co"># Initialization of biases</span>
+              kernel_regularizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/regularizer_l1.html">regularizer_l2</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Penalization of weights </span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>             <span class="co"># Softmax for categorical output</span></code></pre></div>
 <p></p>
 <p>Before we start commenting on the many options used above, we highlight that Keras models, unlike many R variables, are mutable objects. This means that any piping %&gt;% after calling a model will alter it. Hence, successive trainings do not start from scratch but from the result of the previous training.</p>
 <p>First, the options used above and below were chosen as illustrative examples and do not serve to particularly improve the quality of the model. The first change compared to Section <a href="NN.html#regression-example">7.4.1</a> is the activation functions. The first two are simply new cases, while the third one (for the output layer) is imperative. Indeed, since the goal is classification, the dimension of the output must be equal to the number of categories of the labels. The activation that yields a multivariate is the softmax function. Note that we must also specify the number of classes (categories) in the terminal layer.</p>
@@ -464,26 +464,26 @@ We pursue our exploration of neural networks with a much more detailed example. 
 <p>Another family of options is the constraints and norm penalization that are applied on the weights and biases during training. In the above example, the weights of the first layer are coerced to be non-negative, while the weights of the second layer see their magnitude penalized by a factor (0.01) times their <span class="math inline">\(L^2\)</span> norm. </p>
 <p>Lastly, the final novelty is the dropout layer (see Section <a href="NN.html#penalizations-and-dropout">7.3.3</a>) between the first and second layers. According to this layer, one fourth of the units in the first layer will be (randomly) omitted during training.</p>
 <p>The specification of the training is outlined below.</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_C</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>                               <span class="co"># Model specification</span>
-    loss <span class="op">=</span> <span class="st">'binary_crossentropy'</span>,                  <span class="co"># Loss function</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_adam.html">optimizer_adam</a></span><span class="op">(</span>lr <span class="op">=</span> <span class="fl">0.005</span>,         <span class="co"># Optimisation method (weight updating)</span>
-                               beta_1 <span class="op">=</span> <span class="fl">0.9</span>, 
-                               beta_2 <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span>,        
-    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'categorical_accuracy'</span><span class="op">)</span>            <span class="co"># Output metric</span>
+  loss <span class="op">=</span> <span class="st">'binary_crossentropy'</span>,                  <span class="co"># Loss function</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_adam.html">optimizer_adam</a></span><span class="op">(</span>lr <span class="op">=</span> <span class="fl">0.005</span>,         <span class="co"># Optimisation method (weight updating)</span>
+                             beta_1 <span class="op">=</span> <span class="fl">0.9</span>, 
+                             beta_2 <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span>,        
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'categorical_accuracy'</span><span class="op">)</span>            <span class="co"># Output metric</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_C</span><span class="op">)</span>                                   <span class="co"># Model structure</span></code></pre></div>
-<pre><code>## Model: "sequential_58"
+<pre><code>## Model: "sequential_1"
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_189 (Dense)                       (None, 16)                          1504          
+## dense_5 (Dense)                         (None, 16)                          1504          
 ## __________________________________________________________________________________________
-## dropout_7 (Dropout)                     (None, 16)                          0             
+## dropout (Dropout)                       (None, 16)                          0             
 ## __________________________________________________________________________________________
-## dense_188 (Dense)                       (None, 8)                           136           
+## dense_4 (Dense)                         (None, 8)                           136           
 ## __________________________________________________________________________________________
-## dense_187 (Dense)                       (None, 2)                           18            
+## dense_3 (Dense)                         (None, 2)                           18            
 ## ==========================================================================================
 ## Total params: 1,658
 ## Trainable params: 1,658
@@ -492,22 +492,22 @@ We pursue our exploration of neural networks with a much more detailed example. 
 <p></p>
 <p>Here again, many changes have been made: all levels have been revised. The loss is now the cross-entropy. Because we work with two categories, we resort to a specific choice (binary cross-entropy), but the more general form is the option categorical_crossentropy and works for any number of classes (strictly above 1). The optimizer is also different and allows for several parameters and we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba</a> (<a href="solutions-to-exercises.html#ref-kingma2014adam" role="doc-biblioref">2014</a>)</span>. Simply put, the two beta parameters control decay rates for exponentially weighted moving averages used in the update of weights. The two averages are estimates for the first and second moment of the gradient and can be exploited to increase the speed of learning. The performance metric in the above chunk is the categorical accuracy. In multiclass classification, the accuracy is defined as the average accuracy over all classes and all predictions. Since a prediction for one instance is a vector of weights, the ‘terminal’ prediction is the class that is associated with the largest weight. The accuracy then measures the proportion of times when the prediction is equal to the realized value (i.e., when the class is correctly guessed by the model).</p>
 <p>Finally, we proceed with the training of the model.</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_NN_C</span> <span class="op">&lt;-</span> <span class="va">model_C</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                   <span class="co"># Training features</span>
-        <span class="va">NN_train_labels_C</span>,                                   <span class="co"># Training labels</span>
-        epochs <span class="op">=</span> <span class="fl">20</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                       <span class="co"># Training parameters</span>
-        validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, 
-                               <span class="va">NN_test_labels_C</span><span class="op">)</span>,            <span class="co"># Test data</span>
-        verbose <span class="op">=</span> <span class="fl">0</span>,                                         <span class="co"># No comments from algo</span>
-        callbacks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-            <span class="fu"><a href="https://rdrr.io/pkg/keras/man/callback_early_stopping.html">callback_early_stopping</a></span><span class="op">(</span>monitor <span class="op">=</span> <span class="st">"val_loss"</span>,    <span class="co"># Early stopping:</span>
-                                    min_delta <span class="op">=</span> <span class="fl">0.001</span>,       <span class="co"># Improvement threshold</span>
-                                    patience <span class="op">=</span> <span class="fl">3</span>,            <span class="co"># Nb epochs with no improvmt </span>
-                                    verbose <span class="op">=</span> <span class="fl">0</span>              <span class="co"># No warnings</span>
-                                    <span class="op">)</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                   <span class="co"># Training features</span>
+      <span class="va">NN_train_labels_C</span>,                                   <span class="co"># Training labels</span>
+      epochs <span class="op">=</span> <span class="fl">20</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                       <span class="co"># Training parameters</span>
+      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, 
+                             <span class="va">NN_test_labels_C</span><span class="op">)</span>,            <span class="co"># Test data</span>
+      verbose <span class="op">=</span> <span class="fl">0</span>,                                         <span class="co"># No comments from algo</span>
+      callbacks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/keras/man/callback_early_stopping.html">callback_early_stopping</a></span><span class="op">(</span>monitor <span class="op">=</span> <span class="st">"val_loss"</span>,    <span class="co"># Early stopping:</span>
+                                min_delta <span class="op">=</span> <span class="fl">0.001</span>,       <span class="co"># Improvement threshold</span>
+                                patience <span class="op">=</span> <span class="fl">3</span>,            <span class="co"># Nb epochs with no improvmt </span>
+                                verbose <span class="op">=</span> <span class="fl">0</span>              <span class="co"># No warnings</span>
         <span class="op">)</span>
-    <span class="op">)</span>
+      <span class="op">)</span>
+  <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN_C</span><span class="op">)</span> </code></pre></div>
 <div class="figure" style="text-align: center">
 <span id="fig:NN3C"></span>
@@ -527,40 +527,40 @@ FIGURE 7.8: Output from a trained neural network (classification task) with earl
 </h3>
 <p>
 In Keras, it is possible to define user-specified loss functions. This may be interesting in some cases. For instance, the quadratic error has three terms <span class="math inline">\(y_i^2\)</span>, <span class="math inline">\(\tilde{y}_i^2\)</span> and <span class="math inline">\(-2y_i\tilde{y}_i\)</span>. In practice, it can make sense to focus more on the latter term because it is the most essential: we do want predictions and realized values to have the same sign! Below we show how to optimize on a simple (product) function in Keras, <span class="math inline">\(l(y_i,\tilde{y}_i)=(\tilde{y}_i-\tilde{m})^2-\gamma (y_i-m)(\tilde{y}_i-\tilde{m})\)</span>, where <span class="math inline">\(m\)</span> and <span class="math inline">\(\tilde{m}\)</span> are the sample averages of <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\tilde{y}_i\)</span>. With <span class="math inline">\(\gamma&gt;2\)</span>, we give more weight to the cross term. We start with a simple architecture.</p>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_custom</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model_custom</span> <span class="op">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># No activation means linear activation: f(x) = x.</span></code></pre></div>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># No activation means linear activation: f(x) = x.</span></code></pre></div>
 <p></p>
 <p>Then we code the loss function and integrate it to the model. The important trick is to resort to functions that are specific to the library (the k_<em>functions</em>). We code the variance of predicted values minus the scaled covariance between realized and predicted values. Below we use a scale of five.</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Defines the loss, we use gamma = 5</span>
 <span class="va">metric_cust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/metric_binary_accuracy.html">custom_metric</a></span><span class="op">(</span><span class="st">"custom_loss"</span>, 
                              <span class="kw">function</span><span class="op">(</span><span class="va">y_true</span>, <span class="va">y_pred</span><span class="op">)</span> <span class="op">{</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_true</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_true</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span>
+                               <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">5</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_true</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_true</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+                             <span class="op">}</span><span class="op">)</span>
 
 <span class="va">model_custom</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>                                          <span class="co"># Model specification</span>
-    loss <span class="op">=</span>  <span class="va">metric_cust</span>, <span class="co">#function(y_true, y_pred) custom_loss(y_true, y_pred),  # New loss function!</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,                               <span class="co"># Optim method </span>
-    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>                             <span class="co"># Output metric</span>
+  loss <span class="op">=</span>  <span class="va">metric_cust</span>, <span class="co">#function(y_true, y_pred) custom_loss(y_true, y_pred),  # New loss function!</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,                               <span class="co"># Optim method </span>
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>                             <span class="co"># Output metric</span>
 <span class="op">)</span></code></pre></div>
 <p></p>
 <p>Finally, we are ready to train and briefly evaluate the performance of the model.</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_NN_cust</span> <span class="op">&lt;-</span> <span class="va">model_custom</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                       <span class="co"># Training features</span>
-        <span class="va">NN_train_labels</span>,                                         <span class="co"># Training labels</span>
-        epochs <span class="op">=</span> <span class="fl">10</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Training parameters</span>
-        validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, <span class="va">NN_test_labels</span><span class="op">)</span> <span class="co"># Test data</span>
-<span class="op">)</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                       <span class="co"># Training features</span>
+      <span class="va">NN_train_labels</span>,                                         <span class="co"># Training labels</span>
+      epochs <span class="op">=</span> <span class="fl">10</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Training parameters</span>
+      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, <span class="va">NN_test_labels</span><span class="op">)</span> <span class="co"># Test data</span>
+  <span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN_cust</span><span class="op">)</span>   </code></pre></div>
 <div class="inline-figure"><img src="ML_factor_files/figure-html/NN2cust-1.png" width="672"></div>
 <p></p>
 <p>The curves may go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns.</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model_custom</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">*</span> <span class="va">NN_test_labels</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.4468722</code></pre>
 <p></p>
@@ -618,9 +618,9 @@ In compact form, this gives
 </ol>
 <p>For simplicity and in order to reduce computation times, we will use the same subset of stocks as that from Section <a href="lasso.html#sparseex">5.2.2</a>. This yields a perfectly rectangular dataset in which all dates have the same number of observations.</p>
 <p>First, we create some new, intermediate variables.</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_rnn</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span>                                  <span class="co"># Dedicated dataset</span>
-    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">%in%</span> <span class="va">stock_ids_short</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">%in%</span> <span class="va">stock_ids_short</span><span class="op">)</span>
 <span class="va">training_sample_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">data_rnn</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="va">separation_date</span><span class="op">)</span>
 <span class="va">testing_sample_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">data_rnn</span>, <span class="va">date</span> <span class="op">&gt;</span> <span class="va">separation_date</span><span class="op">)</span>
 <span class="va">nb_stocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">stock_ids_short</span><span class="op">)</span>                     <span class="co"># Nb stocks </span>
@@ -629,42 +629,42 @@ In compact form, this gives
 <span class="va">nb_dates_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">)</span> <span class="op">/</span> <span class="va">nb_stocks</span>        <span class="co"># Nb testing dates</span></code></pre></div>
 <p></p>
 <p>Then, we construct the variables we will pass as arguments. We recall that the data file was ordered first by stocks and then by date (see Section <a href="notdata.html#dataset">1.2</a>).</p>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">train_features_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span><span class="va">NN_train_features</span>,           <span class="co"># Formats the training data into array</span>
                             dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_train</span>, <span class="va">nb_stocks</span>, <span class="va">nb_feats</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="co"># Tricky order</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>                                      <span class="co"># The order is: stock, date, feature </span>
+  <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>                                      <span class="co"># The order is: stock, date, feature </span>
 <span class="va">test_features_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span><span class="va">NN_test_features</span>,             <span class="co"># Formats the testing data into array</span>
-                            dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_test</span>, <span class="va">nb_stocks</span>, <span class="va">nb_feats</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># Tricky order</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>                                      <span class="co"># The order is: stock, date, feature </span>
+                           dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_test</span>, <span class="va">nb_stocks</span>, <span class="va">nb_feats</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># Tricky order</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>                                      <span class="co"># The order is: stock, date, feature </span>
 <span class="va">train_labels_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">NN_train_labels</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_train</span>, <span class="va">nb_stocks</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_train</span>, <span class="va">nb_stocks</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>
 <span class="va">test_labels_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">NN_test_labels</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_test</span>, <span class="va">nb_stocks</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+  <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_test</span>, <span class="va">nb_stocks</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p></p>
 <p>Finally, we move towards the training part. For simplicity, we only consider a simple RNN with only one layer. The structure is outlined below. In terms of recurrence structure, we pick a Gated Recurrent Unit (GRU). </p>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_RNN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_gru.html">layer_gru</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>,                              <span class="co"># Nb units in hidden layer</span>
-              batch_input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_stocks</span>,         <span class="co"># Dimensions = tricky part!</span>
-                                    <span class="va">nb_dates_train</span>, 
-                                    <span class="va">nb_feats</span><span class="op">)</span>, 
-              activation <span class="op">=</span> <span class="st">'tanh'</span>,                     <span class="co"># Activation function</span>
-              return_sequences <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>             <span class="co"># Return all the sequence</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                             <span class="co"># Final aggregation layer</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_gru.html">layer_gru</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>,                              <span class="co"># Nb units in hidden layer</span>
+            batch_input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_stocks</span>,         <span class="co"># Dimensions = tricky part!</span>
+                                  <span class="va">nb_dates_train</span>, 
+                                  <span class="va">nb_feats</span><span class="op">)</span>, 
+            activation <span class="op">=</span> <span class="st">'tanh'</span>,                     <span class="co"># Activation function</span>
+            return_sequences <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>             <span class="co"># Return all the sequence</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                             <span class="co"># Final aggregation layer</span>
 <span class="va">model_RNN</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>
-    loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,                       <span class="co"># Loss = quadratic</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,                   <span class="co"># Backprop</span>
-    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>                 <span class="co"># Output metric MAE</span>
+  loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,                       <span class="co"># Loss = quadratic</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,                   <span class="co"># Backprop</span>
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>                 <span class="co"># Output metric MAE</span>
 <span class="op">)</span></code></pre></div>
 <p></p>
 <p>There are many options available for recurrent layers. For GRUs, we refer to the Keras documentation <a href="https://keras.rstudio.com/reference/layer_gru.html" class="uri">https://keras.rstudio.com/reference/layer_gru.html</a>. We comment briefly on the option return_sequences which we activate. In many cases, the output is simply the terminal value of the sequence. If we do not require the entirety of the sequence to be returned, we will face a problem in the dimensionality because the label is indeed a full sequence.
 Once the structure is determined, we can move forward to the training stage.</p>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_RNN</span> <span class="op">&lt;-</span> <span class="va">model_RNN</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">train_features_rnn</span>,   <span class="co"># Training features        </span>
-                  <span class="va">train_labels_rnn</span>,                <span class="co"># Training labels</span>
-                  epochs <span class="op">=</span> <span class="fl">10</span>,                     <span class="co"># Number of rounds</span>
-                  batch_size <span class="op">=</span> <span class="va">nb_stocks</span>,          <span class="co"># Length of sequences</span>
-                  verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>                     <span class="co"># No comments</span>
+                             <span class="va">train_labels_rnn</span>,                <span class="co"># Training labels</span>
+                             epochs <span class="op">=</span> <span class="fl">10</span>,                     <span class="co"># Number of rounds</span>
+                             batch_size <span class="op">=</span> <span class="va">nb_stocks</span>,          <span class="co"># Length of sequences</span>
+                             verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>                     <span class="co"># No comments</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_RNN</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span id="fig:RNN2"></span>
@@ -674,22 +674,22 @@ FIGURE 7.10: Output from a trained recurrent neural network (regression task).
 </div>
 <p></p>
 <p>Compared to our previous models, the major difference both in the ouptut (the graph on Figure <a href="NN.html#fig:RNN2">7.10</a>) and the input (the code) is the absence of validation (or testing) data. One reason for that is because Keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.</p>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">new_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_gru.html">layer_gru</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, 
-              batch_input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_stocks</span>,          <span class="co"># New dimensions</span>
-                                    <span class="va">nb_dates_test</span>, 
-                                    <span class="va">nb_feats</span><span class="op">)</span>, 
-              activation <span class="op">=</span> <span class="st">'tanh'</span>,                      <span class="co"># Activation function</span>
-              return_sequences <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>              <span class="co"># Return the full sequence</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                              <span class="co"># Output dimension</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_gru.html">layer_gru</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, 
+            batch_input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_stocks</span>,          <span class="co"># New dimensions</span>
+                                  <span class="va">nb_dates_test</span>, 
+                                  <span class="va">nb_feats</span><span class="op">)</span>, 
+            activation <span class="op">=</span> <span class="st">'tanh'</span>,                      <span class="co"># Activation function</span>
+            return_sequences <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>              <span class="co"># Return the full sequence</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                              <span class="co"># Output dimension</span>
 <span class="va">new_model</span> <span class="op">%&gt;%</span> <span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/get_weights.html">set_weights</a></span><span class="op">(</span><span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/get_weights.html">get_weights</a></span><span class="op">(</span><span class="va">model_RNN</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p></p>
 <p>Finally, once the new model is ready, and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.</p>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pred_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">new_model</span>, <span class="va">test_features_rnn</span>, batch_size <span class="op">=</span> <span class="va">nb_stocks</span><span class="op">)</span> <span class="co"># Predictions</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">pred_rnn</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">test_labels_rnn</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>           <span class="co"># Hit ratio</span></code></pre></div>
-<pre><code>## [1] 0.4976786</code></pre>
+<pre><code>## [1] 0.4983234</code></pre>
 <p></p>
 <p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
 <p>Before we close this section on RNNs, we mention a new type architecture, called <span class="math inline">\(\alpha\)</span>-RNN which are simpler compared to LSTMs and GRUs. They consist in vanilla RNNs to which a simple autocorrelation is added to generate long term memory. We refer to the paper <span class="citation"><a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">Matthew F. Dixon</a> (<a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span> for more details on this subject.</p>
@@ -754,7 +754,52 @@ FIGURE 7.11: Softmax versus sparsemax in 1 dimension.
 <h3>
 <span class="header-section-number">7.6.5</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results-3"><i class="fas fa-link"></i></a>
 </h3>
-<p>[Under construction]</p>
+<p>In R, TabNets are coded via the <strong>torch</strong> framework. They require both packages torch &amp; tabnet to be installed. We start by defining the network structure, i.e., setting the hyperparameters. We also resort to the package <strong>parsnip</strong> from the <strong>tidymodels</strong> suite, which allows a uniform grammar in model declaration.</p>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs">torch</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"torch"</span>, <span class="st">"tabnet"</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs">torch</a></span><span class="op">)</span>          <span class="co"># General framework for NNs</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">tabnet</span><span class="op">)</span>         <span class="co"># Package for tabular networks</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/recipes">recipes</a></span><span class="op">)</span>        <span class="co"># Uniform ML models</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>            <span class="co"># Random seed</span>
+
+<span class="va">tab_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tabnet/man/tabnet.html">tabnet</a></span><span class="op">(</span>
+  mode <span class="op">=</span> <span class="st">"regression"</span>,  <span class="co"># ML task</span>
+  epochs <span class="op">=</span> <span class="fl">5</span>,           <span class="co"># Nb epochs / rounds</span>
+  batch_size <span class="op">=</span> <span class="fl">4000</span>,    <span class="co"># Batch size</span>
+  virtual_batch_size <span class="op">=</span> <span class="fl">1024</span>,
+  penalty <span class="op">=</span> <span class="fl">1</span>,
+  learn_rate <span class="op">=</span> <span class="fl">0.01</span>,
+  decision_width <span class="op">=</span> <span class="fl">16</span>,
+  attention_width <span class="op">=</span> <span class="fl">8</span>,
+  num_independent <span class="op">=</span> <span class="fl">1</span>,
+  num_shared <span class="op">=</span> <span class="fl">1</span>,
+  num_steps <span class="op">=</span> <span class="fl">5</span>,
+  momentum <span class="op">=</span> <span class="fl">0.02</span>
+<span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"torch"</span><span class="op">)</span></code></pre></div>
+<p>Next, we provide the features and label required to learn. We train it on a smaller dataset for simplicity. Note that the syntax is the same as that of simple models in R (e.g., generalized linear models).</p>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_short</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span>         <span class="co"># Shorter dataset</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">%in%</span> <span class="va">stock_ids_short</span>,
+         <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="st">"date"</span>, <span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">fit_tabnet</span> <span class="op">&lt;-</span> <span class="va">tab_model</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">~</span> <span class="va">Div_Yld</span> <span class="op">+</span> <span class="va">Eps</span> <span class="op">+</span> <span class="va">Mkt_Cap_12M_Usd</span> <span class="op">+</span> <span class="va">Mom_11M_Usd</span> <span class="op">+</span> <span class="va">Pb</span> <span class="op">+</span> <span class="va">Vol1Y_Usd</span>, 
+      data <span class="op">=</span> <span class="va">data_short</span><span class="op">)</span> </code></pre></div>
+<p>Finally, we make some predictions and compute the hit ratio.</p>
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tab_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tabnet</span>,
+                    <span class="va">data_ml</span> <span class="op">%&gt;%</span>                                                <span class="co"># A test set</span>
+                      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">%in%</span> <span class="va">stock_ids_short</span>,
+                                    <span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+                      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="st">"date"</span>, <span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">data_ml</span> <span class="op">%&gt;%</span>                                                <span class="co"># A test set</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">%in%</span> <span class="va">stock_ids_short</span>,
+                <span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">pull</span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">tab_pred</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.4896432</code></pre>
 </div>
 </div>
 <div id="other-common-architectures" class="section level2" number="7.7">
@@ -935,7 +980,7 @@ FIGURE 7.15: Goal: approximate this simple function.
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-05-25.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-05-30.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
