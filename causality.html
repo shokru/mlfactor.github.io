@@ -100,7 +100,7 @@ Y_t&amp;=\sum_{j=1}^mc_jX_{t-j}+\sum_{j=1}^md_jY_{t-j} + \nu_t
 where for simplicity, it is assumed that both processes have zero mean. The usual assumptions apply: the Gaussian noises <span class="math inline">\(\epsilon_t\)</span> and <span class="math inline">\(\nu_t\)</span> are uncorrelated in every possible way (mutually and through time). The test is the following: if one <span class="math inline">\(b_j\)</span> is nonzero, then it is said that <span class="math inline">\(Y\)</span> Granger-causes <span class="math inline">\(X\)</span> and if one <span class="math inline">\(c_j\)</span> is nonzero, <span class="math inline">\(X\)</span> Granger-causes <span class="math inline">\(Y\)</span>. The two are not mutually exclusive and it is widely accepted that feedback loops can very well occur.</p>
 <p>Statistically, under the null hypothesis, <span class="math inline">\(b_1=\dots=b_m=0\)</span> (<em>resp.</em> <span class="math inline">\(c_1=\dots=c_m=0\)</span>), which can be tested using the usual Fischer distribution. Obviously, the linear restriction can be dismissed but the tests are then much more complex. The main financial article in this direction is <span class="citation"><a href="solutions-to-exercises.html#ref-hiemstra1994testing" role="doc-biblioref">Hiemstra and Jones</a> (<a href="solutions-to-exercises.html#ref-hiemstra1994testing" role="doc-biblioref">1994</a>)</span>.</p>
 <p>There are many R packages that embed Granger causality functionalities. One of the most widespread is <em>lmtest</em>, so we work with it below. The syntax is incredibly simple. The <em>order</em> is the maximum lag <span class="math inline">\(m\)</span> in the above equation. We test if market capitalization averaged over the past 6 months Granger-causes 1 month ahead returns for one particular stock (the first in the sample).</p>
-<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">lmtest</span><span class="op">)</span>
 <span class="va">x_granger</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span>                            <span class="co"># X variable =...</span>
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span>     <span class="co"># ... stock nb 1</span>
@@ -176,7 +176,7 @@ X_j=\sum_{k\in \text{pa}_D(j)}f_{j,k}\left(\textbf{X}_{k}  \right)+\epsilon_j,
 <p>where the nonlinear effect of each variable is cumulative, hence the term ‘<em>additive</em>.’ Note that there is no time index there. In contrast to Granger causality, there is no natural ordering. Such models are very complex and hard to estimate. The details can be found in <span class="citation"><a href="solutions-to-exercises.html#ref-buhlmann2014cam" role="doc-biblioref">Bühlmann et al.</a> (<a href="solutions-to-exercises.html#ref-buhlmann2014cam" role="doc-biblioref">2014</a>)</span>. Fortunately, the authors have developed an R package that determines the DAG <span class="math inline">\(D\)</span>.</p>
 <p>Below, we build the adjacency matrix pertaining to the small set of predictor variables plus the 1-month ahead return (on the training sample). The original version of the book used the <em>CAM</em> package which has a very simple syntax.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The CAM package was removed from CRAN in November 2019 but can still be installed manually. First, download the content of the package: &lt;a href="https://cran.r-project.org/web/packages/CAM/index.html" class="uri"&gt;https://cran.r-project.org/web/packages/CAM/index.html&lt;/a&gt;. Second, copy it in the directory obtained by typing &lt;em&gt;.libPaths()&lt;/em&gt; in the console.&lt;/p&gt;'><sup>29</sup></a> Below, we test the more recent <em>InvariantCausalPrediction</em> package.</p>
 <p>[[<strong>NOTE</strong>: the remainder of the subsection is under revision.]]</p>
-<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># library(CAM)                # Activate the package</span>
 <span class="va">data_caus</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1M_Usd"</span>, <span class="va">features_short</span><span class="op">)</span><span class="op">)</span>
 <span class="co"># fit_cam &lt;- CAM(data_caus)   # The main function</span>
@@ -200,7 +200,7 @@ X_j=\sum_{k\in \text{pa}_D(j)}f_{j,k}\left(\textbf{X}_{k}  \right)+\epsilon_j,
 <p></p>
 <p>The matrix is not too sparse, which means that the model has uncovered many relationships between the variables within the sample. Sadly, none are in the direction that is of interest for the prediction task that we seek. Indeed, the first variable is the one we want to predict and its column is empty. However, its row is full, which indicates the reverse effect: future returns cause the predictor values, which may seem rather counter-intuitive, given the nature of features.</p>
 <p>For the sake of completeness, we also provide an implementation of the <em>pcalg</em> package (<span class="citation"><a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">Kalisch et al.</a> (<a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">2012</a>)</span>).<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Another possible choice is the &lt;em&gt;baycn&lt;/em&gt; package documented in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-martin2019bayesian" role="doc-biblioref"&gt;E. A. Martin and Fu&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-martin2019bayesian" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>30</sup></a> Below, an estimation via the so-called PC (named after its authors <strong>P</strong>eter Spirtes and <strong>C</strong>lark Glymour) is performed. The details of the algorithm are out of the scope of the book, and the interested reader can have a look at section 5.4 of <span class="citation"><a href="solutions-to-exercises.html#ref-spirtes2000causation" role="doc-biblioref">Spirtes et al.</a> (<a href="solutions-to-exercises.html#ref-spirtes2000causation" role="doc-biblioref">2000</a>)</span> or section 2 from <span class="citation"><a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">Kalisch et al.</a> (<a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">2012</a>)</span> for more information on this subject. We use the <em>Rgraphviz</em> package available at <a href="https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html" class="uri">https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html</a>.</p>
-<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://pcalg.r-forge.r-project.org/">pcalg</a></span><span class="op">)</span>                                             <span class="co"># Load packages</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Rgraphviz</span><span class="op">)</span>
 <span class="va">est_caus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>C <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">data_caus</span><span class="op">)</span>,  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">data_caus</span><span class="op">)</span><span class="op">)</span> <span class="co"># Compute correlations</span>
@@ -229,7 +229,7 @@ y_t&amp;=\textbf{Z}_t'\boldsymbol{\alpha}_t+\epsilon_t \\
 <p>The dependent variable is expressed as a linear function of state variables <span class="math inline">\(\boldsymbol{\alpha}_t\)</span> plus an error term. These variables are in turn linear functions of their past values plus another error term which can have a complex structure (it’s a product of a matrix <span class="math inline">\(\textbf{R}_t\)</span> with a centered Gaussian term <span class="math inline">\(\boldsymbol{\eta}_t\)</span>). This specification nests many models as special cases, like ARIMA for instance.</p>
 <p>The goal of <span class="citation"><a href="solutions-to-exercises.html#ref-brodersen2015inferring" role="doc-biblioref">Brodersen et al.</a> (<a href="solutions-to-exercises.html#ref-brodersen2015inferring" role="doc-biblioref">2015</a>)</span> is to detect causal impacts via regime changes. They estimate the above model over a given training period and then predict the model’s response on some test set. If the aggregate (summed/integrated) error between the realized versus predicted values is significant (based on some statistical test), then the authors conclude that the breaking point is relevant. Originally, the aim of the approach is to quantify the effect of an intervention by looking at how a model trained before the intervention behaves after the intervention.</p>
 <p>Below, we test if the 100<span class="math inline">\(^{th}\)</span> date point in the sample (April 2008) is a turning point. Arguably, this date belongs to the time span of the subprime financial crisis. We use the <em>CausalImpact</em> package which uses the <em>bsts</em> library (Bayesian structural time series).</p>
-<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://google.github.io/CausalImpact/">CausalImpact</a></span><span class="op">)</span>
 <span class="va">stock1_data</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>          <span class="co"># Data of first stock</span>
 <span class="va">struct_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">stock1_data</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op">%&gt;%</span>    <span class="co"># Combine label...</span>
@@ -242,24 +242,24 @@ y_t&amp;=\textbf{Z}_t'\boldsymbol{\alpha}_t+\epsilon_t \\
 ## 
 ##                          Average            Cumulative      
 ## Actual                   0.016              1.638           
-## Prediction (s.d.)        0.031 (0.017)      3.091 (1.712)   
-## 95% CI                   [-0.0023, 0.064]   [-0.2331, 6.430]
+## Prediction (s.d.)        0.031 (0.017)      3.091 (1.675)   
+## 95% CI                   [-0.0039, 0.064]   [-0.3853, 6.350]
 ##                                                             
-## Absolute effect (s.d.)   -0.015 (0.017)     -1.453 (1.712)  
-## 95% CI                   [-0.048, 0.019]    [-4.792, 1.871] 
+## Absolute effect (s.d.)   -0.015 (0.017)     -1.453 (1.675)  
+## 95% CI                   [-0.047, 0.02]     [-4.712, 2.02]  
 ##                                                             
-## Relative effect (s.d.)   -47% (55%)         -47% (55%)      
-## 95% CI                   [-155%, 61%]       [-155%, 61%]    
+## Relative effect (s.d.)   -47% (54%)         -47% (54%)      
+## 95% CI                   [-152%, 65%]       [-152%, 65%]    
 ## 
-## Posterior tail-area probability p:   0.19309
-## Posterior prob. of a causal effect:  81%
+## Posterior tail-area probability p:   0.18496
+## Posterior prob. of a causal effect:  82%
 ## 
 ## For more details, type: summary(impact, "report")</code></pre>
-<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#summary(impact, "report")                                # Get the full report (see below)</span></code></pre></div>
 <p></p>
 <p>The time series associated with the model are shown in Figure <a href="causality.html#fig:structbayplot">14.2</a>.</p>
-<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb222"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span></code></pre></div>
 <div class="figure">
 <span id="fig:structbayplot"></span>
@@ -307,7 +307,7 @@ In matrix terms, <span class="math inline">\(L=(\textbf{y}-\textbf{Xb})'\textbf{
 <p>One of the most basic practices in (financial) econometrics is to work with returns (relative price changes). The simple reason is that returns seem to behave consistently through time (monthly returns are bounded, they usually lie between -1 and +1). Prices on the other hand shift and, often, some prices never come back to past values. This makes prices harder to study.</p>
 <p>Stationarity is a key notion in financial econometrics: it is much easier to characterize a phenomenon with distributional properties that remain the same through time (this makes them possible to capture). Sadly, the distribution of returns is not stationary: both the mean and the variance of returns change along cycles.</p>
 <p>Below, in Figure <a href="causality.html#fig:statplot">14.4</a>, we illustrate this fact by computing the average monthly return for all calendar years in the whole dataset.</p>
-<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb223"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>          <span class="co"># Create a year variable</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">%&gt;%</span>                     <span class="co"># Group by year</span>
@@ -322,7 +322,7 @@ FIGURE 14.4: Average monthly return on a yearly basis.
 <p></p>
 <p>These changes in the mean are also accompanied by variations in the second moment (variance/volatility). This effect, known as volatility clustering, has been widely documented ever since the theoretical breakthrough of <span class="citation"><a href="solutions-to-exercises.html#ref-engle1982autoregressive" role="doc-biblioref">Engle</a> (<a href="solutions-to-exercises.html#ref-engle1982autoregressive" role="doc-biblioref">1982</a>)</span> (and even well before). We refer for instance to <span class="citation"><a href="solutions-to-exercises.html#ref-cont2007volatility" role="doc-biblioref">Cont</a> (<a href="solutions-to-exercises.html#ref-cont2007volatility" role="doc-biblioref">2007</a>)</span> for more details on this topic. For the computation of realized volatility in R, we strongly recommend chapter 4 in <span class="citation"><a href="solutions-to-exercises.html#ref-regenstein2018reproducible" role="doc-biblioref">Regenstein</a> (<a href="solutions-to-exercises.html#ref-regenstein2018reproducible" role="doc-biblioref">2018</a>)</span>.</p>
 <p>In terms of machine learning models, this is also true. Below, we estimate a pure characteristic regression with one predictor, the market capitalization averaged over the past 6-months (<span class="math inline">\(r_{t+1,n}=\alpha+\beta x_{t,n}^{\text{cap}}+\epsilon_{t+1,n}\)</span>). The label is the 6-month forward return and the estimation is performed over every calendar year.</p>
-<div class="sourceCode" id="cb220"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>                           <span class="co"># Create a year variable</span>
     <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">%&gt;%</span>                                      <span class="co"># Group by year</span>
@@ -466,7 +466,7 @@ More generally, the above expression can be viewed as a theoretical invitation f
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-05-25.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-07-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

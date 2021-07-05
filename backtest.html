@@ -347,7 +347,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <li>the performance indicators.</li>
 </ol>
 <p>Accordingly, we start with initializations.</p>
-<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb182"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sep_oos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2007-01-01"</span><span class="op">)</span>                            <span class="co"># Starting point for backtest</span>
 <span class="va">ticks</span> <span class="op">&lt;-</span> <span class="va">data_ml</span><span class="op">$</span><span class="va">stock_id</span> <span class="op">%&gt;%</span>                               <span class="co"># List of all asset ids</span>
     <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -363,7 +363,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p></p>
 <p>This first step is crucial, it lays the groundwork for the core of the backtest. We consider only two strategies: one ML-based and the EW (1/N) benchmark. The main (weighting) function will consist of these two components, but we define the sophisticated one in a dedicated wrapper. The ML-based weights are derived from XGBoost predictions with 80 trees, a learning rate of 0.3 and a maximum tree depth of 4. This makes the model complex but not exceedingly so. Once the predictions are obtained, the weighting scheme is simple: it is an EW portfolio over the best half of the stocks (those with above median prediction).</p>
 <p>In the function below, all parameters (e.g., the learning rate, <em>eta</em> or the number of trees <em>nrounds</em>) are hard-coded. They can easily be passed in arguments next to the data inputs. One very important detail is that in contrast to the rest of the book, the label is the 12-month future return. The main reason for this is rooted in the discussion from Section <a href="Data.html#pers">4.6</a>. Also, to speed up the computations, we remove the bulk of the distribution of the labels and keep only the top 20% and bottom 20%, as is advised in <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>. The filtering levels could also be passed as arguments.</p>
-<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">weights_xgb</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_data</span>, <span class="va">test_data</span>, <span class="va">features</span><span class="op">)</span><span class="op">{</span> 
     <span class="va">train_features</span> <span class="op">&lt;-</span> <span class="va">train_data</span> <span class="op">%&gt;%</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Indep. variable</span>
     <span class="va">train_label</span> <span class="op">&lt;-</span> <span class="va">train_data</span><span class="op">$</span><span class="va">R12M_Usd</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">train_data</span><span class="op">$</span><span class="va">Vol1Y_Usd</span><span class="op">)</span>            <span class="co"># Dep. variable</span>
@@ -394,7 +394,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p></p>
 <p>Compared to the structure proposed in Section <a href="trees.html#boostcode">6.4.6</a>, the differences are that the label is not only based on <strong>long-term</strong> returns, but it also relies on a volatility component. Even though the denominator in the label is the exponential quantile of the volatility, it seems fair to say that it is inspired by the Sharpe ratio and that the model seeks to explain and forecast a risk-adjusted return instead of a <em>raw</em> return. A stock with very low volatility will have its return unchanged in the label, while a stock with very high volatility will see its return divided by a factor close to three (exp(1)=2.718).</p>
 <p>This function is then embedded in the global weighting function which only wraps two schemes: the EW benchmark and the ML-based policy.</p>
-<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">portf_compo</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_data</span>, <span class="va">test_data</span>, <span class="va">features</span>, <span class="va">j</span><span class="op">)</span><span class="op">{</span> 
     <span class="kw">if</span><span class="op">(</span><span class="va">j</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>                                 <span class="co"># This is the benchmark</span>
         <span class="va">N</span> <span class="op">&lt;-</span> <span class="va">test_data</span><span class="op">$</span><span class="va">stock_id</span> <span class="op">%&gt;%</span>             <span class="co"># Test data dictates allocation</span>
@@ -410,7 +410,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Equipped with this function, we can turn to the main backtesting loop. Given the fact that we use a large-scale model, the computation time for the loop is large (possibly a few hours on a slow machine with CPU). Resorting to functional programming can speed up the loop (see exercise at the end of the chapter). Also, a simple benchmark equally weighted portfolio can be coded with tidyverse functions only.</p>
-<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m_offset</span> <span class="op">&lt;-</span> <span class="fl">12</span>                                          <span class="co"># Offset in months for buffer period</span>
 <span class="va">train_size</span> <span class="op">&lt;-</span> <span class="fl">5</span>                                         <span class="co"># Size of training set in years</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">t_oos</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>                          <span class="co"># Stop before last date: no fwd ret.!</span>
@@ -441,7 +441,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p></p>
 <p>There are two important comments to be made on the above code. The first comment pertains to the two parameters that are defined in the first lines. They refer to the size of the training sample (5 years) and the length of the buffer period shown in Figure <a href="backtest.html#fig:backtestoos2">12.2</a>. This <strong>buffer period is imperative</strong> because the label is based on a long-term (12-month) return. This lag is compulsory to avoid any forward-looking bias in the backtest.</p>
 <p>Below, we create a function that computes the turnover (variation in weights). It requires both the weight values as well as the returns of all assets because the weights just before a rebalancing depend on the weights assigned in the previous period, as well as on the returns of the assets that have altered these original weights during the holding period.</p>
-<div class="sourceCode" id="cb183"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb187"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">turnover</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">weights</span>, <span class="va">asset_returns</span>, <span class="va">t_oos</span><span class="op">)</span><span class="op">{</span> 
     <span class="va">turn</span> <span class="op">&lt;-</span> <span class="fl">0</span>
     <span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">t_oos</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
@@ -453,7 +453,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Once turnover is defined, we embed it into a function that computes several key indicators.</p>
-<div class="sourceCode" id="cb184"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">perf_met</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">portf_returns</span>, <span class="va">weights</span>, <span class="va">asset_returns</span>, <span class="va">t_oos</span><span class="op">)</span><span class="op">{</span> 
     <span class="va">avg_ret</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">portf_returns</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>                     <span class="co"># Arithmetic mean </span>
     <span class="va">vol</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">portf_returns</span>, na.rm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>                           <span class="co"># Volatility</span>
@@ -472,7 +472,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Lastly, we build a function that loops on the various strategies.</p>
-<div class="sourceCode" id="cb185"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">perf_met_multi</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">portf_returns</span>, <span class="va">weights</span>, <span class="va">asset_returns</span>, <span class="va">t_oos</span>, <span class="va">strat_name</span><span class="op">)</span><span class="op">{</span>
     <span class="va">J</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">weights</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>              <span class="co"># Number of strategies </span>
     <span class="va">met</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">)</span>                        <span class="co"># Initialization of metrics</span>
@@ -485,7 +485,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Given the weights and returns of the portfolios, it remains to compute the returns of the assets to plug them in the aggregate metrics function.</p>
-<div class="sourceCode" id="cb186"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">asset_returns</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op">%&gt;%</span>                          <span class="co"># Compute return matrix: start from data</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">stock_id</span>, <span class="va">R1M_Usd</span><span class="op">)</span> <span class="op">%&gt;%</span>        <span class="co"># Keep 3 attributes </span>
     <span class="fu">spread</span><span class="op">(</span>key <span class="op">=</span> <span class="va">stock_id</span>, value <span class="op">=</span> <span class="va">R1M_Usd</span><span class="op">)</span>           <span class="co"># Shape in matrix format</span>
@@ -503,7 +503,7 @@ What follows is a generalization of the content of Section <a href="lasso.html#s
 <p></p>
 <p>The ML-based strategy performs finally well! The gain is mostly obtained by the average return, while the volatility is higher than that of the benchmark. The net effect is that the Sharpe ratio is improved compared to the benchmark. The augmentation is not breathtaking, but (hence?) it seems reasonable. It is noteworthy to underline that turnover is substantially higher for the sophisticated strategy. Removing costs in the numerator (say, 0.005 times the turnover, as in <span class="citation"><a href="solutions-to-exercises.html#ref-goto2015improving" role="doc-biblioref">Goto and Xu</a> (<a href="solutions-to-exercises.html#ref-goto2015improving" role="doc-biblioref">2015</a>)</span>, which is a conservative figure) only mildly reduces the superiority in Sharpe ratio of the ML-based strategy.</p>
 <p>Finally, it is always tempting to plot the corresponding portfolio values and we display two related graphs in Figure <a href="backtest.html#fig:backtest6">12.3</a>.</p>
-<div class="sourceCode" id="cb188"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span> <span class="co"># Date management</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span>   <span class="co"># Plot grid management</span>
 <span class="va">g1</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>date <span class="op">=</span> <span class="va">t_oos</span>,  
@@ -535,7 +535,7 @@ FIGURE 12.3: Graphical representation of the performance of the portfolios.
 </h2>
 <p>
 To end this chapter, we quantify the concepts of Section <a href="backtest.html#backov">12.4.2</a>. First, we build a function that is able to generate performance metrics for simple strategies that can be evaluated in batches. The strategies are pure factor bets and depend on three inputs: the chosen characteristic (e.g., market capitalization), a threshold level (quantile of the characteristic) and a direction (long position in the top or bottom of the distribution).</p>
-<div class="sourceCode" id="cb189"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">strat</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">feature</span>, <span class="va">thresh</span>, <span class="va">direction</span><span class="op">)</span><span class="op">{</span>
     <span class="va">data_tmp</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">feature</span>, <span class="va">date</span>, <span class="va">R1M_Usd</span><span class="op">)</span>       <span class="co"># Data</span>
     <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">data_tmp</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"feature"</span>                            <span class="co"># Colname</span>
@@ -551,15 +551,15 @@ To end this chapter, we quantify the concepts of Section <a href="backtest.html#
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Then, we test the function on a triplet of arguments. We pick the price-to-book (Pb) ratio. The position is positive and the threshold is 0.3, which means that the strategy buys the stocks that have a Pb value above the 0.3 quantile of the distribution.</p>
-<div class="sourceCode" id="cb190"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">strat</span><span class="op">(</span><span class="va">data_ml</span>, <span class="st">"Pb"</span>, <span class="fl">0.3</span>, <span class="fl">1</span><span class="op">)</span>   <span class="co"># Large cap</span></code></pre></div>
-<pre><code>## # A tibble: 1 x 3
+<pre><code>##  [38;5;246m# A tibble: 1 x 3 [39m
 ##      avg     sd    SR
-##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;
-## 1 0.0102 0.0496 0.207</code></pre>
+##     [3m [38;5;246m&lt;dbl&gt; [39m [23m   [3m [38;5;246m&lt;dbl&gt; [39m [23m  [3m [38;5;246m&lt;dbl&gt; [39m [23m
+##  [38;5;250m1 [39m 0.010 [4m2 [24m 0.049 [4m6 [24m 0.207</code></pre>
 <p></p>
 <p>The output keeps three quantities that will be useful to compute the statistic <a href="backtest.html#eq:tSR">(12.5)</a>. We must now generate these indicators for many strategies. We start by creating the grid of parameters.</p>
-<div class="sourceCode" id="cb192"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb196"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">feature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Div_Yld"</span>, <span class="st">"Ebit_Bv"</span>, <span class="st">"Mkt_Cap_6M_Usd"</span>, <span class="st">"Mom_11M_Usd"</span>, <span class="st">"Pb"</span>, <span class="st">"Vol1Y_Usd"</span><span class="op">)</span>  
 <span class="va">thresh</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0.2</span>,<span class="fl">0.8</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>                                <span class="co"># Threshold values values</span>
 <span class="va">direction</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="op">-</span><span class="fl">1</span><span class="op">)</span>                                            <span class="co"># Decision direction</span>
@@ -569,7 +569,7 @@ To end this chapter, we quantify the concepts of Section <a href="backtest.html#
 <span class="va">direction</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span>                                           <span class="co"># re-directions</span></code></pre></div>
 <p></p>
 <p>This makes 84 strategies in total. We can proceed to see how they fare. We plot the corresponding Sharpe ratios below in Figure <a href="backtest.html#fig:backov3">12.4</a>. The top plot shows the strategies that invest in the bottoms of the distributions of characteristics while the bottom plot pertains to the portfolios that are long in the lower parts of these distributions.</p>
-<div class="sourceCode" id="cb193"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb197"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">grd</span> <span class="op">&lt;-</span> <span class="fu">pmap</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">feature</span>, <span class="va">thresh</span>, <span class="va">direction</span><span class="op">)</span>,      <span class="co"># Parameters for the grid search</span>
             <span class="va">strat</span>,                                 <span class="co"># Function on which to apply the grid search</span>
             data <span class="op">=</span> <span class="va">data_ml</span>                         <span class="co"># Data source/input</span>
@@ -589,7 +589,7 @@ FIGURE 12.4: Sharpe ratios of all backtested strategies.
 </div>
 <p></p>
 <p>The last step is to compute the statistic <a href="backtest.html#eq:tSR">(12.5)</a>. We code it here:</p>
-<div class="sourceCode" id="cb194"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb198"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">DSR</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">SR</span>, <span class="va">Tt</span>, <span class="va">M</span>, <span class="va">g3</span>, <span class="va">g4</span>, <span class="va">SR_m</span>, <span class="va">SR_v</span><span class="op">)</span><span class="op">{</span> <span class="co"># First, we build the function</span>
     <span class="va">gamma</span> <span class="op">&lt;-</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Special.html">digamma</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>                        <span class="co"># Euler-Mascheroni constant</span>
     <span class="va">SR_star</span> <span class="op">&lt;-</span> <span class="va">SR_m</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">sqrt</a></span><span class="op">(</span><span class="va">SR_v</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">gamma</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="va">M</span><span class="op">)</span> <span class="op">+</span> <span class="va">gamma</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fl">1</span><span class="op">/</span><span class="va">M</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="co"># SR*</span>
@@ -599,7 +599,7 @@ FIGURE 12.4: Sharpe ratios of all backtested strategies.
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>All that remains to do is to evaluate the arguments of the function. The “best” strategy is the one on the top left corner of Figure <a href="backtest.html#fig:backov3">12.4</a> and it is based on market capitalization.</p>
-<div class="sourceCode" id="cb195"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb199"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">pars</span><span class="op">)</span>             <span class="co"># Number of strategies we tested</span>
 <span class="va">SR</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">grd</span><span class="op">$</span><span class="va">SR</span><span class="op">)</span>           <span class="co"># The SR we want to test</span>
 <span class="va">SR_m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">grd</span><span class="op">$</span><span class="va">SR</span><span class="op">)</span>        <span class="co"># Average SR across all strategies</span>
@@ -691,7 +691,7 @@ FIGURE 12.4: Sharpe ratios of all backtested strategies.
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-05-25.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-07-05.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
