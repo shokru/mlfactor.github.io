@@ -141,7 +141,7 @@ Overall, findings are mixed and the heuristic simple average is, as usual, hard 
 <span class="header-section-number">11.1.2</span> Example<a class="anchor" aria-label="anchor" href="#example"><i class="fas fa-link"></i></a>
 </h3>
 <p>In order to build an ensemble, we must gather the predictions and the corresponding errors into the <span class="math inline">\(\textbf{E}\)</span> matrix. We will work with 5 models that were trained in the previous chapters: penalized regression, simple tree, random forest, xgboost and feed-forward neural network. The training errors have zero means, hence <span class="math inline">\(\textbf{E}'\textbf{E}\)</span> is the covariance matrix of errors between models.</p>
-<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb147"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">err_pen_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pen_pred</span>, <span class="va">x_penalized_train</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>  <span class="co"># Reg.</span>
 <span class="va">err_tree_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree</span>, <span class="va">training_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>       <span class="co"># Tree</span>
 <span class="va">err_RF_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">training_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>           <span class="co"># RF</span>
@@ -151,33 +151,33 @@ Overall, findings are mixed and the heuristic simple average is, as usual, hard 
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pen_reg"</span>, <span class="st">"Tree"</span>, <span class="st">"RF"</span>, <span class="st">"XGB"</span>, <span class="st">"NN"</span><span class="op">)</span>                               <span class="co"># Names</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span>                                                                               <span class="co"># Cor. mat.</span></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9953021
-## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9963537
-## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9965862
-## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9268331
-## NN      0.9953021 0.9963537 0.9965862 0.9268331 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9967499
+## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9975145
+## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9975545
+## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9280977
+## NN      0.9967499 0.9975145 0.9975545 0.9280977 1.0000000</code></pre>
 <p></p>
 <p>As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. The minimum correlation (though above 95%!) is obtained by the boosted tree models. Below, we compare the training accuracy of models by computing the average absolute value of errors.</p>
-<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb149"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span>, <span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># Mean absolute error or columns of E </span></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.08345916 0.08362133 0.08327121 0.08986993 0.08382240</code></pre>
+## 0.08345916 0.08362133 0.08327121 0.08986993 0.08417446</code></pre>
 <p></p>
 <p>The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non-constrained) weights for the combination of models.</p>
-<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb151"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">w_ensemble</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">E</span><span class="op">)</span> <span class="op">%*%</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span>                             <span class="co"># Optimal weights</span>
 <span class="va">w_ensemble</span> <span class="op">&lt;-</span> <span class="va">w_ensemble</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">w_ensemble</span><span class="op">)</span>
 <span class="va">w_ensemble</span></code></pre></div>
-<pre><code>##                  [,1]
-## Pen_reg -0.5355220985
-## Tree    -0.1574089376
-## RF       1.2786785152
-## XGB     -0.0008123032
-## NN       0.4150648241</code></pre>
+<pre><code>##                 [,1]
+## Pen_reg -0.550285216
+## Tree     0.004797415
+## RF       1.465573410
+## XGB     -0.000720779
+## NN       0.080635170</code></pre>
 <p></p>
 <p>Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and ‘short’ a few models in order to compensate. As one could expect, the model with the largest negative weights (Pen_reg) has a very high correlation with the random forest algorithm (0.997).</p>
 <p>Note that the weights are of course computed with <strong>training errors</strong>. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.</p>
-<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb153"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">err_pen_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pen_pred</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>     <span class="co"># Reg.</span>
 <span class="va">err_tree_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>          <span class="co"># Tree</span>
 <span class="va">err_RF_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>              <span class="co"># RF</span>
@@ -187,29 +187,29 @@ Overall, findings are mixed and the heuristic simple average is, as usual, hard 
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">E_test</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pen_reg"</span>, <span class="st">"Tree"</span>, <span class="st">"RF"</span>, <span class="st">"XGB"</span>, <span class="st">"NN"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">E_test</span><span class="op">)</span>, <span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span>             <span class="co"># Mean absolute error or columns of E </span></code></pre></div>
 <pre><code>##    Pen_reg       Tree         RF        XGB         NN 
-## 0.06618181 0.06653527 0.06710349 0.07170802 0.06770328</code></pre>
+## 0.06618181 0.06653527 0.06710349 0.07170802 0.06724401</code></pre>
 <p></p>
 <p>The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.</p>
-<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb155"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">err_EW_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">E_test</span>, <span class="fl">1</span>, <span class="va">mean</span><span class="op">)</span>  <span class="co"># Equally weighted combination</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">err_EW_test</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 0.06701644</code></pre>
+<pre><code>## [1] 0.06690778</code></pre>
 <p></p>
 <p>Because the errors are very correlated, the equally weighted combination of forecasts yields an average error which lies ‘in the middle’ of individual errors. The diversification benefits are too small. Let us now test the ‘optimal’ combination <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}'\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M'\textbf{E}'\textbf{E})^{-1}\textbf{1}_M}\)</span>.</p>
-<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb157"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">err_opt_test</span> <span class="op">&lt;-</span> <span class="va">E_test</span> <span class="op">%*%</span> <span class="va">w_ensemble</span>   <span class="co"># Optimal unconstrained combination</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">err_opt_test</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] 0.0685586</code></pre>
+<pre><code>## [1] 0.06827979</code></pre>
 <p></p>
 <p>Again, the result is disappointing because of the lack of diversification across models. The correlations between errors are high not only on the training sample, but also on the testing sample, as shown below.</p>
-<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb159"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">E_test</span><span class="op">)</span></code></pre></div>
 <pre><code>##           Pen_reg      Tree        RF       XGB        NN
-## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9935952
-## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9954360
-## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9962441
-## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9626184
-## NN      0.9935952 0.9954360 0.9962441 0.9626184 1.0000000</code></pre>
+## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9963847
+## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9976100
+## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9978556
+## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9609661
+## NN      0.9963847 0.9976100 0.9978556 0.9609661 1.0000000</code></pre>
 <p></p>
 <p>The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of <span class="citation"><a href="solutions-to-exercises.html#ref-breiman1996stacked" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman1996stacked" role="doc-biblioref">1996</a>)</span> using the <em>quadprog</em> package. If we write <span class="math inline">\(\mathbf{\Sigma}\)</span> for the covariance matrix of errors, we seek
 <span class="math display">\[\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}'\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}'\mathbf{w}=1, \quad w_i\ge 0,\]</span>
@@ -221,7 +221,7 @@ The constraints will be handled as:</p>
 0 &amp; 0 &amp; 1
 \end{bmatrix} \mathbf{w} \hspace{9mm} \text{ compared to} \hspace{9mm} \mathbf{b}=\begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix},  \]</span></p>
 <p>where the first line will be an equality (weights sum to one) and the last three will be inequalities (weights are all positive).</p>
-<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb161"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">quadprog</span><span class="op">)</span>                       <span class="co"># Package for quadratic programming</span>
 <span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op">%*%</span> <span class="va">E</span>                     <span class="co"># Unscaled covariance matrix</span>
 <span class="va">nb_mods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">Sigma</span><span class="op">)</span>                  <span class="co"># Number of models</span>
@@ -232,7 +232,7 @@ The constraints will be handled as:</p>
               meq <span class="op">=</span> <span class="fl">1</span>                   <span class="co"># 1 line of equality constraints, others = inequalities</span>
               <span class="op">)</span>
 <span class="va">w_const</span><span class="op">$</span><span class="va">solution</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>           <span class="co"># Solution</span></code></pre></div>
-<pre><code>## [1] 0.000 0.000 0.776 0.000 0.224</code></pre>
+<pre><code>## [1] 0 0 1 0 0</code></pre>
 <p></p>
 <p>Compared to the unconstrained solution, the weights are sparse and concentrated in one or two models, usually those with small training sample errors.</p>
 </div>
@@ -260,40 +260,40 @@ FIGURE 11.1: Scheme of stacked ensembles.
 <span class="header-section-number">11.2.2</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results-4"><i class="fas fa-link"></i></a>
 </h3>
 <p>Below, we create a low-dimensional neural network which takes in the individual predictions of each model and compiles them into a synthetic forecast.</p>
-<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model_stack</span> <span class="op">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </code></pre></div>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </code></pre></div>
 <p></p>
 <p>The configuration is very simple. We do not include any optional arguments and hence the model is likely to overfit. As we seek to predict returns, the loss function is the standard <span class="math inline">\(L^2\)</span> norm.</p>
-<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_stack</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>                       <span class="co"># Model specification</span>
+<div class="sourceCode" id="cb164"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_stack</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                       <span class="co"># Model specification</span>
     loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
     metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_stack</span><span class="op">)</span>                           <span class="co"># Model architecture</span></code></pre></div>
-<pre><code>## Model: "sequential_28"
+<pre><code>## Model: "sequential_5"
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_72 (Dense)                        (None, 8)                           48            
+## dense_13 (Dense)                        (None, 8)                           48            
 ## __________________________________________________________________________________________
-## dense_71 (Dense)                        (None, 4)                           36            
+## dense_12 (Dense)                        (None, 4)                           36            
 ## __________________________________________________________________________________________
-## dense_70 (Dense)                        (None, 1)                           5             
+## dense_11 (Dense)                        (None, 1)                           5             
 ## ==========================================================================================
 ## Total params: 89
 ## Trainable params: 89
 ## Non-trainable params: 0
 ## __________________________________________________________________________________________</code></pre>
 <p></p>
-<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">y_tilde</span> <span class="op">&lt;-</span> <span class="va">E</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="va">nb_mods</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span>    <span class="co"># Train preds</span>
 <span class="va">y_test</span> <span class="op">&lt;-</span> <span class="va">E_test</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="va">nb_mods</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span> <span class="co"># Testing</span>
-<span class="va">fit_NN_stack</span> <span class="op">&lt;-</span> <span class="va">model_stack</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">y_tilde</span>,                                  <span class="co"># Train features</span>
+<span class="va">fit_NN_stack</span> <span class="op">&lt;-</span> <span class="va">model_stack</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">y_tilde</span>,                                  <span class="co"># Train features</span>
                      <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>,                                 <span class="co"># Train labels</span>
                      epochs <span class="op">=</span> <span class="fl">12</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Train parameters</span>
                      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">y_test</span>,                           <span class="co"># Test features</span>
@@ -322,38 +322,38 @@ FIGURE 11.2: Training metrics for the ensemble model.
 <p>Adding macro-variables to the set of predictors (here, predictions) <span class="math inline">\(\tilde{y}_{i,m}\)</span> could seem like one way to achieve this. However, this would amount to mix predicted values with (possibly scaled) economic indicators and that would not make much sense.</p>
 <p>One alternative outside the perimeter of ensembles is to train simple trees on a set of macro-economic indicators. If the labels are the (possibly absolute) errors stemming from the original predictions, then the trees will create clusters of homogeneous error values. This will hint towards which conditions lead to the best and worst forecasts.
 We test this idea below, using aggregate data from the Federal Reserve of Saint Louis. A simple downloading function is available in the <em>quantmod</em> package. We download and format the data in the next chunk. CPIAUCSL is a code for consumer price index and T10Y2YM is a code for the term spread (10Y minus 2Y).</p>
-<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb167"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.quantmod.com">quantmod</a></span><span class="op">)</span>                                     <span class="co"># Package that extracts the data</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>                                    <span class="co"># Package for date management</span>
 <span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.html">getSymbols</a></span><span class="op">(</span><span class="st">"CPIAUCSL"</span>, src <span class="op">=</span> <span class="st">"FRED"</span><span class="op">)</span>                  <span class="co"># FRED is the Fed of St Louis</span></code></pre></div>
 <pre><code>## [1] "CPIAUCSL"</code></pre>
-<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.html">getSymbols</a></span><span class="op">(</span><span class="st">"T10Y2YM"</span>, src <span class="op">=</span> <span class="st">"FRED"</span><span class="op">)</span> </code></pre></div>
 <pre><code>## [1] "T10Y2YM"</code></pre>
-<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb171"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cpi</span> <span class="op">&lt;-</span> <span class="fu">fortify</span><span class="op">(</span><span class="va">CPIAUCSL</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span> <span class="op">(</span>inflation <span class="op">=</span> <span class="va">CPIAUCSL</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/lag.html">lag</a></span><span class="op">(</span><span class="va">CPIAUCSL</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># Inflation via Consumer Price Index</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span> <span class="op">(</span>inflation <span class="op">=</span> <span class="va">CPIAUCSL</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/lag.html">lag</a></span><span class="op">(</span><span class="va">CPIAUCSL</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># Inflation via Consumer Price Index</span>
 <span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu">fortify</span><span class="op">(</span><span class="va">T10Y2YM</span><span class="op">)</span>                                <span class="co"># Term spread (10Y minus 2Y rates)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"termspread"</span>                       <span class="co"># To make things clear</span>
 <span class="va">ens_data</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op">%&gt;%</span>                        <span class="co"># Creating aggregate dataset</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">err_NN_test</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Index <span class="op">=</span> <span class="fu"><a href="http://lubridate.tidyverse.org/reference/make_datetime.html">make_date</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,  <span class="co"># Change date to first day of month</span>
-                             month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="http://lubridate.tidyverse.org/reference/month.html">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>Index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/make_datetime.html">make_date</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,  <span class="co"># Change date to first day of month</span>
+                             month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/month.html">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, 
                              day <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu">left_join</span><span class="op">(</span><span class="va">cpi</span><span class="op">)</span> <span class="op">%&gt;%</span>                                <span class="co"># Add CPI to the dataset</span>
     <span class="fu">left_join</span><span class="op">(</span><span class="va">ts</span><span class="op">)</span>                                     <span class="co"># Add termspread</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ens_data</span><span class="op">)</span>                                        <span class="co"># Show first lines</span></code></pre></div>
 <pre><code>##         date err_NN_test      Index CPIAUCSL   inflation termspread
-## 1 2014-01-31 -0.15493047 2014-01-01  235.288 0.002424175       2.47
-## 2 2014-02-28  0.06697269 2014-02-01  235.547 0.001100779       2.38
-## 3 2014-03-31 -0.01598792 2014-03-01  236.028 0.002042055       2.32
-## 4 2014-04-30 -0.08917611 2014-04-01  236.468 0.001864186       2.29
-## 5 2014-05-31 -0.10369546 2014-05-01  236.918 0.001903006       2.17
-## 6 2014-06-30  0.02341014 2014-06-01  237.231 0.001321132       2.15</code></pre>
+## 1 2014-01-31 -0.15601887 2014-01-01  235.288 0.002424175       2.47
+## 2 2014-02-28  0.06786329 2014-02-01  235.547 0.001100779       2.38
+## 3 2014-03-31 -0.02063580 2014-03-01  236.028 0.002042055       2.32
+## 4 2014-04-30 -0.08443547 2014-04-01  236.468 0.001864186       2.29
+## 5 2014-05-31 -0.09622136 2014-05-01  236.918 0.001903006       2.17
+## 6 2014-06-30  0.03287200 2014-06-01  237.231 0.001321132       2.15</code></pre>
 <p></p>
 <p>We can now build a tree that tries to explain the accuracy of models as a function of macro-variables.</p>
-<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.milbo.org/rpart-plot">rpart.plot</a></span><span class="op">)</span>     <span class="co"># Load package for tree plotting</span>
 <span class="va">fit_ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">err_NN_test</span><span class="op">)</span> <span class="op">~</span> <span class="va">inflation</span> <span class="op">+</span> <span class="va">termspread</span>, <span class="co"># Tree model</span>
                  data <span class="op">=</span> <span class="va">ens_data</span>,
@@ -378,27 +378,27 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
 <p>One advantage of deterministic splits is that they are easy to reproduce and their outcome does not depend on the random seed. By the nature of factor-based training samples, the second splitting dichotomy is between time and assets. A split within assets is straightforward: each model is trained on a different set of stocks. Note that the choices of sets can be random, or dictacted by some factor-based criterion: size, momentum, book-to-market ratio, etc.</p>
 <p>A split in dates requires other decisions: is the data split in large blocks (like years) and each model gets a block, which may stand for one particular kind of market condition? Or are the training dates divided more regularly? For instance, if there are 12 models in the ensemble, each model can be trained on data from a given month (e.g., January for the first models, February for the second, etc.).</p>
 <p>Below, we train four models on four different years to see if this helps reduce the inter-model correlations. This process is a bit lengthy because the samples and models need to be all redefined. We start by creating the four training samples. The third model works on the small subset of features, hence the sample is smaller.</p>
-<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">training_sample_2007</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2006-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2008-01-01"</span><span class="op">)</span>
 <span class="va">training_sample_2009</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2008-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span>
 <span class="va">training_sample_2011</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span> 
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2010-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2012-01-01"</span><span class="op">)</span>
 <span class="va">training_sample_2013</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2012-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2014-01-01"</span><span class="op">)</span></code></pre></div>
 <p></p>
 <p>Then, we proceed to the training of the models. The syntaxes are those used in the previous chapters, nothing new here. We start with a penalized regression. In all predictions below, the original testing sample is used <em>for all models</em>.</p>
-<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">y_ens_2007</span> <span class="op">&lt;-</span> <span class="va">training_sample_2007</span><span class="op">$</span><span class="va">R1M_Usd</span>                                       <span class="co"># Dep. var.</span>
 <span class="va">x_ens_2007</span> <span class="op">&lt;-</span> <span class="va">training_sample_2007</span> <span class="op">%&gt;%</span>                                           <span class="co"># Predictors</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
 <span class="va">fit_ens_2007</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x_ens_2007</span>, <span class="va">y_ens_2007</span>, alpha <span class="op">=</span> <span class="fl">0.1</span>, lambda <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>        <span class="co"># Model</span>
 <span class="va">err_ens_2007</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ens_2007</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="co"># Pred. errs</span></code></pre></div>
 <p></p>
 <p>We continue with a random forest.</p>
-<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_ens_2009</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula</span>,            <span class="co"># Same formula as for simple trees!</span>
                  data <span class="op">=</span> <span class="va">training_sample_2009</span>,    <span class="co"># Data source: 2011 training sample</span>
                  sampsize <span class="op">=</span> <span class="fl">4000</span>,                <span class="co"># Size of (random) sample for each tree</span>
@@ -410,11 +410,11 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
 <span class="va">err_ens_2009</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ens_2009</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="co"># Pred. errs</span></code></pre></div>
 <p></p>
 <p>The third model is a boosted tree.</p>
-<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb177"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">train_features_2011</span> <span class="op">&lt;-</span> <span class="va">training_sample_2011</span> <span class="op">%&gt;%</span> 
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>               <span class="co"># Independent variable</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>               <span class="co"># Independent variable</span>
 <span class="va">train_label_2011</span> <span class="op">&lt;-</span> <span class="va">training_sample_2011</span> <span class="op">%&gt;%</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                      <span class="co"># Dependent variable</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                      <span class="co"># Dependent variable</span>
 <span class="va">train_matrix_2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html">xgb.DMatrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_features_2011</span>, 
                                 label <span class="op">=</span> <span class="va">train_label_2011</span><span class="op">)</span>       <span class="co"># XGB format!</span>
 <span class="va">fit_ens_2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_2011</span>,             <span class="co"># Data source </span>
@@ -423,43 +423,43 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
               max_depth <span class="op">=</span> <span class="fl">4</span>,                                    <span class="co"># Maximum depth of trees</span>
               nrounds <span class="op">=</span> <span class="fl">18</span>                                      <span class="co"># Number of trees used</span>
     <span class="op">)</span></code></pre></div>
-<pre><code>## [09:35:27] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
-<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<pre><code>## [08:46:09] WARNING: amalgamation/../src/objective/regression_obj.cu:174: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">err_ens_2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ens_2011</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span>  <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="co"># Prediction errors</span></code></pre></div>
 <p></p>
 <p>Finally, the last model is a simple neural network.</p>
-<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">NN_features_2013</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">training_sample_2013</span>, <span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">NN_features_2013</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample_2013</span>, <span class="va">features</span><span class="op">)</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># Matrix format is important</span>
 <span class="va">NN_labels_2013</span> <span class="op">&lt;-</span> <span class="va">training_sample_2013</span><span class="op">$</span><span class="va">R1M_Usd</span>
-<span class="va">model_ens_2013</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">model_ens_2013</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model_ens_2013</span> <span class="op">%&gt;%</span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_features_2013</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
-<span class="va">model_ens_2013</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/compile.html">compile</a></span><span class="op">(</span>                    <span class="co"># Model specification</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_features_2013</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
+<span class="va">model_ens_2013</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                    <span class="co"># Model specification</span>
     loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
     metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
 <span class="op">)</span>
-<span class="va">model_ens_2013</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_features_2013</span>,                        <span class="co"># Training features</span>
+<span class="va">model_ens_2013</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_features_2013</span>,                        <span class="co"># Training features</span>
                        <span class="va">NN_labels_2013</span>,                          <span class="co"># Training labels</span>
                        epochs <span class="op">=</span> <span class="fl">9</span>, batch_size <span class="op">=</span> <span class="fl">128</span>             <span class="co"># Training parameters</span>
 <span class="op">)</span>
 <span class="va">err_ens_2013</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model_ens_2013</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span></code></pre></div>
 <p></p>
 <p>Endowed with the errors of the four models, we can compute their correlation matrix.</p>
-<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb181"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">E_subtraining</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span><span class="va">err_ens_2007</span>,
                         <span class="va">err_ens_2009</span>,
                         <span class="va">err_ens_2011</span>,
                         <span class="va">err_ens_2013</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">E_subtraining</span><span class="op">)</span></code></pre></div>
 <pre><code>##              err_ens_2007 err_ens_2009 err_ens_2011 err_ens_2013
-## err_ens_2007    1.0000000    0.9660321    0.6460091    0.9981679
-## err_ens_2009    0.9660321    1.0000000    0.6345116    0.9703486
-## err_ens_2011    0.6460091    0.6345116    1.0000000    0.6458760
-## err_ens_2013    0.9981679    0.9703486    0.6458760    1.0000000</code></pre>
+## err_ens_2007    1.0000000    0.9660321    0.6460091    0.9985648
+## err_ens_2009    0.9660321    1.0000000    0.6345116    0.9677120
+## err_ens_2011    0.6460091    0.6345116    1.0000000    0.6459682
+## err_ens_2013    0.9985648    0.9677120    0.6459682    1.0000000</code></pre>
 <p></p>
 <p>The results are overall disappointing. Only one model manages to extract patterns that are somewhat different from the other ones, resulting in a 65% correlation across the board. Neural networks (on 2013 data) and penalized regressions (2007) remain highly correlated. One possible explanation could be that the models capture mainly noise and little signal. Working with long-term labels like annual returns could help improve diversification across models.  </p>
 </div>
@@ -514,7 +514,7 @@ As shown earlier in this chapter, one major problem with ensembles arises when t
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-07-05.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-10-13.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
