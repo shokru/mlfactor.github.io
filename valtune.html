@@ -6,11 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 10 Validating and tuning | Machine Learning for Factor Investing</title>
 <meta name="author" content="Guillaume Coqueret and Tony Guida">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.8/header-attrs.js"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.5.3/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.3.9000/tabs.js"></script><script src="libs/bs3compat-0.2.3.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 10 Validating and tuning | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 10 Validating and tuning | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content="As is shown in Chapters 5 to 11, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or...">
+<meta property="og:description" content="As is shown in Chapters 5 to 11, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or...">
+<meta name="twitter:description" content="As is shown in Chapters 5 to 11, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or...">
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -86,7 +93,7 @@ Errors in regression analyses are usually evaluated in a straightforward way. Th
 \text{MAE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I|y_i-\tilde{y}_i|, \\  \tag{10.2} 
 \text{MSE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I(y_i-\tilde{y}_i)^2, 
 \end{align}\]</span></p>
-<p>and the RMSE is simply the square root of the MSE. It is always possible to generalize these formulae by adding weights <span class="math inline">\(w_i\)</span> to produce heterogeneity in the importance of instances. Let us briefly comment on the MSE. It is by far the most common loss function in machine learning, but it is not necessarily the exact best choice for return prediction in a portfolio allocation task. If we decompose the loss into its 3 terms, we get the sum of squared realized returns, the sum of squared predicted returns and the product between the two (roughly speaking, a covariance term if we assume zero means). The first term does not matter. The second controls the dispersion around zero of the predictions. The third term is the most interesting from the allocator’s standpoint. The negativity of the cross-product <span class="math inline">\(-2y_i\tilde{y}_i\)</span> is always to the investor’s benefit: either both terms are positive and the model has recognized a profitable asset, or they are negative and it has identified a bad opportunity. It is when <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\tilde{y}_i\)</span> don’t have the same sign that problems arise. Thus, compared to the <span class="math inline">\(\tilde{y}_i^2\)</span>, the cross-term is more important. Nonetheless, algorithms do not optimize with respect to this indicator.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;There are some exceptions, like attempts to optimize more exotic criteria, such as the Spearman rho, which is based on rankings and is close in spirit to maximizing the correlation between the output and the prediction. Because this rho cannot be differentiated, this causes numerical issues. These problems can be partially alleviated when resorting to complex architectures, as in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-engilberge2019sodeep" role="doc-biblioref"&gt;Engilberge et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-engilberge2019sodeep" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;. &lt;/p&gt;'><sup>21</sup></a></p>
+<p>and the RMSE is simply the square root of the MSE. It is always possible to generalize these formulae by adding weights <span class="math inline">\(w_i\)</span> to produce heterogeneity in the importance of instances. Let us briefly comment on the MSE. It is by far the most common loss function in machine learning, but it is not necessarily the exact best choice for return prediction in a portfolio allocation task. If we decompose the loss into its 3 terms, we get the sum of squared realized returns, the sum of squared predicted returns and the product between the two (roughly speaking, a covariance term if we assume zero means). The first term does not matter. The second controls the dispersion around zero of the predictions. The third term is the most interesting from the allocator’s standpoint. The negativity of the cross-product <span class="math inline">\(-2y_i\tilde{y}_i\)</span> is always to the investor’s benefit: either both terms are positive and the model has recognized a profitable asset, or they are negative and it has identified a bad opportunity. It is when <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\tilde{y}_i\)</span> don’t have the same sign that problems arise. Thus, compared to the <span class="math inline">\(\tilde{y}_i^2\)</span>, the cross-term is more important. Nonetheless, algorithms do not optimize with respect to this indicator.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;There are some exceptions, like attempts to optimize more exotic criteria, such as the Spearman rho, which is based on rankings and is close in spirit to maximizing the correlation between the output and the prediction. Because this rho cannot be differentiated, this causes numerical issues. These problems can be partially alleviated when resorting to complex architectures, as in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-engilberge2019sodeep" role="doc-biblioref"&gt;Engilberge et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-engilberge2019sodeep" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;. &lt;/p&gt;'><sup>22</sup></a></p>
 <p>These metrics (MSE and RMSE) are widely used outside ML to assess forecasting errors. Below, we present other indicators that are also sometimes used to quantify the quality of a model. In line with the linear regressions, the <span class="math inline">\(R^2\)</span> can be computed in any predictive exercise.
 <span class="math display" id="eq:R2">\[\begin{equation}
 \tag{10.3} 
@@ -129,7 +136,7 @@ where <span class="math inline">\(\bar{y}\)</span> is the sample average of the 
 </ul>
 <p>where true is conventionally encoded into 1 and false into 0. The sum of the four figures is equal to one. These four numbers have very different impacts on out-of-sample results, as is shown in Figure <a href="valtune.html#fig:valconfusion">10.1</a>. In this table (also called a <strong>confusion matrix</strong>), it is assumed that some proxy for future profitability is forecast by the model. Each row stands for the model’s prediction and each column for the realization of the profitability. The most important cases are those in the top row, when the model predicts a positive result because it is likely that assets with positive predicted profitability (possibly relative to some benchmark) will end up in the portfolio. Of course, this is not a problem if the asset does well (left cell), but it becomes penalizing if the model is wrong because the portfolio will suffer.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:valconfusion"></span>
+<span style="display:block;" id="fig:valconfusion"></span>
 <img src="images/confusion.png" alt="Confusion matrix: summary of binary outcomes." width="500px"><p class="caption">
 FIGURE 10.1: Confusion matrix: summary of binary outcomes.
 </p>
@@ -159,23 +166,23 @@ FIGURE 10.1: Confusion matrix: summary of binary outcomes.
 <p>In practice, this 0.5 threshold may not be optimal and the model could very well correctly predict false instances when the probability is below 0.4 and true ones otherwise. Hence, it is a natural idea to test what happens if the decision threshold changes. The ROC curve does just that and plots the recall as a function of the fallout when the threshold increases from zero to one.</p>
 <p>When the threshold is equal to 0, true positives are equal to zero because the model never forecasts positive values. Thus, both recall and fallout are equal to zero. When the threshold is equal to one, false negatives shrink to zero and true negatives too, hence recall and fallout are equal to one. The behavior of their relationship in between these two extremes is called the <strong>ROC curve</strong>. We provide stylized examples below in Figure <a href="valtune.html#fig:ROCcurve">10.2</a>. A random classifier would fare equally good for recall and fallout and thus the ROC curve would be a linear line from the point (0,0) to (1,1). To prove this, imagine a sample with a <span class="math inline">\(p\in (0,1)\)</span> proportion of true instances and a classifier that predicts true randomly with a probability <span class="math inline">\(p'\in (0,1)\)</span>. Then because the sample and predictions are independent, <span class="math inline">\(TP=p'p\)</span>, <span class="math inline">\(FP = p'(1-p)\)</span>, <span class="math inline">\(TN=(1-p')(1-p)\)</span> and <span class="math inline">\(FN=(1-p')p\)</span>. Given the above definition, this yields that both recall and fallout are equal to <span class="math inline">\(p'\)</span>.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:ROCcurve"></span>
+<span style="display:block;" id="fig:ROCcurve"></span>
 <img src="images/ROCcurve.png" alt="Stylized ROC curves." width="450px"><p class="caption">
 FIGURE 10.2: Stylized ROC curves.
 </p>
 </div>
 <p>An algorithm with a ROC curve above the 45° angle is performing better than an average classifier. Indeed, the curve can be seen as a tradeoff between benefits (probability of detecting good strategies on the <span class="math inline">\(y\)</span> axis) minus costs (odds of selecting the wrong assets on the <span class="math inline">\(x\)</span> axis). Hence being above the 45° is paramount. The best possible classifier has a ROC curve that goes from point (0,0) to point (0,1) to point (1,1). At point (0,1), fallout is null, hence there are no false positives, and recall is equal to one so that there are also no false negatives: the model is always right. The opposite is true: at point (1,0), the model is always wrong.</p>
 <p>Below, we use a particular package (<em>caTools</em>) to compute a ROC curve for a given set of predictions on the testing sample.</p>
-<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va">caTools</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"caTools"</span><span class="op">)</span><span class="op">}</span></code></pre></div>
 <p></p>
-<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">caTools</span><span class="op">)</span>  <span class="co"># Package for AUC computation</span>
 <span class="fu"><a href="https://rdrr.io/pkg/caTools/man/colAUC.html">colAUC</a></span><span class="op">(</span>X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF_C</span>, <span class="va">testing_sample</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span>, 
        y <span class="op">=</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span>, 
        plotROC <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:roc"></span>
+<span style="display:block;" id="fig:roc"></span>
 <img src="ML_factor_files/figure-html/roc-1.png" alt="Example of ROC curve." width="450px"><p class="caption">
 FIGURE 10.3: Example of ROC curve.
 </p>
@@ -224,7 +231,7 @@ The <strong>variance-bias tradeoff</strong> is one of the core concepts in super
 <p>The last one is immune to changes in models, so the challenge is to minimize the sum of the first two. This is known as the variance-bias tradeoff because reducing one often leads to increasing the other. The goal is thus to assess when a small increase in either one can lead to a larger decrease in the other.</p>
 <p>There are several ways to represent this tradeoff and we display two of them. The first one relates to archery (see Figure <a href="valtune.html#fig:archery">10.4</a>) below. The best case (top left) is when all shots are concentrated in the middle: on average, the archer aims correctly and all the arrows are very close to one another. The worst case (bottom right) is the exact opposite: the average arrow is above the center of the target (the bias is nonzero) and the dispersion of arrows is large.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:archery"></span>
+<span style="display:block;" id="fig:archery"></span>
 <img src="images/var_bias_trade.png" alt="First representation of the variance-bias tradeoff." width="450px"><p class="caption">
 FIGURE 10.4: First representation of the variance-bias tradeoff.
 </p>
@@ -233,12 +240,12 @@ FIGURE 10.4: First representation of the variance-bias tradeoff.
 <p>The second way the variance bias tradeoff is often depicted is via the notion of <strong>model complexity</strong>. The most simple model of all is a constant one: the prediction is always the same, for instance equal to the average value of the label in the training set. Of course, this prediction will often be far from the realized values of the testing set (its bias will be large), but at least its variance is zero. On the other side of the spectrum, a decision tree with as many leaves as there are instances has a very complex structure. It will probably have a smaller bias, but undoubtedly it is not obvious that this will compensate the increase in variance incurred by the intricacy of the model.</p>
 <p>This facet of the tradeoff is depicted in Figure <a href="valtune.html#fig:varbiastrade">10.5</a> below. To the left of the graph, a simple model has a small variance but a large bias, while to the right it is the opposite for a complex model. Good models often lie somewhere in the middle, but the best mix is hard to find.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:varbiastrade"></span>
+<span style="display:block;" id="fig:varbiastrade"></span>
 <img src="images/var_bias_trade2.png" alt="Second representation of the variance-bias tradeoff." width="450px"><p class="caption">
 FIGURE 10.5: Second representation of the variance-bias tradeoff.
 </p>
 </div>
-<p>The most tractable theoretical form of the variance-bias tradeoff is the ridge regression.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Another angle, critical of neural networks is provided in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref"&gt;Geman, Bienenstock, and Doursat&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref"&gt;1992&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>22</sup></a> The coefficient estimates in this type of regression are given by <span class="math inline">\(\hat{\mathbf{b}}_\lambda=(\mathbf{X}'\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}'\mathbf{Y}\)</span> (see Section <a href="lasso.html#penreg">5.1.1</a>), where <span class="math inline">\(\lambda\)</span> is the penalization intensity. Assuming a <em>true</em> linear form for the data generating process (<span class="math inline">\(\textbf{y}=\textbf{Xb}+\boldsymbol{\epsilon}\)</span> where <span class="math inline">\(\textbf{b}\)</span> is unknown and <span class="math inline">\(\sigma^2\)</span> is the variance of errors - which have identity correlation matrix), this yields
+<p>The most tractable theoretical form of the variance-bias tradeoff is the ridge regression.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Another angle, critical of neural networks is provided in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref"&gt;Geman, Bienenstock, and Doursat&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref"&gt;1992&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>23</sup></a> The coefficient estimates in this type of regression are given by <span class="math inline">\(\hat{\mathbf{b}}_\lambda=(\mathbf{X}'\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}'\mathbf{Y}\)</span> (see Section <a href="lasso.html#penreg">5.1.1</a>), where <span class="math inline">\(\lambda\)</span> is the penalization intensity. Assuming a <em>true</em> linear form for the data generating process (<span class="math inline">\(\textbf{y}=\textbf{Xb}+\boldsymbol{\epsilon}\)</span> where <span class="math inline">\(\textbf{b}\)</span> is unknown and <span class="math inline">\(\sigma^2\)</span> is the variance of errors - which have identity correlation matrix), this yields
 <span class="math display" id="eq:vartrade">\[\begin{align}  
 \mathbb{E}[\hat{\textbf{b}}_\lambda]&amp;=\textbf{b}-\lambda(\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}, \\  \tag{10.8}
 \mathbb{V}[\hat{\textbf{b}}_\lambda]&amp;=\sigma^2(\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1}\textbf{X}'\textbf{X}   (\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1}.
@@ -252,17 +259,17 @@ FIGURE 10.5: Second representation of the variance-bias tradeoff.
 \end{align*}\]</span></p>
 <p>All in all, ridge regressions are very handy because with a single parameter, they are able to provide a cursor that directly tunes the variance-bias tradeoff.</p>
 <p>It’s easy to illustrate how simple it is to display the tradeoff with the ridge regression. In the example below, we recycle the ridge model trained in Chapter <a href="lasso.html#lasso">5</a>.</p>
-<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ridge_errors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span>          <span class="co"># Errors from all models</span>
-    <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+    <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">100</span>, byrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
-<span class="va">ridge_bias</span> <span class="op">&lt;-</span> <span class="va">ridge_errors</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span>                                <span class="co"># Biases</span>
-<span class="va">ridge_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">var</span><span class="op">)</span>          <span class="co"># Variance</span>
-<span class="fu">tibble</span><span class="op">(</span><span class="va">lambda</span>, <span class="va">ridge_bias</span><span class="op">^</span><span class="fl">2</span>, <span class="va">ridge_var</span>, total <span class="op">=</span> <span class="va">ridge_bias</span><span class="op">^</span><span class="fl">2</span><span class="op">+</span><span class="va">ridge_var</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># Plot</span>
-    <span class="fu">gather</span><span class="op">(</span>key <span class="op">=</span> <span class="va">Error_Component</span>, value <span class="op">=</span> <span class="va">Value</span>, <span class="op">-</span><span class="va">lambda</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">Value</span>, color <span class="op">=</span> <span class="va">Error_Component</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<span class="va">ridge_bias</span> <span class="op">&lt;-</span> <span class="va">ridge_errors</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span>                                <span class="co"># Biases</span>
+<span class="va">ridge_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">var</span><span class="op">)</span>          <span class="co"># Variance</span>
+<span class="fu"><a href="https://rdrr.io/pkg/tibble/man/tibble.html">tibble</a></span><span class="op">(</span><span class="va">lambda</span>, <span class="va">ridge_bias</span><span class="op">^</span><span class="fl">2</span>, <span class="va">ridge_var</span>, total <span class="op">=</span> <span class="va">ridge_bias</span><span class="op">^</span><span class="fl">2</span><span class="op">+</span><span class="va">ridge_var</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>  <span class="co"># Plot</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">Error_Component</span>, value <span class="op">=</span> <span class="va">Value</span>, <span class="op">-</span><span class="va">lambda</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">Value</span>, color <span class="op">=</span> <span class="va">Error_Component</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:ridgetrade"></span>
+<span style="display:block;" id="fig:ridgetrade"></span>
 <img src="ML_factor_files/figure-html/ridgetrade-1.png" alt="Error decomposition for a ridge regression." width="480"><p class="caption">
 FIGURE 10.6: Error decomposition for a ridge regression.
 </p>
@@ -277,7 +284,7 @@ FIGURE 10.6: Error decomposition for a ridge regression.
 <p>
 The variance-bias tradeoff is often presented in theoretical terms that are easy to grasp. It is nonetheless useful to demonstrate how it operates on true algorithmic choices. Below, we take the example of trees because their complexity is easy to evaluate. Basically, a tree with many terminal nodes is more complex than a tree with a handful of clusters.</p>
 <p>We start with the parsimonious model, which we train below.</p>
-<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_tree_simple</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>, 
              data <span class="op">=</span> <span class="va">training_sample</span>,     <span class="co"># Data source: training sample</span>
              cp <span class="op">=</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller = more leaves</span>
@@ -285,7 +292,7 @@ The variance-bias tradeoff is often presented in theoretical terms that are easy
              <span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/pkg/rpart.plot/man/rpart.plot.html">rpart.plot</a></span><span class="op">(</span><span class="va">fit_tree_simple</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:treesimple"></span>
+<span style="display:block;" id="fig:treesimple"></span>
 <img src="ML_factor_files/figure-html/treesimple-1.png" alt="Simple tree." width="400px"><p class="caption">
 FIGURE 10.7: Simple tree.
 </p>
@@ -293,21 +300,21 @@ FIGURE 10.7: Simple tree.
 <p></p>
 <p>The model depicted in Figure <a href="valtune.html#fig:treesimple">10.7</a> only has 4 clusters, which means that the predictions can only take four values. The smallest one is 0.011 and encompasses a large portion of the sample (85%) and the largest one is 0.062 and corresponds to only 4% of the training sample.<br>
 We are then able to compute the bias and the variance of the predictions on the <em>testing</em> set.</p>
-<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree_simple</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="co"># Bias</span></code></pre></div>
 <pre><code>## [1] 0.004973917</code></pre>
-<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree_simple</span>, <span class="va">testing_sample</span><span class="op">)</span><span class="op">)</span>                           <span class="co"># Variance</span></code></pre></div>
 <pre><code>## [1] 0.0001398003</code></pre>
 <p></p>
 <p>On average, the error is slightly positive, with an overall overestimation of 0.005. As expected, the variance is very small (10^{-4}).</p>
 <p>For the complex model, we take the boosted tree that was obtained in Section <a href="trees.html#boostcode">6.4.6</a> (fit_xgb). The model aggregates 40 trees with a maximum depth of 4, it is thus undoubtedly more complex. </p>
-<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="co"># Bias</span></code></pre></div>
-<pre><code>## [1] 0.003347665</code></pre>
-<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<pre><code>## [1] 0.003347682</code></pre>
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span><span class="op">)</span>                           <span class="co"># Variance</span></code></pre></div>
-<pre><code>## [1] 0.003542071</code></pre>
+<pre><code>## [1] 0.00354207</code></pre>
 <p></p>
 <p>The bias is indeed smaller compared to that of the simple model, but in exchange, the variance increases substantially. The net effect (via the <em>squared bias</em>) is in favor of the simpler model.</p>
 </div>
@@ -320,7 +327,7 @@ We are then able to compute the bias and the variance of the predictions on the 
 <p>One recent reference on this topic and its impact on portfolio strategies is <span class="citation"><a href="solutions-to-exercises.html#ref-hsu2018asset" role="doc-biblioref">Hsu et al.</a> (<a href="solutions-to-exercises.html#ref-hsu2018asset" role="doc-biblioref">2018</a>)</span>, which builds on the work of <span class="citation"><a href="solutions-to-exercises.html#ref-white2000reality" role="doc-biblioref">White</a> (<a href="solutions-to-exercises.html#ref-white2000reality" role="doc-biblioref">2000</a>)</span>. Both of these references do not deal with ML models, but the principle is the same. When given a dataset, a sufficiently intense level of analysis (by a human or a machine) will always be able to detect some patterns. Whether these patterns are spurious or not is the key question.</p>
 <p>In Figure <a href="valtune.html#fig:overfit">10.8</a>, we illustrate this idea with a simple visual example. We try to find a model that maps x into y. The (training) data points are the small black circles. The simplest model is the constant one (only one parameter), but with two parameters (level and slope), the fit is already quite good. This is shown with the blue line. With a sufficient number of parameters, it is possible to build a model that flows through all the points. One example would be a high-dimensional polynomial. One such model is represented with the red line. Now there seems to be a strange point in the dataset and the complex model fits closely to match this point.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:overfit"></span>
+<span style="display:block;" id="fig:overfit"></span>
 <img src="images/overfitting.png" alt="Illustration of overfitting: a model closely matching training data is rarely a good idea." width="450px"><p class="caption">
 FIGURE 10.8: Illustration of overfitting: a model closely matching training data is rarely a good idea.
 </p>
@@ -408,7 +415,7 @@ In order to illustrate the process of grid search, we will try to find the best 
 <strong>lambda</strong>, the weight regularizer which penalizes the objective function through the total sum of squared weights/scores.</li>
 </ul>
 <p>Below, we create a grid with the values we want to test for these parameters.</p>
-<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span><span class="op">)</span>         <span class="co"># Values for eta</span>
 <span class="va">nrounds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span>                 <span class="co"># Values for nrounds</span>
 <span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span><span class="op">)</span>        <span class="co"># Values for lambda</span>
@@ -421,15 +428,15 @@ In order to illustrate the process of grid search, we will try to find the best 
 ## 4  0.7   10 0.01
 ## 5  0.9   10 0.01
 ## 6  0.1   50 0.01</code></pre>
-<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
 <span class="va">nrounds</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>
 <span class="va">lambda</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span></code></pre></div>
 <p></p>
 <p>Given the computational cost of grid search, we perform the exploration on the dataset with the small number of features (which we recycle from Chapter <a href="trees.html#trees">6</a>). In order to avoid the burden of loops, we resort to the functional programming capabilities of R, via the <em>purrr</em> package. This allows us to define a function that will lighten and simplify the code. This function, coded below, takes data and parameter inputs and returns an error metric for the algorithm. We choose the mean squared error to evaluate the impact of hyperparameter values.</p>
-<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">grid_par</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_matrix</span>, <span class="va">test_features</span>, <span class="va">test_label</span>, <span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span>
-    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">train_matrix</span> <span class="op">%&gt;%</span> 
+    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">train_matrix</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
         <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">.</span>,                            <span class="co"># Data source (pipe input)</span>
                   eta <span class="op">=</span> <span class="va">eta</span>,                           <span class="co"># Learning rate</span>
                   objective <span class="op">=</span> <span class="st">"reg:squarederror"</span>,  <span class="co"># Objective function</span>
@@ -445,9 +452,9 @@ In order to illustrate the process of grid search, we will try to find the best 
 <span class="op">}</span> </code></pre></div>
 <p></p>
 <p>The grid_par function can then be processed by the functional programming tool <strong>pmap</strong> that is going to perform the loop on parameter values automatically.</p>
-<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># grid_par(train_matrix_xgb, xgb_test, testing_sample$R1M_Usd, 0.1, 3, 0.1) # Possible test </span>
-<span class="va">grd</span> <span class="op">&lt;-</span> <span class="fu">pmap</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span>,             <span class="co"># Parameters for the grid search</span>
+<span class="va">grd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/purrr/man/map2.html">pmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span>,             <span class="co"># Parameters for the grid search</span>
             <span class="va">grid_par</span>,                               <span class="co"># Function on which to apply the search</span>
             train_matrix <span class="op">=</span> <span class="va">train_matrix_xgb</span>,        <span class="co"># Input for function: training data</span>
             test_features <span class="op">=</span> <span class="va">xgb_test</span>,               <span class="co"># Input for function: test features</span>
@@ -456,14 +463,14 @@ In order to illustrate the process of grid search, we will try to find the best 
 <span class="va">grd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span>, error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">grd</span><span class="op">)</span><span class="op">)</span> <span class="co"># Dataframe with all results</span></code></pre></div>
 <p></p>
 <p>Once the squared mean errors have been gathered, it is possible to plot them. We chose to work with 3 parameters on purpose because their influence can be simultaneuously plotted on one graph.</p>
-<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">grd</span><span class="op">$</span><span class="va">eta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">eta</span><span class="op">)</span>                                  <span class="co"># Params as categories (for plot)</span>
-<span class="va">grd</span> <span class="op">%&gt;%</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">eta</span>, y <span class="op">=</span> <span class="va">error</span>, fill <span class="op">=</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>      <span class="co"># Plot!</span>
-    <span class="fu">geom_bar</span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">facet_grid</span><span class="op">(</span>rows <span class="op">=</span> <span class="fu">vars</span><span class="op">(</span><span class="va">nrounds</span><span class="op">)</span>, cols <span class="op">=</span> <span class="fu">vars</span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-    <span class="fu">theme</span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<span class="va">grd</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">eta</span>, y <span class="op">=</span> <span class="va">error</span>, fill <span class="op">=</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>      <span class="co"># Plot!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_grid.html">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/vars.html">vars</a></span><span class="op">(</span><span class="va">nrounds</span><span class="op">)</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/vars.html">vars</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:gridvisu"></span>
+<span style="display:block;" id="fig:gridvisu"></span>
 <img src="ML_factor_files/figure-html/gridvisu-1.png" alt="Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda." width="550px"><p class="caption">
 FIGURE 10.9: Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda.
 </p>
@@ -479,12 +486,12 @@ FIGURE 10.9: Plot of error metrics (SMEs) for many parameter values. Each row of
 <p>
 There are several packages in R that relate to Bayesian optimization. We work with <em>rBayesianOptimization</em>, which is general purpose but also needs more coding involvement.</p>
 <p>Just as for the grid search, we need to code the objective function on which the hyperparameters will be optimized. Under <em>rBayesianOptimization</em>, the output has to have a particular form, with a score and a prediction variable. The function will <em>maximize</em> the score, hence we will define it as <em>minus</em> the mean squared error.</p>
-<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bayes_par_opt</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_matrix</span> <span class="op">=</span> <span class="va">train_matrix_xgb</span>,        <span class="co"># Input for func: train data</span>
                           <span class="va">test_features</span> <span class="op">=</span> <span class="va">xgb_test</span>,               <span class="co"># Input for func: test feats</span>
                           <span class="va">test_label</span> <span class="op">=</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>,    <span class="co"># Input for func: test label</span>
                           <span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span>                  <span class="co"># Input for func params</span>
-    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">train_matrix</span> <span class="op">%&gt;%</span> 
+    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">train_matrix</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
         <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">.</span>,                       <span class="co"># Data source (pipe input)</span>
                   eta <span class="op">=</span> <span class="va">eta</span>,                      <span class="co"># Learning rate</span>
                   objective <span class="op">=</span> <span class="st">"reg:squarederror"</span>, <span class="co"># Objective function</span>
@@ -501,8 +508,8 @@ There are several packages in R that relate to Bayesian optimization. We work wi
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Once the objective function is defined, it can be plugged into the Bayesian optimizer.</p>
-<div class="sourceCode" id="cb142"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://github.com/yanyachen/rBayesianOptimization">rBayesianOptimization</a></span><span class="op">)</span>
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yanyachen/rBayesianOptimization">rBayesianOptimization</a></span><span class="op">)</span>
 <span class="va">bayes_opt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rBayesianOptimization/man/BayesianOptimization.html">BayesianOptimization</a></span><span class="op">(</span><span class="va">bayes_par_opt</span>,           <span class="co"># Function to maximize</span>
                      bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>eta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.8</span><span class="op">)</span>,      <span class="co"># Bounds for eta</span>
                                    lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span>,     <span class="co"># Bounds for lambda</span>
@@ -513,24 +520,24 @@ There are several packages in R that relate to Bayesian optimization. We work wi
                      verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ##  Best Parameters Found: 
-## Round = 14   eta = 0.3001    lambda = 0.4518 nrounds = 10.0000   Value = -0.0379</code></pre>
-<div class="sourceCode" id="cb144"><pre class="downlit sourceCode r">
+## Round = 14   eta = 0.3001394 lambda = 0.4517514  nrounds = 10.0000   Value = -0.03793923</code></pre>
+<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">bayes_opt</span><span class="op">$</span><span class="va">Best_Par</span></code></pre></div>
 <pre><code>##        eta     lambda    nrounds 
-##  0.3001398  0.4517514 10.0000000</code></pre>
+##  0.3001394  0.4517514 10.0000000</code></pre>
 <p></p>
 <p>The final parameters indicate that it is advised to resist overfitting: small number of learners and large penalization seem to be the best choices.</p>
 <p>To confirm these results, we plot the relationship between the loss (up to the sign) and two hyperparameters. Each point corresponds to a value tested in the optimization. The best values are clearly to the left of the left graph and to the right of the right graph and the pattern is reliably pronounced. According to these graphs, it seems indeed wiser to pick a smaller number of trees and a larger penalization factor (to maximize minus the loss).</p>
-<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://rpkgs.datanovia.com/ggpubr/">"ggpubr"</a></span><span class="op">)</span> <span class="co"># Package for combining plots</span>
-<span class="va">plot_rounds</span> <span class="op">&lt;-</span> <span class="va">bayes_opt</span><span class="op">$</span><span class="va">History</span> <span class="op">%&gt;%</span> 
-    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">nrounds</span>, y <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
-<span class="va">plot_lambda</span> <span class="op">&lt;-</span> <span class="va">bayes_opt</span><span class="op">$</span><span class="va">History</span> <span class="op">%&gt;%</span> 
-    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
+<span class="va">plot_rounds</span> <span class="op">&lt;-</span> <span class="va">bayes_opt</span><span class="op">$</span><span class="va">History</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">nrounds</span>, y <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
+<span class="va">plot_lambda</span> <span class="op">&lt;-</span> <span class="va">bayes_opt</span><span class="op">$</span><span class="va">History</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/ggpubr/man/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">plot_rounds</span>, <span class="va">plot_lambda</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:bayesoptfig"></span>
+<span style="display:block;" id="fig:bayesoptfig"></span>
 <img src="ML_factor_files/figure-html/bayesoptfig-1.png" alt="Relationship between (minus) the loss and hyperparameter values." width="450px"><p class="caption">
 FIGURE 10.10: Relationship between (minus) the loss and hyperparameter values.
 </p>
@@ -606,7 +613,7 @@ In machine learning, a popular approach is to split the data into <span class="m
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-10-13.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
@@ -626,6 +633,22 @@ In machine learning, a popular approach is to split the data into <span class="m
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
 </script>
 </body>
 </html>
