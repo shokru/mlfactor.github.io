@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 5 Penalized regressions and sparse hedging for minimum variance portfolios | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 5 Penalized regressions and sparse hedging for minimum variance portfolios | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 5 Penalized regressions and sparse hedging for minimum variance portfolios | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content="In this chapter, we introduce the widespread concept of regularization for linear models. There are in fact several possible applications for these models. The first one is straightforward: resort...">
+<meta property="og:description" content="In this chapter, we introduce the widespread concept of regularization for linear models. There are in fact several possible applications for these models. The first one is straightforward: resort...">
+<meta name="twitter:description" content="In this chapter, we introduce the widespread concept of regularization for linear models. There are in fact several possible applications for these models. The first one is straightforward: resort...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="active" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="lasso" class="section level1" number="5">
+<h1>
+<span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios<a class="anchor" aria-label="anchor" href="#lasso"><i class="fas fa-link"></i></a>
+</h1>
+<p></p>
+<p>In this chapter, we introduce the widespread concept of regularization for linear models. There are in fact several possible applications for these models. The first one is straightforward: resort to penalizations to improve the robustness of factor-based predictive regressions. The outcome can then be used to fuel an allocation scheme. For instance, <span class="citation"><a href="solutions-to-exercises.html#ref-han2018firm" role="doc-biblioref">Han et al.</a> (<a href="solutions-to-exercises.html#ref-han2018firm" role="doc-biblioref">2019</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-rapach2019time" role="doc-biblioref">D. Rapach and Zhou</a> (<a href="solutions-to-exercises.html#ref-rapach2019time" role="doc-biblioref">2019</a>)</span> use penalized regressions to improve stock return prediction when combining forecasts that emanate from individual characteristics.</p>
+<p>Similar ideas can be developed for macroeconomic predictions for instance, as in <span class="citation"><a href="solutions-to-exercises.html#ref-uematsu2019high" role="doc-biblioref">Uematsu and Tanaka</a> (<a href="solutions-to-exercises.html#ref-uematsu2019high" role="doc-biblioref">2019</a>)</span>.
+The second application stems from a less known result which originates from <span class="citation"><a href="solutions-to-exercises.html#ref-stevens1998inverse" role="doc-biblioref">Stevens</a> (<a href="solutions-to-exercises.html#ref-stevens1998inverse" role="doc-biblioref">1998</a>)</span>. It links the weights of optimal mean-variance portfolios to particular cross-sectional regressions. The idea is then different and the purpose is to improve the quality of mean-variance driven portfolio weights. We present the two approaches below after an introduction on regularization techniques for linear models.</p>
+<p>Other examples of financial applications of penalization can be found in <span class="citation"><a href="solutions-to-exercises.html#ref-d2011identifying" role="doc-biblioref">d’Aspremont</a> (<a href="solutions-to-exercises.html#ref-d2011identifying" role="doc-biblioref">2011</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-ban2016machine" role="doc-biblioref">Ban, El Karoui, and Lim</a> (<a href="solutions-to-exercises.html#ref-ban2016machine" role="doc-biblioref">2016</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-kremer2019sparse" role="doc-biblioref">Kremer et al.</a> (<a href="solutions-to-exercises.html#ref-kremer2019sparse" role="doc-biblioref">2019</a>)</span>. In any case, the idea is the same as in the seminal paper <span class="citation"><a href="solutions-to-exercises.html#ref-tibshirani1996regression" role="doc-biblioref">Tibshirani</a> (<a href="solutions-to-exercises.html#ref-tibshirani1996regression" role="doc-biblioref">1996</a>)</span>: standard (unconstrained) optimization programs may lead to noisy estimates, thus adding a structuring constraint helps remove some noise (at the cost of a possible bias). For instance, <span class="citation"><a href="solutions-to-exercises.html#ref-kremer2019sparse" role="doc-biblioref">Kremer et al.</a> (<a href="solutions-to-exercises.html#ref-kremer2019sparse" role="doc-biblioref">2019</a>)</span> use this concept to build more robust mean-variance (<span class="citation"><a href="solutions-to-exercises.html#ref-markowitz1952portfolio" role="doc-biblioref">Markowitz</a> (<a href="solutions-to-exercises.html#ref-markowitz1952portfolio" role="doc-biblioref">1952</a>)</span>) portfolios and <span class="citation"><a href="solutions-to-exercises.html#ref-freyberger2020dissecting" role="doc-biblioref">Freyberger, Neuhierl, and Weber</a> (<a href="solutions-to-exercises.html#ref-freyberger2020dissecting" role="doc-biblioref">2020</a>)</span> use it to single out the characteristics that <em>really</em> help explain the cross-section of equity returns.</p>
+<div id="penalized-regressions" class="section level2" number="5.1">
+<h2>
+<span class="header-section-number">5.1</span> Penalized regressions<a class="anchor" aria-label="anchor" href="#penalized-regressions"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="penreg" class="section level3" number="5.1.1">
+<h3>
+<span class="header-section-number">5.1.1</span> Simple regressions<a class="anchor" aria-label="anchor" href="#penreg"><i class="fas fa-link"></i></a>
+</h3>
+<p> 
+The ideas behind linear models are at least two centuries old (<span class="citation"><a href="solutions-to-exercises.html#ref-legendre1805nouvelles" role="doc-biblioref">Legendre</a> (<a href="solutions-to-exercises.html#ref-legendre1805nouvelles" role="doc-biblioref">1805</a>)</span> is an early reference on least squares optimization). Given a matrix of predictors <span class="math inline">\(\textbf{X}\)</span>, we seek to decompose the output vector <span class="math inline">\(\textbf{y}\)</span> as a linear function of the columns of <span class="math inline">\(\textbf{X}\)</span> (written <span class="math inline">\(\textbf{X}\boldsymbol{\beta}\)</span>) plus an error term <span class="math inline">\(\boldsymbol{\epsilon}\)</span>: <span class="math inline">\(\textbf{y}=\textbf{X}\boldsymbol{\beta}+\boldsymbol{\epsilon}\)</span>.</p>
+<p>The best choice of <span class="math inline">\(\boldsymbol{\beta}\)</span> is naturally the one that minimizes the error. For analytical tractability, it is the sum of squared errors that is minimized: <span class="math inline">\(L=\boldsymbol{\epsilon}'\boldsymbol{\epsilon}=\sum_{i=1}^I\epsilon_i^2\)</span>. The loss <span class="math inline">\(L\)</span> is called the sum of squared residuals (SSR). In order to find the optimal <span class="math inline">\(\boldsymbol{\beta}\)</span>, it is imperative to differentiate this loss <span class="math inline">\(L\)</span> with respect to <span class="math inline">\(\boldsymbol{\beta}\)</span> because the first order condition requires that the gradient be equal to zero:
+<span class="math display">\[\begin{align*}
+\nabla_{\boldsymbol{\beta}} L&amp;=\frac{\partial}{\partial \boldsymbol{\beta}}(\textbf{y}-\textbf{X}\boldsymbol{\beta})'(\textbf{y}-\textbf{X}\boldsymbol{\beta})=\frac{\partial}{\partial \boldsymbol{\beta}}\boldsymbol{\beta}'\textbf{X}'\textbf{X}\boldsymbol{\beta}-2\textbf{y}'\textbf{X}\boldsymbol{\beta} \\
+&amp;=2\textbf{X}'\textbf{X}\boldsymbol{\beta}  -2\textbf{X}'\textbf{y}
+\end{align*}\]</span>
+so that the first order condition <span class="math inline">\(\nabla_{\boldsymbol{\beta}}=\textbf{0}\)</span> is satisfied if
+<span class="math display" id="eq:regbeta">\[\begin{equation}
+\tag{5.1}
+\boldsymbol{\beta}^*=(\textbf{X}'\textbf{X})^{-1}\textbf{X}'\textbf{y},
+\end{equation}\]</span>
+which is known as the standard <strong>ordinary least squares</strong> (OLS) solution of the linear model. If the matrix <span class="math inline">\(\textbf{X}\)</span> has dimensions <span class="math inline">\(I \times K\)</span>, then the <span class="math inline">\(\textbf{X}'\textbf{X}\)</span> can only be inverted if the number of rows <span class="math inline">\(I\)</span> is strictly superior to the number of columns <span class="math inline">\(K\)</span>. In some cases, that may not hold; there are more predictors than instances and there is no unique value of <span class="math inline">\(\boldsymbol{\beta}\)</span> that minimizes the loss. If <span class="math inline">\(\textbf{X}'\textbf{X}\)</span> is nonsingular (or positive definite), then the second order condition ensures that <span class="math inline">\(\boldsymbol{\beta}^*\)</span> yields a global minimum for the loss <span class="math inline">\(L\)</span> (the second order derivative of <span class="math inline">\(L\)</span> with respect to <span class="math inline">\(\boldsymbol{\beta}\)</span>, the Hessian matrix, is exactly <span class="math inline">\(\textbf{X}'\textbf{X}\)</span>).</p>
+<p>Up to now, we have made no distributional assumption on any of the above quantities. Standard assumptions are the following:<br>
+- <span class="math inline">\(\mathbb{E}[\textbf{y}|\textbf{X}]=\textbf{X}\boldsymbol{\beta}\)</span>: <strong>linear shape for the regression function</strong>;<br>
+- <span class="math inline">\(\mathbb{E}[\boldsymbol{\epsilon}|\textbf{X}]=\textbf{0}\)</span>: errors are <strong>independent of predictors</strong>;<br>
+- <span class="math inline">\(\mathbb{E}[\boldsymbol{\epsilon}\boldsymbol{\epsilon}'| \textbf{X}]=\sigma^2\textbf{I}\)</span>: <strong>homoscedasticity</strong> - errors are uncorrelated and have identical variance;<br>
+- the <span class="math inline">\(\epsilon_i\)</span> are normally distributed.</p>
+<p>Under these hypotheses, it is possible to perform statistical tests related to the <span class="math inline">\(\hat{\boldsymbol{\beta}}\)</span> coefficients. We refer to chapters 2 to 4 in <span class="citation"><a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">Greene</a> (<a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">2018</a>)</span> for a thorough treatment on linear models as well as to chapter 5 of the same book for details on the corresponding tests.</p>
+</div>
+<div id="forms-of-penalizations" class="section level3" number="5.1.2">
+<h3>
+<span class="header-section-number">5.1.2</span> Forms of penalizations<a class="anchor" aria-label="anchor" href="#forms-of-penalizations"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Penalized regressions have been popularized since the seminal work of <span class="citation"><a href="solutions-to-exercises.html#ref-tibshirani1996regression" role="doc-biblioref">Tibshirani</a> (<a href="solutions-to-exercises.html#ref-tibshirani1996regression" role="doc-biblioref">1996</a>)</span>. The idea is to impose a constraint on the coefficients of the regression, namely that their total magnitude be restrained. In his original paper, <span class="citation"><a href="solutions-to-exercises.html#ref-tibshirani1996regression" role="doc-biblioref">Tibshirani</a> (<a href="solutions-to-exercises.html#ref-tibshirani1996regression" role="doc-biblioref">1996</a>)</span> proposes to estimate the following model (LASSO):
+<span class="math display" id="eq:lasso1">\[\begin{equation}
+\tag{5.2}
+y_i = \sum_{j=1}^J \beta_jx_{i,j} + \epsilon_i, \quad i =1,\dots,I, \quad \text{s.t.} \quad \sum_{j=1}^J |\beta_j| &lt; \delta, 
+\end{equation}\]</span>
+for some strictly positive constant <span class="math inline">\(\delta\)</span>. Under least square minimization, this amounts to solve the Lagrangian formulation:
+<span class="math display" id="eq:lasso2">\[\begin{equation}
+\tag{5.3}
+\underset{\mathbf{\beta}}{\min} \, \left\{ \sum_{i=1}^I\left(y_i - \sum_{j=1}^J \beta_jx_{i,j} \right)^2+\lambda \sum_{j=1}^J |\beta_j| \right\},
+\end{equation}\]</span>
+for some value <span class="math inline">\(\lambda&gt;0\)</span> which naturally depends on <span class="math inline">\(\delta\)</span> (the lower the <span class="math inline">\(\delta\)</span>, the higher the <span class="math inline">\(\lambda\)</span>: the constraint is more binding). This specification seems close to the ridge regression (<span class="math inline">\(L^2\)</span> regularization), which is in fact anterior to the Lasso:
+<span class="math display" id="eq:ridge">\[\begin{equation}
+\tag{5.4}
+\underset{\mathbf{\beta}}{\min} \, \left\{ \sum_{i=1}^I\left(y_i - \sum_{j=1}^J\beta_jx_{i,j} \right)^2+\lambda \sum_{j=1}^J \beta_j^2 \right\},
+\end{equation}\]</span>
+and which is equivalent to estimating the following model
+<span class="math display" id="eq:ridge6">\[\begin{equation}
+\tag{5.5}
+y_i = \sum_{j=1}^J \beta_jx_{i,j} + \epsilon_i, \quad i =1,\dots,I, \quad \text{s.t.} \quad \sum_{j=1}^J \beta_j^2 &lt; \delta, 
+\end{equation}\]</span>
+but the outcome is in fact quite different, which justifies a separate treatment. Mechanically, as <span class="math inline">\(\lambda\)</span>, the penalization intensity, increases (or as <span class="math inline">\(\delta\)</span> in <a href="lasso.html#eq:ridge6">(5.5)</a> <em>decreases</em>), the coefficients of the ridge regression all slowly decrease in magnitude towards zero. In the case of the LASSO, the convergence is somewhat more brutal as some coefficients shrink to zero very quickly. For <span class="math inline">\(\lambda\)</span> sufficiently large, only one coefficient will remain nonzero, while in the ridge regression, the zero value is only reached asymptotically for all coefficients. We invite the interested read to have a look at the survey in <span class="citation"><a href="solutions-to-exercises.html#ref-hastie2020ridge" role="doc-biblioref">Hastie</a> (<a href="solutions-to-exercises.html#ref-hastie2020ridge" role="doc-biblioref">2020</a>)</span> about all applications of ridge regressions in data science with links to other topics like cross-validation and dropout regularization, among others.</p>
+<p>To depict the difference between the Lasso and the ridge regression, let us consider the case of <span class="math inline">\(K=2\)</span> predictors which is shown in Figure <a href="lasso.html#fig:lassoridge">5.1</a>. The optimal unconstrained solution <span class="math inline">\(\boldsymbol{\beta}^*\)</span> is pictured in red in the middle of the space. The problem is naturally that it does not satisfy the imposed conditions. These constraints are shown in light grey: they take the shape of a square <span class="math inline">\(|\beta_1|+|\beta_2| \le \delta\)</span> in the case of the Lasso and a circle <span class="math inline">\(\beta_1^2+\beta_2^2 \le \delta\)</span> for the ridge regression. In order to satisfy these constraints, the optimization needs to look in the vicinity of <span class="math inline">\(\boldsymbol{\beta}^*\)</span> by allowing for larger error levels. These error levels are shown as orange ellipsoids in the figure. When the requirement on the error is loose enough, one ellipsoid touches the acceptable boundary (in grey) and this is where the constrained solution is located.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:lassoridge"></span>
+<img src="images/lassoridge.png" alt="Schematic view of Lasso (left) versus ridge (right) regressions." width="800px"><p class="caption">
+FIGURE 5.1: Schematic view of Lasso (left) versus ridge (right) regressions.
+</p>
+</div>
+<p>Both methods work when the number of exogenous variables surpasses that of observations, i.e., in the case where classical regressions are ill-defined. This is easy to see in the case of the ridge regression for which the OLS solution is simply
+<span class="math display">\[\hat{\boldsymbol{\beta}}=(\mathbf{X}'\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}'\mathbf{Y}.\]</span>
+The additional term <span class="math inline">\(\lambda \mathbf{I}_N\)</span> compared to Equation <a href="lasso.html#eq:regbeta">(5.1)</a> ensures that the inverse matrix is well-defined whenever <span class="math inline">\(\lambda&gt;0\)</span>. As <span class="math inline">\(\lambda\)</span> increases, the magnitudes of the <span class="math inline">\(\hat{\beta}_i\)</span> decrease, which explains why penalizations are sometimes referred to as <strong>shrinkage</strong> methods (the estimated coefficients see their values shrink). </p>
+<p><span class="citation"><a href="solutions-to-exercises.html#ref-zou2005regularization" role="doc-biblioref">Zou and Hastie</a> (<a href="solutions-to-exercises.html#ref-zou2005regularization" role="doc-biblioref">2005</a>)</span> propose to benefit from the best of both worlds when combining both penalizations in a convex manner (which they call the <strong>elasticnet</strong>):
+<span class="math display" id="eq:elasticnet">\[\begin{equation}
+\tag{5.6}
+y_i = \sum_{j=1}^J \beta_jx_{i,j} + \epsilon_i, \quad \text{s.t.} \quad \alpha \sum_{j=1}^J |\beta_j| +(1-\alpha)\sum_{j=1}^J \beta_j^2&lt; \delta, \quad i =1,\dots,N,
+\end{equation}\]</span>
+which is associated to the optimization program
+<span class="math display" id="eq:elastic">\[\begin{equation}
+\tag{5.7}
+\underset{\mathbf{\beta}}{\min} \, \left\{ \sum_{i=1}^I\left(y_i - \sum_{j=1}^J\beta_jx_{i,j} \right)^2+\lambda \left(\alpha\sum_{j=1}^J |\beta_j|+ (1-\alpha)\sum_{j=1}^J \beta_j^2\right) \right\}.
+\end{equation}\]</span></p>
+<p>The main advantage of the LASSO compared to the ridge regression is its selection capability. Indeed, given a very large number of variables (or predictors), the LASSO will progressively rule out those that are the least relevant. The elasticnet preserves this selection ability and <span class="citation"><a href="solutions-to-exercises.html#ref-zou2005regularization" role="doc-biblioref">Zou and Hastie</a> (<a href="solutions-to-exercises.html#ref-zou2005regularization" role="doc-biblioref">2005</a>)</span> argue that in some cases, it is even more effective than the LASSO. The parameter <span class="math inline">\(\alpha \in [0,1]\)</span> tunes the smoothness of convergence (of the coefficients) towards zero. The closer <span class="math inline">\(\alpha\)</span> is to zero, the smoother the convergence.</p>
+</div>
+<div id="illustrations" class="section level3" number="5.1.3">
+<h3>
+<span class="header-section-number">5.1.3</span> Illustrations<a class="anchor" aria-label="anchor" href="#illustrations"><i class="fas fa-link"></i></a>
+</h3>
+<p>We begin with simple illustrations of penalized regressions. We start with the LASSO. The original implementation by the authors is in R, which is practical. The syntax is slightly different, compared to usual linear models. The illustrations are run on the whole dataset. First, we estimate the coefficients. By default, the function chooses a large array of penalization values so that the results for different penalization intensities (<span class="math inline">\(\lambda\)</span>) can be shown immediately.</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu">glmnet</a></span><span class="op">)</span>
+<span class="va">y_penalized</span> <span class="op">&lt;-</span> <span class="va">data_ml</span><span class="op">$</span><span class="va">R1M_Usd</span>                              <span class="co"># Dependent variable</span>
+<span class="va">x_penalized</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Predictors</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="va">fit_lasso</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x_penalized</span>, <span class="va">y_penalized</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>    <span class="co"># Model alpha = 1: LASSO</span></code></pre></div>
+<p></p>
+<p>Once the coefficients are computed, they require some wrangling before plotting. Also, there are too many of them, so we only plot a subset of them.</p>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">lasso_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_lasso</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span>                        <span class="co"># Extract LASSO coefs</span>
+<span class="va">lambda</span> <span class="op">&lt;-</span> <span class="va">fit_lasso</span><span class="op">$</span><span class="va">lambda</span>                                  <span class="co"># Values of the penalisation const</span>
+<span class="va">lasso_res</span><span class="op">$</span><span class="va">Lambda</span> <span class="op">&lt;-</span> <span class="va">lambda</span><span class="op">[</span><span class="va">lasso_res</span><span class="op">$</span><span class="va">j</span><span class="op">]</span>                     <span class="co"># Put the labels where they belong</span>
+<span class="va">lasso_res</span><span class="op">$</span><span class="va">Feature</span> <span class="op">&lt;-</span> <span class="va">features</span><span class="op">[</span><span class="va">lasso_res</span><span class="op">$</span><span class="va">i</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Add names of variables to output</span>
+<span class="va">lasso_res</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">120</span>,<span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                       <span class="co"># Take the first 120 estimates</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Lambda</span>, y <span class="op">=</span> <span class="va">x</span>, color <span class="op">=</span> <span class="va">Feature</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>       <span class="co"># Plot!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="fl">0.25</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">ylab</a></span><span class="op">(</span><span class="st">"beta"</span><span class="op">)</span> <span class="op">+</span>        <span class="co"># Change aspect ratio of graph</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>legend.text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span>             <span class="co"># Reduce legend font size</span></code></pre></div>
+<div class="figure">
+<span style="display:block;" id="fig:lassoresults"></span>
+<img src="ML_factor_files/figure-html/lassoresults-1.png" alt="LASSO model. The dependent variable is the 1 month ahead return." width="400px"><p class="caption">
+FIGURE 5.2: LASSO model. The dependent variable is the 1 month ahead return.
+</p>
+</div>
+<p></p>
+<p>The graph plots the evolution of coefficients as the penalization intensity, <span class="math inline">\(\lambda\)</span>, increases. For some characteristics, like Ebit_Ta (in orange), the convergence to zero is rapid. Other variables resist the penalization longer, like Mkt_Cap_3M_Usd, which is the last one to vanish. Essentially, this means that at the first order, this variable is an important driver of future 1-month returns in our sample. Moreover, the negative sign of its coefficient is a confirmation (again, in this sample) of the size anomaly, according to which small firms experience higher future returns compared to their larger counterparts.</p>
+<p>Next, we turn to ridge regressions.</p>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_ridge</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x_penalized</span>, <span class="va">y_penalized</span>, alpha <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>                  <span class="co"># alpha = 0: ridge</span>
+<span class="va">ridge_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">fit_ridge</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span>                                      <span class="co"># Extract ridge coefs</span>
+<span class="va">lambda</span> <span class="op">&lt;-</span> <span class="va">fit_ridge</span><span class="op">$</span><span class="va">lambda</span>                                                <span class="co"># Penalisation const</span>
+<span class="va">ridge_res</span><span class="op">$</span><span class="va">Feature</span> <span class="op">&lt;-</span> <span class="va">features</span><span class="op">[</span><span class="va">ridge_res</span><span class="op">$</span><span class="va">i</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">ridge_res</span><span class="op">$</span><span class="va">Lambda</span> <span class="op">&lt;-</span> <span class="va">lambda</span><span class="op">[</span><span class="va">ridge_res</span><span class="op">$</span><span class="va">j</span><span class="op">]</span>                                   <span class="co"># Set labels right</span>
+<span class="va">ridge_res</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">Feature</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/droplevels.html">droplevels</a></span><span class="op">(</span><span class="va">lasso_res</span><span class="op">$</span><span class="va">Feature</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">120</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="co"># Keep same features </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Lambda</span>, y <span class="op">=</span> <span class="va">x</span>, color <span class="op">=</span> <span class="va">Feature</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">ylab</a></span><span class="op">(</span><span class="st">"beta"</span><span class="op">)</span> <span class="op">+</span>      <span class="co"># Plot!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_continuous.html">scale_x_log10</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="fl">45</span><span class="op">)</span> <span class="op">+</span>                     <span class="co"># Aspect ratio </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>legend.text <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">7</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure">
+<span style="display:block;" id="fig:sparseridge"></span>
+<img src="ML_factor_files/figure-html/sparseridge-1.png" alt="Ridge regression. The dependent variable is the 1 month ahead return." width="576"><p class="caption">
+FIGURE 5.3: Ridge regression. The dependent variable is the 1 month ahead return.
+</p>
+</div>
+<p></p>
+<p>In Figure <a href="lasso.html#fig:sparseridge">5.3</a>, the convergence to zero is much smoother. We underline that the x-axis (penalization intensities) have a log-scale. This allows to see the early patterns (close to zero, to the left) more clearly. As in the previous figure, the Mkt_Cap_3M_Usd predictor clearly dominates, with again large negative coefficients. Nonetheless, as <span class="math inline">\(\lambda\)</span> increases, its domination over the other predictor fades.</p>
+<p>By definition, the elasticnet will produce curves that behave like a blend of the two above approaches. Nonetheless, as long as <span class="math inline">\(\alpha &gt;0\)</span>, the selective property of the LASSO will be preserved: some features will see their coefficients shrink rapidly to zero. In fact, the strength of the LASSO is such that a balanced mix of the two penalizations is not reached at <span class="math inline">\(\alpha = 1/2\)</span>, but rather at a much smaller value (possibly below 0.1).</p>
+</div>
+</div>
+<div id="sparse-hedging-for-minimum-variance-portfolios" class="section level2" number="5.2">
+<h2>
+<span class="header-section-number">5.2</span> Sparse hedging for minimum variance portfolios<a class="anchor" aria-label="anchor" href="#sparse-hedging-for-minimum-variance-portfolios"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="presentation-and-derivations" class="section level3" number="5.2.1">
+<h3>
+<span class="header-section-number">5.2.1</span> Presentation and derivations<a class="anchor" aria-label="anchor" href="#presentation-and-derivations"><i class="fas fa-link"></i></a>
+</h3>
+<p>The idea of constructing sparse portfolios is not new per se (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-brodie2009sparse" role="doc-biblioref">Brodie et al.</a> (<a href="solutions-to-exercises.html#ref-brodie2009sparse" role="doc-biblioref">2009</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-fastrich2015constructing" role="doc-biblioref">Fastrich, Paterlini, and Winker</a> (<a href="solutions-to-exercises.html#ref-fastrich2015constructing" role="doc-biblioref">2015</a>)</span>) and the link with the selective property of the LASSO is rather straightforward in classical quadratic programs. Note that the choice of the <span class="math inline">\(L^1\)</span> norm is imperative because when enforcing a simple <span class="math inline">\(L^2\)</span> norm, the diversification of the portfolio increases (see <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2015diversified" role="doc-biblioref">Coqueret</a> (<a href="solutions-to-exercises.html#ref-coqueret2015diversified" role="doc-biblioref">2015</a>)</span>).</p>
+<p>The idea behind this section stems from <span class="citation"><a href="solutions-to-exercises.html#ref-goto2015improving" role="doc-biblioref">Goto and Xu</a> (<a href="solutions-to-exercises.html#ref-goto2015improving" role="doc-biblioref">2015</a>)</span> but the cornerstone result was first published by <span class="citation"><a href="solutions-to-exercises.html#ref-stevens1998inverse" role="doc-biblioref">Stevens</a> (<a href="solutions-to-exercises.html#ref-stevens1998inverse" role="doc-biblioref">1998</a>)</span> and we present it below. We provide details because the derivations are not commonplace in the literature.</p>
+<p>In usual mean-variance allocations, one core ingredient is the inverse covariance matrix of assets <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>. For instance, the maximum Sharpe ratio (MSR) portfolio is given by</p>
+<p><span class="math display" id="eq:MSR">\[\begin{equation}
+\tag{5.8}
+\mathbf{w}^{\text{MSR}}=\frac{\mathbf{\Sigma}^{-1}\boldsymbol{\mu}}{\mathbf{1}'\mathbf{\Sigma}^{-1}\boldsymbol{\mu}},
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbf{\mu}\)</span> is the vector of expected (excess) returns. Taking <span class="math inline">\(\mathbf{\mu}=\mathbf{1}\)</span> yields the minimum variance portfolio, which is agnostic in terms of the first moment of expected returns (and, as such, usually more robust than most alternatives which try to estimate <span class="math inline">\(\boldsymbol{\mu}\)</span> and often fail).</p>
+<p>Usually, the traditional way is to estimate <span class="math inline">\(\boldsymbol{\Sigma}\)</span> and to invert it to get the MSR weights. However, several approaches aim at estimating <span class="math inline">\(\boldsymbol{\Sigma}^{-1}\)</span>  and we present one of them below. We proceed one asset at a time, that is, one line of <span class="math inline">\(\boldsymbol{\Sigma}^{-1}\)</span> at a time.<br>
+If we decompose the matrix <span class="math inline">\(\mathbf{\Sigma}\)</span> into:
+<span class="math display">\[\mathbf{\Sigma}= \left[\begin{array}{cc} \sigma^2 &amp; \mathbf{c}' \\
+\mathbf{c}&amp; \mathbf{C}\end{array} \right],\]</span>
+classical partitioning results (e.g., Schur complements) imply
+<span class="math display">\[\small \mathbf{\Sigma}^{-1}= \left[\begin{array}{cc} (\sigma^2 -\mathbf{c}'\mathbf{C}^{-1}\mathbf{c})^{-1} &amp; - (\sigma^2 -\mathbf{c}'\mathbf{C}^{-1}\mathbf{c})^{-1}\mathbf{c}'\mathbf{C}^{-1} \\
+- (\sigma^2 -\mathbf{c}'\mathbf{C}^{-1}\mathbf{c})^{-1}\mathbf{C}^{-1}\mathbf{c}&amp; \mathbf{C}^{-1}+ (\sigma^2 -\mathbf{c}'\mathbf{C}^{-1}\mathbf{c})^{-1}\mathbf{C}^{-1}\mathbf{cc}'\mathbf{C}^{-1}\end{array} \right].\]</span>
+We are interested in the first line, which has 2 components: the factor <span class="math inline">\((\sigma^2 -\mathbf{c}'\mathbf{C}^{-1}\mathbf{c})^{-1}\)</span> and the line vector <span class="math inline">\(\mathbf{c}'\mathbf{C}^{-1}\)</span>. <span class="math inline">\(\mathbf{C}\)</span> is the covariance matrix of assets <span class="math inline">\(2\)</span> to <span class="math inline">\(N\)</span> and <span class="math inline">\(\mathbf{c}\)</span> is the covariance between the first asset and all other assets. The first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span> is
+<span class="math display" id="eq:sparse1">\[\begin{equation}
+\tag{5.9}
+(\sigma^2 -\mathbf{c}'\mathbf{C}^{-1}\mathbf{c})^{-1} \left[1 \quad  \underbrace{-\mathbf{c}'\mathbf{C}^{-1}}_{N-1 \text{ terms}} \right]. 
+\end{equation}\]</span></p>
+<p>We now consider an alternative setting. We regress the returns of the first asset on those of all other assets:
+<span class="math display" id="eq:sparseeq">\[\begin{equation}
+\tag{5.10}
+r_{1,t}=a_1+\sum_{n=2}^N\beta_{1|n}r_{n,t}+\epsilon_t, \quad \text{ i.e., } \quad  \mathbf{r}_1=a_1\mathbf{1}_T+\mathbf{R}_{-1}\mathbf{\beta}_1+\epsilon_1,
+\end{equation}\]</span>
+where <span class="math inline">\(\mathbf{R}_{-1}\)</span> gathers the returns of all assets except the first one. The OLS estimator for <span class="math inline">\(\mathbf{\beta}_1\)</span> is
+<span class="math display" id="eq:sparse2">\[\begin{equation}
+\tag{5.11}
+\hat{\mathbf{\beta}}_{1}=\mathbf{C}^{-1}\mathbf{c},
+\end{equation}\]</span></p>
+<p>and this is the partitioned form (when a constant is included to the regression) stemming from the Frisch-Waugh-Lovell theorem (see chapter 3 in <span class="citation"><a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">Greene</a> (<a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">2018</a>)</span>).</p>
+<p>In addition,
+<span class="math display" id="eq:sparse3">\[\begin{equation}
+\tag{5.12}
+(1-R^2)\sigma_{\mathbf{r}_1}^2=\sigma_{\mathbf{r}_1}^2- \mathbf{c}'\mathbf{C}^{-1}\mathbf{c} =\sigma^2_{\epsilon_1}.
+\end{equation}\]</span>
+The proof of this last fact is given below.</p>
+<p>With <span class="math inline">\(\mathbf{X}\)</span> being the concatenation of <span class="math inline">\(\mathbf{1}_T\)</span> with returns <span class="math inline">\(\mathbf{R}_{-1}\)</span> and with <span class="math inline">\(\mathbf{y}=\mathbf{r}_1\)</span>, the classical expression of the <span class="math inline">\(R^2\)</span> is <span class="math display">\[R^2=1-\frac{\mathbf{\epsilon}'\mathbf{\epsilon}}{T\sigma_Y^2}=1-\frac{\mathbf{y}'\mathbf{y}-\hat{\mathbf{\beta}'}\mathbf{X}'\mathbf{X}\hat{\mathbf{\beta}}}{T\sigma_Y^2}=1-\frac{\mathbf{y}'\mathbf{y}-\mathbf{y}'\mathbf{X}\hat{\mathbf{\beta}}}{T\sigma_Y^2},\]</span>
+with fitted values <span class="math inline">\(\mathbf{X}\hat{\mathbf{\beta}}= \hat{a_1}\mathbf{1}_T+\mathbf{R}_{-1}\mathbf{C}^{-1}\mathbf{c}\)</span>. Hence,
+<span class="math display">\[\begin{align*}
+T\sigma_{\mathbf{r}_1}^2R^2&amp;=T\sigma_{\mathbf{r}_1}^2-\mathbf{r}'_1\mathbf{r}_1+\hat{a_1}\mathbf{1}'_T\mathbf{r}_1+\mathbf{r}'_1\mathbf{R}_{-1}\mathbf{C}^{-1}\mathbf{c} \\
+T(1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\mathbf{r}'_1\mathbf{r}_1-\hat{a_1}\mathbf{1}'_T\mathbf{r}_1-\left(\mathbf{\tilde{r}}_1+\frac{\mathbf{1}_T\mathbf{1}'_T}{T}\mathbf{r}_1\right)'\left(\tilde{\mathbf{R}}_{-1}+\frac{\mathbf{1}_T\mathbf{1}'_T}{T}\mathbf{R}_{-1}\right)\mathbf{C}^{-1}\mathbf{c} \\
+T(1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\mathbf{r}'_1\mathbf{r}_1-\hat{a_1}\mathbf{1}'_T\mathbf{r}_1-T\mathbf{c}'\mathbf{C}^{-1}\mathbf{c} -\mathbf{r}'_1\frac{\mathbf{1}_T\mathbf{1}'_T}{T}\mathbf{R}_{-1} \mathbf{C}^{-1}\mathbf{c} \\
+T(1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\mathbf{r}'_1\mathbf{r}_1-\frac{(\mathbf{1}'_T\mathbf{r}_1)^2}{T}- T\mathbf{c}'\mathbf{C}^{-1}\mathbf{c} \\
+(1-R^2)\sigma_{\mathbf{r}_1}^2&amp;=\sigma_{\mathbf{r}_1}^2- \mathbf{c}'\mathbf{C}^{-1}\mathbf{c} 
+\end{align*}\]</span>
+where in the fourth equality we have plugged <span class="math inline">\(\hat{a}_1=\frac{\mathbf{1'}_T}{T}(\mathbf{r}_1-\mathbf{R}_{-1}\mathbf{C}^{-1}\mathbf{c})\)</span>. Note that there is probably a simpler proof, see, e.g., section 3.5 in <span class="citation"><a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">Greene</a> (<a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">2018</a>)</span>.</p>
+<p>Combining (<a href="lasso.html#eq:sparse1">(5.9)</a>, (<a href="lasso.html#eq:sparse2">(5.11)</a>) and (<a href="lasso.html#eq:sparse3">(5.12)</a>), we get that the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span> is equal to
+<span class="math display" id="eq:sparsehedgeeq2">\[\begin{equation}
+\tag{5.13}
+\frac{1}{\sigma^2_{\epsilon_1}}\times \left[ 1 \quad  -\hat{\boldsymbol{\beta}}_1'\right].
+\end{equation}\]</span></p>
+<p>Given the first line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, it suffices to multiply by <span class="math inline">\(\boldsymbol{\mu}\)</span> to get the portfolio weight in the first asset (up to a scaling constant).</p>
+<p>There is a nice economic intuition behind the above results which justifies the term “sparse hedging.” We take the case of the minimum variance portfolio, for which <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>. In Equation <a href="lasso.html#eq:sparseeq">(5.10)</a>, we try to explain the return of asset 1 with that of all other assets. In the above equation, up to a scaling constant, the portfolio has a unit position in the first asset and <span class="math inline">\(-\hat{\boldsymbol{\beta}}_1\)</span> positions in all other assets. Hence, the purpose of all other assets is clearly to hedge the return of the first one. In fact, these positions are aimed at minimizing the squared errors of the aggregate portfolio for the first asset (these errors are exactly <span class="math inline">\(\mathbf{\epsilon}_1\)</span>). Moreover, the scaling factor <span class="math inline">\(\sigma^{-2}_{\epsilon_1}\)</span> is also simple to interpret: the more we trust the regression output (because of a small <span class="math inline">\(\sigma^{2}_{\epsilon_1}\)</span>), the more we invest in the hedging portfolio of the asset.</p>
+<p>This reasoning is easily generalized for any line of <span class="math inline">\(\mathbf{\Sigma}^{-1}\)</span>, which can be obtained by regressing the returns of asset <span class="math inline">\(i\)</span> on the returns of all other assets. If the allocation scheme has the form (<a href="lasso.html#eq:MSR">(5.8)</a>) for given values of <span class="math inline">\(\boldsymbol{\mu}\)</span>, then the pseudo-code for the sparse portfolio strategy is the following.</p>
+<p>At each date (which we omit for notational convenience),</p>
+<ul>
+<li>For all stocks <span class="math inline">\(i\)</span>,<br>
+</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>estimate the elasticnet regression over the <span class="math inline">\(t=1,\dots,T\)</span> samples to get the <span class="math inline">\(i^{th}\)</span> line of <span class="math inline">\(\hat{\mathbf{\Sigma}}^{-1}\)</span>:
+<span class="math display">\[ \small \left[\hat{\mathbf{\Sigma}}^{-1}\right]_{i,\cdot}= \underset{\mathbf{\beta}_{i|}}{\text{argmin}}\, \left\{\sum_{t=1}^T\left( r_{i,t}-a_i+\sum_{n\neq i}^N\beta_{i|n}r_{n,t}\right)^2+\lambda \alpha ||  \mathbf{\beta}_{i|}||_1+\lambda (1-\alpha)||\mathbf{\beta}_{i|}||_2^2\right\}
+\]</span><br>
+</li>
+<li>to get the weights of asset <span class="math inline">\(i\)</span>, we compute the <span class="math inline">\(\mathbf{\mu}\)</span>-weighted sum:
+<span class="math inline">\(w_i= \sigma_{\epsilon_i}^{-2}\left(\mu_i- \sum_{j\neq i}\mathbf{\beta}_{i|j}\mu_j\right)\)</span>,</li>
+</ol>
+<p>where we recall that the vectors <span class="math inline">\(\mathbf{\beta}_{i|}=[\mathbf{\beta}_{i|1},\dots,\mathbf{\beta}_{i|i-1},\mathbf{\beta}_{i|i+1},\dots,\mathbf{\beta}_{i|N}]\)</span> are the coefficients from regressing the returns of asset <span class="math inline">\(i\)</span> against the returns of all other assets.<br>
+The introduction of the <strong>penalization norms</strong> is the new ingredient, compared to the original approach of <span class="citation"><a href="solutions-to-exercises.html#ref-stevens1998inverse" role="doc-biblioref">Stevens</a> (<a href="solutions-to-exercises.html#ref-stevens1998inverse" role="doc-biblioref">1998</a>)</span>. The benefits are twofold: first, introducing constraints yields weights that are more robust and less subject to errors in the estimates of <span class="math inline">\(\mathbf{\mu}\)</span>; second, because of sparsity, weights are more stable, less leveraged and thus the strategy is less impacted by transaction costs. Before we turn to numerical applications, we mention a more direct route to the estimation of a <strong>robust inverse covariance matrix</strong>: the Graphical LASSO. The GLASSO estimates the precision matrix (inverse covariance matrix) via maximum likelihood while imposing constraints/penalizations on the weights of the matrix. When the penalization is strong enough, this yields a sparse matrix, i.e., a matrix in which some and possibly many coefficients are zero. We refer to the original article <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2008sparse" role="doc-biblioref">J. Friedman, Hastie, and Tibshirani</a> (<a href="solutions-to-exercises.html#ref-friedman2008sparse" role="doc-biblioref">2008</a>)</span> for more details on this subject.</p>
+</div>
+<div id="sparseex" class="section level3" number="5.2.2">
+<h3>
+<span class="header-section-number">5.2.2</span> Example<a class="anchor" aria-label="anchor" href="#sparseex"><i class="fas fa-link"></i></a>
+</h3>
+<p>The interest of sparse hedging portfolios is to propose a robust approach to the estimation of minimum variance policies. Indeed, since the vector of expected returns <span class="math inline">\(\boldsymbol{\mu}\)</span> is usually very noisy, a simple solution is to adopt an agnostic view by setting <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>. In order to test the added value of the sparsity constraint, we must resort to a full backtest. In doing so, we anticipate the content of Chapter <a href="backtest.html#backtest">12</a>.</p>
+<p>We first prepare the variables. Sparse portfolios are based on returns only; we thus base our analysis on the dedicated variable in matrix/rectangular format (<em>returns</em>) which were created at the end of Chapter <a href="notdata.html#notdata">1</a>.</p>
+<p>Then, we initialize the output variables: portfolio weights and portfolio returns. We want to compare three strategies: an equally weighted (EW) benchmark of all stocks, the classical global minimum variance portfolio (GMV) and the sparse-hedging approach to minimum variance.</p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">t_oos</span> <span class="op">&lt;-</span> <span class="va">returns</span><span class="op">$</span><span class="va">date</span><span class="op">[</span><span class="va">returns</span><span class="op">$</span><span class="va">date</span> <span class="op">&gt;</span> <span class="va">separation_date</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>            <span class="co"># Out-of-sample dates </span>
+    <span class="fu"><a href="https://rdrr.io/r/base/unique.html">unique</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                                     <span class="co"># Remove duplicates</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/zoo/man/yearmon.html">as.Date</a></span><span class="op">(</span>origin <span class="op">=</span> <span class="st">"1970-01-01"</span><span class="op">)</span>                                   <span class="co"># Transform in date format</span>
+<span class="va">Tt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">t_oos</span><span class="op">)</span>                                                  <span class="co"># Nb of dates, avoid T </span>
+<span class="va">nb_port</span> <span class="op">&lt;-</span> <span class="fl">3</span>                                                         <span class="co"># Nb of portfolios/strats.</span>
+<span class="va">portf_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span><span class="fl">0</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">Tt</span>, <span class="va">nb_port</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">returns</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Initial portf. weights</span>
+<span class="va">portf_returns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="va">Tt</span>, ncol <span class="op">=</span> <span class="va">nb_port</span><span class="op">)</span>                <span class="co"># Initial portf. returns </span></code></pre></div>
+<p></p>
+<p>Next, because it is the purpose of this section, we isolate the computation of the weights of sparse-hedging portfolios. In the case of minimum variance portfolios, when <span class="math inline">\(\boldsymbol{\mu}=\boldsymbol{1}\)</span>, the weight in asset 1 will simply be the sum of all terms in Equation <a href="lasso.html#eq:sparsehedgeeq2">(5.13)</a> and the other weights have similar forms.</p>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">weights_sparsehedge</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">returns</span>, <span class="va">alpha</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span>  <span class="co"># The parameters are defined here</span>
+    <span class="va">w</span> <span class="op">&lt;-</span> <span class="fl">0</span>                                                <span class="co"># Initiate weights</span>
+    <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">returns</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>                            <span class="co"># Loop on the assets</span>
+        <span class="va">y</span> <span class="op">&lt;-</span> <span class="va">returns</span><span class="op">[</span>,<span class="va">i</span><span class="op">]</span>                                  <span class="co"># Dependent variable</span>
+        <span class="va">x</span> <span class="op">&lt;-</span> <span class="va">returns</span><span class="op">[</span>,<span class="op">-</span><span class="va">i</span><span class="op">]</span>                                 <span class="co"># Independent variable</span>
+        <span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x</span>,<span class="va">y</span>, family <span class="op">=</span> <span class="st">"gaussian"</span>, alpha <span class="op">=</span> <span class="va">alpha</span>, lambda <span class="op">=</span> <span class="va">lambda</span><span class="op">)</span>
+        <span class="va">err</span> <span class="op">&lt;-</span> <span class="va">y</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">x</span><span class="op">)</span>                          <span class="co"># Prediction errors</span>
+        <span class="va">w</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="va">err</span><span class="op">)</span>                <span class="co"># Output: weight of asset i</span>
+    <span class="op">}</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">w</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span><span class="op">)</span>                                    <span class="co"># Normalisation of weights</span>
+<span class="op">}</span></code></pre></div>
+<p></p>
+<p>In order to benchmark our strategy, we define a meta-weighting function that embeds three strategies: (1) the EW benchmark, (2) the classical GMV and (3) the sparse-hedging minimum variance. For the GMV, since there are much more assets than dates, the covariance matrix is singular. Thus, we have a small heuristic shrinkage term. For a more rigorous treatment of this technique, we refer to the original article <span class="citation"><a href="solutions-to-exercises.html#ref-ledoit2004well" role="doc-biblioref">Olivier Ledoit and Wolf</a> (<a href="solutions-to-exercises.html#ref-ledoit2004well" role="doc-biblioref">2004</a>)</span> and to the recent improvements mentioned in <span class="citation"><a href="solutions-to-exercises.html#ref-ledoit2017nonlinear" role="doc-biblioref">Olivier Ledoit and Wolf</a> (<a href="solutions-to-exercises.html#ref-ledoit2017nonlinear" role="doc-biblioref">2017</a>)</span>. In short, we use <span class="math inline">\(\hat{\boldsymbol{\Sigma}}=\boldsymbol{\Sigma}_S+\delta \boldsymbol{I}\)</span> for some small constant <span class="math inline">\(\delta\)</span> (equal to 0.01 in the code below).</p>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">weights_multi</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">returns</span>,<span class="va">j</span>, <span class="va">alpha</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">returns</span><span class="op">)</span>
+    <span class="kw">if</span><span class="op">(</span><span class="va">j</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">{</span>                                    <span class="co"># j = 1 =&gt; EW</span>
+        <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">N</span>,<span class="va">N</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="kw">if</span><span class="op">(</span><span class="va">j</span> <span class="op">==</span> <span class="fl">2</span><span class="op">)</span><span class="op">{</span>                                    <span class="co"># j = 2 =&gt; Minimum Variance</span>
+        <span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="va">returns</span><span class="op">)</span> <span class="op">+</span> <span class="fl">0.01</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>     <span class="co"># Covariance matrix + regularizing term</span>
+        <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html">solve</a></span><span class="op">(</span><span class="va">sigma</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/Matrix/man/matrix-products.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="va">N</span><span class="op">)</span>             <span class="co"># Inverse &amp; multiply</span>
+        <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">w</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">w</span><span class="op">)</span><span class="op">)</span>                         <span class="co"># Normalize</span>
+    <span class="op">}</span>
+    <span class="kw">if</span><span class="op">(</span><span class="va">j</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span><span class="op">{</span>                                    <span class="co"># j = 3 =&gt; Penalised / elasticnet</span>
+        <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu">weights_sparsehedge</span><span class="op">(</span><span class="va">returns</span>, <span class="va">alpha</span>, <span class="va">lambda</span><span class="op">)</span>
+    <span class="op">}</span>
+<span class="op">}</span></code></pre></div>
+<p></p>
+<p>Finally, we proceed to the backtesting loop. Given the number of assets, the execution of the loop takes a few minutes. At the end of the loop, we compute the standard deviation of portfolio returns (monthly volatility). This is the key indicator as minimum variance seeks to minimize this particular metric.</p>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">t</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">t_oos</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>                                                 <span class="co"># Loop = rebal. dates</span>
+    <span class="va">temp_data</span> <span class="op">&lt;-</span> <span class="va">returns</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                               <span class="co"># Data for weights</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="va">t_oos</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                        <span class="co"># Expand. window</span>
+        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>
+        <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
+    <span class="va">realised_returns</span> <span class="op">&lt;-</span> <span class="va">returns</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                        <span class="co"># OOS returns</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">==</span>  <span class="va">t_oos</span><span class="op">[</span><span class="va">t</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+        <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">date</span><span class="op">)</span>
+    <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nb_port</span><span class="op">)</span><span class="op">{</span>                                                   <span class="co"># Loop over strats</span>
+        <span class="va">portf_weights</span><span class="op">[</span><span class="va">t</span>,<span class="va">j</span>,<span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">weights_multi</span><span class="op">(</span><span class="va">temp_data</span>, <span class="va">j</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span><span class="op">)</span>       <span class="co"># Hard-coded params!</span>
+        <span class="va">portf_returns</span><span class="op">[</span><span class="va">t</span>,<span class="va">j</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">portf_weights</span><span class="op">[</span><span class="va">t</span>,<span class="va">j</span>,<span class="op">]</span> <span class="op">*</span> <span class="va">realised_returns</span><span class="op">)</span>  <span class="co"># Portf. returns</span>
+    <span class="op">}</span>
+<span class="op">}</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">portf_returns</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"EW"</span>, <span class="st">"MV"</span>, <span class="st">"Sparse"</span><span class="op">)</span> <span class="co"># Colnames</span>
+<span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">portf_returns</span>, <span class="fl">2</span>, <span class="va">sd</span><span class="op">)</span>                        <span class="co"># Portfolio volatilities (monthly scale)</span></code></pre></div>
+<pre><code>##         EW         MV     Sparse 
+## 0.04180422 0.03350424 0.02672169</code></pre>
+<p></p>
+<p>The aim of the sparse hedging restrictions is to provide a better estimate of the covariance structure of assets so that the estimation of minimum variance portfolio weights is more accurate. From the above exercise, we see that the monthly volatility is indeed reduced when building covariance matrices based on sparse hedging relationships. This is not the case if we use the shrunk sample covariance matrix because there is probably too much noise in the estimates of correlations between assets. Working with daily returns would likely improve the quality of the estimates. But the above backtest shows that the penalized methodology performs well even when the number of observations (dates) is small compared to the number of assets.</p>
+</div>
+</div>
+<div id="predictive-regressions" class="section level2" number="5.3">
+<h2>
+<span class="header-section-number">5.3</span> Predictive regressions<a class="anchor" aria-label="anchor" href="#predictive-regressions"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="literature-review-and-principle" class="section level3" number="5.3.1">
+<h3>
+<span class="header-section-number">5.3.1</span> Literature review and principle<a class="anchor" aria-label="anchor" href="#literature-review-and-principle"><i class="fas fa-link"></i></a>
+</h3>
+<p>The topic of predictive regressions sits on a collection of very interesting articles. One influential contribution is <span class="citation"><a href="solutions-to-exercises.html#ref-stambaugh1999predictive" role="doc-biblioref">Stambaugh</a> (<a href="solutions-to-exercises.html#ref-stambaugh1999predictive" role="doc-biblioref">1999</a>)</span>, where the author shows the perils of regressions in which the independent variables are autocorrelated. In this case, the usual OLS estimate is biased and must therefore be corrected. The results have since then been extended in numerous directions (see <span class="citation"><a href="solutions-to-exercises.html#ref-campbell2006efficient" role="doc-biblioref">Campbell and Yogo</a> (<a href="solutions-to-exercises.html#ref-campbell2006efficient" role="doc-biblioref">2006</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-hjalmarsson2011new" role="doc-biblioref">Hjalmarsson</a> (<a href="solutions-to-exercises.html#ref-hjalmarsson2011new" role="doc-biblioref">2011</a>)</span>, the survey in <span class="citation"><a href="solutions-to-exercises.html#ref-gonzalo2018predictive" role="doc-biblioref">Gonzalo and Pitarakis</a> (<a href="solutions-to-exercises.html#ref-gonzalo2018predictive" role="doc-biblioref">2018</a>)</span> and, more recently, the study of <span class="citation"><a href="solutions-to-exercises.html#ref-xu2020testing" role="doc-biblioref">Xu</a> (<a href="solutions-to-exercises.html#ref-xu2020testing" role="doc-biblioref">2020</a>)</span> on predictability over multiple horizons).</p>
+<p>A second important topic pertains to the time-dependence of the coefficients in predictive regressions. One contribution in this direction is <span class="citation"><a href="solutions-to-exercises.html#ref-dangl2012predictive" role="doc-biblioref">Dangl and Halling</a> (<a href="solutions-to-exercises.html#ref-dangl2012predictive" role="doc-biblioref">2012</a>)</span>, where coefficients are estimated via a Bayesian procedure. More recently <span class="citation"><a href="solutions-to-exercises.html#ref-kelly2019characteristics" role="doc-biblioref">Kelly, Pruitt, and Su</a> (<a href="solutions-to-exercises.html#ref-kelly2019characteristics" role="doc-biblioref">2019</a>)</span> use time-dependent factor loadings to model the cross-section of stock returns. The time-varying nature of coefficients of predictive regressions is further documented by <span class="citation"><a href="solutions-to-exercises.html#ref-henkel2011time" role="doc-biblioref">Henkel, Martin, and Nardari</a> (<a href="solutions-to-exercises.html#ref-henkel2011time" role="doc-biblioref">2011</a>)</span> for short term returns. Lastly, <span class="citation"><a href="solutions-to-exercises.html#ref-farmer2019pockets" role="doc-biblioref">Farmer, Schmidt, and Timmermann</a> (<a href="solutions-to-exercises.html#ref-farmer2019pockets" role="doc-biblioref">2019</a>)</span> introduce the concept of pockets of predictability: assets or markets experience different phases; in some stages, they are predictable and in some others, they aren’t. Pockets are measured both by the number of days that a <em>t</em>-statistic is above a particular threshold and by the magnitude of the <span class="math inline">\(R^2\)</span> over the considered period. Formal statistical tests are developed by <span class="citation"><a href="solutions-to-exercises.html#ref-demetrescu2020testing" role="doc-biblioref">Demetrescu et al.</a> (<a href="solutions-to-exercises.html#ref-demetrescu2020testing" role="doc-biblioref">2020</a>)</span>.</p>
+<p>The introduction of penalization within predictive regressions goes back at least to <span class="citation"><a href="solutions-to-exercises.html#ref-rapach2013international" role="doc-biblioref">D. E. Rapach, Strauss, and Zhou</a> (<a href="solutions-to-exercises.html#ref-rapach2013international" role="doc-biblioref">2013</a>)</span>, where they are used to assess lead-lag relationships between US markets and other international stock exchanges. More recently, <span class="citation"><a href="solutions-to-exercises.html#ref-chinco2019sparse" role="doc-biblioref">Alexander Chinco, Clark-Joseph, and Ye</a> (<a href="solutions-to-exercises.html#ref-chinco2019sparse" role="doc-biblioref">2019</a>)</span> use LASSO regressions to forecast high frequency returns based on past returns (in the cross-section) at various horizons. They report statistically significant gains. <span class="citation"><a href="solutions-to-exercises.html#ref-han2018firm" role="doc-biblioref">Han et al.</a> (<a href="solutions-to-exercises.html#ref-han2018firm" role="doc-biblioref">2019</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-rapach2019time" role="doc-biblioref">D. Rapach and Zhou</a> (<a href="solutions-to-exercises.html#ref-rapach2019time" role="doc-biblioref">2019</a>)</span> use LASSO and elasticnet regressions (respectively) to improve forecast combinations and single out the characteristics that matter when explaining stock returns.</p>
+<p>These contributions underline the relevance of the overlap between predictive regressions and penalized regressions. In simple machine-learning based asset pricing, we often seek to build models such as that of Equation <a href="factor.html#eq:genML">(3.6)</a>. If we stick to a linear relationship and add penalization terms, then the model becomes:
+<span class="math display">\[r_{t+1,n} = \alpha_n + \sum_{k=1}^K\beta_n^kf^k_{t,n}+\epsilon_{t+1,n}, \quad \text{s.t.} \quad (1-\alpha)\sum_{j=1}^J |\beta_j| +\alpha\sum_{j=1}^J \beta_j^2&lt; \theta\]</span>
+where we use <span class="math inline">\(f^k_{t,n}\)</span> or <span class="math inline">\(x_{t,n}^k\)</span> interchangeably and <span class="math inline">\(\theta\)</span> is some penalization intensity. Again, one of the aims of the regularization is to generate more robust estimates. If the patterns extracted hold out of sample, then
+<span class="math display">\[\hat{r}_{t+1,n} = \hat{\alpha}_n + \sum_{k=1}^K\hat{\beta}_n^kf^k_{t,n},\]</span>
+will be a relatively reliable proxy of future performance.</p>
+</div>
+<div id="code-and-results" class="section level3" number="5.3.2">
+<h3>
+<span class="header-section-number">5.3.2</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results"><i class="fas fa-link"></i></a>
+</h3>
+<p>Given the form of our dataset, implementing penalized predictive regressions is easy.</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">y_penalized_train</span> <span class="op">&lt;-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>                 <span class="co"># Dependent variable</span>
+<span class="va">x_penalized_train</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                     <span class="co"># Predictors</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                  
+<span class="va">fit_pen_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x_penalized_train</span>, <span class="va">y_penalized_train</span>, <span class="co"># Model</span>
+                       alpha <span class="op">=</span> <span class="fl">0.1</span>, lambda <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
+<p></p>
+<p>We then report two key performance measures: the mean squared error and the hit ratio, which is the proportion of times that the prediction guesses the sign of the return correctly. A detailed account of metrics is given later in the book (Chapter <a href="backtest.html#backtest">12</a>).</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">x_penalized_test</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                     <span class="co"># Predictors</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>         
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pen_pred</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
+<pre><code>## [1] 0.03699696</code></pre>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pen_pred</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.5460346</code></pre>
+<p></p>
+<p>From an investor’s standpoint, the MSEs (or even the mean absolute error) are hard to interpret because it is complicated to map them mentally into some intuitive financial indicator. In this perspective, the hit ratio is more natural. It tells the proportion of correct signs achieved by the predictions. If the investor is long in positive signals and short in negative ones, the hit ratio indicates the proportion of ‘correct’ bets (the positions that go in the expected direction). A natural threshold is 50% but because of transaction costs, 51% of accurate forecasts probably won’t be profitable. The figure 0.546 can be deemed a relatively good hit ratio, though not a very impressive one.</p>
+</div>
+</div>
+<div id="coding-exercise" class="section level2" number="5.4">
+<h2>
+<span class="header-section-number">5.4</span> Coding exercise<a class="anchor" aria-label="anchor" href="#coding-exercise"><i class="fas fa-link"></i></a>
+</h2>
+<p>On the test sample, evaluate the impact of the two elastic net parameters on out-of-sample accuracy.</p>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></div>
+<div class="next"><a href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#lasso"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li>
+<a class="nav-link" href="#penalized-regressions"><span class="header-section-number">5.1</span> Penalized regressions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#penreg"><span class="header-section-number">5.1.1</span> Simple regressions</a></li>
+<li><a class="nav-link" href="#forms-of-penalizations"><span class="header-section-number">5.1.2</span> Forms of penalizations</a></li>
+<li><a class="nav-link" href="#illustrations"><span class="header-section-number">5.1.3</span> Illustrations</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#sparse-hedging-for-minimum-variance-portfolios"><span class="header-section-number">5.2</span> Sparse hedging for minimum variance portfolios</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#presentation-and-derivations"><span class="header-section-number">5.2.1</span> Presentation and derivations</a></li>
+<li><a class="nav-link" href="#sparseex"><span class="header-section-number">5.2.2</span> Example</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#predictive-regressions"><span class="header-section-number">5.3</span> Predictive regressions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#literature-review-and-principle"><span class="header-section-number">5.3.1</span> Literature review and principle</a></li>
+<li><a class="nav-link" href="#code-and-results"><span class="header-section-number">5.3.2</span> Code and results</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#coding-exercise"><span class="header-section-number">5.4</span> Coding exercise</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

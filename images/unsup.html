@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 15 Unsupervised learning | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 15 Unsupervised learning | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 15 Unsupervised learning | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } All algorithms presented in Chapters 5 to 9 belong to the larger class of supervised learning tools. Such tools seek to unveil a mapping between...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } All algorithms presented in Chapters 5 to 9 belong to the larger class of supervised learning tools. Such tools seek to unveil a mapping between...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } All algorithms presented in Chapters 5 to 9 belong to the larger class of supervised learning tools. Such tools seek to unveil a mapping between...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="active" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="unsup" class="section level1" number="15">
+<h1>
+<span class="header-section-number">15</span> Unsupervised learning<a class="anchor" aria-label="anchor" href="#unsup"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>All algorithms presented in Chapters <a href="lasso.html#lasso">5</a> to <a href="bayes.html#bayes">9</a> belong to the larger class of supervised learning tools. Such tools seek to unveil a mapping between predictors <span class="math inline">\(\textbf{X}\)</span> and a label <span class="math inline">\(\textbf{Z}\)</span>. The supervision comes from the fact that it is asked that the data tries to explain this particular variable <span class="math inline">\(\textbf{Z}\)</span>. Another important part of machine learning consists of unsupervised tasks, that is, when <span class="math inline">\(\textbf{Z}\)</span> is not specified and the algorithm tries to make sense of <span class="math inline">\(\textbf{X}\)</span> on its own. Often, relationships between the components of <span class="math inline">\(\textbf{X}\)</span> are identified. This field is much too vast to be summarized in one book, let alone one chapter. The purpose here is to briefly explain in what ways unsupervised learning can be used, especially in the data pre-processing phase.</p>
+<div id="corpred" class="section level2" number="15.1">
+<h2>
+<span class="header-section-number">15.1</span> The problem with correlated predictors<a class="anchor" aria-label="anchor" href="#corpred"><i class="fas fa-link"></i></a>
+</h2>
+<p>Often, it is tempting to supply all predictors to a ML-fueled predictive engine. That may not be a good idea when some predictors are highly correlated. To illustrate this, the simplest example is a regression on two variables with zero mean and covariance and precisions matrices:
+<span class="math display">\[\boldsymbol{\Sigma}=\textbf{X}'\textbf{X}=\begin{bmatrix} 1 &amp; \rho \\ \rho &amp; 1 \end{bmatrix},  \quad \boldsymbol{\Sigma}^{-1}=\frac{1}{1-\rho^2}\begin{bmatrix} 1 &amp; -\rho \\ -\rho &amp; 1 \end{bmatrix}.\]</span>
+When the covariance/correlation <span class="math inline">\(\rho\)</span> increase towards 1 (the two variables are co-linear), the scaling denominator in <span class="math inline">\(\boldsymbol{\Sigma}^{-1}\)</span> goes to zero and the formula <span class="math inline">\(\hat{\boldsymbol{\beta}}=\boldsymbol{\Sigma}^{-1}\textbf{X}'\textbf{Z}\)</span> implies that one coefficient will be highly positive and one highly negative. The regression creates a spurious arbitrage between the two variables. Of course, this is very inefficient and yields disastrous results out-of-sample.</p>
+<p>We illustrate what happens when many variables are used in the regression below (Table <a href="unsup.html#tab:regbroom">15.1</a>). One elucidation of the aforementioned phenomenon comes from the variables Mkt_Cap_12M_Usd and Mkt_Cap_6M_Usd, which have a correlation of 99.6% in the training sample. Both are singled out as highly significant but their signs are contradictory. Moreover, the magnitude of their coefficients are very close (0.21 versus 0.18) so that their net effect cancels out. Naturally, providing the regression with only one of these two inputs would have been wiser.</p>
+<div class="sourceCode" id="cb225"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://broom.tidymodels.org/">broom</a></span><span class="op">)</span>                                  <span class="co"># Package for clean regression output </span>
+<span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>    
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">features</span>,  <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>  <span class="co"># List of variables</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">~</span> <span class="va">.</span> , data <span class="op">=</span> <span class="va">.</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>              <span class="co"># Model: predict R1M_Usd</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Put output in clean format</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">statistic</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">3</span><span class="op">)</span>  <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>             <span class="co"># Keep significant predictors only</span>
+    <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>booktabs <span class="op">=</span> <span class="cn">TRUE</span>,
+                 caption <span class="op">=</span> <span class="st">"Significant predictors in the training sample."</span><span class="op">)</span> </code></pre></div>
+<div class="inline-table"><table class="table table-sm">
+<caption>
+<span id="tab:regbroom">TABLE 15.1: </span>Significant predictors in the training sample.
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.0405741
+</td>
+<td style="text-align:right;">
+0.0053427
+</td>
+<td style="text-align:right;">
+7.594323
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ebitda_Margin
+</td>
+<td style="text-align:right;">
+0.0132374
+</td>
+<td style="text-align:right;">
+0.0034927
+</td>
+<td style="text-align:right;">
+3.789999
+</td>
+<td style="text-align:right;">
+0.0001507
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ev_Ebitda
+</td>
+<td style="text-align:right;">
+0.0068144
+</td>
+<td style="text-align:right;">
+0.0022563
+</td>
+<td style="text-align:right;">
+3.020213
+</td>
+<td style="text-align:right;">
+0.0025263
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fa_Ci
+</td>
+<td style="text-align:right;">
+0.0072308
+</td>
+<td style="text-align:right;">
+0.0023465
+</td>
+<td style="text-align:right;">
+3.081471
+</td>
+<td style="text-align:right;">
+0.0020601
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fcf_Bv
+</td>
+<td style="text-align:right;">
+0.0250538
+</td>
+<td style="text-align:right;">
+0.0051314
+</td>
+<td style="text-align:right;">
+4.882465
+</td>
+<td style="text-align:right;">
+0.0000010
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Fcf_Yld
+</td>
+<td style="text-align:right;">
+-0.0158930
+</td>
+<td style="text-align:right;">
+0.0037359
+</td>
+<td style="text-align:right;">
+-4.254126
+</td>
+<td style="text-align:right;">
+0.0000210
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mkt_Cap_12M_Usd
+</td>
+<td style="text-align:right;">
+0.2047383
+</td>
+<td style="text-align:right;">
+0.0274320
+</td>
+<td style="text-align:right;">
+7.463476
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mkt_Cap_6M_Usd
+</td>
+<td style="text-align:right;">
+-0.1797795
+</td>
+<td style="text-align:right;">
+0.0459390
+</td>
+<td style="text-align:right;">
+-3.913443
+</td>
+<td style="text-align:right;">
+0.0000910
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mom_5M_Usd
+</td>
+<td style="text-align:right;">
+-0.0186690
+</td>
+<td style="text-align:right;">
+0.0044313
+</td>
+<td style="text-align:right;">
+-4.212972
+</td>
+<td style="text-align:right;">
+0.0000252
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mom_Sharp_11M_Usd
+</td>
+<td style="text-align:right;">
+0.0178174
+</td>
+<td style="text-align:right;">
+0.0046948
+</td>
+<td style="text-align:right;">
+3.795131
+</td>
+<td style="text-align:right;">
+0.0001476
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ni
+</td>
+<td style="text-align:right;">
+0.0154609
+</td>
+<td style="text-align:right;">
+0.0044966
+</td>
+<td style="text-align:right;">
+3.438361
+</td>
+<td style="text-align:right;">
+0.0005854
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ni_Avail_Margin
+</td>
+<td style="text-align:right;">
+0.0118135
+</td>
+<td style="text-align:right;">
+0.0038614
+</td>
+<td style="text-align:right;">
+3.059359
+</td>
+<td style="text-align:right;">
+0.0022184
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ocf_Bv
+</td>
+<td style="text-align:right;">
+-0.0198113
+</td>
+<td style="text-align:right;">
+0.0052939
+</td>
+<td style="text-align:right;">
+-3.742277
+</td>
+<td style="text-align:right;">
+0.0001824
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pb
+</td>
+<td style="text-align:right;">
+-0.0178971
+</td>
+<td style="text-align:right;">
+0.0031285
+</td>
+<td style="text-align:right;">
+-5.720637
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Pe
+</td>
+<td style="text-align:right;">
+-0.0089908
+</td>
+<td style="text-align:right;">
+0.0023539
+</td>
+<td style="text-align:right;">
+-3.819565
+</td>
+<td style="text-align:right;">
+0.0001337
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sales_Ps
+</td>
+<td style="text-align:right;">
+-0.0157856
+</td>
+<td style="text-align:right;">
+0.0046278
+</td>
+<td style="text-align:right;">
+-3.411062
+</td>
+<td style="text-align:right;">
+0.0006472
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vol1Y_Usd
+</td>
+<td style="text-align:right;">
+0.0114250
+</td>
+<td style="text-align:right;">
+0.0027923
+</td>
+<td style="text-align:right;">
+4.091628
+</td>
+<td style="text-align:right;">
+0.0000429
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Vol3Y_Usd
+</td>
+<td style="text-align:right;">
+0.0084587
+</td>
+<td style="text-align:right;">
+0.0027952
+</td>
+<td style="text-align:right;">
+3.026169
+</td>
+<td style="text-align:right;">
+0.0024771
+</td>
+</tr>
+</tbody>
+</table></div>
+<p></p>
+<p>In fact, there are several indicators for the market capitalization and maybe only one would suffice, but it is not obvious to tell which one is the best choice.</p>
+<p>To further depict correlation issues, we compute the correlation matrix of the predictors below (on the training sample). Because of its dimension, we show it graphically. As there are too many labels, we remove them.</p>
+<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/taiyun/corrplot">corrplot</a></span><span class="op">)</span>              <span class="co"># Package for plots of correlation matrices</span>
+<span class="va">C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="co"># Correlation matrix</span>
+<span class="fu"><a href="https://rdrr.io/pkg/corrplot/man/corrplot.html">corrplot</a></span><span class="op">(</span><span class="va">C</span>, tl.pos<span class="op">=</span><span class="st">'n'</span><span class="op">)</span>        <span class="co"># Plot</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:instcorrplot2"></span>
+<img src="ML_factor_files/figure-html/instcorrplot2-1.png" alt="Correlation matrix of predictors." width="480"><p class="caption">
+FIGURE 15.1: Correlation matrix of predictors.
+</p>
+</div>
+<p>The graph of Figure <a href="unsup.html#fig:instcorrplot2">15.1</a> reveals several blue squares around the diagonal. For instance, the biggest square around the first third of features relates to all accounting ratios based on free cash flows. Because of this common term in their calculation, the features are naturally highly correlated. These local correlation patterns occur several times in the dataset and explain why it is not a good idea to use simple regression with this set of features.</p>
+<p>In full disclosure, <strong>multicollinearity</strong> (when predictors are correlated) can be much less a problem for ML tools than it is for pure statistical inference. In statistics, one central goal is to study the properties of <span class="math inline">\(\beta\)</span> coefficients. Collinearity perturbs this kind of analysis. In machine learning, the aim is to maximize out-of-sample accuracy. If having many predictors can be helpful, then so be it. One simple example can help clarify this matter. When building a regression tree, having many predictors will give more options for the splits. If the features make sense, then they can be useful. The same reasoning applies to random forests and boosted trees. What does matter is that the large spectrum of features helps improve the generalization ability of the model. Their collinearity is irrelevant.</p>
+<p>In the remainder of the chapter, we present two approaches that help reduce the number of predictors:</p>
+<ul>
+<li>the first one aims at creating new variables that are uncorrelated with each other. Low correlation is favorable from an algorithmic point of view, but the new variables lack interpretability;<br>
+</li>
+<li>the second one gathers predictors into homogeneous clusters and only one feature should be chosen out of this cluster. Here the rationale is reversed: interpretability is favored over statistical properties because the resulting set of features may still include high correlations, albeit to a lesser point compared to the original one.</li>
+</ul>
+</div>
+<div id="principal-component-analysis-and-autoencoders" class="section level2" number="15.2">
+<h2>
+<span class="header-section-number">15.2</span> Principal component analysis and autoencoders<a class="anchor" aria-label="anchor" href="#principal-component-analysis-and-autoencoders"><i class="fas fa-link"></i></a>
+</h2>
+<p>The first method is a cornerstone in dimensionality reduction. It seeks to determine a smaller number of factors (<span class="math inline">\(K'&lt;K\)</span>) such that:<br>
+- i) the level of explanatory power remains as high as possible;<br>
+- ii) the resulting factors are linear combinations of the original variables;<br>
+- iii) the resulting factors are orthogonal.</p>
+<div id="a-bit-of-algebra" class="section level3" number="15.2.1">
+<h3>
+<span class="header-section-number">15.2.1</span> A bit of algebra<a class="anchor" aria-label="anchor" href="#a-bit-of-algebra"><i class="fas fa-link"></i></a>
+</h3>
+<p> 
+In this short subsection, we define some key concepts that are required to fully understand the derivation of principal component analysis (PCA). Henceforth, we work with matrices (in bold fonts). An <span class="math inline">\(I \times K\)</span> matrix <span class="math inline">\(\textbf{X}\)</span> is orthonormal if <span class="math inline">\(I&gt; K\)</span> and <span class="math inline">\(\textbf{X}'\textbf{X}=\textbf{I}_K\)</span>. When <span class="math inline">\(I=K\)</span>, the (square) matrix is called orthogonal and <span class="math inline">\(\textbf{X}'\textbf{X}=\textbf{X}\textbf{X}'=\textbf{I}_K\)</span>, i.e., <span class="math inline">\(\textbf{X}^{-1}=\textbf{X}'\)</span>.</p>
+<p>One foundational result in matrix theory is the Singular Value Decomposition (SVD, see, e.g., chapter 5 in <span class="citation"><a href="solutions-to-exercises.html#ref-meyer2000matrix" role="doc-biblioref">Meyer</a> (<a href="solutions-to-exercises.html#ref-meyer2000matrix" role="doc-biblioref">2000</a>)</span>). The SVD is formulated as follows: any <span class="math inline">\(I \times K\)</span> matrix <span class="math inline">\(\textbf{X}\)</span> can be decomposed into
+<span class="math display" id="eq:svd">\[\begin{equation}
+\tag{15.1}
+\textbf{X}=\textbf{U} \boldsymbol{\Delta} \textbf{V}',
+\end{equation}\]</span>
+where <span class="math inline">\(\textbf{U}\)</span> (<span class="math inline">\(I\times I\)</span>) and <span class="math inline">\(\textbf{V}\)</span> (<span class="math inline">\(K \times K\)</span>) are orthogonal and <span class="math inline">\(\boldsymbol{\Delta}\)</span> (with dimensions <span class="math inline">\(I\times K\)</span>) is diagonal, i.e., <span class="math inline">\(\Delta_{i,k}=0\)</span> whenever <span class="math inline">\(i\neq k\)</span>. In addition, <span class="math inline">\(\Delta_{i,i}\ge 0\)</span>: the diagonal terms of <span class="math inline">\(\boldsymbol{\Delta}\)</span> are nonnegative.</p>
+<p>For simplicity, we assume below that <span class="math inline">\(\textbf{1}_I'\textbf{X}=\textbf{0}_K'\)</span>, i.e., that all columns have zero sum (and hence zero mean).<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In practice, this is not a major problem; since we work with features that are uniformly distributed, de-meaning amounts to remove 0.5 to all feature values.&lt;/p&gt;"><sup>33</sup></a> This allows to write that the covariance matrix is equal to its sample estimate <span class="math inline">\(\boldsymbol{\Sigma}_X= \frac{1}{I-1}\textbf{X}'\textbf{X}\)</span>.</p>
+<p>One crucial feature of covariance matrices is their symmetry. Indeed, real-valued symmetric (square) matrices enjoy a SVD which is much more powerful: when <span class="math inline">\(\textbf{X}\)</span> is symmetric, there exist an orthogonal matrix <span class="math inline">\(\textbf{Q}\)</span> and a diagonal matrix <span class="math inline">\(\textbf{D}\)</span> such that
+<span class="math display" id="eq:diagonaliz">\[\begin{equation}
+\tag{15.2} 
+\textbf{X}=\textbf{Q}\textbf{DQ}'.
+\end{equation}\]</span>
+This process is called <strong>diagonalization</strong> (see chapter 7 in <span class="citation"><a href="solutions-to-exercises.html#ref-meyer2000matrix" role="doc-biblioref">Meyer</a> (<a href="solutions-to-exercises.html#ref-meyer2000matrix" role="doc-biblioref">2000</a>)</span>) and conveniently applies to covariance matrices.</p>
+</div>
+<div id="pca" class="section level3" number="15.2.2">
+<h3>
+<span class="header-section-number">15.2.2</span> PCA<a class="anchor" aria-label="anchor" href="#pca"><i class="fas fa-link"></i></a>
+</h3>
+<p> 
+The goal of PCA is to build a dataset <span class="math inline">\(\tilde{\textbf{X}}\)</span> that has fewer columns but that keeps as much information as possible when compressing the original one, <span class="math inline">\(\textbf{X}\)</span>. The key notion is the <strong>change of base</strong>, which is a linear transformation of <span class="math inline">\(\textbf{X}\)</span> into <span class="math inline">\(\textbf{Z}\)</span>, a matrix with identical dimension, via
+<span class="math display" id="eq:pca">\[\begin{equation}
+\tag{15.3}
+\textbf{Z}=\textbf{XP},
+\end{equation}\]</span>
+where <span class="math inline">\(\textbf{P}\)</span> is a <span class="math inline">\(K \times K\)</span> matrix. There are of course an infinite number of ways to transform <span class="math inline">\(\textbf{X}\)</span> into <span class="math inline">\(\textbf{Z}\)</span>, but two fundamental constraints help reduce the possibilities. The first constraint is that the columns of <span class="math inline">\(\textbf{Z}\)</span> be uncorrelated. Having uncorrelated features is desirable because they then all tell different stories and have zero redundancy. The second constraint is that the variance of the columns of <span class="math inline">\(\textbf{Z}\)</span> is highly concentrated. This means that a few factors (columns) will capture most of the explanatory power (signal), while most (the others) will consist predominantly of noise. All of this is coded in the covariance matrix of <span class="math inline">\(\textbf{Z}\)</span>:</p>
+<ul>
+<li>the first condition imposes that the covariance matrix be diagonal;<br>
+</li>
+<li>the second condition imposes that the diagonal elements, when ranked in decreasing magnitude, see their value decline (sharply if possible).</li>
+</ul>
+<p>The covariance matrix of <span class="math inline">\(\textbf{Z}\)</span> is
+<span class="math display" id="eq:covy">\[\begin{equation}
+\tag{15.4} 
+\boldsymbol{\Sigma}_Z=\frac{1}{I-1}\textbf{Z}'\textbf{Z}=\frac{1}{I-1}\textbf{P}'\textbf{X}'\textbf{XP}=\frac{1}{I-1}\textbf{P}'\boldsymbol{\Sigma}_X\textbf{P}.
+\end{equation}\]</span></p>
+<p>In this expression, we plug the decomposition <a href="unsup.html#eq:diagonaliz">(15.2)</a> of <span class="math inline">\(\boldsymbol{\Sigma}_X\)</span>:
+<span class="math display">\[\boldsymbol{\Sigma}_Z=\frac{1}{I-1}\textbf{P}'\textbf{Q}\textbf{DQ}'\textbf{P},\]</span>
+thus picking <span class="math inline">\(\textbf{P}=\textbf{Q}\)</span>, we get, by orthogonality, <span class="math inline">\(\boldsymbol{\Sigma}_Z=\frac{1}{I-1}\textbf{D}\)</span>, that is, a diagonal covariance matrix for <span class="math inline">\(\textbf{Z}\)</span>. The columns of <span class="math inline">\(\textbf{Z}\)</span> can then be re-shuffled in decreasing order of variance so that the diagonal elements of <span class="math inline">\(\boldsymbol{\Sigma}_Z\)</span> progressively shrink. This is useful because it helps locate the factors with most informational content (the first factors). In the limit, a constant vector (with zero variance) carries no signal.</p>
+<p>The matrix <span class="math inline">\(\textbf{Z}\)</span> is a linear transformation of <span class="math inline">\(\textbf{X}\)</span>, thus, it is expected to carry the same information, even though this information is coded differently. Since the columns are ordered according to their relative importance, it is simple to omit some of them. The new set of features <span class="math inline">\(\tilde{\textbf{X}}\)</span> consists in the first <span class="math inline">\(K'\)</span> (with <span class="math inline">\(K'&lt;K\)</span>) columns of <span class="math inline">\(\textbf{Z}\)</span>.</p>
+<p>Below, we show how to perform PCA and visualize the output with the <em>factoextra</em> package. To ease readability, we use the smaller sample with few predictors.</p>
+<div class="sourceCode" id="cb227"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pca</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>    <span class="co"># Smaller number of predictors</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/prcomp.html">prcomp</a></span><span class="op">(</span><span class="op">)</span>                             <span class="co"># Performs PCA</span>
+<span class="va">pca</span>                                      <span class="co"># Show the result</span></code></pre></div>
+<pre><code>## Standard deviations (1, .., p=7):
+## [1] 0.4536601 0.3344080 0.2994393 0.2452000 0.2352087 0.2010782 0.1140988
+## 
+## Rotation (n x k) = (7 x 7):
+##                         PC1         PC2         PC3         PC4         PC5          PC6
+## Div_Yld          0.27159946 -0.57909866  0.04572501 -0.52895604 -0.22662581 -0.506566090
+## Eps              0.42040708 -0.15008243 -0.02476659  0.33737265  0.77137719 -0.301883295
+## Mkt_Cap_12M_Usd  0.52386846  0.34323935  0.17228893  0.06249528 -0.25278113 -0.002987057
+## Mom_11M_Usd      0.04723846  0.05771359 -0.89715955  0.24101481 -0.25055884 -0.258476580
+## Ocf              0.53294744  0.19588990  0.18503939  0.23437100 -0.35759553 -0.049015486
+## Pb               0.15241340  0.58080620 -0.22104807 -0.68213576  0.30866476 -0.038674594
+## Vol1Y_Usd       -0.40688963  0.38113933  0.28216181  0.15541056 -0.06157461 -0.762587677
+##                          PC7
+## Div_Yld          0.032011635
+## Eps              0.011965041
+## Mkt_Cap_12M_Usd  0.714319417
+## Mom_11M_Usd      0.043178747
+## Ocf             -0.676866120
+## Pb              -0.168799297
+## Vol1Y_Usd        0.008632062</code></pre>
+<p></p>
+<p>The rotation gives the matrix <span class="math inline">\(\textbf{P}\)</span>: it’s the tool that changes the base. The first row of the output indicates the standard deviation of each new factor (column). Each factor is indicated via a PC index (principal component). Often, the first PC (first column PC1 in the output) loads positively on all initial features: a convex weighted average of all predictors is expected to carry a lot of information. In the above example, it is almost the case, with the exception of volatility, which has a negative coefficient in the first PC. The second PC is an arbitrage between price-to-book (long) and dividend yield (short). The third PC is contrarian, as it loads heavily and negatively on momentum. Not all principal components are easy to interpret.</p>
+<p>Sometimes, it can be useful to visualize the way the principal components are built. In Figure <a href="unsup.html#fig:pca2">15.2</a>, we show one popular representation that is used for two factors (usually the first two).  </p>
+<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.sthda.com/english/rpkgs/factoextra">factoextra</a></span><span class="op">)</span>                      <span class="co"># Package for PCA visualization</span>
+<span class="fu"><a href="https://rdrr.io/pkg/factoextra/man/fviz_pca.html">fviz_pca_var</a></span><span class="op">(</span><span class="va">pca</span>,                        <span class="co"># Source of PCA decomposition</span>
+             col.var<span class="op">=</span><span class="st">"contrib"</span>,          
+             gradient.cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#00AFBB"</span>, <span class="st">"#E7B800"</span>, <span class="st">"#FC4E07"</span><span class="op">)</span>,
+             repel <span class="op">=</span> <span class="cn">TRUE</span>                <span class="co"># Avoid text overlapping</span>
+<span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pca2"></span>
+<img src="ML_factor_files/figure-html/pca2-1.png" alt="Visual representation of PCA with two dimensions." width="330px" height="200px"><p class="caption">
+FIGURE 15.2: Visual representation of PCA with two dimensions.
+</p>
+</div>
+<p></p>
+<p>The plot shows that no initial factor has negative signs for the first two principal components. Volatility is negative for the first one and earnings per share and dividend yield are negative for the second. The numbers indicated along the axes are the proportion of explained variance of each PC. Compared to the figures in the first line of the output, the numbers are squared and then divided by the total sum of squares.</p>
+<p>Once the rotation is known, it is possible to select a subsample of the transformed data. From the original 7 features, it is easy to pick just 4.</p>
+<div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Start from large sample</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                <span class="co"># Keep only 7 features</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Transform in matrix</span>
+    <span class="fu">multiply_by_matrix</span><span class="op">(</span><span class="va">pca</span><span class="op">$</span><span class="va">rotation</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>       <span class="co"># Rotate via PCA (first 4 columns of P)</span>
+    <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"PC1"</span>, <span class="st">"PC2"</span>, <span class="st">"PC3"</span>, <span class="st">"PC4"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>  <span class="co"># Change column names</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="op">)</span>                                           <span class="co"># Show first 6 lines</span></code></pre></div>
+<pre><code>##            PC1       PC2         PC3       PC4
+## [1,] 0.3989674 0.7578132 -0.13915223 0.3132578
+## [2,] 0.4284697 0.7587274 -0.40164338 0.3745255
+## [3,] 0.5215295 0.5679119 -0.10533870 0.2574949
+## [4,] 0.5445359 0.5335619 -0.08833864 0.2281793
+## [5,] 0.5672644 0.5339749 -0.06092424 0.2320938
+## [6,] 0.5871306 0.6420126 -0.44566482 0.3075399</code></pre>
+<p></p>
+<p>These 4 factors can then be used as orthogonal features in any ML engine. The fact that the features are uncorrelated is undoubtedly an asset. But the price of this convenience is high: the features are no longer immediately interpretable. De-correlating the predictors adds yet another layer of “<em>blackbox-ing</em>” in the algorithm.  </p>
+<p>PCA can also be used to estimate factor models. In Equation <a href="unsup.html#eq:pca">(15.3)</a>, it suffices to replace <span class="math inline">\(\textbf{Z}\)</span> with returns, <span class="math inline">\(\textbf{X}\)</span> with factor values and <span class="math inline">\(\textbf{P}\)</span> with factor loadings (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-connor1988risk" role="doc-biblioref">Connor and Korajczyk</a> (<a href="solutions-to-exercises.html#ref-connor1988risk" role="doc-biblioref">1988</a>)</span> for an early reference). More recently, <span class="citation"><a href="solutions-to-exercises.html#ref-lettau2018estimating" role="doc-biblioref">Lettau and Pelger</a> (<a href="solutions-to-exercises.html#ref-lettau2018estimating" role="doc-biblioref">2020a</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-lettau2018factors" role="doc-biblioref">Lettau and Pelger</a> (<a href="solutions-to-exercises.html#ref-lettau2018factors" role="doc-biblioref">2020b</a>)</span> propose a thorough analysis of PCA estimation techniques. They notably argue that first moments of returns are important and should be included in the objective function, alongside the optimization on the second moments.</p>
+<p>We end this subsection with a technical note. Usually, PCA is performed on the covariance matrix of returns. Sometimes, it may be preferable to decompose the <strong>correlation</strong> matrix. The result may adjust substantially if the variables have very different variances (which is not really the case in the equity space). If the investment universe encompasses several asset classes, then a correlation-based PCA will reduce the importance of the most volatile class. In this case, it is as if all returns are scaled by their respective volatilities.</p>
+</div>
+<div id="ae" class="section level3" number="15.2.3">
+<h3>
+<span class="header-section-number">15.2.3</span> Autoencoders<a class="anchor" aria-label="anchor" href="#ae"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>In a PCA, the coding from <span class="math inline">\(\textbf{X}\)</span> to <span class="math inline">\(\textbf{Z}\)</span> is straightfoward, linear and works both ways:
+<span class="math display">\[\textbf{Z}=\textbf{X}\textbf{P} \quad \text{and} \quad \textbf{X}=\textbf{ZP}',\]</span>
+so that we recover <span class="math inline">\(\textbf{X}\)</span> from <span class="math inline">\(\textbf{Z}\)</span>. This can be writen differently:
+<span class="math display" id="eq:pcascheme">\[\begin{equation}
+\tag{15.5}
+\textbf{X} \quad \overset{\text{encode via }\textbf{P}}{\longrightarrow} \quad \textbf{Z} \quad \overset{\text{decode via } \textbf{P}'}{\longrightarrow} \quad \textbf{X}
+\end{equation}\]</span></p>
+<p>If we take the truncated version and seek a smaller output (with only <span class="math inline">\(K'\)</span> columns), this gives:</p>
+<p><span class="math display" id="eq:pcaschem2">\[\begin{equation}
+\tag{15.6}
+\textbf{X}, \ (I\times K) \quad \overset{\text{encode via }\textbf{P}_{K'}}{\longrightarrow} \quad \tilde{\textbf{X}}, \ (I \times K') \quad \overset{\text{decode via } \textbf{P}'_{K'}}{\longrightarrow} \quad \breve{\textbf{X}},\ (I \times K),
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\textbf{P}_{K'}\)</span> is the restriction of <span class="math inline">\(\textbf{P}\)</span> to the <span class="math inline">\(K'\)</span> columns that correspond to the factors with the largest variances. The dimensions of matrices are indicated inside the brackets. In this case, the recoding cannot recover <span class="math inline">\(\textbf{X}\)</span> exactly but only an approximation, which we write <span class="math inline">\(\breve{\textbf{X}}\)</span>. This approximation is coded with less information, hence this new data <span class="math inline">\(\breve{\textbf{X}}\)</span> is compressed and provides a parsimonious representation of the original sample <span class="math inline">\(\textbf{X}\)</span>.</p>
+<p>An autoencodeur generalizes this concept to <strong>nonlinear</strong> coding functions. Simple linear autoencoders are linked to latent factor models (see Proposition 1 in <span class="citation"><a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">2020a</a>)</span> for the case of single layer autoencoders.) The scheme is the following
+<span class="math display" id="eq:aescheme2">\[\begin{equation}
+\tag{15.7}
+\textbf{X},\ (I\times K) \quad \overset{\text{encode via } N} {\longrightarrow} \quad \tilde{\textbf{X}}=N(\textbf{X}), \ (I \times K') \quad \overset{\text{decode via } N'}{\longrightarrow} \quad \breve{\textbf{X}}=N'(\tilde{\textbf{X}}), \ (I \times K),
+\end{equation}\]</span></p>
+<p>where the encoding and decoding functions <span class="math inline">\(N\)</span> and <span class="math inline">\(N'\)</span> are often taken to be neural networks. The term <strong>autoencoder</strong> comes from the fact that the target output, which we often write <span class="math inline">\(\textbf{Z}\)</span> is the original sample <span class="math inline">\(\textbf{X}\)</span>. Thus, the algorithm seeks to determine the function <span class="math inline">\(N\)</span> that minimizes the distance (to be defined) between <span class="math inline">\(\textbf{X}\)</span> and the output value <span class="math inline">\(\breve{\textbf{X}}\)</span>. The encoder generates an alternative representation of <span class="math inline">\(\textbf{X}\)</span>, whereas the decoder tries to recode it back to its original values. Naturally, the intermediate (coded) version <span class="math inline">\(\tilde{\textbf{X}}\)</span> is targeted to have a smaller dimension compared to <span class="math inline">\(\textbf{X}\)</span>.</p>
+</div>
+<div id="application" class="section level3" number="15.2.4">
+<h3>
+<span class="header-section-number">15.2.4</span> Application<a class="anchor" aria-label="anchor" href="#application"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Autoencoders are easy to code in Keras (see Chapter <a href="NN.html#NN">7</a> for more details on Keras). To underline the power of the framework, we resort to another way of coding a NN: the so-called functional API. For simplicity, we work with the small number of predictors (7). The structure of the network consists of two symmetric networks with only one intermediate layer containing 32 units. The activation function is sigmoid; this makes sense since the input has values in the unit interval.</p>
+<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">input_layer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">7</span><span class="op">)</span><span class="op">)</span>    <span class="co"># features_short has 7 columns </span>
+
+<span class="va">encoder</span> <span class="op">&lt;-</span> <span class="va">input_layer</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>       <span class="co"># First, encode</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">32</span>, activation <span class="op">=</span> <span class="st">"sigmoid"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span><span class="op">)</span>       <span class="co"># 4 dimensions for the output layer (same as PCA example)</span>
+
+<span class="va">decoder</span> <span class="op">&lt;-</span> <span class="va">encoder</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>           <span class="co"># Then, from encoder, decode</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">32</span>, activation <span class="op">=</span> <span class="st">"sigmoid"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>       <span class="co"># the original sample has 7 features</span></code></pre></div>
+<p></p>
+<p>In the training part, we optimize the MSE and use an Adam update of the weights (see Section <a href="NN.html#backprop">7.2.3</a>).</p>
+<div class="sourceCode" id="cb233"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ae_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model.html">keras_model</a></span><span class="op">(</span>inputs <span class="op">=</span> <span class="va">input_layer</span>, outputs <span class="op">=</span> <span class="va">decoder</span><span class="op">)</span> <span class="co"># Builds the model</span>
+
+<span class="va">ae_model</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                <span class="co"># Learning parameters</span>
+    loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,
+    optimizer <span class="op">=</span> <span class="st">'adam'</span>,
+    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div>
+<p></p>
+<p>Finally, we are ready to train the data onto itself! The evolution of loss on the training and testing samples is depicted in Figure <a href="unsup.html#fig:aekeras3">15.3</a>. The decreasing pattern shows the progress of the quality in compression.</p>
+<div class="sourceCode" id="cb234"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_ae</span> <span class="op">&lt;-</span> <span class="va">ae_model</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Input</span>
+        <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>,  <span class="co"># Output</span>
+        epochs <span class="op">=</span> <span class="fl">15</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,
+        validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>, 
+                               <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/mboost/man/plot.html">plot</a></span><span class="op">(</span><span class="va">fit_ae</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_grey</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:aekeras3"></span>
+<img src="ML_factor_files/figure-html/aekeras3-1.png" alt="Output from the training of an autoencoder." width="400px"><p class="caption">
+FIGURE 15.3: Output from the training of an autoencoder.
+</p>
+</div>
+<p></p>
+<p>In order to get the details of all weights and biases, the syntax is the following.</p>
+<div class="sourceCode" id="cb235"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ae_weights</span> <span class="op">&lt;-</span> <span class="va">ae_model</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://keras.rstudio.com/reference/get_weights.html">get_weights</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p></p>
+<p>Retrieving the encoder and processing the data into the compressed format is just a matter of matrix manipulation. In practice, it is possible to build a submodel by loading the weights from the encoder (see exercise below).</p>
+</div>
+</div>
+<div id="clustering-via-k-means" class="section level2" number="15.3">
+<h2>
+<span class="header-section-number">15.3</span> Clustering via k-means<a class="anchor" aria-label="anchor" href="#clustering-via-k-means"><i class="fas fa-link"></i></a>
+</h2>
+<p> 
+The second family of unsupervised tools pertains to clustering. Features are grouped into homogeneous families of predictors. It is then possible to single out one among the group (or to create a synthetic average of all of them). Mechanically, the number of predictors is reduced.</p>
+<p>The principle is simple: among a group of variables (the reasoning would be the same for observations in the other dimension) <span class="math inline">\(\textbf{x}_{\{1 \le j \le J\}}\)</span>, find the combination of <span class="math inline">\(k&lt;J\)</span> groups that minimize
+<span class="math display" id="eq:kmeans">\[\begin{equation}
+\tag{15.8}
+\sum_{i=1}^k\sum_{\textbf{x}\in S_i}||\textbf{x}-\textbf{m}_i||^2,
+\end{equation}\]</span>
+where <span class="math inline">\(||\cdot ||\)</span> is some norm which is usually taken to be the Euclidean <span class="math inline">\(l^2\)</span>-norm. The <span class="math inline">\(S_i\)</span> are the groups and the minimization is run on the whole set of groups <span class="math inline">\(\textbf{S}\)</span>. The <span class="math inline">\(\textbf{m}_i\)</span> are the group means (also called centroids or barycenters): <span class="math inline">\(\textbf{m}_i=(\text{card}(S_i))^{-1}\sum_{\textbf{x}\in S_i}\textbf{x}\)</span>.</p>
+<p>In order to ensure optimality, all possible arrangements must be tested, which is prohibitively long when <span class="math inline">\(k\)</span> and <span class="math inline">\(J\)</span> are large. Therefore, the problem is usually solved with greedy algorithms that seek (and find) solutions that are not optimal but ‘good enough.’</p>
+<p>One heuristic way to proceed is the following:</p>
+<ol start="0" style="list-style-type: decimal">
+<li>Start with a (possibly random) partition of <span class="math inline">\(k\)</span> clusters.<br>
+</li>
+<li>For each cluster, compute the optimal mean values <span class="math inline">\(\textbf{m}_i^*\)</span> that minimizes expression <a href="unsup.html#eq:kmeans">(15.8)</a>. This is a simple quadratic program.<br>
+</li>
+<li>Given the optimal centers <span class="math inline">\(\textbf{m}_i^*\)</span>, reassign the points <span class="math inline">\(\textbf{x}_i\)</span> so that they are all the closest to their center.<br>
+</li>
+<li>Repeat steps 1. and 2. until the points do not change cluster at step 2.</li>
+</ol>
+<p>Below, we illustrate this process with an example. From all 93 features, we build 10 clusters.</p>
+<div class="sourceCode" id="cb236"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>                               <span class="co"># Setting the random seed (the optim. is random)</span>
+<span class="va">k_means</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>             <span class="co"># Performs the k-means clustering</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>
+<span class="va">clusters</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/tibble.html">tibble</a></span><span class="op">(</span>factor <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">k_means</span><span class="op">$</span><span class="va">cluster</span><span class="op">)</span>,   <span class="co"># Organize the cluster data</span>
+                   cluster <span class="op">=</span> <span class="va">k_means</span><span class="op">$</span><span class="va">cluster</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/arrange.html">arrange</a></span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span>
+<span class="va">clusters</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">cluster</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span>                     <span class="co"># Shows one particular group</span></code></pre></div>
+<pre><code>## # A tibble: 4 × 2
+##   factor                         cluster
+##   &lt;chr&gt;                            &lt;int&gt;
+## 1 Asset_Turnover                       4
+## 2 Bb_Yld                               4
+## 3 Recurring_Earning_Total_Assets       4
+## 4 Sales_Ps                             4</code></pre>
+<p></p>
+<p>
+We single out the fourth cluster which is composed mainly of accounting ratios related to the profitability of firms. Given these 10 clusters, we can build a much smaller group of features that can then be fed to the predictive engines described in Chapters <a href="lasso.html#lasso">5</a> to <a href="bayes.html#bayes">9</a>. The representative of a cluster can be the member that is closest to the center, or simply the center itself. This pre-processing step can nonetheless cause problems in the forecasting phase. Typically, it requires that the training data be also clustered. The extension to the testing data is not straightforward (the clusters may not be the same).</p>
+</div>
+<div id="nearest-neighbors" class="section level2" number="15.4">
+<h2>
+<span class="header-section-number">15.4</span> Nearest neighbors<a class="anchor" aria-label="anchor" href="#nearest-neighbors"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+To the best of our knowledge, nearest neighbors are not used in large-scale portfolio choice applications. The reason is simple: computational cost. Nonetheless, the concept of neighbors is widespread in unsupervised learning and can be used locally in complement to interpretability tools. Theoretical results on k-NN relating to bounds for error rates on classification tasks can be found in section 6.2 of <span class="citation"><a href="solutions-to-exercises.html#ref-ripley2007pattern" role="doc-biblioref">Ripley</a> (<a href="solutions-to-exercises.html#ref-ripley2007pattern" role="doc-biblioref">2007</a>)</span>. The rationale is the following. If:</p>
+<ol style="list-style-type: decimal">
+<li>the training sample is able to accurately span the distribution of <span class="math inline">\((\textbf{y}, \textbf{X})\)</span>; <strong>and</strong><br>
+</li>
+<li>the testing sample follows the same distribution as the training sample (or close enough);</li>
+</ol>
+<p>then the neighborhood of one instance <span class="math inline">\(\textbf{x}_i\)</span> from the testing features computed on the training sample will yield valuable information on <span class="math inline">\(y_i\)</span>.</p>
+<p>In what follows, we thus seek to find neighbors of one particular instance <span class="math inline">\(\textbf{x}_i\)</span> (a <span class="math inline">\(K\)</span>-dimensional row vector). Note that there is a major difference with the previous section: the clustering is intended at the observation level (row) and not at the predictor level (column).</p>
+<p>Given a dataset with the same (corresponding) columns <span class="math inline">\(\textbf{X}_{i,k}\)</span>, the neighbors are defined via a similarity measure (or distance)
+<span class="math display" id="eq:D">\[\begin{equation}
+\tag{15.9}
+D(\textbf{x}_j,\textbf{x}_i)=\sum_{k=1}^Kc_k d_k(x_{j,k},x_{i,k}),
+\end{equation}\]</span>
+where the distance functions <span class="math inline">\(d_k\)</span> can operate on various data types (numerical, categorical, etc.). For numerical values, <span class="math inline">\(d_k(x_{j,k},x_{i,k})=(x_{j,k}-x_{i,k})^2\)</span> or <span class="math inline">\(d_k(x_{j,k},x_{i,k})=|x_{j,k}-x_{i,k}|\)</span>. For categorical values, we refer to the exhaustive survey by <span class="citation"><a href="solutions-to-exercises.html#ref-boriah2008similarity" role="doc-biblioref">Boriah, Chandola, and Kumar</a> (<a href="solutions-to-exercises.html#ref-boriah2008similarity" role="doc-biblioref">2008</a>)</span> which lists 14 possible measures. Finally the <span class="math inline">\(c_k\)</span> in Equation <a href="unsup.html#eq:D">(15.9)</a> allow some flexbility by weighting features. This is useful because both raw values (<span class="math inline">\(x_{i,k}\)</span> versus <span class="math inline">\(x_{i,k'}\)</span>) or measure outputs (<span class="math inline">\(d_k\)</span> versus <span class="math inline">\(d_{k'}\)</span>) can have different scales.</p>
+<p>Once the distances are computed over the whole sample, they are ranked using indices <span class="math inline">\(l_1^i, \dots, l_I^i\)</span>:
+<span class="math display">\[D\left(\textbf{x}_{l_1^i},\textbf{x}_i\right) \le D\left(\textbf{x}_{l_2^i},\textbf{x}_i\right) \le \dots, \le D\left(\textbf{x}_{l_I^i},\textbf{x}_i\right)\]</span></p>
+<p>The nearest neighbors are those indexed by <span class="math inline">\(l_m^i\)</span> for <span class="math inline">\(m=1,\dots,k\)</span>. We leave out the case when there are problematic equalities of the type <span class="math inline">\(D\left(\textbf{x}_{l_m^i},\textbf{x}_i\right)=D\left(\textbf{x}_{l_{m+1}^i},\textbf{x}_i\right)\)</span> for the sake of simplicity and because they rarely occur in practice as long as there are sufficiently many numerical predictors.</p>
+<p>Given these neighbors, it is now possible to build a prediction for the label side <span class="math inline">\(y_i\)</span>. The rationale is straightforward: if <span class="math inline">\(\textbf{x}_i\)</span> is close to other instances <span class="math inline">\(\textbf{x}_j\)</span>, then the label value <span class="math inline">\(y_i\)</span> should also be close to <span class="math inline">\(y_j\)</span> (under the assumption that the features carry some predictive information over the label <span class="math inline">\(y\)</span>).</p>
+<p>An intuitive prediction for <span class="math inline">\(y_i\)</span> is the following weighted average:
+<span class="math display">\[\hat{y}_i=\frac{\sum_{j\neq i} h(D(\textbf{x}_j,\textbf{x}_i)) y_j}{\sum_{j\neq i} h(D(\textbf{x}_j,\textbf{x}_i))},\]</span>
+where <span class="math inline">\(h\)</span> is a decreasing function. Thus, the further <span class="math inline">\(\textbf{x}_j\)</span> is from <span class="math inline">\(\textbf{x}_i\)</span>, the smaller the weight in the average. A typical choice for <span class="math inline">\(h\)</span> is <span class="math inline">\(h(z)=e^{-az}\)</span> for some parameter <span class="math inline">\(a&gt;0\)</span> that determines how penalizing the distance <span class="math inline">\(D(\textbf{x}_j,\textbf{x}_i)\)</span> is. Of course, the average can be taken in the set of <span class="math inline">\(k\)</span> nearest neighbors, in which case the <span class="math inline">\(h\)</span> is equal to zero beyond a particular distance threshold:
+<span class="math display">\[\hat{y}_i=\frac{\sum_{j \text{ neighbor}} h(D(\textbf{x}_j,\textbf{x}_i)) y_j}{\sum_{j \text{ neighbor}} h(D(\textbf{x}_j,\textbf{x}_i))}.\]</span></p>
+<p>A more agnostic rule is to take <span class="math inline">\(h:=1\)</span> over the set of neighbors and in this case, all neighbors have the same weight (see the old discussion by <span class="citation"><a href="solutions-to-exercises.html#ref-bailey1978note" role="doc-biblioref">T. Bailey and Jain</a> (<a href="solutions-to-exercises.html#ref-bailey1978note" role="doc-biblioref">1978</a>)</span> in the case of classification). For classification tasks, the procedure involves a voting rule whereby the class with the most votes wins the contest, with possible tie-breaking methods. The interested reader can have a look at the short survey in <span class="citation"><a href="solutions-to-exercises.html#ref-bhatia2010survey" role="doc-biblioref">Bhatia et al.</a> (<a href="solutions-to-exercises.html#ref-bhatia2010survey" role="doc-biblioref">2010</a>)</span>.</p>
+<p>For the choice of optimal <span class="math inline">\(k\)</span>, several complicated techniques and criteria exist (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-ghosh2006optimum" role="doc-biblioref">A. K. Ghosh</a> (<a href="solutions-to-exercises.html#ref-ghosh2006optimum" role="doc-biblioref">2006</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-hall2008choice" role="doc-biblioref">Peter Hall et al.</a> (<a href="solutions-to-exercises.html#ref-hall2008choice" role="doc-biblioref">2008</a>)</span>). Heuristic values often do the job pretty well. A rule of thumb is that <span class="math inline">\(k=\sqrt{I}\)</span> (<span class="math inline">\(I\)</span> being the total number of instances) is not too far from the optimal value, unless <span class="math inline">\(I\)</span> is exceedingly large. </p>
+<p>Below, we illustrate this concept. We pick one date (31th of December 2006) and single out one asset (with stock_id equal to 13). We then seek to find the <span class="math inline">\(k=30\)</span> stocks that are the closest to this asset at this particular date. We resort to the <em>FNN</em> package that proposes an efficient computation of Euclidean distances (and their ordering).</p>
+<div class="sourceCode" id="cb238"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">FNN</span><span class="op">)</span>     <span class="co"># Package for Fast Nearest Neighbors detection</span>
+<span class="va">knn_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">data_ml</span>, <span class="va">date</span> <span class="op">==</span> <span class="st">"2006-12-31"</span><span class="op">)</span>    <span class="co"># Dataset for k-NN exercise</span>
+<span class="va">knn_target</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">knn_data</span>, <span class="va">stock_id</span> <span class="op">==</span> <span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># Target observation</span>
+              <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span>
+<span class="va">knn_sample</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">knn_data</span>, <span class="va">stock_id</span> <span class="op">!=</span> <span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># All other observations</span>
+              <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span>
+<span class="va">neighbors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/FNN/man/get.knn.html">get.knnx</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">knn_sample</span>, query <span class="op">=</span> <span class="va">knn_target</span>, k <span class="op">=</span> <span class="fl">30</span><span class="op">)</span> 
+<span class="va">neighbors</span><span class="op">$</span><span class="va">nn.index</span>                                   <span class="co"># Indices of the k nearest neighbors</span></code></pre></div>
+<pre><code>##      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12] [,13] [,14] [,15]
+## [1,]  905  876  730  548 1036  501  335  117  789    54   618   130   342   360   673
+##      [,16] [,17] [,18] [,19] [,20] [,21] [,22] [,23] [,24] [,25] [,26] [,27] [,28] [,29]
+## [1,]   153   265   858   830   286  1150   166   946   192   340   162   951   376   785
+##      [,30]
+## [1,]     2</code></pre>
+<p></p>
+<p>Once the neighbors and distances are known, we can compute a prediction for the return of the target stock. We use the function <span class="math inline">\(h(z)=e^{-z}\)</span> for the weighting of instances (via the distances).</p>
+<div class="sourceCode" id="cb240"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">knn_labels</span> <span class="op">&lt;-</span> <span class="va">knn_data</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/vector.html">as.vector</a></span><span class="op">(</span><span class="va">neighbors</span><span class="op">$</span><span class="va">nn.index</span><span class="op">)</span>,<span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                <span class="co"># y values for neighb.</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span>    
+<span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">knn_labels</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="op">-</span><span class="va">neighbors</span><span class="op">$</span><span class="va">nn.dist</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="op">-</span><span class="va">neighbors</span><span class="op">$</span><span class="va">nn.dist</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>  <span class="co"># Pred w. k(z)=e^(-z)</span></code></pre></div>
+<pre><code>## [1] 0.003042282</code></pre>
+<div class="sourceCode" id="cb242"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">knn_data</span>, <span class="va">stock_id</span> <span class="op">==</span> <span class="fl">13</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                      <span class="co"># True y </span>
+              <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##   R1M_Usd
+##     &lt;dbl&gt;
+## 1   0.089</code></pre>
+<p></p>
+<p>The prediction is neither very good, nor very bad (the sign is correct!). However, note that this example cannot be used for predictive purposes because we use data from 2006-12-31 to predict a return at the same date. In order to avoid the forward-looking bias, the knn_sample variable should be chosen from a prior point in time.</p>
+<p>The above computations are fast (a handful of seconds at most), but hold for only one asset. In a <span class="math inline">\(k\)</span>-NN exercise, each stock gets a customed prediction and the set of neighbors must be re-assessed each time. For <span class="math inline">\(N\)</span> assets, <span class="math inline">\(N(N-1)/2\)</span> distances must be evaluated. This is particularly costly in a backtest, especially when several parameters can be tested (the number of neighbors, <span class="math inline">\(k\)</span>, or <span class="math inline">\(a\)</span> in the weighting function <span class="math inline">\(h(z)=e^{-az}\)</span>). When the investment universe is small (when trading indices for instance), <em>k</em>-NN methods become computationally attractive (see for instance <span class="citation"><a href="solutions-to-exercises.html#ref-chen2017feature" role="doc-biblioref">Y. Chen and Hao</a> (<a href="solutions-to-exercises.html#ref-chen2017feature" role="doc-biblioref">2017</a>)</span>).</p>
+</div>
+<div id="coding-exercise-1" class="section level2" number="15.5">
+<h2>
+<span class="header-section-number">15.5</span> Coding exercise<a class="anchor" aria-label="anchor" href="#coding-exercise-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Code the compressed version of the data (narrow training sample) via the encoder part of the autoencoder.</p>
+
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></div>
+<div class="next"><a href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#unsup"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="nav-link" href="#corpred"><span class="header-section-number">15.1</span> The problem with correlated predictors</a></li>
+<li>
+<a class="nav-link" href="#principal-component-analysis-and-autoencoders"><span class="header-section-number">15.2</span> Principal component analysis and autoencoders</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#a-bit-of-algebra"><span class="header-section-number">15.2.1</span> A bit of algebra</a></li>
+<li><a class="nav-link" href="#pca"><span class="header-section-number">15.2.2</span> PCA</a></li>
+<li><a class="nav-link" href="#ae"><span class="header-section-number">15.2.3</span> Autoencoders</a></li>
+<li><a class="nav-link" href="#application"><span class="header-section-number">15.2.4</span> Application</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#clustering-via-k-means"><span class="header-section-number">15.3</span> Clustering via k-means</a></li>
+<li><a class="nav-link" href="#nearest-neighbors"><span class="header-section-number">15.4</span> Nearest neighbors</a></li>
+<li><a class="nav-link" href="#coding-exercise-1"><span class="header-section-number">15.5</span> Coding exercise</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

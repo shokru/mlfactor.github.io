@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 14 Two key concepts: causality and non-stationarity | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 14 Two key concepts: causality and non-stationarity | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 14 Two key concepts: causality and non-stationarity | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; }  A prominent point of criticism faced by ML tools is their inability to uncover causality relationships between features and labels because they are...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; }  A prominent point of criticism faced by ML tools is their inability to uncover causality relationships between features and labels because they are...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; }  A prominent point of criticism faced by ML tools is their inability to uncover causality relationships between features and labels because they are...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="active" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="causality" class="section level1" number="14">
+<h1>
+<span class="header-section-number">14</span> Two key concepts: causality and non-stationarity<a class="anchor" aria-label="anchor" href="#causality"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p> 
+A prominent point of criticism faced by ML tools is their inability to uncover <strong>causality</strong> relationships between features and labels because they are mostly focused (by design) to capture correlations. Correlations are much weaker than causality because they characterize a two-way relationship (<span class="math inline">\(\textbf{X}\leftrightarrow \textbf{y}\)</span>), while causality specifies a direction <span class="math inline">\(\textbf{X}\rightarrow \textbf{y}\)</span> or <span class="math inline">\(\textbf{X}\leftarrow \textbf{y}\)</span>. One fashionable example is sentiment. Many academic articles seem to find that sentiment (irrespectively of its definition) is a significant driver of future returns. A high sentiment for a particular stock may increase the demand for this stock and push its price up (though contrarian reasonings may also apply: if sentiment is high, it is a sign that mean-reversion is possibly about to happen). The reverse causation is also plausible: returns may well cause sentiment. If a stock experiences a long period of market growth, people become bullish about this stock and sentiment increases (this notably comes from extrapolation, see <span class="citation"><a href="solutions-to-exercises.html#ref-barberis2015x" role="doc-biblioref">Barberis et al.</a> (<a href="solutions-to-exercises.html#ref-barberis2015x" role="doc-biblioref">2015</a>)</span> for a theoretical model). In <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2018economic" role="doc-biblioref">Coqueret</a> (<a href="solutions-to-exercises.html#ref-coqueret2018economic" role="doc-biblioref">2020</a>)</span>, it is found (in opposition to most findings in this field), that the latter relationship (returns <span class="math inline">\(\rightarrow\)</span> sentiment) is more likely. This result is backed by causality driven tests (see Section <a href="causality.html#granger">14.1.1</a>).</p>
+<p>Statistical causality is a large field and we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-pearl2009causality" role="doc-biblioref">Pearl</a> (<a href="solutions-to-exercises.html#ref-pearl2009causality" role="doc-biblioref">2009</a>)</span> for a deep dive into this topic. Recently, researchers have sought to link causality with ML approaches (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-peters2017elements" role="doc-biblioref">Peters, Janzing, and Schölkopf</a> (<a href="solutions-to-exercises.html#ref-peters2017elements" role="doc-biblioref">2017</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-heinze2018invariant" role="doc-biblioref">Heinze-Deml, Peters, and Meinshausen</a> (<a href="solutions-to-exercises.html#ref-heinze2018invariant" role="doc-biblioref">2018</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-arjovsky2019invariant" role="doc-biblioref">Arjovsky et al.</a> (<a href="solutions-to-exercises.html#ref-arjovsky2019invariant" role="doc-biblioref">2019</a>)</span>). The key notion in their work is <strong>invariance</strong>. </p>
+<p>Often, data is collected not at once, but from different sources at different moments. Some relationships found in these different sources will change, while others may remain the same. The relationships that are invariant to <strong>changing environments</strong> are likely to stem from (and signal) causality. One counter-example is the following (related in <span class="citation"><a href="solutions-to-exercises.html#ref-beery2018recognition" role="doc-biblioref">Beery, Van Horn, and Perona</a> (<a href="solutions-to-exercises.html#ref-beery2018recognition" role="doc-biblioref">2018</a>)</span>): training a computer vision algorithm to discriminate between cows and camels will lead the algorithm to focus on grass versus sand! This is because most camels are pictured in the desert while cows are shown in green fields of grass. Thus, a picture of a camel on grass will be classified as cow, while a cow on sand would be labelled “camel.” It is only with pictures of these two animals in different contexts (environments) that the learner will end up truly finding what makes a cow and a camel. A camel will remain a camel no matter where it is pictured: it should be recognized as such by the learner. If so, the representation of the camel becomes invariant over all datasets and the learner has discovered causality, i.e., the true attributes that make the camel a camel (overall silhouette, shape of the back, face, color (possibly misleading!), etc.).</p>
+<p>This search for invariance makes sense for many disciplines like computer vision or natural language processing (cats will always look like cats and languages don’t change much). In finance, it is not obvious that invariance may exist. Market conditions are known to be time-varying and the relationships between firm characteristics and returns also change from year to year. One solution to this issue may simply be to embrace <strong>non-stationarity</strong> (see Section <a href="notdata.html#notations">1.1</a> for a definition of stationarity). In Chapter <a href="backtest.html#backtest">12</a>, we advocate to do that by updating models as frequently as possible with rolling training sets: this allows the predictions to be based on the most recent trends. In Section <a href="causality.html#nonstat">14.2</a> below, we introduce other theoretical and practical options.</p>
+<div id="causality-1" class="section level2" number="14.1">
+<h2>
+<span class="header-section-number">14.1</span> Causality<a class="anchor" aria-label="anchor" href="#causality-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+Traditional machine learning models aim to uncover relationships between variables but do not usually specify <em>directions</em> for these relationships. One typical example is the linear regression. If we write <span class="math inline">\(y=a+bx+\epsilon\)</span>, then it is also true that <span class="math inline">\(x=b^{-1}(y-a-\epsilon)\)</span>, which is of course also a linear relationship (with respect to <span class="math inline">\(y\)</span>). These equations do not define causation whereby <span class="math inline">\(x\)</span> would be a clear determinant of <span class="math inline">\(y\)</span> (<span class="math inline">\(x \rightarrow y\)</span>, but the opposite could be false).</p>
+<p>Recently, <span class="citation"><a href="solutions-to-exercises.html#ref-dacunto2021evolving" role="doc-biblioref">D’Acunto et al.</a> (<a href="solutions-to-exercises.html#ref-dacunto2021evolving" role="doc-biblioref">2021</a>)</span> have investigated the causal structure of prominent equity factors. The study, via the the VAR-LiNGAM technique of <span class="citation"><a href="solutions-to-exercises.html#ref-hyvarinen2010estimation" role="doc-biblioref">Hyvärinen et al.</a> (<a href="solutions-to-exercises.html#ref-hyvarinen2010estimation" role="doc-biblioref">2010</a>)</span>, finds that risk factor interations are continuously evolving.</p>
+<div id="granger" class="section level3" number="14.1.1">
+<h3>
+<span class="header-section-number">14.1.1</span> Granger causality<a class="anchor" aria-label="anchor" href="#granger"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The most notable tool first proposed by <span class="citation"><a href="solutions-to-exercises.html#ref-granger1969investigating" role="doc-biblioref">Granger</a> (<a href="solutions-to-exercises.html#ref-granger1969investigating" role="doc-biblioref">1969</a>)</span> is probably the simplest. For simplicity, we consider only two stationary processes, <span class="math inline">\(X_t\)</span> and <span class="math inline">\(Y_t\)</span>. A strict definition of causality could be the following. <span class="math inline">\(X\)</span> can be said to cause <span class="math inline">\(Y\)</span>, whenever, for some integer <span class="math inline">\(k\)</span>,
+<span class="math display">\[(Y_{t+1},\dots,Y_{t+k})|(\mathcal{F}_{Y,t}\cup \mathcal{F}_{X,t}) \quad  \overset{d}{\neq} \quad (Y_{t+1},\dots,Y_{t+k})|\mathcal{F}_{Y,t},\]</span>
+that is, when the distribution of future values of <span class="math inline">\(Y_t\)</span>, conditionally on the knowledge of both processes is not the same as the distribution with the sole knowledge of the filtration <span class="math inline">\(\mathcal{F}_{Y,t}\)</span>. Hence <span class="math inline">\(X\)</span> does have an impact on <span class="math inline">\(Y\)</span> because its trajectory alters that of <span class="math inline">\(Y\)</span>.</p>
+<p>Now, this formulation is too vague and impossible to handle numerically, thus we simplify the setting via a linear formulation. We keep the same notations as section 5 of the original paper by <span class="citation"><a href="solutions-to-exercises.html#ref-granger1969investigating" role="doc-biblioref">Granger</a> (<a href="solutions-to-exercises.html#ref-granger1969investigating" role="doc-biblioref">1969</a>)</span>. The test consists of two regressions:
+<span class="math display">\[\begin{align*}
+X_t&amp;=\sum_{j=1}^ma_jX_{t-j}+\sum_{j=1}^mb_jY_{t-j} + \epsilon_t \\
+Y_t&amp;=\sum_{j=1}^mc_jX_{t-j}+\sum_{j=1}^md_jY_{t-j} + \nu_t
+\end{align*}\]</span>
+where for simplicity, it is assumed that both processes have zero mean. The usual assumptions apply: the Gaussian noises <span class="math inline">\(\epsilon_t\)</span> and <span class="math inline">\(\nu_t\)</span> are uncorrelated in every possible way (mutually and through time). The test is the following: if one <span class="math inline">\(b_j\)</span> is nonzero, then it is said that <span class="math inline">\(Y\)</span> Granger-causes <span class="math inline">\(X\)</span> and if one <span class="math inline">\(c_j\)</span> is nonzero, <span class="math inline">\(X\)</span> Granger-causes <span class="math inline">\(Y\)</span>. The two are not mutually exclusive and it is widely accepted that feedback loops can very well occur.</p>
+<p>Statistically, under the null hypothesis, <span class="math inline">\(b_1=\dots=b_m=0\)</span> (<em>resp.</em> <span class="math inline">\(c_1=\dots=c_m=0\)</span>), which can be tested using the usual Fischer distribution. Obviously, the linear restriction can be dismissed but the tests are then much more complex. The main financial article in this direction is <span class="citation"><a href="solutions-to-exercises.html#ref-hiemstra1994testing" role="doc-biblioref">Hiemstra and Jones</a> (<a href="solutions-to-exercises.html#ref-hiemstra1994testing" role="doc-biblioref">1994</a>)</span>.</p>
+<p>There are many R packages that embed Granger causality functionalities. One of the most widespread is <em>lmtest</em>, so we work with it below. The syntax is incredibly simple. The <em>order</em> is the maximum lag <span class="math inline">\(m\)</span> in the above equation. We test if market capitalization averaged over the past 6 months Granger-causes 1 month ahead returns for one particular stock (the first in the sample).</p>
+<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">lmtest</span><span class="op">)</span>
+<span class="va">x_granger</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                            <span class="co"># X variable =...</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>     <span class="co"># ... stock nb 1</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">Mkt_Cap_6M_Usd</span><span class="op">)</span>         <span class="co"># ... &amp; Market cap</span>
+<span class="va">y_granger</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Y variable = ...</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span><span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>     <span class="co"># ... stock nb 1</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span>                <span class="co"># ... &amp; 1M return</span>
+<span class="va">fit_granger</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lmtest/man/grangertest.html">grangertest</a></span><span class="op">(</span><span class="va">x_granger</span>,                       <span class="co"># X variable</span>
+                           <span class="va">y_granger</span>,                       <span class="co"># Y variable</span>
+                           order <span class="op">=</span> <span class="fl">6</span>,                       <span class="co"># Maximmum lag</span>
+                           na.action <span class="op">=</span> <span class="va">na.omit</span><span class="op">)</span>             <span class="co"># What to do with missing data</span>
+<span class="va">fit_granger</span></code></pre></div>
+<pre><code>## Granger causality test
+## 
+## Model 1: y_granger ~ Lags(y_granger, 1:6) + Lags(x_granger, 1:6)
+## Model 2: y_granger ~ Lags(y_granger, 1:6)
+##   Res.Df Df     F    Pr(&gt;F)    
+## 1    149                       
+## 2    155 -6 4.111 0.0007554 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p></p>
+<p>The test is directional and only tests if <span class="math inline">\(X\)</span> Granger-causes <span class="math inline">\(Y\)</span>. In order to test the reverse effect, it is required to inverse the arguments in the function. In the output above, the <span class="math inline">\(p\)</span>-value is very low, hence the probability of observing samples similar to ours knowing that <span class="math inline">\(H_0\)</span> holds is negligible. Thus it seems that market capitalization does Granger-cause one-month returns. We nonetheless underline that Granger causality is arguably weaker than the one defined in the next subsection. A process that Granger-causes another one simply contains useful predictive information, which is not proof of causality in a strict sense. Moreover, our test is limited to a linear model and including nonlinearities may alter the conclusion. Lastly, including other regressors (possibly omitted variables) could also change the results (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-chow2002multivariate" role="doc-biblioref">Chow, Cotsomitis, and Kwan</a> (<a href="solutions-to-exercises.html#ref-chow2002multivariate" role="doc-biblioref">2002</a>)</span>).</p>
+</div>
+<div id="causal-additive-models" class="section level3" number="14.1.2">
+<h3>
+<span class="header-section-number">14.1.2</span> Causal additive models<a class="anchor" aria-label="anchor" href="#causal-additive-models"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The zoo of causal model encompasses a variety of beasts (even BARTs from Section <a href="bayes.html#BART">9.5</a> are used for this purpose in <span class="citation"><a href="solutions-to-exercises.html#ref-hahn2019bayesian" role="doc-biblioref">Hahn, Murray, and Carvalho</a> (<a href="solutions-to-exercises.html#ref-hahn2019bayesian" role="doc-biblioref">2019</a>)</span>). The interested reader can have a peek at <span class="citation"><a href="solutions-to-exercises.html#ref-pearl2009causality" role="doc-biblioref">Pearl</a> (<a href="solutions-to-exercises.html#ref-pearl2009causality" role="doc-biblioref">2009</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-peters2017elements" role="doc-biblioref">Peters, Janzing, and Schölkopf</a> (<a href="solutions-to-exercises.html#ref-peters2017elements" role="doc-biblioref">2017</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-maathuis2018handbook" role="doc-biblioref">Maathuis et al.</a> (<a href="solutions-to-exercises.html#ref-maathuis2018handbook" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-hunermund2019causal" role="doc-biblioref">Hünermund and Bareinboim</a> (<a href="solutions-to-exercises.html#ref-hunermund2019causal" role="doc-biblioref">2019</a>)</span> and the references therein. One central tool in causal models is the <strong>do-calculus</strong> developed by Pearl. Whereas traditional probabilities <span class="math inline">\(P[Y|X]\)</span> link the odds of <span class="math inline">\(Y\)</span> conditionally on <strong>observing</strong> <span class="math inline">\(X\)</span> take some value <span class="math inline">\(x\)</span>, the do(<span class="math inline">\(\cdot\)</span>) <strong>forces</strong> <span class="math inline">\(X\)</span> to take value <span class="math inline">\(x\)</span>. This is a <em>looking</em> versus <em>doing</em> dichotomy. One classical example is the following. Observing a barometer gives a clue what the weather will be because high pressures are more often associated with sunny days:
+<span class="math display">\[P[\text{sunny weather}|\text{barometer says ``high''} ]&gt;P[\text{sunny weather}|\text{barometer says ``low''} ],\]</span>
+but if you hack the barometer (force it to display some value),
+<span class="math display">\[P[\text{sunny weather}|\text{barometer hacked to ``high''} ]=P[\text{sunny weather}|\text{barometer hacked ``low''} ],\]</span>
+because hacking the barometer will have no impact on the weather. In short notation, when there is an intervention on the barometer, <span class="math inline">\(P[\text{weather}|\text{do(barometer)}]=P[\text{weather}]\)</span>. This is an interesting example related to causality. The overarching variable is pressure. Pressure impacts both the weather and the barometer and this joint effect is called confounding. However, it may not be true that the barometer impacts the weather. The interested reader who wants to dive deeper into these concepts should have a closer look at the work of Judea Pearl. Do-calculus is a very powerful theoretical framework, but it is not easy to apply it to any situation or dataset (see for instance the book review <span class="citation"><a href="solutions-to-exercises.html#ref-aronow2020book" role="doc-biblioref">Aronow and Sävje</a> (<a href="solutions-to-exercises.html#ref-aronow2020book" role="doc-biblioref">2019</a>)</span>).</p>
+<p>While we do not formally present an exhaustive tour of the theory behind causal inference, we wish to show some practical implementations because they are easy to interpret. It is always hard to single out one type of model in particular so we choose one that can be explained with simple mathematical tools. We start with the simplest definition of a structural causal model (SCM), where we follow here chapter 3 of <span class="citation"><a href="solutions-to-exercises.html#ref-peters2017elements" role="doc-biblioref">Peters, Janzing, and Schölkopf</a> (<a href="solutions-to-exercises.html#ref-peters2017elements" role="doc-biblioref">2017</a>)</span>. The idea behind these models is to introduce some hierarchy (i.e., some additional structure) in the model. Formally, this gives
+<span class="math display">\[\begin{align*}
+X&amp;=\epsilon_X \\ 
+Y&amp;=f(X,\epsilon_Y),
+\end{align*}\]</span>
+where the <span class="math inline">\(\epsilon_X\)</span> and <span class="math inline">\(\epsilon_Y\)</span> are independent noise variables. Plainly, a realization of <span class="math inline">\(X\)</span> is drawn randomly and has then an impact on the realization of <span class="math inline">\(Y\)</span> via <span class="math inline">\(f\)</span>. Now this scheme could be more complex if the number of observed variables was larger. Imagine a third variable comes in so that
+<span class="math display">\[\begin{align*}
+X&amp;=\epsilon_X \\ 
+Y&amp;=f(X,\epsilon_Y),\\
+Z&amp;=g(Y,\epsilon_Z)
+\end{align*}\]</span></p>
+<p>In this case, <span class="math inline">\(X\)</span> has a causation effect on <span class="math inline">\(Y\)</span> and then <span class="math inline">\(Y\)</span> has a causation effect on <span class="math inline">\(Z\)</span>. We thus have the following connections:
+<span class="math display">\[\begin{array}{ccccccc} X &amp; &amp;&amp;&amp;\\
+&amp;\searrow &amp; &amp;&amp;\\
+&amp;&amp;Y&amp;\rightarrow&amp;Z. \\
+&amp;\nearrow &amp;&amp;\nearrow&amp; \\
+\epsilon_Y &amp; &amp;\epsilon_Z 
+\end{array}\]</span></p>
+<p>
+The above representation is called a graph and graph theory has its own nomenclature, which we very briefly summarize. The variables are often referred to as <em>vertices</em> (or <em>nodes</em>) and the arrows as <em>edges</em>. Because arrows have a direction, they are called <em>directed</em> edges. When two vertices are connected via an edge, they are called <em>adjacent</em>. A sequence of adjacent vertices is called a <em>path</em>, and it is directed if all edges are arrows. Within a directed path, a vertex that comes first is a parent node and the one just after is a child node.</p>
+<p>Graphs can be summarized by adjacency matrices. An adjacency matrix <span class="math inline">\(\textbf{A}=A_{ij}\)</span> is a matrix filled with zeros and ones. <span class="math inline">\(A_{ij}=1\)</span> whenever there is an edge from vertex <span class="math inline">\(i\)</span> to vertex <span class="math inline">\(j\)</span>. Usually, self-loops (<span class="math inline">\(X \rightarrow X\)</span>) are prohibited so that adjacency matrices have zeros on the diagonal. If we consider a simplified version of the above graph like <span class="math inline">\(X \rightarrow Y \rightarrow Z\)</span>, the corresponding adjacency matrix is</p>
+<p><span class="math display">\[\textbf{A}=\begin{bmatrix} 
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1 \\
+0&amp; 0&amp;0
+\end{bmatrix}.\]</span></p>
+<p>where letters <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(Z\)</span> are naturally ordered alphabetically. There are only two arrows: from <span class="math inline">\(X\)</span> to <span class="math inline">\(Y\)</span> (first row, second column) and from <span class="math inline">\(Y\)</span> to <span class="math inline">\(Z\)</span> (second row, third column).</p>
+<p>A <strong>cycle</strong> is a particular type of path that creates a loop, i.e., when the first vertex is also the last. The sequence <span class="math inline">\(X \rightarrow Y \rightarrow Z \rightarrow X\)</span> is a cycle. Technically, cycles pose problems. To illustrate this, consider the simple sequence <span class="math inline">\(X \rightarrow Y \rightarrow X\)</span>. This would imply that a realization of <span class="math inline">\(X\)</span> causes <span class="math inline">\(Y\)</span> which in turn would cause the realization of <span class="math inline">\(Y\)</span>. While Granger causality can be viewed as allowing this kind of connection, general causal models usually avoid cycles and work with <strong>directed acyclic graphs</strong> (DAGs). Formal graph manipulations (possibly linked to do-calculus) can be computed via the <em>causaleffect</em> package <span class="citation"><a href="solutions-to-exercises.html#ref-tikka2017identifying" role="doc-biblioref">Tikka and Karvanen</a> (<a href="solutions-to-exercises.html#ref-tikka2017identifying" role="doc-biblioref">2017</a>)</span>. Direct acyclic graphs can also be created and manipulated with the <em>dagitty</em> (<span class="citation"><a href="solutions-to-exercises.html#ref-textor2016robust" role="doc-biblioref">Textor et al.</a> (<a href="solutions-to-exercises.html#ref-textor2016robust" role="doc-biblioref">2016</a>)</span>) and <em>ggdag</em> packages.</p>
+<p>Equipped with these tools, we can explicitize a very general form of models:
+<span class="math display" id="eq:CAM0">\[\begin{equation}
+\tag{14.1} 
+X_j=f_j\left(\textbf{X}_{\text{pa}_D(j)},\epsilon_j  \right),
+\end{equation}\]</span></p>
+<p>where the noise variables are mutually independent. The notation <span class="math inline">\(\text{pa}_D(j)\)</span> refers to the set of parent nodes of vertex <span class="math inline">\(j\)</span> within the graph structure <span class="math inline">\(D\)</span>. Hence, <span class="math inline">\(X_j\)</span> is a function of all of its parents and some noise term <span class="math inline">\(\epsilon_j\)</span>. An additive causal model is a mild simplification of the above specification:</p>
+<p><span class="math display" id="eq:CAM">\[\begin{equation}
+\tag{14.2} 
+X_j=\sum_{k\in \text{pa}_D(j)}f_{j,k}\left(\textbf{X}_{k}  \right)+\epsilon_j,
+\end{equation}\]</span></p>
+<p>where the nonlinear effect of each variable is cumulative, hence the term ‘<em>additive</em>.’ Note that there is no time index there. In contrast to Granger causality, there is no natural ordering. Such models are very complex and hard to estimate. The details can be found in <span class="citation"><a href="solutions-to-exercises.html#ref-buhlmann2014cam" role="doc-biblioref">Bühlmann et al.</a> (<a href="solutions-to-exercises.html#ref-buhlmann2014cam" role="doc-biblioref">2014</a>)</span>. Fortunately, the authors have developed an R package that determines the DAG <span class="math inline">\(D\)</span>.</p>
+<p>Below, we build the adjacency matrix pertaining to the small set of predictor variables plus the 1-month ahead return (on the training sample). The original version of the book used the <em>CAM</em> package which has a very simple syntax.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The CAM package was removed from CRAN in November 2019 but can still be installed manually. First, download the content of the package: &lt;a href="https://cran.r-project.org/web/packages/CAM/index.html" class="uri"&gt;https://cran.r-project.org/web/packages/CAM/index.html&lt;/a&gt;. Second, copy it in the directory obtained by typing &lt;em&gt;.libPaths()&lt;/em&gt; in the console.&lt;/p&gt;'><sup>29</sup></a> Below, we test the more recent <em>InvariantCausalPrediction</em> package.</p>
+<p>[[<strong>NOTE</strong>: the remainder of the subsection is under revision.]]</p>
+<div class="sourceCode" id="cb215"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># library(CAM)                # Activate the package</span>
+<span class="va">data_caus</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"R1M_Usd"</span>, <span class="va">features_short</span><span class="op">)</span><span class="op">)</span>
+<span class="co"># fit_cam &lt;- CAM(data_caus)   # The main function</span>
+<span class="co"># fit_cam$Adj                 # Showing the adjacency matrix</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">InvariantCausalPrediction</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/InvariantCausalPrediction/man/ICP.html">ICP</a></span><span class="op">(</span>X <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>,
+    Y <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="st">"R1M_Usd"</span><span class="op">)</span>,
+    ExpInd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">training_sample</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,
+    alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+##  accepted empty set
+##  accepted set of variables 
+##  accepted set of variables 1
+##  *** 2% complete: tested 2 of 128 sets of variables 
+##  accepted set of variables 2
+##  accepted set of variables 3
+##  accepted set of variables 4
+##  accepted set of variables 5
+##  accepted set of variables 6
+##  accepted set of variables 7
+##  accepted set of variables 1,2
+##  accepted set of variables 1,3
+##  accepted set of variables 2,3
+##  accepted set of variables 1,4
+##  accepted set of variables 2,4
+##  accepted set of variables 3,4
+##  accepted set of variables 1,5
+##  accepted set of variables 2,5
+##  accepted set of variables 3,5
+##  accepted set of variables 4,5
+##  accepted set of variables 1,6
+##  accepted set of variables 2,6
+##  accepted set of variables 3,6
+##  accepted set of variables 4,6
+##  accepted set of variables 5,6
+##  accepted set of variables 1,7
+##  accepted set of variables 2,7
+##  accepted set of variables 3,7
+##  accepted set of variables 4,7
+##  accepted set of variables 5,7
+##  accepted set of variables 6,7
+##  accepted set of variables 1,2,3
+##  accepted set of variables 1,2,4
+##  accepted set of variables 1,3,4
+##  accepted set of variables 2,3,4
+##  accepted set of variables 1,2,5
+##  accepted set of variables 1,3,5
+##  accepted set of variables 2,3,5
+##  accepted set of variables 1,4,5
+##  accepted set of variables 2,4,5
+##  accepted set of variables 3,4,5
+##  accepted set of variables 1,2,6
+##  accepted set of variables 1,3,6
+##  accepted set of variables 2,3,6
+##  accepted set of variables 1,4,6
+##  accepted set of variables 2,4,6
+##  accepted set of variables 3,4,6
+##  accepted set of variables 1,5,6
+##  accepted set of variables 2,5,6
+##  accepted set of variables 3,5,6
+##  accepted set of variables 4,5,6
+##  accepted set of variables 1,2,7
+##  accepted set of variables 1,3,7
+##  accepted set of variables 2,3,7
+##  accepted set of variables 1,4,7
+##  accepted set of variables 2,4,7
+##  accepted set of variables 3,4,7
+##  accepted set of variables 1,5,7
+##  accepted set of variables 2,5,7
+##  accepted set of variables 3,5,7
+##  accepted set of variables 4,5,7
+##  accepted set of variables 1,6,7
+##  accepted set of variables 2,6,7
+##  accepted set of variables 3,6,7
+##  accepted set of variables 4,6,7
+##  accepted set of variables 5,6,7
+##  accepted set of variables 1,2,3,4
+##  accepted set of variables 1,2,3,5
+##  accepted set of variables 1,2,4,5
+##  accepted set of variables 1,3,4,5
+##  accepted set of variables 2,3,4,5
+##  accepted set of variables 1,2,3,6
+##  accepted set of variables 1,2,4,6
+##  accepted set of variables 1,3,4,6
+##  accepted set of variables 2,3,4,6
+##  accepted set of variables 1,2,5,6
+##  accepted set of variables 1,3,5,6
+##  accepted set of variables 2,3,5,6
+##  accepted set of variables 1,4,5,6
+##  accepted set of variables 2,4,5,6
+##  accepted set of variables 3,4,5,6
+##  accepted set of variables 1,2,3,7
+##  accepted set of variables 1,2,4,7
+##  accepted set of variables 1,3,4,7
+##  accepted set of variables 2,3,4,7
+##  accepted set of variables 1,2,5,7
+##  accepted set of variables 1,3,5,7
+##  accepted set of variables 2,3,5,7
+##  accepted set of variables 1,4,5,7
+##  accepted set of variables 2,4,5,7
+##  accepted set of variables 3,4,5,7
+##  accepted set of variables 1,2,6,7
+##  accepted set of variables 1,3,6,7
+##  accepted set of variables 2,3,6,7
+##  accepted set of variables 1,4,6,7
+##  accepted set of variables 2,4,6,7
+##  accepted set of variables 3,4,6,7
+##  accepted set of variables 1,5,6,7
+##  accepted set of variables 2,5,6,7
+##  accepted set of variables 3,5,6,7
+##  accepted set of variables 4,5,6,7
+##  accepted set of variables 1,2,3,4,5
+##  accepted set of variables 1,2,3,4,6
+##  accepted set of variables 1,2,3,5,6
+##  accepted set of variables 1,2,4,5,6
+##  accepted set of variables 1,3,4,5,6
+##  accepted set of variables 2,3,4,5,6
+##  accepted set of variables 1,2,3,4,7
+##  accepted set of variables 1,2,3,5,7
+##  accepted set of variables 1,2,4,5,7
+##  accepted set of variables 1,3,4,5,7
+##  accepted set of variables 2,3,4,5,7
+##  accepted set of variables 1,2,3,6,7
+##  accepted set of variables 1,2,4,6,7
+##  accepted set of variables 1,3,4,6,7
+##  accepted set of variables 2,3,4,6,7
+##  accepted set of variables 1,2,5,6,7
+##  accepted set of variables 1,3,5,6,7
+##  accepted set of variables 2,3,5,6,7
+##  accepted set of variables 1,4,5,6,7
+##  accepted set of variables 2,4,5,6,7
+##  accepted set of variables 3,4,5,6,7
+##  accepted set of variables 1,2,3,4,5,6
+##  accepted set of variables 1,2,3,4,5,7
+##  accepted set of variables 1,2,3,4,6,7
+##  accepted set of variables 1,2,3,5,6,7
+##  accepted set of variables 1,2,4,5,6,7
+##  accepted set of variables 1,3,4,5,6,7
+##  accepted set of variables 2,3,4,5,6,7
+##  accepted set of variables 1,2,3,4,5,6,7</code></pre>
+<pre><code>## 
+##  Invariant Linear Causal Regression at level 0.05 (including multiplicity correction for the number of variables)
+##  
+##                   LOWER BOUND  UPPER BOUND  MAXIMIN EFFECT  P-VALUE
+## Div_Yld                -0.01         0.01            0.00     0.35
+## Eps                    -0.02         0.00            0.00     0.35
+## Mkt_Cap_12M_Usd        -0.04         0.00            0.00     0.34
+## Mom_11M_Usd            -0.02         0.00            0.00     0.34
+## Ocf                    -0.02         0.03            0.00     0.34
+## Pb                     -0.02         0.00            0.00     0.35
+## Vol1Y_Usd               0.00         0.02            0.00     0.35</code></pre>
+<p></p>
+<p>The matrix is not too sparse, which means that the model has uncovered many relationships between the variables within the sample. Sadly, none are in the direction that is of interest for the prediction task that we seek. Indeed, the first variable is the one we want to predict and its column is empty. However, its row is full, which indicates the reverse effect: future returns cause the predictor values, which may seem rather counter-intuitive, given the nature of features.</p>
+<p>For the sake of completeness, we also provide an implementation of the <em>pcalg</em> package (<span class="citation"><a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">Kalisch et al.</a> (<a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">2012</a>)</span>).<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Another possible choice is the &lt;em&gt;baycn&lt;/em&gt; package documented in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-martin2019bayesian" role="doc-biblioref"&gt;E. A. Martin and Fu&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-martin2019bayesian" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>30</sup></a> Below, an estimation via the so-called PC (named after its authors <strong>P</strong>eter Spirtes and <strong>C</strong>lark Glymour) is performed. The details of the algorithm are out of the scope of the book, and the interested reader can have a look at section 5.4 of <span class="citation"><a href="solutions-to-exercises.html#ref-spirtes2000causation" role="doc-biblioref">Spirtes et al.</a> (<a href="solutions-to-exercises.html#ref-spirtes2000causation" role="doc-biblioref">2000</a>)</span> or section 2 from <span class="citation"><a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">Kalisch et al.</a> (<a href="solutions-to-exercises.html#ref-kalisch2012causal" role="doc-biblioref">2012</a>)</span> for more information on this subject. We use the <em>Rgraphviz</em> package available at <a href="https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html" class="uri">https://www.bioconductor.org/packages/release/bioc/html/Rgraphviz.html</a>.</p>
+<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://pcalg.r-forge.r-project.org/">pcalg</a></span><span class="op">)</span>                                             <span class="co"># Load packages</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">Rgraphviz</span><span class="op">)</span>
+<span class="va">est_caus</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>C <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">data_caus</span><span class="op">)</span>,  n <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">data_caus</span><span class="op">)</span><span class="op">)</span> <span class="co"># Compute correlations</span>
+<span class="va">pc.fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/pcalg/man/pc.html">pc</a></span><span class="op">(</span><span class="va">est_caus</span>, indepTest <span class="op">=</span> <span class="va">gaussCItest</span>,            <span class="co"># Estimate model</span>
+             p <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">data_caus</span><span class="op">)</span>,alpha <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/pcalg/man/iplotPC.html">iplotPC</a></span><span class="op">(</span><span class="va">pc.fit</span><span class="op">)</span>                                            <span class="co"># Plot model</span></code></pre></div>
+<div class="figure">
+<span style="display:block;" id="fig:pcalg"></span>
+<img src="ML_factor_files/figure-html/pcalg-1.png" alt="Representation of a directed graph." width="624"><p class="caption">
+FIGURE 14.1: Representation of a directed graph.
+</p>
+</div>
+<p></p>
+<p>A bidirectional arrow is shown when the model was unable to determine the edge orientation. While the adjacency matrix is different compared to the first model, there are still no predictors that seem to have a clear causal effect on the dependent variable (first circle).</p>
+</div>
+<div id="structural-time-series-models" class="section level3" number="14.1.3">
+<h3>
+<span class="header-section-number">14.1.3</span> Structural time series models<a class="anchor" aria-label="anchor" href="#structural-time-series-models"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+We end the topic of causality by mentioning a particular type of structural models: <strong>structural time series</strong>. Because we illustrate their relevance for a particular kind of causal inference, we closely follow the notations of <span class="citation"><a href="solutions-to-exercises.html#ref-brodersen2015inferring" role="doc-biblioref">Brodersen et al.</a> (<a href="solutions-to-exercises.html#ref-brodersen2015inferring" role="doc-biblioref">2015</a>)</span>. The model is driven by two equations:</p>
+<p><span class="math display">\[\begin{align*}
+y_t&amp;=\textbf{Z}_t'\boldsymbol{\alpha}_t+\epsilon_t \\
+\boldsymbol{\alpha}_{t+1}&amp; =\textbf{T}_t\boldsymbol{\alpha}_{t}+\textbf{R}_t\boldsymbol{\eta}_t.
+\end{align*}\]</span></p>
+<p>The dependent variable is expressed as a linear function of state variables <span class="math inline">\(\boldsymbol{\alpha}_t\)</span> plus an error term. These variables are in turn linear functions of their past values plus another error term which can have a complex structure (it’s a product of a matrix <span class="math inline">\(\textbf{R}_t\)</span> with a centered Gaussian term <span class="math inline">\(\boldsymbol{\eta}_t\)</span>). This specification nests many models as special cases, like ARIMA for instance.</p>
+<p>The goal of <span class="citation"><a href="solutions-to-exercises.html#ref-brodersen2015inferring" role="doc-biblioref">Brodersen et al.</a> (<a href="solutions-to-exercises.html#ref-brodersen2015inferring" role="doc-biblioref">2015</a>)</span> is to detect causal impacts via regime changes. They estimate the above model over a given training period and then predict the model’s response on some test set. If the aggregate (summed/integrated) error between the realized versus predicted values is significant (based on some statistical test), then the authors conclude that the breaking point is relevant. Originally, the aim of the approach is to quantify the effect of an intervention by looking at how a model trained before the intervention behaves after the intervention.</p>
+<p>Below, we test if the 100<span class="math inline">\(^{th}\)</span> date point in the sample (April 2008) is a turning point. Arguably, this date belongs to the time span of the subprime financial crisis. We use the <em>CausalImpact</em> package which uses the <em>bsts</em> library (Bayesian structural time series).</p>
+<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://google.github.io/CausalImpact/">CausalImpact</a></span><span class="op">)</span>
+<span class="va">stock1_data</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span>          <span class="co"># Data of first stock</span>
+<span class="va">struct_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">stock1_data</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>    <span class="co"># Combine label...</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">stock1_data</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span><span class="op">)</span>  <span class="co"># ... and features</span>
+<span class="va">pre.period</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">100</span><span class="op">)</span>                                    <span class="co"># Pre-break period (pre-2008)</span>
+<span class="va">post.period</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">101</span>,<span class="fl">200</span><span class="op">)</span>                                 <span class="co"># Post-break period</span>
+<span class="va">impact</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/CausalImpact/man/CausalImpact.html">CausalImpact</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/zoo/man/zoo.html">zoo</a></span><span class="op">(</span><span class="va">struct_data</span><span class="op">)</span>, <span class="va">pre.period</span>, <span class="va">post.period</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span></code></pre></div>
+<pre><code>## Posterior inference {CausalImpact}
+## 
+##                          Average            Cumulative      
+## Actual                   0.016              1.638           
+## Prediction (s.d.)        0.03 (0.017)       3.05 (1.734)    
+## 95% CI                   [-0.0037, 0.065]   [-0.3720, 6.518]
+##                                                             
+## Absolute effect (s.d.)   -0.014 (0.017)     -1.410 (1.734)  
+## 95% CI                   [-0.049, 0.02]     [-4.880, 2.01]  
+##                                                             
+## Relative effect (s.d.)   -46% (57%)         -46% (57%)      
+## 95% CI                   [-160%, 66%]       [-160%, 66%]    
+## 
+## Posterior tail-area probability p:   0.186
+## Posterior prob. of a causal effect:  81%
+## 
+## For more details, type: summary(impact, "report")</code></pre>
+<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#summary(impact, "report")                                # Get the full report (see below)</span></code></pre></div>
+<p></p>
+<p>The time series associated with the model are shown in Figure <a href="causality.html#fig:structbayplot">14.2</a>.</p>
+<div class="sourceCode" id="cb222"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/mboost/man/plot.html">plot</a></span><span class="op">(</span><span class="va">impact</span><span class="op">)</span></code></pre></div>
+<div class="figure">
+<span style="display:block;" id="fig:structbayplot"></span>
+<img src="ML_factor_files/figure-html/structbayplot-1.png" alt="Output of the causal impact study." width="672"><p class="caption">
+FIGURE 14.2: Output of the causal impact study.
+</p>
+</div>
+<p></p>
+<p>Below, we copy and paste the report generated by the function (obtained by the commented line in the above code). The conclusions do not support a marked effect of the crisis on the model probably because the signs of the error in the post period constantly change sign.</p>
+<p><em>During the post-intervention period, the response variable had an average value of approx. 0.016. In the absence of an intervention, we would have expected an average response of 0.031. The 95% interval of this counterfactual prediction is [-0.0059, 0.063]. Subtracting this prediction from the observed response yields an estimate of the causal effect the intervention had on the response variable. This effect is -0.015 with a 95% interval of [-0.047, 0.022].</em></p>
+<p><em>Summing up the individual data points during the post-intervention period (which can only sometimes be meaningfully interpreted), the response variable had an overall value of 1.64. Had the intervention not taken place, we would have expected a sum of 3.09. The 95% interval of this prediction is [-0.59, 6.34]. The above results are given in terms of absolute numbers. In relative terms, the response variable showed a decrease of -47%. The 95% interval of this percentage is [-152%, +72%].</em></p>
+<p><em>This means that, although it may look as though the intervention has exerted a negative effect on the response variable when considering the intervention period as a whole, this effect is not statistically significant, and so cannot be meaningfully interpreted. The apparent effect could be the result of random fluctuations that are unrelated to the intervention. This is often the case when the intervention period is very long and includes much of the time when the effect has already worn off. It can also be the case when the intervention period is too short to distinguish the signal from the noise. Finally, failing to find a significant effect can happen when there are not enough control variables or when these variables do not correlate well with the response variable during the learning period.</em></p>
+<p><em>The probability of obtaining this effect by chance is p = 0.199. This means the effect may be spurious and would generally not be considered statistically significant.</em></p>
+</div>
+</div>
+<div id="nonstat" class="section level2" number="14.2">
+<h2>
+<span class="header-section-number">14.2</span> Dealing with changing environments<a class="anchor" aria-label="anchor" href="#nonstat"><i class="fas fa-link"></i></a>
+</h2>
+<p>The most common assumption in machine learning contributions is that the samples that are studied are i.i.d. realizations of a phenomenon that we are trying to characterize. This constraint is natural because if the relationship between <span class="math inline">\(X\)</span> and <span class="math inline">\(y\)</span> always changes, then it is very hard to infer anything from observations. One major problem in Finance is that this is often the case: markets, behaviors, policies, etc., evolve all the time. This is at least partly related to the notion of absence of arbitrage: if a trading strategy worked all the time, all agents would eventually adopt it via herding, which would annihilate the corresponding gains.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;See for instance the papers on herding in factor investing: &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-krkoska2019herding" role="doc-biblioref"&gt;Krkoska and Schenk-Hoppé&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-krkoska2019herding" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-santi2018exploring" role="doc-biblioref"&gt;Santi and Zwinkels&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-santi2018exploring" role="doc-biblioref"&gt;2018&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>31</sup></a> If the strategy is kept private, its holder would become infinitely rich, which obviously has never happened.</p>
+<p>There are several ways to define changes in environments. If we denote with <span class="math inline">\(\mathbb{P}_{XY}\)</span> the multivariate distribution of all variables (features and label), with <span class="math inline">\(\mathbb{P}_{XY}=\mathbb{P}_{X}\mathbb{P}_{Y|X}\)</span>, then two simple changes are possible:</p>
+<ul>
+<li>
+<strong>covariate shift</strong>: <span class="math inline">\(\mathbb{P}_{X}\)</span> changes but <span class="math inline">\(\mathbb{P}_{Y|X}\)</span> does not: the features have a fluctuating distribution, but their relationship with <span class="math inline">\(Y\)</span> holds still;<br>
+</li>
+<li>
+<strong>concept drift</strong>: <span class="math inline">\(\mathbb{P}_{Y|X}\)</span> changes but <span class="math inline">\(\mathbb{P}_{X}\)</span> does not: feature distributions are stable, but their relation to <span class="math inline">\(Y\)</span> is altered.</li>
+</ul>
+<p>Obviously, we omit the case when both items change, as it is too complex to handle. In factor investing, the feature engineering process (see Section <a href="Data.html#feateng">4.4</a>) is partly designed to bypass the risk of covariate shift. Uniformization guarantees that the marginals stay the same but correlations between features may of course change. The main issue is probably concept drift when the way features explain the label changes through time. In <span class="citation"><a href="solutions-to-exercises.html#ref-cornuejols2011apprentissage" role="doc-biblioref">Cornuejols, Miclet, and Barra</a> (<a href="solutions-to-exercises.html#ref-cornuejols2011apprentissage" role="doc-biblioref">2018</a>)</span>,<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;This book is probably the most complete reference for theoretical results in machine learning, but it is in French.&lt;/p&gt;"><sup>32</sup></a> the authors distinguish four types of drifts, which we reproduce in Figure <a href="causality.html#fig:conceptchange">14.3</a>. In factor models, changes are presumably a combination of all four types: they can be abrupt during crashes, but most of the time they are progressive (gradual or incremental) and never-ending (continuously recurring).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:conceptchange"></span>
+<img src="images/conceptchange.png" alt="Different flavors of concept change." width="300px"><p class="caption">
+FIGURE 14.3: Different flavors of concept change.
+</p>
+</div>
+<p>Naturally, if we aknowledge that the environment changes, it appears logical to adapt models accordingly, i.e., dynamically. This gives rise to the so-called <strong>stability-plasticity dilemma</strong>. This dilemma is a trade-off between model <strong>reactiveness</strong> (new instances have an important impact on updates) versus <strong>stability</strong> (these instances may not be representative of a slower trend and they may thus shift the model in a suboptimal direction).</p>
+<p>Practically, there are two ways to shift the cursor with respect to this dilemma: alter the chronological depth of the training sample (e.g., go further back in time) or, when it’s possible, allocate more weight to recent instances. We discuss the first option in Section <a href="backtest.html#protocol">12.1</a> and the second is mentioned in Section <a href="trees.html#adaboost">6.3</a> (though the purpose in Adaboost is precisely to let the algorithm handle the weights). In neural networks, it is possible, in all generality to introduce instance-based weights in the computation of the loss function, though this option is not (yet) available in Keras (to the best of our knowledge: the framework evolves rapidly). For simple regressions, this idea is known as <strong>weighted least squares</strong> wherein errors are weighted inside the loss:
+<span class="math display">\[L=\sum_{i=1}^Iw_i(y_i-\textbf{x}_i\textbf{b})^2.\]</span>
+In matrix terms, <span class="math inline">\(L=(\textbf{y}-\textbf{Xb})'\textbf{W}(\textbf{y}-\textbf{Xb})\)</span>, where <span class="math inline">\(\textbf{W}\)</span> is a diagonal matrix of weights. The gradient with respect to <span class="math inline">\(\textbf{b}\)</span> is equal to <span class="math inline">\(2\textbf{X}'\textbf{WX}\textbf{b}-2\textbf{X}'\textbf{Wy}\)</span> so that the loss is minimized for <span class="math inline">\(\textbf{b}^*=(\textbf{X}'\textbf{WX})^{-1}\textbf{X}'\textbf{Wy}\)</span>. The standard least-square solution is recovered for <span class="math inline">\(\textbf{W}=\textbf{I}\)</span>. In order to fine-tune the reactiveness of the model, the weights must be a function that decreases as instances become older in the sample.</p>
+<p>There is of course no perfect solution to changing financial environements. Below, we mention two routes that are taken in the ML literature to overcome the problem of non-stationarity in the data generating process. But first, we propose yet another clear verification that markets do experience time-varying distributions.</p>
+<div id="non-stationarity-yet-another-illustration" class="section level3" number="14.2.1">
+<h3>
+<span class="header-section-number">14.2.1</span> Non-stationarity: yet another illustration<a class="anchor" aria-label="anchor" href="#non-stationarity-yet-another-illustration"><i class="fas fa-link"></i></a>
+</h3>
+<p>One of the most basic practices in (financial) econometrics is to work with returns (relative price changes). The simple reason is that returns seem to behave consistently through time (monthly returns are bounded, they usually lie between -1 and +1). Prices on the other hand shift and, often, some prices never come back to past values. This makes prices harder to study.</p>
+<p>Stationarity is a key notion in financial econometrics: it is much easier to characterize a phenomenon with distributional properties that remain the same through time (this makes them possible to capture). Sadly, the distribution of returns is not stationary: both the mean and the variance of returns change along cycles.</p>
+<p>Below, in Figure <a href="causality.html#fig:statplot">14.4</a>, we illustrate this fact by computing the average monthly return for all calendar years in the whole dataset.</p>
+<div class="sourceCode" id="cb223"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>          <span class="co"># Create a year variable</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                     <span class="co"># Group by year</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/summarise.html">summarize</a></span><span class="op">(</span>avg_ret <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="co"># Compute average return</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="va">avg_ret</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_grey</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:statplot"></span>
+<img src="ML_factor_files/figure-html/statplot-1.png" alt="Average monthly return on a yearly basis." width="350px"><p class="caption">
+FIGURE 14.4: Average monthly return on a yearly basis.
+</p>
+</div>
+<p></p>
+<p>These changes in the mean are also accompanied by variations in the second moment (variance/volatility). This effect, known as volatility clustering, has been widely documented ever since the theoretical breakthrough of <span class="citation"><a href="solutions-to-exercises.html#ref-engle1982autoregressive" role="doc-biblioref">Engle</a> (<a href="solutions-to-exercises.html#ref-engle1982autoregressive" role="doc-biblioref">1982</a>)</span> (and even well before). We refer for instance to <span class="citation"><a href="solutions-to-exercises.html#ref-cont2007volatility" role="doc-biblioref">Cont</a> (<a href="solutions-to-exercises.html#ref-cont2007volatility" role="doc-biblioref">2007</a>)</span> for more details on this topic. For the computation of realized volatility in R, we strongly recommend chapter 4 in <span class="citation"><a href="solutions-to-exercises.html#ref-regenstein2018reproducible" role="doc-biblioref">Regenstein</a> (<a href="solutions-to-exercises.html#ref-regenstein2018reproducible" role="doc-biblioref">2018</a>)</span>.</p>
+<p>In terms of machine learning models, this is also true. Below, we estimate a pure characteristic regression with one predictor, the market capitalization averaged over the past 6-months (<span class="math inline">\(r_{t+1,n}=\alpha+\beta x_{t,n}^{\text{cap}}+\epsilon_{t+1,n}\)</span>). The label is the 6-month forward return and the estimation is performed over every calendar year.</p>
+<div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                           <span class="co"># Create a year variable</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                      <span class="co"># Group by year</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/summarise.html">summarize</a></span><span class="op">(</span>beta_cap <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">R6M_Usd</span> <span class="op">~</span> <span class="va">Mkt_Cap_6M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># Perform regression</span>
+                  <span class="fu"><a href="https://rdrr.io/r/stats/coef.html">coef</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                <span class="co"># Extract coefs</span>
+                  <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                   <span class="co"># Transpose</span>
+                  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                          <span class="co"># Format into df</span>
+                  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">Mkt_Cap_6M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                 <span class="co"># Pull coef (remove intercept)</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="va">beta_cap</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>      <span class="co"># Plot</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_grey</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:conceptdriftemp"></span>
+<img src="ML_factor_files/figure-html/conceptdriftemp-1.png" alt="Variations in betas with respect to 6-month market capitalization." width="350px"><p class="caption">
+FIGURE 14.5: Variations in betas with respect to 6-month market capitalization.
+</p>
+</div>
+<p></p>
+<p>The bars in Figure <a href="causality.html#fig:conceptdriftemp">14.5</a> highlight the concept drift: overall, the relationship between capitalization and returns is negative (the <strong>size effect</strong> again). Sometimes it is markedly negative, sometimes, not so much. The ability of capitalization to explain returns is time-varying and models must adapt accordingly.</p>
+</div>
+<div id="online-learning" class="section level3" number="14.2.2">
+<h3>
+<span class="header-section-number">14.2.2</span> Online learning<a class="anchor" aria-label="anchor" href="#online-learning"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Online learning refers to a subset of machine learning in which new information arrives progressively and the integration of this flow is performed iteratively (the term ‘<em>online</em>’ is not linked to the internet). In order to take the latest data updates into account, it is imperative to update the model (stating the obvious). This is clearly the case in finance and this topic is closely related to the discussion on learning windows in Section <a href="backtest.html#protocol">12.1</a>.</p>
+<p>The problem is that if a 2019 model is trained on data from 2010 to 2019, the (dynamic) 2020 model will have to be re-trained with the whole dataset including the latest points from 2020. This can be heavy and including just the latest points in the learning process would substantially decrease its computational cost. In neural networks, the sequential batch updating of weights can allow a progressive change in the model. Nonetheless, this is typically impossible for decision trees because the splits are decided once and for all. One notable exception is <span class="citation"><a href="solutions-to-exercises.html#ref-basak2004online" role="doc-biblioref">Basak</a> (<a href="solutions-to-exercises.html#ref-basak2004online" role="doc-biblioref">2004</a>)</span>, but, in that case, the construction of the trees differs strongly from the original algorithm.</p>
+<p>The simplest example of online learning is the Widrow-Hodd algorithm (originally from <span class="citation"><a href="solutions-to-exercises.html#ref-widrow1960adaptive" role="doc-biblioref">Widrow and Hoff</a> (<a href="solutions-to-exercises.html#ref-widrow1960adaptive" role="doc-biblioref">1960</a>)</span>). Originally, the idea comes from the so-called ADALINE (ADAptive LInear NEuron) model which is a neural network with one hidden layer with linear activation function (i.e., like a perceptron, but with a different activation).</p>
+<p>Suppose the model is linear, that is <span class="math inline">\(\textbf{y}=\textbf{Xb}+\textbf{e}\)</span> (a constant can be added to the list of predictors) and that the amount of data is both massive and coming in at a high frequency so that updating the model on the full sample is proscribed because it is technically intractable. A simple and heuristic way to update the values of <span class="math inline">\(\textbf{b}\)</span> is to compute
+<span class="math display">\[\textbf{b}_{t+1} \longleftarrow \textbf{b}_t-\eta (\textbf{x}_t\textbf{b}-y_t)\textbf{x}_t',\]</span>
+where <span class="math inline">\(\textbf{x}_t\)</span> is the row vector of instance <span class="math inline">\(t\)</span>. The justification is simple. The quadratic error <span class="math inline">\((\textbf{x}_t\textbf{b}-y_t)^2\)</span> has a gradient with respect to <span class="math inline">\(\textbf{b}\)</span> equal to <span class="math inline">\(2(\textbf{x}_t\textbf{b}-y_t)\textbf{x}_t'\)</span>; therefore, the above update is a simple example of gradient descent. <span class="math inline">\(\eta\)</span> must of course be quite small: if not, each new point will considerably alter <span class="math inline">\(\textbf{b}\)</span>, thereby resulting in a volatile model.</p>
+<p>An exhaustive review of techniques pertaining to online learning is presented in <span class="citation"><a href="solutions-to-exercises.html#ref-hoi2018online" role="doc-biblioref">Hoi et al.</a> (<a href="solutions-to-exercises.html#ref-hoi2018online" role="doc-biblioref">2018</a>)</span> (section 4.11 is even dedicated to portfolio selection). The book <span class="citation"><a href="solutions-to-exercises.html#ref-hazan2016introduction" role="doc-biblioref">Hazan et al.</a> (<a href="solutions-to-exercises.html#ref-hazan2016introduction" role="doc-biblioref">2016</a>)</span> covers online convex optimization which is a very close domain with a large overlap with online learning. The presentation below is adapted from the second and third parts of the first survey.</p>
+<p>Datasets are indexed by time: we write <span class="math inline">\(\textbf{X}_t\)</span> and <span class="math inline">\(\textbf{y}_t\)</span> for features and labels (the usual column index (<span class="math inline">\(k\)</span>) and row index (<span class="math inline">\(i\)</span>) will not be used in this section). Time has a bounded horizon <span class="math inline">\(T\)</span>. The machine learning model depends on some parameters <span class="math inline">\(\boldsymbol{\theta}\)</span> and we denote it with <span class="math inline">\(f_{\boldsymbol{\theta}}\)</span>. At time <span class="math inline">\(t\)</span> (when dataset (<span class="math inline">\(\textbf{X}_t\)</span>, <span class="math inline">\(\textbf{y}_t\)</span>) is gathered), the loss function <span class="math inline">\(L\)</span> of the trained model naturally depends on the data (<span class="math inline">\(\textbf{X}_t\)</span>, <span class="math inline">\(\textbf{y}_t\)</span>) and on the model via <span class="math inline">\(\boldsymbol{\theta}_t\)</span> which are the parameter values fitted to the time-<span class="math inline">\(t\)</span> data. For notational simplicity, we henceforth write <span class="math inline">\(L_t(\boldsymbol{\theta}_t)=L(\textbf{X}_t,\textbf{y}_t,\boldsymbol{\theta}_t )\)</span>. The key quantity in online learning is the regret over the whole time sequence:
+<span class="math display" id="eq:regret">\[\begin{equation}
+\tag{14.3} 
+R_T=\sum_{t=1}^TL_t(\boldsymbol{\theta}_t)-\underset{\boldsymbol{\theta}^*\in \boldsymbol{\Theta}}{\inf} \ \sum_{t=1}^TL_t(\boldsymbol{\theta}^*).
+\end{equation}\]</span></p>
+<p>The regret is the total loss incurred by the models <span class="math inline">\(\boldsymbol{\theta}_t\)</span> minus the minimal loss that could have been obtained with full knowledge of the data sequence (hence computed in hindsight). The basic methods in online learning are in fact quite similar to the batch-training of neural networks. The updating of the parameter is based on
+<span class="math display" id="eq:online1">\[\begin{equation}
+\tag{14.4} 
+\textbf{z}_{t+1}=\boldsymbol{\theta}_t-\eta_t\nabla L_t(\boldsymbol{\theta}_t),
+\end{equation}\]</span>
+where <span class="math inline">\(\nabla L_t(\boldsymbol{\theta}_t)\)</span> denotes the gradient of the current loss <span class="math inline">\(L_t\)</span>. One problem that can arise is when <span class="math inline">\(\textbf{z}_{t+1}\)</span> falls out of the bounds that are prescribed for <span class="math inline">\(\boldsymbol{\theta}_t\)</span>. Thus, the candidate vector for the new parameters, <span class="math inline">\(\textbf{z}_{t+1}\)</span>, is projected onto the feasible domain which we call <span class="math inline">\(S\)</span> here:
+<span class="math display" id="eq:online2">\[\begin{equation}
+\tag{14.5} 
+\boldsymbol{\theta}_{t+1}=\Pi_S(\textbf{z}_{t+1}), \quad \text{with} \quad \Pi_S(\textbf{u}) = \underset{\boldsymbol{\theta}\in S}{\text{argmin}} \ ||\boldsymbol{\theta}-\textbf{u}||_2.
+\end{equation}\]</span>
+Hence <span class="math inline">\(\boldsymbol{\theta}_{t+1}\)</span> is as close as possible to the intermediate choice <span class="math inline">\(\textbf{z}_{t+1}\)</span>. In <span class="citation"><a href="solutions-to-exercises.html#ref-hazan2007logarithmic" role="doc-biblioref">Hazan, Agarwal, and Kale</a> (<a href="solutions-to-exercises.html#ref-hazan2007logarithmic" role="doc-biblioref">2007</a>)</span>, it is shown that under suitable assumptions (e.g., <span class="math inline">\(L_t\)</span> being strictly convex with bounded gradient <span class="math inline">\(\left|\left|\underset{\boldsymbol{\theta}}{\sup} \, \nabla L_t(\boldsymbol{\theta})\right|\right|\le G\)</span>), the regret <span class="math inline">\(R_T\)</span> satisfies
+<span class="math display">\[R_T \le \frac{G^2}{2H}(1+\log(T)),\]</span>
+where <span class="math inline">\(H\)</span> is a scaling factor for the learning rate (also called step sizes): <span class="math inline">\(\eta_t=(Ht)^{-1}\)</span>.</p>
+<p>More sophisticated online algorithms generalize <a href="causality.html#eq:online1">(14.4)</a> and <a href="causality.html#eq:online2">(14.5)</a> by integrating the Hessian matrix <span class="math inline">\(\nabla^2 L_t(\boldsymbol{\theta}):=[\nabla^2 L_t]_{i,j}=\frac{\partial}{\partial \boldsymbol{\theta}_i \partial \boldsymbol{\theta}_j}L_t( \boldsymbol{\theta})\)</span> and/or by including penalizations to reduce instability in <span class="math inline">\(\boldsymbol{\theta}_t\)</span>. We refer to section 2 in <span class="citation"><a href="solutions-to-exercises.html#ref-hoi2018online" role="doc-biblioref">Hoi et al.</a> (<a href="solutions-to-exercises.html#ref-hoi2018online" role="doc-biblioref">2018</a>)</span> for more details on these extensions.</p>
+<p>An interesting stream of parameter updating is that of the passive-aggressive algorithms (PAAs) formalized in <span class="citation"><a href="solutions-to-exercises.html#ref-crammer2006online" role="doc-biblioref">Crammer et al.</a> (<a href="solutions-to-exercises.html#ref-crammer2006online" role="doc-biblioref">2006</a>)</span>. The base case involves classification tasks, but we stick to the regression setting below (section 5 in <span class="citation"><a href="solutions-to-exercises.html#ref-crammer2006online" role="doc-biblioref">Crammer et al.</a> (<a href="solutions-to-exercises.html#ref-crammer2006online" role="doc-biblioref">2006</a>)</span>). One strong limitation with PAAs is that they rely on the set of parameters where the loss is either zero or negligible: <span class="math inline">\(\boldsymbol{\Theta}^*_\epsilon=\{\boldsymbol{\theta}, L_t(\boldsymbol{\theta})&lt; \epsilon\}\)</span>. For general loss functions and learner <span class="math inline">\(f\)</span>, this set is largely inaccessible. Thus, the algorithms in <span class="citation"><a href="solutions-to-exercises.html#ref-crammer2006online" role="doc-biblioref">Crammer et al.</a> (<a href="solutions-to-exercises.html#ref-crammer2006online" role="doc-biblioref">2006</a>)</span> are restricted to a particular case, namely linear <span class="math inline">\(f\)</span> and <span class="math inline">\(\epsilon\)</span>-insensitive hinge loss:</p>
+<p><span class="math display">\[L_\epsilon(\boldsymbol{\theta})=\left\{ \begin{array}{ll}
+0 &amp; \text{if } \ |\boldsymbol{\theta}'\textbf{x}-y|\le \epsilon \quad (\text{close enough prediction}) \\
+|\boldsymbol{\theta}'\textbf{x}-y|- \epsilon &amp; \text{if } \  |\boldsymbol{\theta}'\textbf{x}-y| &gt;  \epsilon \quad (\text{prediction too far})
+\end{array}\right.,\]</span></p>
+<p>for some parameter <span class="math inline">\(\epsilon&gt;0\)</span>. If the weight <span class="math inline">\(\boldsymbol{\theta}\)</span> is such that the model is close enough to the true value, then the loss is zero; if not, it is equal to the absolute value of the error minus <span class="math inline">\(\epsilon\)</span>. In PAA, the update of the parameter is given by
+<span class="math display">\[\boldsymbol{\theta}_{t+1}= \underset{\boldsymbol{\theta}}{\text{argmin}} ||\boldsymbol{\theta}-\boldsymbol{\theta}_t||_2^2, \quad \text{subject to} \quad L_\epsilon(\boldsymbol{\theta})=0,\]</span>
+hence the new parameter values are chosen such that two conditions are satisfied:<br>
+- the loss is zero (by the definition of the loss, this means that the model is close enough to the true value);<br>
+- and, the parameter is as close as possible to the previous parameter values.</p>
+<p>By construction, if the model is good enough, the model does not move (passive phase), but if not, it is rapidly shifted towards values that yield satisfactory results (aggressive phase).</p>
+<p>We end this section with a historical note. Some of the ideas from online learning stem from the financial literature and from the concept of <strong>universal portfolios</strong> originally coined by <span class="citation"><a href="solutions-to-exercises.html#ref-cover1991universal" role="doc-biblioref">Cover</a> (<a href="solutions-to-exercises.html#ref-cover1991universal" role="doc-biblioref">1991</a>)</span> in particular. The setting is the following. The function <span class="math inline">\(f\)</span> is assumed to be linear <span class="math inline">\(f(\textbf{x}_t)=\boldsymbol{\theta}'\textbf{x}_t\)</span> and the data <span class="math inline">\(\textbf{x}_t\)</span> consists of asset returns, thus, the values are portfolio returns as long as <span class="math inline">\(\boldsymbol{\theta}'\textbf{1}_N=1\)</span> (the budget constraint). The loss functions <span class="math inline">\(L_t\)</span> correspond to a concave utility function (e.g., logarithmic) and the regret is reversed:
+<span class="math display">\[R_T=\underset{\boldsymbol{\theta}^*\in \boldsymbol{\Theta}}{\sup} \ \sum_{t=1}^TL_t(\textbf{r}_t'\boldsymbol{\theta}^*)-\sum_{t=1}^TL_t(\textbf{r}_t'\boldsymbol{\theta}_t),\]</span>
+where <span class="math inline">\(\textbf{r}_t'\)</span> are the returns. Thus, the program is transformed to maximize a concave function. Several articles (often from the Computer Science or ML communities) have proposed solutions to this type of problems: <span class="citation"><a href="solutions-to-exercises.html#ref-blum1999universal" role="doc-biblioref">Blum and Kalai</a> (<a href="solutions-to-exercises.html#ref-blum1999universal" role="doc-biblioref">1999</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-agarwal2006algorithms" role="doc-biblioref">Agarwal et al.</a> (<a href="solutions-to-exercises.html#ref-agarwal2006algorithms" role="doc-biblioref">2006</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-hazan2007logarithmic" role="doc-biblioref">Hazan, Agarwal, and Kale</a> (<a href="solutions-to-exercises.html#ref-hazan2007logarithmic" role="doc-biblioref">2007</a>)</span>. Most contributions work with price data only, with the notable exception of <span class="citation"><a href="solutions-to-exercises.html#ref-cover1996universal" role="doc-biblioref">Cover and Ordentlich</a> (<a href="solutions-to-exercises.html#ref-cover1996universal" role="doc-biblioref">1996</a>)</span>, which mentions external data (‘<em>side information</em>’). In the latter article, it is proven that constantly rebalanced portfolios distributed according to two random distributions achieve growth rates that are close to the unattainable optimal rates. The two distributions are the uniform law (equally weighting, once again) and the Dirichlet distribution with constant parameters equal to 1/2. Under this universal distribution, <span class="citation"><a href="solutions-to-exercises.html#ref-cover1996universal" role="doc-biblioref">Cover and Ordentlich</a> (<a href="solutions-to-exercises.html#ref-cover1996universal" role="doc-biblioref">1996</a>)</span> show that the wealth obtained is bounded below by:
+<span class="math display">\[\text{wealth universal} \ge \frac{\text{wealth from optimal strategy}}{2(n+1)^{(m-1)/2}}, \]</span>
+where <span class="math inline">\(m\)</span> is the number of assets and <span class="math inline">\(n\)</span> is the number of periods.</p>
+<p>The literature on online portfolio allocation is reviewed in <span class="citation"><a href="solutions-to-exercises.html#ref-li2014online" role="doc-biblioref">B. Li and Hoi</a> (<a href="solutions-to-exercises.html#ref-li2014online" role="doc-biblioref">2014</a>)</span> and outlined in more details in <span class="citation"><a href="solutions-to-exercises.html#ref-li2018online" role="doc-biblioref">B. Li and Hoi</a> (<a href="solutions-to-exercises.html#ref-li2018online" role="doc-biblioref">2018</a>)</span>. Online learning, combined to early stopping for neural networks, is applied to factor investing in <span class="citation"><a href="solutions-to-exercises.html#ref-wong2020non" role="doc-biblioref">Wong et al.</a> (<a href="solutions-to-exercises.html#ref-wong2020non" role="doc-biblioref">2020</a>)</span>. Finally, online learning is associated to clustering methods for portfolio choice in <span class="citation"><a href="solutions-to-exercises.html#ref-khedmati2020online" role="doc-biblioref">Khedmati and Azin</a> (<a href="solutions-to-exercises.html#ref-khedmati2020online" role="doc-biblioref">2020</a>)</span>.</p>
+</div>
+<div id="homogeneous-transfer-learning" class="section level3" number="14.2.3">
+<h3>
+<span class="header-section-number">14.2.3</span> Homogeneous transfer learning<a class="anchor" aria-label="anchor" href="#homogeneous-transfer-learning"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+This subsection is mostly conceptual and will not be illustrated by coded applications. The ideas behind transfer learning can be valuable in that they can foster novel ideas, which is why we briefly present them below.</p>
+<p>Transfer learning has been surveyed numerous times. One classical reference is <span class="citation"><a href="solutions-to-exercises.html#ref-pan2009survey" role="doc-biblioref">Pan and Yang</a> (<a href="solutions-to-exercises.html#ref-pan2009survey" role="doc-biblioref">2009</a>)</span>, but <span class="citation"><a href="solutions-to-exercises.html#ref-weiss2016survey" role="doc-biblioref">Weiss, Khoshgoftaar, and Wang</a> (<a href="solutions-to-exercises.html#ref-weiss2016survey" role="doc-biblioref">2016</a>)</span> is more recent and more exhaustive. Suppose we are given two datasets <span class="math inline">\(D_S\)</span> (source) and <span class="math inline">\(D_T\)</span> (target). Each dataset has its own features <span class="math inline">\(\textbf{X}^S\)</span> and <span class="math inline">\(\textbf{X}^T\)</span> and labels <span class="math inline">\(\textbf{y}^S\)</span> and <span class="math inline">\(\textbf{y}^T\)</span>. In classical supervised learning, the patterns of the target set are learned only through <span class="math inline">\(\textbf{X}^T\)</span> and <span class="math inline">\(\textbf{y}^T\)</span>. Transfer learning proposes to improve the function <span class="math inline">\(f^T\)</span> (obtained by minimizing the fit <span class="math inline">\(y_i^T=f^T(\textbf{x}_i^T)+\epsilon^T_i\)</span> on the target data) via the function <span class="math inline">\(f^S\)</span> (from <span class="math inline">\(y_i^S=f^S(\textbf{x}_i^S)+\varepsilon^S_i\)</span> on the source data). Homogeneous transfer learning is when the feature space does not change, which is the case in our setting. In asset management, this may not always be the case if for instance new predictors are included (e.g., based on alternative data like sentiment, satellite imagery, credit card logs, etc.).</p>
+<p>There are many subcategories in transfer learning depending on what changes between the source <span class="math inline">\(S\)</span> and the target <span class="math inline">\(T\)</span>: is it the feature space, the distribution of the labels, and/or the relationship between the two? These are the same questions as in Section <a href="causality.html#nonstat">14.2</a>. The latter case is of interest in finance because the link with non-stationarity is evident: it is when the model <span class="math inline">\(f\)</span> in <span class="math inline">\(\textbf{y}=f(\textbf{X})\)</span> changes through time. In transfer learning jargon, it is written as <span class="math inline">\(P[\textbf{y}^S|\textbf{X}^S]\neq P[\textbf{y}^T|\textbf{X}^T]\)</span>: the conditional law of the label knowing the features is not the same when switching from the source to the target. Often, the term ‘domain adaptation’ is used as synonym to transfer learning. Because of a data shift, we must adapt the model to increase its accuracy. These topics are reviewed in a series of chapters in the collection by <span class="citation"><a href="solutions-to-exercises.html#ref-quionero2009dataset" role="doc-biblioref">Quionero-Candela et al.</a> (<a href="solutions-to-exercises.html#ref-quionero2009dataset" role="doc-biblioref">2009</a>)</span>.</p>
+<p>An important and elegant result in the theory was proven by <span class="citation"><a href="solutions-to-exercises.html#ref-ben2010theory" role="doc-biblioref">Ben-David et al.</a> (<a href="solutions-to-exercises.html#ref-ben2010theory" role="doc-biblioref">2010</a>)</span> in the case of binary classification. We state it below. We consider <span class="math inline">\(f\)</span> and <span class="math inline">\(h\)</span> two classifiers with values in <span class="math inline">\(\{0,1 \}\)</span>. The average error between the two over the domain <span class="math inline">\(S\)</span> is defined by
+<span class="math display">\[\epsilon_S(f,h)=\mathbb{E}_S[|f(\textbf{x})-h(\textbf{x})|].\]</span>
+Then,
+<span class="math display">\[\begin{equation}
+\small
+\epsilon_T(f_T,h)\le \epsilon_S(f_S,h)+\underbrace{2 \sup_B|P_S(B)-P_T(B)|}_{\text{ difference between domains }} + \underbrace{ \min\left(\mathbb{E}_S[|f_S(\textbf{x})-f_T(\textbf{x})|],\mathbb{E}_T[|f_S(\textbf{x})-f_T(\textbf{x})|]\right)}_{\text{difference between the two learning tasks}}, \nonumber
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(P_S\)</span> and <span class="math inline">\(P_T\)</span> denote the distribution of the two domains. The above inequality is a bound on the generalization performance of <span class="math inline">\(h\)</span>. If we take <span class="math inline">\(f_S\)</span> to be the best possible classifier for <span class="math inline">\(S\)</span> and <span class="math inline">\(f_T\)</span> the best for <span class="math inline">\(T\)</span>, then the error generated by <span class="math inline">\(h\)</span> in <span class="math inline">\(T\)</span> is smaller than the sum of three components:<br>
+- the error in the <span class="math inline">\(S\)</span> space;<br>
+- the distance between the two domains (by how much the data space has shifted);<br>
+- the distance between the two best models (generators).</p>
+<p>One solution that is often mentioned in transfer learning is instance weighting. We present it here in a general setting. In machine learning, we seek to minimize
+<span class="math display">\[\begin{align*}
+\epsilon_T(f)=\mathbb{E}_T\left[L(\text{y},f(\textbf{X})) \right],
+\end{align*}\]</span>
+where <span class="math inline">\(L\)</span> is some loss function that depends on the task (regression versus classification). This can be arranged
+<span class="math display">\[\begin{align*}
+\epsilon_T(f)&amp;=\mathbb{E}_T \left[\frac{P_S(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})} L(\text{y},f(\textbf{X})) \right]  \\
+&amp;=\sum_{\textbf{y},\textbf{X}}P_T(\textbf{y},\textbf{X})\frac{P_S(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})} L(\text{y},f(\textbf{X})) \\
+&amp;=\mathbb{E}_S \left[\frac{P_T(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})} L(\text{y},f(\textbf{X})) \right]
+\end{align*}\]</span></p>
+<p>The key quantity is thus the transition ratio <span class="math inline">\(\frac{P_T(\textbf{y},\textbf{X})}{P_S(\textbf{y},\textbf{X})}\)</span> (Radon–Nikodym derivative under some assumptions). Of course this ratio is largely inaccessible in practice, but it is possible to find a weighting scheme (over the instances) that yields improvements over the error in the target space. The weighting scheme, just as in <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>, can be binary, thereby simply excluding some observations in the computation of the error. Simply removing observations from the training sample can have beneficial effects.</p>
+<p>
+More generally, the above expression can be viewed as a theoretical invitation for user-specified instance weighting (as in Section <a href="trees.html#instweight">6.4.7</a>). In the asset allocation parlance, this can be viewed as introducing views as to which observations are the most interesting, e.g., value stocks can be allowed to have a larger weight in the computation of the loss if the user believes they carry more relevant information. Naturally, it then always remains to minimize this loss.</p>
+<p>We close this topic by mentioning a practical application of transfer learning developed in <span class="citation"><a href="solutions-to-exercises.html#ref-koshiyama2020quantnet" role="doc-biblioref">Koshiyama et al.</a> (<a href="solutions-to-exercises.html#ref-koshiyama2020quantnet" role="doc-biblioref">2020</a>)</span>. The authors propose a neural network architecture that allows to share the learning process from different strategies across several markets. This method is, among other things, aimed at alleviating the backtest overfitting problem.</p>
+
+</div>
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="interp.html"><span class="header-section-number">13</span> Interpretability</a></div>
+<div class="next"><a href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#causality"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li>
+<a class="nav-link" href="#causality-1"><span class="header-section-number">14.1</span> Causality</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#granger"><span class="header-section-number">14.1.1</span> Granger causality</a></li>
+<li><a class="nav-link" href="#causal-additive-models"><span class="header-section-number">14.1.2</span> Causal additive models</a></li>
+<li><a class="nav-link" href="#structural-time-series-models"><span class="header-section-number">14.1.3</span> Structural time series models</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#nonstat"><span class="header-section-number">14.2</span> Dealing with changing environments</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#non-stationarity-yet-another-illustration"><span class="header-section-number">14.2.1</span> Non-stationarity: yet another illustration</a></li>
+<li><a class="nav-link" href="#online-learning"><span class="header-section-number">14.2.2</span> Online learning</a></li>
+<li><a class="nav-link" href="#homogeneous-transfer-learning"><span class="header-section-number">14.2.3</span> Homogeneous transfer learning</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

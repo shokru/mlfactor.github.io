@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 4 Data preprocessing | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 4 Data preprocessing | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 4 Data preprocessing | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="active" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="Data" class="section level1" number="4">
+<h1>
+<span class="header-section-number">4</span> Data preprocessing<a class="anchor" aria-label="anchor" href="#Data"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>The methods we describe in this chapter are driven by financial applications. For an introduction to non-financial data processing, we recommend two references: chapter 3 from the general purpose ML book by <span class="citation"><a href="solutions-to-exercises.html#ref-boehmke2019hands" role="doc-biblioref">Boehmke and Greenwell</a> (<a href="solutions-to-exercises.html#ref-boehmke2019hands" role="doc-biblioref">2019</a>)</span> and the monograph on this dedicated subject by <span class="citation"><a href="solutions-to-exercises.html#ref-kuhn2019feature" role="doc-biblioref">Kuhn and Johnson</a> (<a href="solutions-to-exercises.html#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span>.</p>
+<div id="know-your-data" class="section level2" number="4.1">
+<h2>
+<span class="header-section-number">4.1</span> Know your data<a class="anchor" aria-label="anchor" href="#know-your-data"><i class="fas fa-link"></i></a>
+</h2>
+<p>The first step, as in any quantitative study, is obviously to make sure the data is trustworthy, i.e., comes from a reliable provider (a minima). The landscape in financial data provision is vast to say the least: some providers are well established (e.g., Bloomberg, Thomson-Reuters, Datastream, CRSP, Morningstar), some are more recent (e.g., Capital IQ, Ravenpack) and some focus on alternative data niches (see <a href="https://alternativedata.org/data-providers/" class="uri">https://alternativedata.org/data-providers/</a> for an exhaustive list). Unfortunately, and to the best of our knowledge, no study has been published that evaluates a large spectrum of these providers in terms of data reliability.</p>
+<p>The second step is to have a look at <strong>summary statistics</strong>: ranges (minimum and maximum values), and averages and medians. Histograms or plots of time series carry of course more information but cannot be analyzed properly in high dimensions. They are nonetheless sometimes useful to track local patterns or errors for a given stock and/or a particular feature.
+Beyond first order moments, second order quantities (variances and covariances/correlations) also matter because they help spot colinearities. When two features are highly correlated, problems may arise in some models (e.g., simple regressions, see Section <a href="unsup.html#corpred">15.1</a>).</p>
+<p>Often, the number of predictors is so large that it is unpractical to look at these simple metrics. A minimal verification is recommended. To further ease the analysis:</p>
+<ul>
+<li>focus on a subset of predictors, e.g., the ones linked to the most common factors (market-capitalization, price-to-book or book-to-market, momentum (past returns), profitability, asset growth, volatility);<br>
+</li>
+<li>track outliers in the summary statistics (when the maximum/median or median/minimum ratios seem suspicious).</li>
+</ul>
+<p>Below, in Figure <a href="Data.html#fig:boxcorr">4.1</a>, we show a box plot that illustrates the distribution of correlations between features and the one month ahead return. The correlations are computed on a date-by-date basis, over the whole cross-section of stocks. They are mostly located close to zero, but some dates seem to experience extreme shifts (outliers are shown with black circles). The market capitalization has the median which is the most negative while volatility is the only predictor with positive median correlation (this particular example seems to refute the low risk anomaly).</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">features_short</span>, <span class="st">"R1M_Usd"</span>, <span class="st">"date"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>     <span class="co"># Keep few features, label &amp; date</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                          <span class="co"># Group: dates!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/summarise_all.html">summarise_all</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/funs.html">funs</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">.</span>,<span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                     <span class="co"># Compute correlations</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                 <span class="co"># Remove label</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">Predictor</span>, value <span class="op">=</span> <span class="va">value</span>, <span class="op">-</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>           <span class="co"># Put in tidy format</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Predictor</span>, y <span class="op">=</span> <span class="va">value</span>, color <span class="op">=</span> <span class="va">Predictor</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># Plot</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span>outlier.colour <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>aspect.ratio <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:boxcorr"></span>
+<img src="ML_factor_files/figure-html/boxcorr-1.png" alt="Boxplot of correlations with the 1M forward return (label)." width="400px"><p class="caption">
+FIGURE 4.1: Boxplot of correlations with the 1M forward return (label).
+</p>
+</div>
+<p></p>
+<p>More importantly, when seeking to work with supervised learning (as we will do most of the time), the link of some features with the dependent variable can be further characterized by the smoothed <strong>conditional average</strong> because it shows how the features impact the label. The use of the conditional average has a deep theoretical grounding. Suppose there is only one feature <span class="math inline">\(X\)</span> and that we seek a model <span class="math inline">\(Y=f(X)+\text{error}\)</span>, where variables are real-valued. The function <span class="math inline">\(f\)</span> that minimizes the average squared error <span class="math inline">\(\mathbb{E}[(Y-f(X))^2]\)</span> is the so-called regression function (see Section 2.4 in <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">Hastie, Tibshirani, and Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">2009</a>)</span>):
+<span class="math display" id="eq:regfun">\[\begin{equation}
+\tag{4.1}
+f(x)=\mathbb{E}[Y|X=x].
+\end{equation}\]</span></p>
+<p>In Figure <a href="Data.html#fig:regfun">4.2</a>, we plot two illustrations of this function when the dependent variable (<span class="math inline">\(Y\)</span>) is the one month ahead return. The first one pertains to the average market capitalization over the past year and the second to the volatility over the past year as well. Both predictors have been uniformized (see Section <a href="Data.html#scaling">4.4.2</a> below) so that their values are uniformly distributed in the cross-section of assets for any given time period. Thus, the range of features is <span class="math inline">\([0,1]\)</span> and is shown on the <span class="math inline">\(x\)</span>-axis of the plot. The grey corridors around the lines show 95% level confidence interval for the computation of the mean. Essentially, it is narrow when both (i) many data points are available and (ii) these points are not too dispersed.</p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                                      <span class="co"># From dataset:</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>                                     <span class="co"># Plot</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Mkt_Cap_12M_Usd</span>, color <span class="op">=</span> <span class="st">"Market Cap"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># Cond. Exp. Mkt_cap</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Vol1Y_Usd</span>, color <span class="op">=</span> <span class="st">"Volatility"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>        <span class="co"># Cond. Exp. Vol</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/scale_manual.html">scale_color_manual</a></span><span class="op">(</span>values<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#F87E1F"</span>, <span class="st">"#0570EA"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>           <span class="co"># Change color</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>                              <span class="co"># Change x/y ratio</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Predictor"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">xlab</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_blank</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure">
+<span style="display:block;" id="fig:regfun"></span>
+<img src="ML_factor_files/figure-html/regfun-1.png" alt="Conditional expectations: average returns as smooth functions of features." width="672"><p class="caption">
+FIGURE 4.2: Conditional expectations: average returns as smooth functions of features.
+</p>
+</div>
+<p></p>
+<p>The two variables have a close to monotonic impact on future returns. Returns, on average, decrease with market capitalization (thereby corroborating the so-called <em>size</em> effect). The reverse pattern is less pronounced for volatility: the curve is rather flat for the first half of volatility scores and progressively increases, especially over the last quintile of volatility values (thereby contradicting the low-volatility anomaly).</p>
+<p>One important empirical property of features is <strong>autocorrelation</strong> (or absence thereof). A high level of autocorrelation for one predictor makes it plausible to use simple imputation techniques when some data points are missing. But autocorrelation is also important when moving towards prediction tasks and we discuss this issue shortly below in Section <a href="Data.html#pers">4.6</a>. In Figure <a href="Data.html#fig:histcorr">4.3</a>, we build the histogram of autocorrelations, computed stock-by-stock and feature-by-feature.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">autocorrs</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                         <span class="co"># From dataset:</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                     <span class="co"># Keep ids &amp; features</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">feature</span>, value <span class="op">=</span> <span class="va">value</span>, <span class="op">-</span><span class="va">stock_id</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>            <span class="co"># Put in tidy format</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">stock_id</span>, <span class="va">feature</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                <span class="co"># Group</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/summarise.html">summarize</a></span><span class="op">(</span>acf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/acf.html">acf</a></span><span class="op">(</span><span class="va">value</span>, lag.max <span class="op">=</span> <span class="fl">1</span>, plot <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">$</span><span class="va">acf</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span>  <span class="co"># Compute ACF</span>
+<span class="va">autocorrs</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">acf</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/lims.html">xlim</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.1</span>,<span class="fl">1</span><span class="op">)</span> <span class="op">+</span>              <span class="co"># Plot</span>
+   <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">60</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span> </code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:histcorr"></span>
+<img src="ML_factor_files/figure-html/histcorr-1.png" alt="Histogram of sample feature autocorrelations." width="384"><p class="caption">
+FIGURE 4.3: Histogram of sample feature autocorrelations.
+</p>
+</div>
+<p></p>
+<p>Given the large number of values to evaluate, the above chunk is quite time-consuming. The output shows that predictors are highly autocorrelated: most of them have a first order autocorrelation above 0.80.</p>
+</div>
+<div id="missing-data" class="section level2" number="4.2">
+<h2>
+<span class="header-section-number">4.2</span> Missing data<a class="anchor" aria-label="anchor" href="#missing-data"><i class="fas fa-link"></i></a>
+</h2>
+<p>Similarly to any empirical discipline, portfolio management is bound to face missing data issues. The topic is well known and several books detail solutions to this problem (e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-allison2001missing" role="doc-biblioref">Allison</a> (<a href="solutions-to-exercises.html#ref-allison2001missing" role="doc-biblioref">2001</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-enders2010applied" role="doc-biblioref">Enders</a> (<a href="solutions-to-exercises.html#ref-enders2010applied" role="doc-biblioref">2010</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-little2014statistical" role="doc-biblioref">Little and Rubin</a> (<a href="solutions-to-exercises.html#ref-little2014statistical" role="doc-biblioref">2014</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-van2018flexible" role="doc-biblioref">Van Buuren</a> (<a href="solutions-to-exercises.html#ref-van2018flexible" role="doc-biblioref">2018</a>)</span>). While researchers continuously propose new methods to cope with absent points (<span class="citation"><a href="solutions-to-exercises.html#ref-honaker2010missing" role="doc-biblioref">Honaker and King</a> (<a href="solutions-to-exercises.html#ref-honaker2010missing" role="doc-biblioref">2010</a>)</span> or <span class="citation"><a href="solutions-to-exercises.html#ref-che2018recurrent" role="doc-biblioref">Che et al.</a> (<a href="solutions-to-exercises.html#ref-che2018recurrent" role="doc-biblioref">2018</a>)</span> to cite but a few), we believe that a simple, heuristic treatment is usually sufficient as long as some basic cautious safeguards are enforced.</p>
+<p>First of all, there are mainly two ways to deal with missing data: <strong>removal</strong> and <strong>imputation</strong>. Removal is agnostic but costly, especially if one whole instance is eliminated because of only one missing feature value. Imputation is often preferred but relies on some underlying and potentially erroneous assumption.</p>
+<p>A simplified classification of imputation is the following:</p>
+<ul>
+<li>A basic imputation choice is the median (or mean) of the feature for the stock over the past available values. If there is a trend in the time series, this will nonetheless alter the trend. Relatedly, this method can be forward-looking, unless the training and testing sets are treated separately.<br>
+</li>
+<li>In time series contexts with views towards backtesting, the most simple imputation comes from previous values: if <span class="math inline">\(x_t\)</span> is missing, replace it with <span class="math inline">\(x_{t-1}\)</span>. This makes sense most of the time because past values are all that is available and are by definition backward-looking. However, in some particular cases, this may be a very bad choice (see words of caution below).<br>
+</li>
+<li>Medians and means can also be computed over the <strong>cross-section</strong> of assets. This roughly implies that the missing feature value will be relocated in the bulk of observed values. When many values are missing, this creates an atom in the distribution of the feature and alters the original distribution. One advantage is that this imputation is not forward-looking.<br>
+</li>
+<li>Many techniques rely on some modelling assumptions for the data generating process. We refer to nonparametric approaches (<span class="citation"><a href="solutions-to-exercises.html#ref-stekhoven2011missforest" role="doc-biblioref">Stekhoven and Bühlmann</a> (<a href="solutions-to-exercises.html#ref-stekhoven2011missforest" role="doc-biblioref">2011</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-shah2014comparison" role="doc-biblioref">Shah et al.</a> (<a href="solutions-to-exercises.html#ref-shah2014comparison" role="doc-biblioref">2014</a>)</span>, which rely on random forests, see Chapter <a href="trees.html#trees">6</a>), Bayesian imputation (<span class="citation"><a href="solutions-to-exercises.html#ref-schafer1999multiple" role="doc-biblioref">Schafer</a> (<a href="solutions-to-exercises.html#ref-schafer1999multiple" role="doc-biblioref">1999</a>)</span>), maximum likelihood approaches (<span class="citation"><a href="solutions-to-exercises.html#ref-enders2001primer" role="doc-biblioref">Enders</a> (<a href="solutions-to-exercises.html#ref-enders2001primer" role="doc-biblioref">2001</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-enders2010applied" role="doc-biblioref">Enders</a> (<a href="solutions-to-exercises.html#ref-enders2010applied" role="doc-biblioref">2010</a>)</span>), interpolation or extrapolation and nearest neighbor algorithms (<span class="citation"><a href="solutions-to-exercises.html#ref-garcia2009k" role="doc-biblioref">Garcı́a-Laencina et al.</a> (<a href="solutions-to-exercises.html#ref-garcia2009k" role="doc-biblioref">2009</a>)</span>). More generally, the four books cited at the begining of the subsection detail many such imputation processes. Advanced techniques are much more demanding computationally.</li>
+</ul>
+<p>A few words of caution:</p>
+<ul>
+<li>Interpolation should be avoided at all cost. Accounting values or ratios that are released every quarter must never be linearly interpolated for the simple reason that this is forward-looking. If numbers are disclosed in January and April, then interpolating February and March requires the knowledge of the April figure, which, in live trading will not be known. Resorting to past values is a better way to go.<br>
+</li>
+<li>Nevertheless, there are some feature types for which imputation from past values should be avoided. First of all, returns should not be replicated. By default, a superior choice is to set missing return indicators to zero (which is often close to the average or the median). A good indicator that can help the decision is the persistence of the feature through time. If it is highly autocorrelated (and the time series plot create a smooth curve, like for market capitalization), then imputation from the past can make sense. If not, then it should be avoided.<br>
+</li>
+<li>There are some cases that can require more attention. Let us consider the following fictitious sample of dividend yield:</li>
+</ul>
+<div class="inline-table"><table class="table table-sm">
+<caption>
+<span id="tab:impex">TABLE 4.1: </span> Challenges with chronological imputation.</caption>
+<thead><tr class="header">
+<th>Date</th>
+<th>Original yield</th>
+<th>Replacement value</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>2015-02</td>
+<td>NA</td>
+<td>preceding (if it exists)</td>
+</tr>
+<tr class="even">
+<td>2015-03</td>
+<td>0.02</td>
+<td>untouched (none)</td>
+</tr>
+<tr class="odd">
+<td>2015-04</td>
+<td>NA</td>
+<td>0.02 (previous)</td>
+</tr>
+<tr class="even">
+<td>2015-05</td>
+<td>NA</td>
+<td>0.02 (previous)</td>
+</tr>
+<tr class="odd">
+<td>2015-06</td>
+<td>NA</td>
+<td>&lt;= <strong>Problem</strong>!</td>
+</tr>
+</tbody>
+</table></div>
+<p>In this case, the yield is released quarterly, in March, June, September, etc. But in June, the value is missing. The problem is that we cannot know if it is missing because of a genuine data glitch, or because the firm simply did not pay any dividends in June. Thus, imputation from past value may be erroneous here. There is no perfect solution but a decision must nevertheless be taken. For dividend data, three options are:</p>
+<ol style="list-style-type: decimal">
+<li>Keep the previous value. In R, the function na.locf() from the <em>zoo</em> package is incredibly efficient for this task.<br>
+</li>
+<li>Extrapolate from previous observations (this is very different from <strong>inter</strong>polation): for instance, evaluate a trend on past data and pursue that trend.<br>
+</li>
+<li>Set the value to zero. This is tempting but may be sub-optimal due to dividend smoothing practices from executives (see for instance <span class="citation"><a href="solutions-to-exercises.html#ref-leary2011determinants" role="doc-biblioref">Leary and Michaely</a> (<a href="solutions-to-exercises.html#ref-leary2011determinants" role="doc-biblioref">2011</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-chen2012dividend" role="doc-biblioref">Long Chen, Da, and Priestley</a> (<a href="solutions-to-exercises.html#ref-chen2012dividend" role="doc-biblioref">2012</a>)</span> for details on the subject). For persistent time series, the first two options are probably better.</li>
+</ol>
+<p>Tests can be performed to evaluate the relative performance of each option. It is also important to <strong>remember</strong> these design choices. There are so many of them that they are easy to forget. Keeping track of them is obviously compulsory. In the ML pipeline, the <strong>scripts</strong> pertaining to data preparation are often key because they do not serve only once!</p>
+<p>Finally, we mention that many packages exist in R that deal with data imputation: <em>Amelia</em>, <em>imputeTS</em>, <em>mice</em>, <em>mtsdi</em>, <em>simputation</em> and <em>VIM</em>. The interested reader can have a look at these.</p>
+</div>
+<div id="outlier-detection" class="section level2" number="4.3">
+<h2>
+<span class="header-section-number">4.3</span> Outlier detection<a class="anchor" aria-label="anchor" href="#outlier-detection"><i class="fas fa-link"></i></a>
+</h2>
+<p>The topic of outlier detection is also well documented and has its own surveys (<span class="citation"><a href="solutions-to-exercises.html#ref-hodge2004survey" role="doc-biblioref">Hodge and Austin</a> (<a href="solutions-to-exercises.html#ref-hodge2004survey" role="doc-biblioref">2004</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-chandola2009anomaly" role="doc-biblioref">Chandola, Banerjee, and Kumar</a> (<a href="solutions-to-exercises.html#ref-chandola2009anomaly" role="doc-biblioref">2009</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-gupta2014outlier" role="doc-biblioref">M. Gupta et al.</a> (<a href="solutions-to-exercises.html#ref-gupta2014outlier" role="doc-biblioref">2014</a>)</span>) and a few dedicated books (<span class="citation"><a href="solutions-to-exercises.html#ref-aggarwal2013outlier" role="doc-biblioref">Aggarwal</a> (<a href="solutions-to-exercises.html#ref-aggarwal2013outlier" role="doc-biblioref">2013</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-rousseeuw2005robust" role="doc-biblioref">Rousseeuw and Leroy</a> (<a href="solutions-to-exercises.html#ref-rousseeuw2005robust" role="doc-biblioref">2005</a>)</span>, though the latter is very focused on regression analysis).</p>
+<p>Again, incredibly sophisticated methods may require a lot of efforts for possibly limited gain. Simple heuristic methods, as long as they are documented in the process, may suffice. They often rely on ‘hard’ thresholds:</p>
+<ul>
+<li>for one given feature (possibly filtered in time), any point outside the interval <span class="math inline">\([\mu-m\sigma, \mu+m\sigma]\)</span> can be deemed an outlier. Here <span class="math inline">\(\mu\)</span> is the mean of the sample and <span class="math inline">\(\sigma\)</span> the standard deviation. The multiple value <span class="math inline">\(m\)</span> usually belongs to the set <span class="math inline">\(\{3, 5, 10\}\)</span>, which is of course arbitrary.</li>
+<li>likewise, if the largest value is above <span class="math inline">\(m\)</span> times the second-to-largest, then it can also be classified as an outlier (the same reasoning applied for the other side of the tail).</li>
+<li>finally, for a given small threshold <span class="math inline">\(q\)</span>, any value outside the <span class="math inline">\([q,1-q]\)</span> quantile range can be considered outliers.</li>
+</ul>
+<p>This latter idea was popularized by <strong>winsorization</strong>. Winsorizing amounts to setting to <span class="math inline">\(x^{(q)}\)</span> all values below <span class="math inline">\(x^{(q)}\)</span> and to <span class="math inline">\(x^{(1-q)}\)</span> all values above <span class="math inline">\(x^{(1-q)}\)</span>. The winsorized variable <span class="math inline">\(\tilde{x}\)</span> is:
+<span class="math display">\[\tilde{x}_i=\left\{\begin{array}{ll}
+x_i &amp; \text{ if }  x_i \in [x^{(q)},x^{(1-q)}] \quad \text{ (unchanged)}\\
+x^{(q)} &amp; \text{ if }  x_i &lt; x^{(q)} \\
+x^{(1-q)} &amp; \text{ if }  x_i &gt; x^{(1-q)}
+ \end{array} \right. .\]</span></p>
+<p>The range for <span class="math inline">\(q\)</span> is usually <span class="math inline">\((0.5\%, 5\%)\)</span> with 1% and 2% being the most often used.</p>
+<p>The winsorization stage <strong>must</strong> be performed on a feature-by-feature and a date-by-date basis. However, keeping a time series perspective is also useful. For instance, a $800B market capitalization may seems out of range, except when looking at the history of Apple’s capitalization.</p>
+<p>We conclude this subsection by recalling that <em>true</em> outliers (i.e., extreme points that are not due to data extraction errors) are valuable because they are likely to carry important information.</p>
+</div>
+<div id="feateng" class="section level2" number="4.4">
+<h2>
+<span class="header-section-number">4.4</span> Feature engineering<a class="anchor" aria-label="anchor" href="#feateng"><i class="fas fa-link"></i></a>
+</h2>
+<p>Feature engineering is a very important step of the portfolio construction process. Computer scientists often refer to the saying “<em>garbage in, garbage out</em>.” It is thus paramount to prevent the ML engine of the allocation to be trained on ill-designed variables.
+We invite the interested reader to have a look at the recent work of <span class="citation"><a href="solutions-to-exercises.html#ref-kuhn2019feature" role="doc-biblioref">Kuhn and Johnson</a> (<a href="solutions-to-exercises.html#ref-kuhn2019feature" role="doc-biblioref">2019</a>)</span> on this topic. The (shorter) academic reference is <span class="citation"><a href="solutions-to-exercises.html#ref-guyon2003introduction" role="doc-biblioref">Guyon and Elisseeff</a> (<a href="solutions-to-exercises.html#ref-guyon2003introduction" role="doc-biblioref">2003</a>)</span>.</p>
+<div id="feature-selection" class="section level3" number="4.4.1">
+<h3>
+<span class="header-section-number">4.4.1</span> Feature selection<a class="anchor" aria-label="anchor" href="#feature-selection"><i class="fas fa-link"></i></a>
+</h3>
+<p>The first step is selection. It is not obvious to determine which set of predictors to include. For instance, <span class="citation"><a href="solutions-to-exercises.html#ref-bali2020cross" role="doc-biblioref">Bali et al.</a> (<a href="solutions-to-exercises.html#ref-bali2020cross" role="doc-biblioref">2020</a>)</span> show that fixed-income related variables do not help to predict equity returns. One heuristic choice is to chose the variables that are often mentioned in the literature (both academic and practical). Though of course, sticking to common characteristics may complicate the generation of alpha because all trading agents will take them into account. Choices can stem from empirical studies such as <span class="citation"><a href="solutions-to-exercises.html#ref-chen2021open" role="doc-biblioref">A. Y. Chen and Zimmermann</a> (<a href="solutions-to-exercises.html#ref-chen2021open" role="doc-biblioref">2021</a>)</span>, or theoretical models like <span class="citation"><a href="solutions-to-exercises.html#ref-ohlson1995earnings" role="doc-biblioref">Ohlson</a> (<a href="solutions-to-exercises.html#ref-ohlson1995earnings" role="doc-biblioref">1995</a>)</span>, which is one of the many papers that justify the inclusion of fundamental values as independent variables in predictive models.</p>
+<p>Then, given a large set of predictors, it seems a sound idea to filter out unwanted or redundant exogenous variables. Heuristically, simple methods include:</p>
+<ul>
+<li>computing the correlation matrix of all features and making sure that no (absolute) value is above a threshold (0.7 is a common value) so that redundant variables do not pollute the learning engine;<br>
+</li>
+<li>carrying out a linear regression and removing the non significant variables (e.g., those with <span class="math inline">\(p\)</span>-value above 0.05).<br>
+</li>
+<li>perform a clustering analysis over the set of features and retain only one feature within each cluster (see Chapter <a href="unsup.html#unsup">15</a>).</li>
+</ul>
+<p>Both these methods are somewhat reductive and overlook nonlinear relationships. Another approach would be to fit a decision tree (or a random forest) and retain only the features that have a high variable importance. These methods will be developed in Chapter <a href="trees.html#trees">6</a> for trees and Chapter <a href="interp.html#interp">13</a> for variable importance.</p>
+</div>
+<div id="scaling" class="section level3" number="4.4.2">
+<h3>
+<span class="header-section-number">4.4.2</span> Scaling the predictors<a class="anchor" aria-label="anchor" href="#scaling"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>The premise of the need to pre-process the data comes from the large variety of scales in financial data:</p>
+<ul>
+<li>returns are most of the time smaller than one in absolute value;</li>
+<li>stock volatility lies usually between 5% and 80%;</li>
+<li>market capitalization is expressed in million or billion units of a particular currency;</li>
+<li>accounting values as well;</li>
+<li>accounting ratios can have inhomogeneous units;</li>
+<li>synthetic attributes like sentiment also have their idiosyncrasies.</li>
+</ul>
+<p>While it is widely considered that monotonic transformations of the features have a marginal impact on prediction outcomes, <span class="citation"><a href="solutions-to-exercises.html#ref-galili2016splitting" role="doc-biblioref">Galili and Meilijson</a> (<a href="solutions-to-exercises.html#ref-galili2016splitting" role="doc-biblioref">2016</a>)</span> show that this is not always the case (see also Section <a href="Data.html#impact-of-rescaling-toy-example">4.8.2</a>). Hence, the choice of normalization may in fact very well matter.</p>
+<p>If we write <span class="math inline">\(x_i\)</span> for the raw input and <span class="math inline">\(\tilde{x}_i\)</span> for the transformed data, common scaling practices include: </p>
+<ul>
+<li>
+<strong>standardization</strong>: <span class="math inline">\(\tilde{x}_i=(x_i-m_x)/\sigma_x\)</span>, where <span class="math inline">\(m_x\)</span> and <span class="math inline">\(\sigma_x\)</span> are the mean and standard deviation of <span class="math inline">\(x\)</span>, respectively;</li>
+<li>
+<strong>min-max</strong> rescaling over [0,1]: <span class="math inline">\(\tilde{x}_i=(x_i-\min(\mathbf{x}))/(\max(\mathbf{x})-\min(\mathbf{x}))\)</span>;</li>
+<li>
+<strong>min-max</strong> rescaling over [-1,1]: <span class="math inline">\(\tilde{x}_i=2\frac{x_i-\min(\mathbf{x})}{\max(\mathbf{x})-\min(\mathbf{x})}-1\)</span>;</li>
+<li>
+<strong>uniformization</strong>: <span class="math inline">\(\tilde{x}_i=F_\mathbf{x}(x_i)\)</span>, where <span class="math inline">\(F_\mathbf{x}\)</span> is the empirical c.d.f. of <span class="math inline">\(\mathbf{x}\)</span>. In this case, the vector <span class="math inline">\(\tilde{\mathbf{x}}\)</span> is defined to follow a uniform distribution over [0,1].</li>
+</ul>
+<p>Sometimes, it is possible to apply a logarithmic transform of variables with both large values (market capitalization) and large outliers. The scaling can come after this transformation. Obviously, this technique is prohibited for features with negative values.</p>
+<p>It is often advised to scale inputs so that they range in [0,1] before sending them through the training of neural networks for instance. The dataset that we use in this book is based on variables that have been uniformized: for each point in time, the cross-sectional distribution of each feature is uniform over the unit interval. In factor investing, the scaling of features must be <strong>operated separately for each date and each feature</strong>. This point is critical. It makes sure that for every rebalancing date, the predictors will have a similar shape and do carry information on the cross-section of stocks.</p>
+<p>Uniformization is sometimes presented differently: for a given characteristic and time, characteristic values are ranked and the rank is then divided by the number of non-missing points. This is done in <span class="citation"><a href="solutions-to-exercises.html#ref-freyberger2020dissecting" role="doc-biblioref">Freyberger, Neuhierl, and Weber</a> (<a href="solutions-to-exercises.html#ref-freyberger2020dissecting" role="doc-biblioref">2020</a>)</span> for example. In <span class="citation"><a href="solutions-to-exercises.html#ref-kelly2019characteristics" role="doc-biblioref">Kelly, Pruitt, and Su</a> (<a href="solutions-to-exercises.html#ref-kelly2019characteristics" role="doc-biblioref">2019</a>)</span>, the authors perform this operation but then subtract 0.5 to all features so that their values lie in [-0.5,0.5].</p>
+<p>Scaling features across dates should be proscribed. Take for example the case of market capitalization. In the long run (market crashes notwithstanding), this feature increases through time. Thus, scaling across dates would lead to small values at the beginning of the sample and large values at the end of the sample. This would completely alter and dilute the cross-sectional content of the features. </p>
+</div>
+</div>
+<div id="labelling" class="section level2" number="4.5">
+<h2>
+<span class="header-section-number">4.5</span> Labelling<a class="anchor" aria-label="anchor" href="#labelling"><i class="fas fa-link"></i></a>
+</h2>
+<div id="simple-labels" class="section level3" number="4.5.1">
+<h3>
+<span class="header-section-number">4.5.1</span> Simple labels<a class="anchor" aria-label="anchor" href="#simple-labels"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+There are several ways to define labels when constructing portfolio policies. Of course, the finality is the portfolio weight, but it is rarely considered as the best choice for the label.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Some methodologies do map firm attributes into final weights, e.g., &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-brandt2009parametric" role="doc-biblioref"&gt;Brandt, Santa-Clara, and Valkanov&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-brandt2009parametric" role="doc-biblioref"&gt;2009&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-ammann2016characteristics" role="doc-biblioref"&gt;Ammann, Coqueret, and Schade&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-ammann2016characteristics" role="doc-biblioref"&gt;2016&lt;/a&gt;)&lt;/span&gt;, but these are outside the scope of the book.&lt;/p&gt;'><sup>11</sup></a></p>
+<p>Usual labels in factor investing are the following:</p>
+<ul>
+<li>raw asset returns;<br>
+</li>
+<li>future relative returns (versus some benchmark: market-wide index, or sector-based portfolio for instance). One simple choice is to take returns minus a cross-sectional mean or median;<br>
+</li>
+<li>the probability of positive return (or of return above a specified threshold);<br>
+</li>
+<li>the probability of outperforming a benchmark (computed over a given time frame);<br>
+</li>
+<li>the binary version of the above: YES (outperforming) versus NO (underperforming);<br>
+</li>
+<li>risk-adjusted versions of the above: Sharpe ratios, information ratios, MAR or CALMAR ratios (see Section <a href="backtest.html#perfmet">12.3</a>).</li>
+</ul>
+<p>When creating binary variables, it is often tempting to create a test that compares returns to zero (profitable versus non profitable). This is not optimal because it is very much time-dependent. In good times, many assets will have positive returns, while in market crashes, few will experience positive returns, thereby creating very unbalanced classes. It is a better idea to split the returns in two by comparing them to their time-<span class="math inline">\(t\)</span> median (or average). In this case, the indicator is relative and the two classes are much more balanced.</p>
+<p>As we will discuss later in this chapter, these choices still leave room for additional degrees of freedom. Should the labels be rescaled, just like features are processed? What is the best time horizon on which to compute performance metrics?</p>
+</div>
+<div id="categorical-labels" class="section level3" number="4.5.2">
+<h3>
+<span class="header-section-number">4.5.2</span> Categorical labels<a class="anchor" aria-label="anchor" href="#categorical-labels"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In a typical ML analysis, when <span class="math inline">\(y\)</span> is a proxy for future performance, the ML engine will try to minimize some distance between the predicted value and the realized values. For mathematical convenience, the sum of squared error (<span class="math inline">\(L^2\)</span> norm) is used because it has the simplest derivative and makes gradient descent accessible and easy to compute.</p>
+<p>Sometimes, it can be interesting not to focus on raw performance proxies, like returns or Sharpe ratios, but on discrete investment decisions, which can be derived from these proxies. A simple example (decision rule) is the following:</p>
+<p><span class="math display" id="eq:catlabel">\[\begin{equation}
+\tag{4.2}
+y_{t,i}=\left\{  \begin{array}{rll}
+-1 &amp; \text{ if } &amp; \hat{r}_{t,i} &lt; r_- \\
+0 &amp; \text{ if } &amp; \hat{r}_{t,i} \in [r_-,r_+] \\
++1 &amp; \text{ if } &amp; \hat{r}_{t,i} &gt; r_+ \\
+\end{array} \right.,
+\end{equation}\]</span>
+where <span class="math inline">\(\hat{r}_{t,i}\)</span> is the performance proxy (e.g., returns or Sharpe ratio) and <span class="math inline">\(r_\pm\)</span> are the decision thresholds. When the predicted performance is below <span class="math inline">\(r_-\)</span>, the decision is -1 (e.g., <em>sell</em>), when it is above <span class="math inline">\(r_+\)</span>, the decision is +1 (e.g., <em>buy</em>) and when it is in the middle (the model is neither very optimistic nor very pessimistic), then the decision is neutral (e.g., <em>hold</em>). The performance proxy can of course be relative to some benchmark so that the decision is directly related to this benchmark. It is often advised that the thresholds <span class="math inline">\(r_\pm\)</span> be chosen such that the three categories are relatively balanced, that is, so that they end up having a comparable number of instances.</p>
+<p>In this case, the final output can be considered as categorical or numerical because it belongs to an important subgroup of categorical variables: the ordered categorical (<strong>ordinal</strong>) variables. If <span class="math inline">\(y\)</span> is taken as a number, the usual regression tools apply.</p>
+<p>When <span class="math inline">\(y\)</span> is treated as a non-ordered (<strong>nominal</strong>) categorical variable, then a new layer of processing is required because ML tools only work with numbers. Hence, the categories must be recoded into digits. The mapping that is most often used is called ‘<strong>one-hot encoding</strong>.’ The vector of classes is split in a sparse matrix in which each column is dedicated to one class. The matrix is filled with zeros and ones. A one is allocated to the column corresponding to the class of the instance. We provide a simple illustration in the table below.</p>
+<div class="inline-table"><table class="table table-sm">
+<caption>
+<span id="tab:onehot">TABLE 4.2: </span> Concise example of one-hot encoding.</caption>
+<thead><tr class="header">
+<th>Initial data</th>
+<th></th>
+<th align="center">One-hot encoding</th>
+<th></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Position</td>
+<td>Sell</td>
+<td align="center">Hold</td>
+<td>Buy</td>
+</tr>
+<tr class="even">
+<td>buy</td>
+<td>0</td>
+<td align="center">0</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>buy</td>
+<td>0</td>
+<td align="center">0</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>hold</td>
+<td>0</td>
+<td align="center">1</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>sell</td>
+<td>1</td>
+<td align="center">0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>buy</td>
+<td>0</td>
+<td align="center">0</td>
+<td>1</td>
+</tr>
+</tbody>
+</table></div>
+<p>In classification tasks, the output has a larger dimension. For each instance, it gives the probability of belonging to each class assigned by the model. As we will see in Chapters <a href="trees.html#trees">6</a> and <a href="NN.html#NN">7</a>, this is easily handled via the softmax function.</p>
+<p>From the standpoint of allocation, handling categorical predictions is not necessarily easy. For long-short portfolios, plus or minus one signals can provide the sign of the position. For long-only portfolio, two possible solutions: (i) work with binary classes (in versus out of the portfolio) or (ii) adapt weights according to the prediction: zero weight for a -1 prediction, 0.5 weight for a 0 prediction and full weight for a +1 prediction. Weights are then of course normalized so as to comply with the budget constraint.</p>
+</div>
+<div id="the-triple-barrier-method" class="section level3" number="4.5.3">
+<h3>
+<span class="header-section-number">4.5.3</span> The triple barrier method<a class="anchor" aria-label="anchor" href="#the-triple-barrier-method"><i class="fas fa-link"></i></a>
+</h3>
+<p>We conclude this section with an advanced labelling technique mentioned in <span class="citation"><a href="solutions-to-exercises.html#ref-de2018advances" role="doc-biblioref">De Prado</a> (<a href="solutions-to-exercises.html#ref-de2018advances" role="doc-biblioref">2018</a>)</span>. The idea is to consider the full dynamics of a trading strategy and not a simple performance proxy. The rationale for this extension is that often money managers implement P&amp;L triggers that cash in when gains are sufficient or opt out to stop their losses. Upon inception of the strategy, three barriers are fixed (see Figure <a href="Data.html#fig:triplebarrier">4.4</a>):</p>
+<ul>
+<li>one above the current level of the asset (magenta line), which measures a reasonable expected profit;<br>
+</li>
+<li>one below the current level of the asset (cyan line), which acts as a stop-loss signal to prevent large negative returns;<br>
+</li>
+<li>and finally, one that fixes the horizon of the strategy after which it will be terminated (black line).</li>
+</ul>
+<p>If the strategy hits the first (<em>resp</em>. second) barrier, the output is +1 (<em>resp</em>. -1), and if it hits the last barrier, the output is equal to zero or to some linear interpolation (between -1 and +1) that represents the position of the terminal value relative to the two horizontal barriers. Computationally, this method is <strong>much</strong> more demanding, as it evaluates a whole trajectory for each instance. Again, it is nonetheless considered as more realistic because trading strategies are often accompanied with automatic triggers such as stop-loss, etc.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:triplebarrier"></span>
+<img src="images/triple_bar.png" alt=" Illustration of the triple barrier method." width="798"><p class="caption">
+FIGURE 4.4:  Illustration of the triple barrier method.
+</p>
+</div>
+</div>
+<div id="filtering-the-sample" class="section level3" number="4.5.4">
+<h3>
+<span class="header-section-number">4.5.4</span> Filtering the sample<a class="anchor" aria-label="anchor" href="#filtering-the-sample"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+One of the main challenges in Machine Learning is to extract as much <strong>signal</strong> as possible. By signal, we mean patterns that will hold out-of-sample. Intuitively, it may seem reasonable to think that the more data we gather, the more signal we can extract. This is in fact false in all generality because more data also means more noise. Surprisingly, filtering the training samples can improve performance. This idea was for example implemented successfully in <span class="citation"><a href="solutions-to-exercises.html#ref-fu2018machine" role="doc-biblioref">Fu et al.</a> (<a href="solutions-to-exercises.html#ref-fu2018machine" role="doc-biblioref">2018</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-guida2019big" role="doc-biblioref">Guida and Coqueret</a> (<a href="solutions-to-exercises.html#ref-guida2019big" role="doc-biblioref">2018a</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-guida2018machine" role="doc-biblioref">Guida and Coqueret</a> (<a href="solutions-to-exercises.html#ref-guida2018machine" role="doc-biblioref">2018b</a>)</span>.</p>
+<p>In <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>, we investigate why smaller samples may lead to superior out-of-sample accuracy for a particular type of ML algorithm: decision trees (see Chapter <a href="trees.html#trees">6</a>). We focus on a particular kind of filter: we exclude the labels (e.g., returns) that are not extreme and retain the 20% values that are the smallest and the 20% that are the largest (the bulk of the distribution is removed). In doing so, we alter the structure of trees in two ways:<br>
+- when the splitting points are altered, they are always closer to the center of the distribution of the splitting variable (i.e., the resulting clusters are more balanced and possibly more robust);<br>
+- the choice of splitting variables is (sometimes) pushed towards the features that have a monotonic impact on the label.<br>
+These two properties are desirable. The first reduces the risk of fitting to small groups of instances that may be spurious. The second gives more importance to features that appear globally more relevant in explaining the returns. However, the filtering must not be too intense. If, instead of retaining 20% of each tail of the predictor, we keep just 10%, then the loss in signal becomes too severe and the performance deteriorates.</p>
+</div>
+<div id="horizons" class="section level3" number="4.5.5">
+<h3>
+<span class="header-section-number">4.5.5</span> Return horizons<a class="anchor" aria-label="anchor" href="#horizons"><i class="fas fa-link"></i></a>
+</h3>
+<p>This subsection deals with one of the least debated issues in factor-based machine learning models: horizons. Several horizons come into play during the whole ML-driven allocation workflow: the <strong>horizon of the label</strong>, the <strong>estimation window</strong> (chronological depth of the training samples) and the <strong>holding periods</strong>. One early reference that looks at these aspects is the founding academic paper on momentum by <span class="citation"><a href="solutions-to-exercises.html#ref-jegadeesh1993returns" role="doc-biblioref">Jegadeesh and Titman</a> (<a href="solutions-to-exercises.html#ref-jegadeesh1993returns" role="doc-biblioref">1993</a>)</span>. The authors compute the profitability of portfolios based on the returns over the past <span class="math inline">\(J=3, 6, 9, 12\)</span> months. Four holding periods are tested: <span class="math inline">\(K=3,6,9,12\)</span> months. They report: “<em>The most successful zero-cost (long-short) strategy selects stocks based on their returns over the previous 12 months and then holds the portfolio for 3 months</em>.” While there is no machine learning whatsoever in this contribution, it is possible that their conclusion that horizons matter may also hold for more sophisticated methods. This topic is in fact much discussed, as is shown by the continuing debate on the impact of horizons in momentum profitability (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-novy2012momentum" role="doc-biblioref">Novy-Marx</a> (<a href="solutions-to-exercises.html#ref-novy2012momentum" role="doc-biblioref">2012</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-gong2015momentum" role="doc-biblioref">Gong, Liu, and Liu</a> (<a href="solutions-to-exercises.html#ref-gong2015momentum" role="doc-biblioref">2015</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-goyal2015momentum" role="doc-biblioref">Goyal and Wahal</a> (<a href="solutions-to-exercises.html#ref-goyal2015momentum" role="doc-biblioref">2015</a>)</span>).</p>
+<p>This debate should also be considered when working with ML algorithms (see for instance <span class="citation"><a href="solutions-to-exercises.html#ref-geertsema2020cross" role="doc-biblioref">Geertsema and Lu</a> (<a href="solutions-to-exercises.html#ref-geertsema2020cross" role="doc-biblioref">2020</a>)</span>). The issues of estimation windows and holding periods are mentioned later in the book, in Chapter <a href="backtest.html#backtest">12</a>. Naturally, in the present chapter, the horizon of the label is the important ingredient. Heuristically, there are four possible combinations if we consider only one feature for simplicity:</p>
+<ol style="list-style-type: decimal">
+<li>oscillating label and feature;<br>
+</li>
+<li>oscillating label, smooth feature (highly autocorrelated);<br>
+</li>
+<li>smooth label, oscillating feature;<br>
+</li>
+<li>smooth label and feature.</li>
+</ol>
+<p>Of all of these options, the last one is probably preferable because it is more robust, all things being equal.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;This is of course not the case for inference relying on linear models. Memory generates many problems and complicates the study of estimators. We refer to &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-hjalmarsson2011new" role="doc-biblioref"&gt;Hjalmarsson&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-hjalmarsson2011new" role="doc-biblioref"&gt;2011&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-xu2020testing" role="doc-biblioref"&gt;Xu&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-xu2020testing" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt; for theoretical and empirical results on this matter.&lt;/p&gt;'><sup>12</sup></a> By <em>all things being equal</em>, we mean that in each case, a model is capable of extracting some relevant pattern. A pattern that holds between two slowly moving series is more likely to persist in time. Thus, since features are often highly autocorrelated (cf Figure <a href="Data.html#fig:histcorr">4.3</a>), combining them with smooth labels is probably a good idea. To illustrate how critical this point is, we will purposefully use 1-month returns in most of the examples of the book and show that the corresponding results are often disappointing. These returns are very weakly autocorrelated while 6-month or 12-month returns are much more persistent and are better choices for labels.</p>
+<p>Theoretically, it is possible to understand why that may be the case. For simplicity, let us assume a single feature <span class="math inline">\(x\)</span> that explains returns <span class="math inline">\(r\)</span>: <span class="math inline">\(r_{t+1}=f(x_t)+e_{t+1}\)</span>. If <span class="math inline">\(x_t\)</span> is highly autocorrelated and the noise embeded in <span class="math inline">\(e_{t+1}\)</span> is not too large, then the two-period ahead return <span class="math inline">\((1+r_{t+1})(1+r_{t+2})-1\)</span> may carry more signal than <span class="math inline">\(r_{t+1}\)</span> because the relationship with <span class="math inline">\(x_t\)</span> has diffused and compounded through time. Consequently, it may also be beneficial to embed memory considerations directly into the modelling function, as is done for instance in <span class="citation"><a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">Matthew F. Dixon</a> (<a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span>. We discuss some practicalities related to autocorrelations in the next section.</p>
+</div>
+</div>
+<div id="pers" class="section level2" number="4.6">
+<h2>
+<span class="header-section-number">4.6</span> Handling persistence<a class="anchor" aria-label="anchor" href="#pers"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+While we have separated the steps of feature engineering and labelling in two different subsections, it is probably wiser to consider them jointly. One important property of the dataset processed by the ML algorithm should be the consistency of persistence between features and labels. Intuitively, the autocorrelation patterns between the label <span class="math inline">\(y_{t,n}\)</span> (future performance) and the features <span class="math inline">\(x_{t,n}^{(k)}\)</span> should not be too distant.</p>
+<p>One problematic example is when the dataset is sampled at the monthly frequency (not unusual in the money management industry) with the labels being monthly returns and the features being risk-based or fundamental attributes. In this case, the label is very weakly autocorrelated, while the features are often highly autocorrelated. In this situation, most sophisticated forecasting tools will arbitrage between features which will probably result in a lot of noise. In linear predictive models, this configuration is known to generate bias in estimates (see the study of <span class="citation"><a href="solutions-to-exercises.html#ref-stambaugh1999predictive" role="doc-biblioref">Stambaugh</a> (<a href="solutions-to-exercises.html#ref-stambaugh1999predictive" role="doc-biblioref">1999</a>)</span> and the review by <span class="citation"><a href="solutions-to-exercises.html#ref-gonzalo2018predictive" role="doc-biblioref">Gonzalo and Pitarakis</a> (<a href="solutions-to-exercises.html#ref-gonzalo2018predictive" role="doc-biblioref">2018</a>)</span>).</p>
+<p>Among other more technical options, there are two simple solutions when facing this issue: either introduce autocorrelation into the label, or remove it from the features. Again, the first option is not advised for statistical inference on linear models. Both are rather easy econometrically:</p>
+<ul>
+<li>to increase the autocorrelation of the label, compute performance over longer time ranges. For instance, when working with monthly data, considering annual or biennial returns will do the trick. <br>
+</li>
+<li>to get rid of autocorrelation, the shortest route is to resort to differences/variations: <span class="math inline">\(\Delta x_{t,n}^{(k)}=x_{t,n}^{(k)}-x_{t-1,n}^{(k)}\)</span>. One advantage of this procedure is that it makes sense, economically: variations in features may be better drivers of performance, compared to raw levels.</li>
+</ul>
+<p>A mix between persistent and oscillating variables in the feature space is of course possible, as long as it is driven by economic motivations.</p>
+</div>
+<div id="extensions" class="section level2" number="4.7">
+<h2>
+<span class="header-section-number">4.7</span> Extensions<a class="anchor" aria-label="anchor" href="#extensions"><i class="fas fa-link"></i></a>
+</h2>
+<div id="transforming-features" class="section level3" number="4.7.1">
+<h3>
+<span class="header-section-number">4.7.1</span> Transforming features<a class="anchor" aria-label="anchor" href="#transforming-features"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The feature space can easily be augmented through simple operations. One of them is lagging, that is, considering older values of features and assuming some memory effect for their impact on the label. This is naturally useful mostly if the features are oscillating (adding a layer of memory on persistent features can be somewhat redundant). New variables are defined by <span class="math inline">\(\breve{x}_{t,n}^{(k)}=x_{t-1,n}^{(k)}\)</span>.</p>
+<p>In some cases (e.g., insufficient number of features), it is possible to consider ratios or products between features. Accounting ratios like price-to-book, book-to-market, debt-to-equity are examples of functions of raw features that make sense. The gains brought by a larger spectrum of features are not obvious. The risk of overfitting increases, just like in a simple linear regression adding variables mechanically increases the <span class="math inline">\(R^2\)</span>. The choices must make sense, economically.</p>
+<p>Another way to increase the feature space (mentioned above) is to consider variations. Variations in sentiment, variations in book-to-market ratio, etc., can be relevant predictors because sometimes, the change is more important than the level. In this case, a new predictor is <span class="math inline">\(\breve{x}_{t,n}^{(k)}=x_{t,n}^{(k)}-x_{t-1,n}^{(k)}\)</span>.</p>
+</div>
+<div id="macrovar" class="section level3" number="4.7.2">
+<h3>
+<span class="header-section-number">4.7.2</span> Macro-economic variables<a class="anchor" aria-label="anchor" href="#macrovar"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Finally, we discuss a very important topic. The data should never be separated from the context it comes from (its environment). In classical financial terms, this means that a particular model is likely to depend on the overarching situation which is often proxied by macro-economic indicators. One way to take this into account at the data level is simply to multiply the feature by an exogenous indicator <span class="math inline">\(z_{t}\)</span> and in this case, the new predictor is
+<span class="math display" id="eq:macrocond">\[\begin{equation}
+\tag{4.3}
+\breve{x}_{t,n}^{(k)}=z_t \times x_{t,n}^{(k)}
+\end{equation}\]</span>
+This technique is used by <span class="citation"><a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">2020b</a>)</span> who use 8 economic indicators (plus the original predictors (<span class="math inline">\(z_t=1\)</span>)). This increases the feature space ninefold.</p>
+<p>Another route that integrates shifting economic environments is conditional engineering. Suppose that labels are coded via formula <a href="Data.html#eq:catlabel">(4.2)</a>. The thresholds can be made dependent on some exogenous variable. In times of turbulence, it might be a good idea to increase both <span class="math inline">\(r_+\)</span> (buy threshold) and <span class="math inline">\(r_-\)</span> (sell threshold) so that the labels become more conservative: it takes a higher return to make it to the <em>buy</em> category, while short positions are favored. One such example of dynamic thresholding could be</p>
+<p><span class="math display" id="eq:condvix">\[\begin{equation}
+\tag{4.4}
+r_{t,\pm}=r_{\pm} \times e^{\pm\delta(\text{VIX}_t-\bar{\text{VIX}})},
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(\text{VIX}_t\)</span> is the time-<span class="math inline">\(t\)</span> value of the VIX, while <span class="math inline">\(\bar{\text{VIX}}\)</span> is some average or median value. When the VIX is above its average and risk seems to be increasing, the thresholds also increase. The parameter <span class="math inline">\(\delta\)</span> tunes the magnitude of the correction. In the above example, we assume <span class="math inline">\(r_-&lt;0&lt;r_+\)</span>.</p>
+</div>
+<div id="active-learning" class="section level3" number="4.7.3">
+<h3>
+<span class="header-section-number">4.7.3</span> Active learning<a class="anchor" aria-label="anchor" href="#active-learning"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>We end this section with the notion of active learning. To the best of our knowledge, it is not widely used in quantitative investment, but the underlying concept is enlightening, hence we dedicate a few paragraphs to this notion for the sake of completeness.</p>
+<p>In general supervised learning, there is sometimes an asymmetry in the ability to gather features versus labels. For instance, it is free to have access to images, but the labelling of the content of the image (e.g., “a dog,” “a truck,” “a pizza,” etc.) is costly because it requires human annotation. In formal terms, <span class="math inline">\(\textbf{X}\)</span> is cheap but the corresponding <span class="math inline">\(\textbf{y}\)</span> is expensive.</p>
+<p>As is often the case when facing cost constraints, an evident solution is greed. Ahead of the usual learning process, a filter (often called <em>query</em>) is used to decide which data to label and train on (possibly in relationship with the ML algorithm). The labelling is performed by a so-called <em>oracle</em> (which/who knows the truth), usually human. This technique that focuses on the most informative instances is referred to as <strong>active learning</strong>. We refer to the surveys of <span class="citation"><a href="solutions-to-exercises.html#ref-settles2009active" role="doc-biblioref">Settles</a> (<a href="solutions-to-exercises.html#ref-settles2009active" role="doc-biblioref">2009</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-settles2012active" role="doc-biblioref">Settles</a> (<a href="solutions-to-exercises.html#ref-settles2012active" role="doc-biblioref">2012</a>)</span> for a detailed account of this field (which we briefly summarize below). The term <strong>active</strong> comes from the fact that the learner does not passively accept data samples but actively participates in the choices of items it learns from.</p>
+<p>One major dichotomy in active learning pertains to the data source <span class="math inline">\(\textbf{X}\)</span> on which the query is based. One obvious case is when the original sample <span class="math inline">\(\textbf{X}\)</span> is very large and not labelled and the learner asks for particular instances within this sample to be labelled. The second case is when the learner has the ability to simulate/generate its own values <span class="math inline">\(\textbf{x}_i\)</span>. This can sometimes be problematic if the oracle does not recognize the data that is generated by the machine. For instance, if the purpose is to label images of characters and numbers, the learner may generate shapes that do not correspond to any letter or digit: the oracle cannot label it.</p>
+<p>In active learning, one key question is, how does the learner choose the instances to be labelled? Heuristically, the answer is by picking those observations that maximize learning efficiency. In binary classification, a simple criterion is the probability of belonging to one particular class. If this probability is far from 0.5, then the algorithm will have no difficulty of picking one class (even though it can be wrong). The interesting case is when the probability is close to 0.5: the machine may hesitate for this particular instance. Thus, having the oracle label it is useful in this case because it helps the learner in a configuration in which it is undecided.</p>
+<p>Other methods seek to estimate the fit that can be obtained when including particular (new) instances in the training set, and then to optimize this fit. Recalling Section 3.1 in <span class="citation"><a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref">Geman, Bienenstock, and Doursat</a> (<a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref">1992</a>)</span> on the variance-bias tradeoff, we have, for a training dataset <span class="math inline">\(D\)</span> and one instance <span class="math inline">\(x\)</span> (we omit the bold font for simplicity),
+<span class="math display">\[\mathbb{E}\left[\left.(y-\hat{f}(x;D))^2\right|\{D,x\}\right]=\mathbb{E}\left[\left.\underbrace{(y-\mathbb{E}[y|x])^2}_{\text{indep. from }D\text{ and }\hat{f}} \right|\{D,x\} \right]+(\hat{f}(x;D)-\mathbb{E}[y|x])^2,\]</span>
+where the notation <span class="math inline">\(f(x;D)\)</span> is used to highlight the dependence between the model <span class="math inline">\(\hat{f}\)</span> and the dataset <span class="math inline">\(D\)</span>: the model has been trained on <span class="math inline">\(D\)</span>. The first term is irreducible, as it does not depend on <span class="math inline">\(\hat{f}\)</span>. Thus, only the second term is of interest. If we take the average of this quantity, taken over all possible values of <span class="math inline">\(D\)</span>:
+<span class="math display">\[\mathbb{E}_D\left[(\hat{f}(x;D)-\mathbb{E}[y|x])^2  \right]=\underbrace{\left(\mathbb{E}_D\left[\hat{f}(x;D)-\mathbb{E}[y|x]\right]\right)^2}_{\text{squared bias}} \ + \ \underbrace{\mathbb{E}_D\left[(\hat{f}(x,D)-\mathbb{E}_D[\hat{f}(x;D)])^2\right]}_{\text{variance}}\]</span>
+If this expression is not too complicated to compute, the learner can query the <span class="math inline">\(x\)</span> that minimizes the tradeoff. Thus, on average, this new instance will be the one that yields the best learning angle (as measured by the <span class="math inline">\(L^2\)</span> error). Beyond this approach (which is limited because it requires the oracle to label a possibly irrelevant instance), many other criteria exist for querying and we refer to section 3 from <span class="citation"><a href="solutions-to-exercises.html#ref-settles2009active" role="doc-biblioref">Settles</a> (<a href="solutions-to-exercises.html#ref-settles2009active" role="doc-biblioref">2009</a>)</span> for an exhaustive list.</p>
+<p>One final question: is active learning applicable to factor investing? One straightfoward answer is that data cannot be annotated by human intervention. Thus, the learners cannot simulate their own instances and ask for corresponding labels. One possible option is to provide the learner with <span class="math inline">\(\textbf{X}\)</span> but not <span class="math inline">\(\textbf{y}\)</span> and keep only a queried subset of observations with the corresponding labels. In spirit, this is close to what is done in <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span> except that the query is not performed by a machine but by the human user. Indeed, it is shown in this paper that not all observations carry the same amount of signal. Instances with ‘average’ label values seem to be on average less informative compared to those with extreme label values.</p>
+</div>
+</div>
+<div id="additional-code-and-results" class="section level2" number="4.8">
+<h2>
+<span class="header-section-number">4.8</span> Additional code and results<a class="anchor" aria-label="anchor" href="#additional-code-and-results"><i class="fas fa-link"></i></a>
+</h2>
+<div id="impact-of-rescaling-graphical-representation" class="section level3" number="4.8.1">
+<h3>
+<span class="header-section-number">4.8.1</span> Impact of rescaling: graphical representation<a class="anchor" aria-label="anchor" href="#impact-of-rescaling-graphical-representation"><i class="fas fa-link"></i></a>
+</h3>
+<p>We start with a simple illustration of the different scaling methods. We generate an arbitrary series and then rescale it. The series is not random so that each time the code chunk is executed, the output remains the same.</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">Length</span> <span class="op">&lt;-</span> <span class="fl">100</span>                                 <span class="co"># Length of the sequence</span>
+<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">Length</span><span class="op">)</span><span class="op">)</span>                       <span class="co"># Original data</span>
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">Length</span>, x <span class="op">=</span> <span class="va">x</span><span class="op">)</span>   <span class="co"># Data framed into dataframe</span>
+<span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">index</span>, y <span class="op">=</span> <span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span>                <span class="co"># Plot</span></code></pre></div>
+<div class="inline-figure"><img src="ML_factor_files/figure-html/scale_ex-1.png" width="672"></div>
+<p></p>
+<p>We define and plot the scaled variables below.</p>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">norm_unif</span> <span class="op">&lt;-</span>  <span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">{</span>  <span class="co"># This is a function that uniformalises a vector.</span>
+    <span class="va">v</span> <span class="op">&lt;-</span> <span class="va">v</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/ecdf.html">ecdf</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">norm_0_1</span> <span class="op">&lt;-</span>  <span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">{</span>  <span class="co"># This is a function that uniformalises a vector.</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="op">(</span><span class="va">v</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">max</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html">min</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">data_norm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>                        <span class="co"># Formatting the data</span>
+    index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">Length</span>,                           <span class="co"># Index of point/instance</span>
+    standard <span class="op">=</span> <span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/stats/sd.html">sd</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,           <span class="co"># Standardisation</span>
+    norm_0_1 <span class="op">=</span> <span class="fu">norm_0_1</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>,                     <span class="co"># [0,1] reduction</span>
+    unif <span class="op">=</span> <span class="fu">norm_unif</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                    <span class="co"># Uniformisation</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">Type</span>, value <span class="op">=</span> <span class="va">value</span>, <span class="op">-</span><span class="va">index</span><span class="op">)</span>   <span class="co"># Putting in tidy format</span>
+<span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_norm</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">index</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">Type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>   <span class="co"># Plot!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_grid.html">facet_grid</a></span><span class="op">(</span><span class="va">Type</span><span class="op">~</span><span class="va">.</span><span class="op">)</span>          <span class="co"># This option creates 3 concatenated graphs to ease comparison</span></code></pre></div>
+<div class="inline-figure"><img src="ML_factor_files/figure-html/data_norm-1.png" width="672"></div>
+<p></p>
+<p>Finally, we look at the histogram of the newly created variables.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_norm</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">Type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="ML_factor_files/figure-html/data_norm_dist-1.png" width="672"></div>
+<p></p>
+<p>With respect to shape, the green and red distributions are close to the original one. It is only the support that changes: the min/max rescaling ensures all values lie in the <span class="math inline">\([0,1]\)</span> interval. In both cases, the smallest values (on the left) display a spike in distribution. By construction, this spike disappears under the uniformization: the points are evenly distributed over the unit interval.</p>
+</div>
+<div id="impact-of-rescaling-toy-example" class="section level3" number="4.8.2">
+<h3>
+<span class="header-section-number">4.8.2</span> Impact of rescaling: toy example<a class="anchor" aria-label="anchor" href="#impact-of-rescaling-toy-example"><i class="fas fa-link"></i></a>
+</h3>
+<p>To illustrate the impact of choosing one particular rescaling method,<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;For a more thorough technical discussion on the impact of feature engineering, we refer to &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-galili2016splitting" role="doc-biblioref"&gt;Galili and Meilijson&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-galili2016splitting" role="doc-biblioref"&gt;2016&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>13</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">firm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>             <span class="co"># Firms (3 lines for each)</span>
+<span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,<span class="fl">3</span><span class="op">)</span>                             <span class="co"># Dates</span>
+<span class="va">cap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">100</span>,                               <span class="co"># Market capitalization</span>
+         <span class="fl">15</span>, <span class="fl">10</span>, <span class="fl">15</span>, 
+         <span class="fl">200</span>, <span class="fl">120</span>, <span class="fl">80</span><span class="op">)</span>
+<span class="va">return</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.06</span>, <span class="fl">0.01</span>, <span class="op">-</span><span class="fl">0.06</span>,                      <span class="co"># Return values</span>
+            <span class="op">-</span><span class="fl">0.03</span>, <span class="fl">0.00</span>, <span class="fl">0.02</span>,
+            <span class="op">-</span><span class="fl">0.04</span>, <span class="op">-</span><span class="fl">0.02</span>,<span class="fl">0.00</span><span class="op">)</span>
+<span class="va">data_toy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">firm</span>, <span class="va">date</span>, <span class="va">cap</span>, <span class="va">return</span><span class="op">)</span>     <span class="co"># Aggregation of data</span>
+<span class="va">data_toy</span> <span class="op">&lt;-</span> <span class="va">data_toy</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Transformation of data</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                            
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>cap_0_1 <span class="op">=</span> <span class="fu">norm_0_1</span><span class="op">(</span><span class="va">cap</span><span class="op">)</span>, cap_u <span class="op">=</span> <span class="fu">norm_unif</span><span class="op">(</span><span class="va">cap</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p></p>
+<div class="inline-table"><table class="table table-striped" style="margin-left: auto; margin-right: auto;">
+<caption>
+<span id="tab:fakedata2">TABLE 4.3: </span>Sample data for a toy example.
+</caption>
+<thead><tr>
+<th style="text-align:right;">
+firm
+</th>
+<th style="text-align:right;">
+date
+</th>
+<th style="text-align:right;">
+cap
+</th>
+<th style="text-align:right;">
+return
+</th>
+<th style="text-align:right;">
+cap_0_1
+</th>
+<th style="text-align:right;">
+cap_u
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+50
+</td>
+<td style="text-align:right;">
+0.01
+</td>
+<td style="text-align:right;">
+0.364
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+100
+</td>
+<td style="text-align:right;">
+-0.06
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+-0.03
+</td>
+<td style="text-align:right;">
+0.026
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+10
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+0.02
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.333
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+200
+</td>
+<td style="text-align:right;">
+-0.04
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+120
+</td>
+<td style="text-align:right;">
+-0.02
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+3
+</td>
+<td style="text-align:right;">
+80
+</td>
+<td style="text-align:right;">
+0.00
+</td>
+<td style="text-align:right;">
+0.765
+</td>
+<td style="text-align:right;">
+0.667
+</td>
+</tr>
+</tbody>
+</table></div>
+<p></p>
+<p></p>
+<p>Let’s briefly comment on this synthetic data. We assume that dates are ordered chronologically and far away: each date stands for a year or the beginning of a decade, but the (forward) returns are computed on a monthly basis. The first firm is hugely successful and multiplies its cap ten times over the periods. The second firm remains stable cap-wise, while the third one plummets. If we look at ‘local’ future returns, they are strongly negatively related to size for the first and third firms. For the second one, there is no clear pattern.</p>
+<p>Date-by-date, the analysis is fairly similar, though slightly nuanced.</p>
+<ol style="list-style-type: decimal">
+<li>On date 1, the smallest firm has the largest return and the two others have negative returns.<br>
+</li>
+<li>On date 2, the biggest firm has a negative return while the two smaller firms do not.<br>
+</li>
+<li>On date 3, returns are decreasing with size.</li>
+</ol>
+<p>While the relationship is not always perfectly monotonous, there seems to be a link between size and return and, typically, investing in the smallest firm would be a very good strategy with this sample.</p>
+<p>Now let us look at the output of simple regressions. Below, the package <em>broom</em> is part of the <em>tidyverse</em>. It is great to format regression outputs.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">return</span> <span class="op">~</span> <span class="va">cap_0_1</span>, data <span class="op">=</span> <span class="va">data_toy</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="co"># First regression (min-max rescaling)</span>
+    <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">'Regression output when the independent var. comes 
+                 from min-max rescaling'</span>,  booktabs <span class="op">=</span> <span class="cn">T</span><span class="op">)</span> </code></pre></div>
+<div class="inline-table"><table class="table table-sm">
+<caption>
+<span id="tab:datatoyreg">TABLE 4.4: </span>Regression output when the independent var. comes
+from min-max rescaling
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.0162778
+</td>
+<td style="text-align:right;">
+0.0137351
+</td>
+<td style="text-align:right;">
+1.185121
+</td>
+<td style="text-align:right;">
+0.2746390
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_0_1
+</td>
+<td style="text-align:right;">
+-0.0497032
+</td>
+<td style="text-align:right;">
+0.0213706
+</td>
+<td style="text-align:right;">
+-2.325777
+</td>
+<td style="text-align:right;">
+0.0529421
+</td>
+</tr>
+</tbody>
+</table></div>
+<p></p>
+<p>
+</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">return</span> <span class="op">~</span> <span class="va">cap_u</span>, data <span class="op">=</span> <span class="va">data_toy</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>   <span class="co"># Second regression (uniformised feature)</span>
+    <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>   
+    <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">'Regression output when the indep. var. comes from uniformization'</span>,
+                  booktabs <span class="op">=</span> <span class="cn">T</span><span class="op">)</span>   </code></pre></div>
+<div class="inline-table"><table class="table table-sm">
+<caption>
+<span id="tab:datatoyreg2">TABLE 4.5: </span>Regression output when the indep. var. comes from uniformization
+</caption>
+<thead><tr>
+<th style="text-align:left;">
+term
+</th>
+<th style="text-align:right;">
+estimate
+</th>
+<th style="text-align:right;">
+std.error
+</th>
+<th style="text-align:right;">
+statistic
+</th>
+<th style="text-align:right;">
+p.value
+</th>
+</tr></thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:right;">
+0.06
+</td>
+<td style="text-align:right;">
+0.0198139
+</td>
+<td style="text-align:right;">
+3.028170
+</td>
+<td style="text-align:right;">
+0.0191640
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+cap_u
+</td>
+<td style="text-align:right;">
+-0.10
+</td>
+<td style="text-align:right;">
+0.0275162
+</td>
+<td style="text-align:right;">
+-3.634219
+</td>
+<td style="text-align:right;">
+0.0083509
+</td>
+</tr>
+</tbody>
+</table></div>
+<p></p>
+<p>In terms of <em>p</em>-<strong>value</strong> (last column), the first estimation for the cap coefficient is above 5% (in Table <a href="Data.html#tab:datatoyreg">4.4</a>) while the second is below 1% (in Table <a href="Data.html#tab:datatoyreg2">4.5</a>). One possible explanation for this discrepancy is the standard deviation of the variables. The deviations are equal to 0.47 and 0.29 for cap_0 and cap_u, respectively. Values like market capitalizations can have very large ranges and are thus subject to substantial deviations (even after scaling). Working with uniformized variables reduces dispersion and can help solve this problem.</p>
+<p>Note that this is a <strong>double-edged sword</strong>: while it can help avoid <strong>false negatives</strong>, it can also lead to <strong>false positives</strong>.</p>
+</div>
+</div>
+<div id="coding-exercises-1" class="section level2" number="4.9">
+<h2>
+<span class="header-section-number">4.9</span> Coding exercises<a class="anchor" aria-label="anchor" href="#coding-exercises-1"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>The Federal Reserve of Saint Louis (<a href="https://fred.stlouisfed.org" class="uri">https://fred.stlouisfed.org</a>) hosts thousands of time series of economic indicators that can serve as conditioning variables. Pick one and apply formula <a href="Data.html#eq:macrocond">(4.3)</a> to expand the number of predictors. If need be, use the function defined above.<br>
+</li>
+<li>Create a new categorical label based on formulae <a href="Data.html#eq:condvix">(4.4)</a> and <a href="Data.html#eq:catlabel">(4.2)</a>. The time series of the VIX can also be retrieved from the Federal Reserve’s website: <a href="https://fred.stlouisfed.org/series/VIXCLS" class="uri">https://fred.stlouisfed.org/series/VIXCLS</a>.<br>
+</li>
+<li>Plot the histogram of the R12M_Usd variable. Clearly, some outliers are present. Identify the stock with highest value for this variable and determine if the value can be correct or not.</li>
+</ol>
+</div>
+</div>
+
+
+
+.container-fluid main {
+max-width: 60rem;
+}
+
+<div class="chapter-nav">
+<div class="prev"><a href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></div>
+<div class="next"><a href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#Data"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li><a class="nav-link" href="#know-your-data"><span class="header-section-number">4.1</span> Know your data</a></li>
+<li><a class="nav-link" href="#missing-data"><span class="header-section-number">4.2</span> Missing data</a></li>
+<li><a class="nav-link" href="#outlier-detection"><span class="header-section-number">4.3</span> Outlier detection</a></li>
+<li>
+<a class="nav-link" href="#feateng"><span class="header-section-number">4.4</span> Feature engineering</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#feature-selection"><span class="header-section-number">4.4.1</span> Feature selection</a></li>
+<li><a class="nav-link" href="#scaling"><span class="header-section-number">4.4.2</span> Scaling the predictors</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#labelling"><span class="header-section-number">4.5</span> Labelling</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#simple-labels"><span class="header-section-number">4.5.1</span> Simple labels</a></li>
+<li><a class="nav-link" href="#categorical-labels"><span class="header-section-number">4.5.2</span> Categorical labels</a></li>
+<li><a class="nav-link" href="#the-triple-barrier-method"><span class="header-section-number">4.5.3</span> The triple barrier method</a></li>
+<li><a class="nav-link" href="#filtering-the-sample"><span class="header-section-number">4.5.4</span> Filtering the sample</a></li>
+<li><a class="nav-link" href="#horizons"><span class="header-section-number">4.5.5</span> Return horizons</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#pers"><span class="header-section-number">4.6</span> Handling persistence</a></li>
+<li>
+<a class="nav-link" href="#extensions"><span class="header-section-number">4.7</span> Extensions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#transforming-features"><span class="header-section-number">4.7.1</span> Transforming features</a></li>
+<li><a class="nav-link" href="#macrovar"><span class="header-section-number">4.7.2</span> Macro-economic variables</a></li>
+<li><a class="nav-link" href="#active-learning"><span class="header-section-number">4.7.3</span> Active learning</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#additional-code-and-results"><span class="header-section-number">4.8</span> Additional code and results</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#impact-of-rescaling-graphical-representation"><span class="header-section-number">4.8.1</span> Impact of rescaling: graphical representation</a></li>
+<li><a class="nav-link" href="#impact-of-rescaling-toy-example"><span class="header-section-number">4.8.2</span> Impact of rescaling: toy example</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#coding-exercises-1"><span class="header-section-number">4.9</span> Coding exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+</div>
+
+  
+
+  
+
+</div>
+ <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 16 Reinforcement learning | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 16 Reinforcement learning | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 16 Reinforcement learning | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } Due to its increasing popularity within the Machine Learning community, we dedicate a chapter to reinforcement learning (RL). In 2019 only, more than 25...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } Due to its increasing popularity within the Machine Learning community, we dedicate a chapter to reinforcement learning (RL). In 2019 only, more than 25...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } Due to its increasing popularity within the Machine Learning community, we dedicate a chapter to reinforcement learning (RL). In 2019 only, more than 25...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="active" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="RL" class="section level1" number="16">
+<h1>
+<span class="header-section-number">16</span> Reinforcement learning<a class="anchor" aria-label="anchor" href="#RL"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>Due to its increasing popularity within the Machine Learning community, we dedicate a chapter to reinforcement learning (RL). In 2019 only, more than 25 papers dedicated to RL have been submitted to (or updated on) arXiv under the <strong>q:fin</strong> (quantitative finance) classification. Applications to trading include <span class="citation"><a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">Xiong et al.</a> (<a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-theate2020application" role="doc-biblioref">Théate and Ernst</a> (<a href="solutions-to-exercises.html#ref-theate2020application" role="doc-biblioref">2020</a>)</span>. Market microstructure is a focal framework (<span class="citation"><a href="solutions-to-exercises.html#ref-wei2019model" role="doc-biblioref">H. Wei et al.</a> (<a href="solutions-to-exercises.html#ref-wei2019model" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-ferreira2020reinforced" role="doc-biblioref">Ferreira</a> (<a href="solutions-to-exercises.html#ref-ferreira2020reinforced" role="doc-biblioref">2020</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-karpe2020multi" role="doc-biblioref">Karpe et al.</a> (<a href="solutions-to-exercises.html#ref-karpe2020multi" role="doc-biblioref">2020</a>)</span>).<br>
+Moreover, an early survey of RL-based portfolios is compiled in <span class="citation"><a href="solutions-to-exercises.html#ref-sato2019model" role="doc-biblioref">Sato</a> (<a href="solutions-to-exercises.html#ref-sato2019model" role="doc-biblioref">2019</a>)</span> (see also <span class="citation"><a href="solutions-to-exercises.html#ref-zhang2020deep" role="doc-biblioref">Z. Zhang, Zohren, and Roberts</a> (<a href="solutions-to-exercises.html#ref-zhang2020deep" role="doc-biblioref">2020</a>)</span>) and general financial applications are discussed in <span class="citation"><a href="solutions-to-exercises.html#ref-kolm2019modern" role="doc-biblioref">Kolm and Ritter</a> (<a href="solutions-to-exercises.html#ref-kolm2019modern" role="doc-biblioref">2019b</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-meng2019reinforcement" role="doc-biblioref">Meng and Khushi</a> (<a href="solutions-to-exercises.html#ref-meng2019reinforcement" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-charpentier2020reinforcement" role="doc-biblioref">Charpentier, Elie, and Remlinger</a> (<a href="solutions-to-exercises.html#ref-charpentier2020reinforcement" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-mosavi2020comprehensive" role="doc-biblioref">Mosavi et al.</a> (<a href="solutions-to-exercises.html#ref-mosavi2020comprehensive" role="doc-biblioref">2020</a>)</span>. This shows again that RL has recently gained traction among the quantitative finance community.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Like neural networks, reinforcement learning methods have also been recently developed for derivatives pricing and hedging, see for instance &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-kolm2019dynamic" role="doc-biblioref"&gt;Kolm and Ritter&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-kolm2019dynamic" role="doc-biblioref"&gt;2019a&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-du2020deep" role="doc-biblioref"&gt;J. Du et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-du2020deep" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>34</sup></a></p>
+<p>While RL is a framework much more than a particular algorithm, its efficient application in portfolio management is not straightforward, as we will show. For a discussion on the generalization ability of RL algorithms, we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-packer2018assessing" role="doc-biblioref">Packer et al.</a> (<a href="solutions-to-exercises.html#ref-packer2018assessing" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-ghosh2021generalization" role="doc-biblioref">D. Ghosh et al.</a> (<a href="solutions-to-exercises.html#ref-ghosh2021generalization" role="doc-biblioref">2021</a>)</span>.</p>
+<div id="theoretical-layout" class="section level2" number="16.1">
+<h2>
+<span class="header-section-number">16.1</span> Theoretical layout<a class="anchor" aria-label="anchor" href="#theoretical-layout"><i class="fas fa-link"></i></a>
+</h2>
+<div id="general-framework" class="section level3" number="16.1.1">
+<h3>
+<span class="header-section-number">16.1.1</span> General framework<a class="anchor" aria-label="anchor" href="#general-framework"><i class="fas fa-link"></i></a>
+</h3>
+<p>In this section, we introduce the core concepts of RL and follow relatively closely the notations (and layout) of
+<span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span>, which is widely considered as a solid reference in the field, along with <span class="citation"><a href="solutions-to-exercises.html#ref-bertsekas2017dynamic" role="doc-biblioref">Bertsekas</a> (<a href="solutions-to-exercises.html#ref-bertsekas2017dynamic" role="doc-biblioref">2017</a>)</span>. One central tool in the field is called the <strong>Markov Decision Process</strong> (MDP, see Chapter 3 in <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span>). </p>
+<p>MDPs, like all RL frameworks, involve the interaction between an <strong>agent</strong> (e.g., a trader or portfolio manager) and an <strong>environment</strong> (e.g., a financial market). The agent performs <strong>actions</strong> that may alter the state of environment and gets a reward (possibly negative) for each action. This short sequence can be repeated an arbitrary number of times, as is shown in Figure <a href="RL.html#fig:mdpscheme">16.1</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:mdpscheme"></span>
+<img src="images/MDP_scheme.png" alt="Scheme of Markov Decision Process. R, S and A stand for reward, state and action, respectively." width="500px"><p class="caption">
+FIGURE 16.1: Scheme of Markov Decision Process. R, S and A stand for reward, state and action, respectively.
+</p>
+</div>
+<p>Given initialized values for the state of the environment (<span class="math inline">\(S_0\)</span>) and reward (usually <span class="math inline">\(R_0=0\)</span>), the agent performs an action (e.g., invests in some assets). This generates a reward <span class="math inline">\(R_1\)</span> (e.g., returns, profits, Sharpe ratio) and also a future state of the environment (<span class="math inline">\(S_1\)</span>). Based on that, the agent performs a new action and the sequence continues. When the sets of states, actions and rewards are finite, the MDP is logically called <em>finite</em>. In a financial framework, this is somewhat unrealistic and we discuss this issue later on. It nevertheless is not hard to think of simplified and discretized financial problems. For instance, the reward can be binary: win money versus lose money. In the case of only one asset, the action can also be dual: investing versus not investing. When the number of assets is sufficiently small, it is possible to set fixed proportions that lead to a reasonable number of combinations of portfolio choices, etc.</p>
+<p>We pursue our exposé with finite MDPs; they are the most common in the literature and their formal treatment is simpler. The relative simplicity of MDPs helps grasp the concepts that are common to other RL techniques. As is often the case with Markovian objects, the key notion is that of <strong>transition probability</strong>:</p>
+<p><span class="math display" id="eq:transprob">\[\begin{equation}
+\tag{16.1}
+p(s',r|s,a)=\mathbb{P}\left[S_t=s',R_t=r | S_{t-1}=s,A_{t-1}=a \right],
+\end{equation}\]</span></p>
+<p>which is the probability of reaching state <span class="math inline">\(s'\)</span> and reward <span class="math inline">\(r\)</span> at time <span class="math inline">\(t\)</span>, conditionally on being in state <span class="math inline">\(s\)</span> and performing action <span class="math inline">\(a\)</span> at time <span class="math inline">\(t-1\)</span>. The finite sets of states and actions will be denoted with <span class="math inline">\(\mathcal{S}\)</span> and <span class="math inline">\(\mathcal{A}\)</span> henceforth.
+Sometimes, this probability is averaged over the set of rewards which gives the following decomposition:
+<span class="math display" id="eq:transprob2\tag{16.2}}  (#eq:transprob2)
+\sum_r rp(s',r|s,a)&amp;=\mathcal{P}_{ss'}^a \mathcal{R}_{ss'}^a, \quad \text{ where } \\
+\mathcal{P}_{ss'}^a &amp;=\mathbb{P}\left[S_t=s' | S_{t-1}=s,A_{t-1}=a \right],  \quad \text{ and } \nonumber \\
+ \mathcal{R}_{ss'}^a &amp;= \mathbb{E}\left[R_t | S_{t-1}=s,S_t=s', A_{t-1}=a \right]. \nonumber
+\end{align}\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The goal of the agent is to maximize some function of the stream of rewards. This gain is usually defined as
+&lt;span class=" math display>\[\begin{align}
+G_t&amp;=\sum_{k=0}^T\gamma^kR_{t+k+1} \nonumber \\   \tag{16.3}
+&amp;=R_{t+1} +\gamma G_{t+1},
+\end{align}\]</span></p>
+<p>i.e., it is a discounted version of the reward, where the discount factor is <span class="math inline">\(\gamma \in (0,1]\)</span>. The horizon <span class="math inline">\(T\)</span> may be infinite, which is why <span class="math inline">\(\gamma\)</span> was originally introduced. Assuming the rewards are bounded, the infinite sum may diverge for <span class="math inline">\(\gamma=1\)</span>. That is the case if rewards don’t decrease with time and there is no reason why they should.
+When <span class="math inline">\(\gamma &lt;1\)</span> and rewards are bounded, convergence is assured. When <span class="math inline">\(T\)</span> is finite, the task is called <em>episodic</em> and, otherwise, it is said to be <em>continuous</em>.</p>
+<p>In RL, the focal unknown to be optimized or learned is the <strong>policy</strong> <span class="math inline">\(\pi\)</span>, which drives the actions of the agent. More precisely, <span class="math inline">\(\pi(a,s)=\mathbb{P}[A_t=a|S_t=s]\)</span>, that is, <span class="math inline">\(\pi\)</span> equals the probability of taking action <span class="math inline">\(a\)</span> if the state of the environment is <span class="math inline">\(s\)</span>. This means that actions are subject to randomness, just like for mixed strategies in game theory. While this may seem disappointing because an investor would want to be sure to take <em>the</em> best action, it is also a good reminder that the best way to face random outcomes may well be to randomize actions as well. </p>
+<p>Finally, in order to try to determine the <em>best</em> policy, one key indicator is the so-called value function:
+<span class="math display" id="eq:RLvalue">\[\begin{equation}
+\tag{16.4}
+v_\pi(s)=\mathbb{E}_\pi\left[ G_t | S_t=s \right],
+\end{equation}\]</span></p>
+<p>where the time index <span class="math inline">\(t\)</span> is not very relevant and omitted in the notation of the function. The index <span class="math inline">\(\pi\)</span> under the expectation operator <span class="math inline">\(\mathbb{E}[\cdot]\)</span> simply indicates that the average is taken when the policy <span class="math inline">\(\pi\)</span> is enforced. The value function is simply equal to the average gain conditionally on the state being equal to <span class="math inline">\(s\)</span>. In financial terms, this is equivalent to the average profit if the agent takes actions driven by <span class="math inline">\(\pi\)</span> when the market environment is <span class="math inline">\(s\)</span>. More generally, it is also possible to condition not only on the state, but also on the action taken. We thus introduce the <span class="math inline">\(q_\pi\)</span> action-value function:
+<span class="math display" id="eq:RLQ">\[\begin{equation}
+\tag{16.5}
+q_\pi(s,a)=\mathbb{E}_\pi\left[ G_t | S_t=s, \ A_t=a \right].
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\(q_\pi\)</span> function is highly important because it gives the average gain when the state and action are fixed. Hence, if the current state is known, then one obvious choice is to select the action for which <span class="math inline">\(q_\pi(s,\cdot)\)</span> is the highest. Of course, this is the best solution if the optimal value of <span class="math inline">\(q_\pi\)</span> is known, which is not always the case in practice. The value function can easily be accessed via <span class="math inline">\(q_\pi\)</span>: <span class="math inline">\(v_\pi(s)=\sum_a \pi(a,s)q_\pi(s,a)\)</span>.</p>
+<p>The optimal <span class="math inline">\(v_\pi\)</span> and <span class="math inline">\(q_\pi\)</span> are straightforwardly defined as
+<span class="math display">\[v_*(s)=\underset{\pi}{\max} \, v_\pi(s), \ \forall s\in \mathcal{S}, \quad \text{ and } \quad q_*(s,a) =\underset{\pi}{\max} \, q_\pi(s,a), \ \forall (s,a)\in \mathcal{S}\times \mathcal{A}.\]</span></p>
+<p>If only <span class="math inline">\(v_*(s)\)</span> is known, then the agent must span the set of actions and find those that yield the maximum value for any given state <span class="math inline">\(s\)</span>.</p>
+<p>Finding these optimal values is a very complicated task and many articles are dedicated to solving this challenge. One reason why finding the best <span class="math inline">\(q_\pi(s,a)\)</span> is difficult is because it depends on two elements (<span class="math inline">\(s\)</span> and <span class="math inline">\(a\)</span>) on one side and <span class="math inline">\(\pi\)</span> on the other. Usually, for a fixed policy <span class="math inline">\(\pi\)</span>, it can be time consuming to evaluate <span class="math inline">\(q_\pi(s,a)\)</span> for a given stream of actions, states and rewards. Once <span class="math inline">\(q_\pi(s,a)\)</span> is estimated, then a new policy <span class="math inline">\(\pi'\)</span> must be tested and evaluated to determine if it is better than the original one.
+Thus, this iterative search for a good policy can take long. For more details on policy improvement and value function updating, we recommend chapter 4 of <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span> which is dedicated to dynamic programming.</p>
+</div>
+<div id="q-learning" class="section level3" number="16.1.2">
+<h3>
+<span class="header-section-number">16.1.2</span> Q-learning<a class="anchor" aria-label="anchor" href="#q-learning"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+An interesting shortcut to the problem of finding <span class="math inline">\(v_*(s)\)</span> and <span class="math inline">\(q_*(s,a)\)</span> is to remove the dependence on the policy. Consequently, there is then of course no need to iteratively improve it. The central relationship that is required to do this is the so-called Bellman equation that is satisfied by <span class="math inline">\(q_\pi(s,a)\)</span>. We detail its derivation below. First of all, we recall that
+<span class="math display">\[\begin{align*}
+q_\pi(s,a) &amp;= \mathbb{E}_\pi[G_t|S_t=s,A_t=a] \\
+&amp;= \mathbb{E}_\pi[R_{t+1}+ \gamma G_{t+1}|S_t=s,A_t=a],
+\end{align*}\]</span>
+where the second equality stems from <a href="RL.html#eq:gain6">(16.3)</a>. The expression <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]\)</span> can be further decomposed. Since the expectation runs over <span class="math inline">\(\pi\)</span>, we need to sum over all possible actions <span class="math inline">\(a'\)</span> and states <span class="math inline">\(s'\)</span> and resort to <span class="math inline">\(\pi(a',s')\)</span>. In addition, the sum on the <span class="math inline">\(s'\)</span> and <span class="math inline">\(r\)</span> arguments of the probability <span class="math inline">\(p(s',r|s,a)=\mathbb{P}\left[S_{t+1}=s',R_{t+1}=r | S_t=s,A_t=a \right]\)</span> gives access to the distribution of the random couple <span class="math inline">\((S_{t+1},R_{t+1})\)</span> so that in the end <span class="math inline">\(\mathbb{E}_\pi[R_{t+1}|S_t=s,A_t=a]=\sum_{a', r,s'}\pi(a',s')p(s',r|s,a) r\)</span>. A similar reasoning applies to the second portion of <span class="math inline">\(q_\pi\)</span> and:
+<span class="math display" id="eq:bellman">\[\begin{align}
+q_\pi(s,a) &amp;=\sum_{a',r, s'}\pi(a',s')p(s',r|s,a) \left[ r+\gamma \mathbb{E}_\pi[ G_{t+1}|S_t=s',A_t=a']\right] \nonumber \\  \tag{16.6}
+&amp;=\sum_{a',r,s'}\pi(a',s')p(s',r|s,a) \left[ r+\gamma q_\pi(s',a')\right].
+\end{align}\]</span></p>
+<p>This equation links <span class="math inline">\(q_\pi(s,a)\)</span> to the future <span class="math inline">\(q_\pi(s',a')\)</span> from the states and actions <span class="math inline">\((s',a')\)</span> that are accessible from <span class="math inline">\((s,a)\)</span>.</p>
+<p>Notably, Equation <a href="RL.html#eq:bellman">(16.6)</a> is also true for the optimal action-value function <span class="math inline">\(q_*=\underset{\pi}{\max} \, q_\pi(s,a)\)</span>:</p>
+<p><span class="math display" id="eq:bellmanq">\[\begin{align}
+q_*(s,a) &amp;= \underset{a'}{\max} \sum_{r,s'}p(s',r|s,a) \left[ r+\gamma q_*(s',a')\right], \\ 
+&amp;= \mathbb{E}_{\pi^*}[r|s,a]+ \gamma \, \sum_{r,s'}p(s',r|s,a) \left(  \underset{a'}{\max}  q_*(s',a') \right)  \tag{16.7}
+\end{align}\]</span></p>
+<p>because one optimal policy is one that maximizes <span class="math inline">\(q_\pi(s,a)\)</span>, for a given state <span class="math inline">\(s\)</span> and over all possible actions <span class="math inline">\(a\)</span>. This expression is central to a cornerstone algorithm in reinforcement learning called <span class="math inline">\(Q\)</span>-learning (the formal proof of convergence is outlined in <span class="citation"><a href="solutions-to-exercises.html#ref-watkins1992q" role="doc-biblioref">Watkins and Dayan</a> (<a href="solutions-to-exercises.html#ref-watkins1992q" role="doc-biblioref">1992</a>)</span>). In <span class="math inline">\(Q\)</span>-learning, the state-action function no longer depends on policy and is written with capital <span class="math inline">\(Q\)</span>. The process is the following:</p>
+<p>Initialize values <span class="math inline">\(Q(s,a)\)</span> for all states <span class="math inline">\(s\)</span> and actions <span class="math inline">\(a\)</span>. For each episode:<br><span class="math display">\[ (\textbf{QL}) \quad \left\{
+\begin{array}{l}
+\text{0. Initialize state } S_0 \text{ and for each iteration } i \text{ until the end of the episode;}   \\
+\text{1. observe state } s_i;    \\
+\text{2. perform action } a_i \text{(depending on } Q);   \\
+\text{3. receive reward }r_{i+1} \text{ and observe state } s_{i+1};  \\
+\text{4. Update } Q \text{ as follows: }
+\end{array} \right.\]</span></p>
+<p><span class="math display" id="eq:QLupdate">\[\begin{equation}
+\tag{16.8}
+Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(\underbrace{r_{i+1}+\gamma \, \underset{a}{\max} \, Q_i(s_{i+1},a)}_{\text{echo of Bellman eq.}}-Q_i(s_i,a_i) \right)
+\end{equation}\]</span></p>
+<p>The underlying reason this update rule works can be linked to fixed point theorems of contraction mappings. If a function <span class="math inline">\(f\)</span> satisfies <span class="math inline">\(|f(x)-f(y)|&lt; \delta |x-y|\)</span> (Lipshitz continuity), then a fixed point <span class="math inline">\(z\)</span> satisfying <span class="math inline">\(f(z)=z\)</span> can be iteratively obtained via <span class="math inline">\(z \leftarrow f(z)\)</span>. This updating rule converges to the fixed point. Equation <a href="RL.html#eq:bellmanq">(16.7)</a> can be solved using a similar principle, except that a learning rate <span class="math inline">\(\eta\)</span> slows the learning process but also technically ensures convergence under technical assumptions.</p>
+<p>More generally, <a href="RL.html#eq:QLupdate">(16.8)</a> has a form that is widespread in reinforcement learning that is summarized in Equation (2.4) of <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span>:
+<span class="math display" id="eq:RLeq">\[\begin{equation}
+\tag{16.9}
+\text{New estimate} \leftarrow \text{Old estimate + Step size (}i.e., \text{ learning rate)} \times (\text{Target - Old estimate}),
+\end{equation}\]</span></p>
+<p>where the last part can be viewed as an error term. Starting from the old estimate, the new estimate therefore goes in the ‘right’ (or sought) direction, modulo a discount term that makes sure that the magnitude of this direction is not too large. The update rule in <a href="RL.html#eq:QLupdate">(16.8)</a> is often referred to as ‘<em>temporal difference</em>’ learning because it is driven by the improvement yielded by estimates that are known at time <span class="math inline">\(t+1\)</span> (target) versus those known at time <span class="math inline">\(t\)</span>.</p>
+<p> 
+One important step of the <em>Q</em>-learning sequence (<strong>QL</strong>) is the second one where the action <span class="math inline">\(a_i\)</span> is picked. In RL, the best algorithms combine two features: <strong>exploitation</strong> and <strong>exploration</strong>. Exploitation is when the machine uses the current information at its disposal to choose the next action. In this case, for a given state <span class="math inline">\(s_i\)</span>, it chooses the action <span class="math inline">\(a_i\)</span> that maximizes the expected reward <span class="math inline">\(Q_i(s_i,a_i)\)</span>. While obvious, this choice is not optimal if the current function <span class="math inline">\(Q_i\)</span> is relatively far from the <em>true</em> <span class="math inline">\(Q\)</span>. Repeating the locally optimal strategy is likely to favor a limited number of actions, which will narrowly improve the accuracy of the <span class="math inline">\(Q\)</span> function.</p>
+<p>In order to gather new information stemming from actions that have not been tested much (but that can potentially generate higher rewards), exploration is needed. This is when an action <span class="math inline">\(a_i\)</span> is chosen randomly. The most common way to combine these two concepts is called <span class="math inline">\(\epsilon\)</span>-greedy exploration. The action <span class="math inline">\(a_i\)</span> is assigned according to:</p>
+<p><span class="math display" id="eq:egreedy">\[\begin{equation}
+\tag{16.10}
+a_i=\left\{ \begin{array}{c l}
+\underset{a}{\text{argmax}} \ Q_i(s_i,a) &amp; \text{ with probability } 1-\epsilon \\
+\text{randomly (uniformly) over } \mathcal{A} &amp; \text{ with probability } \epsilon
+\end{array}\right. .
+\end{equation}\]</span></p>
+<p>Thus, with probability <span class="math inline">\(\epsilon\)</span>, the algorithm explores and with probability <span class="math inline">\(1-\epsilon\)</span>, it exploits the current knowledge of the expected reward and picks the best action. Because all actions have a non-zero probability of being chosen, the policy is called “soft.” Indeed, then best action has a probability of selection equal to <span class="math inline">\(1-\epsilon(1-\text{card}(\mathcal{A})^{-1})\)</span>, while all other actions are picked with probability <span class="math inline">\(\epsilon/\text{card}(\mathcal{A})\)</span>.</p>
+</div>
+<div id="sarsa" class="section level3" number="16.1.3">
+<h3>
+<span class="header-section-number">16.1.3</span> SARSA<a class="anchor" aria-label="anchor" href="#sarsa"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In <span class="math inline">\(Q\)</span>-learning, the algorithm seeks to find the action-value function of the optimal policy. Thus, the policy that is followed to pick actions is different from the one that is learned (via <span class="math inline">\(Q\)</span>). Such algorithms are called <em>off-policy</em>. <em>On-policy</em> algorithms seek to improve the estimation of the action-value function <span class="math inline">\(q_\pi\)</span> by continuously acting according to the policy <span class="math inline">\(\pi\)</span>. One canonical example of on-policy learning is the SARSA method which requires two consecutive states and actions <strong>SA</strong>R<strong>SA</strong>. The way the quintuple <span class="math inline">\((S_t,A_t,R_{t+1}, S_{t+1}, A_{t+1})\)</span> is processed is presented below.</p>
+<p>The main difference between <span class="math inline">\(Q\)</span> learning and SARSA is the update rule. In SARSA, it is given by
+<span class="math display" id="eq:SARSAupdate">\[\begin{equation}
+\tag{16.11}
+Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, Q_i(s_{i+1},a_{i+1})-Q_i(s_i,a_i) \right)
+\end{equation}\]</span></p>
+<p>The improvement comes only from the <strong>local</strong> point <span class="math inline">\(Q_i(s_{i+1},a_{i+1})\)</span> that is based on the new states and actions (<span class="math inline">\(s_{i+1},a_{i+1}\)</span>), whereas in <span class="math inline">\(Q\)</span>-learning, it comes from all possible actions of which only the best is retained <span class="math inline">\(\underset{a}{\max} \, Q_i(s_{i+1},a)\)</span>.</p>
+<p>A more robust but also more computationally demanding version of SARSA is <em>expected</em> SARSA in which the target <span class="math inline">\(Q\)</span> function is averaged over all actions:
+<span class="math display" id="eq:exSARSAupdate">\[\begin{equation}
+\tag{16.12}
+Q_{i+1}(s_i,a_i) \longleftarrow Q_i(s_i,a_i) + \eta  \left(r_{i+1}+\gamma \, \sum_a \pi(a,s_{i+1}) Q_i(s_{i+1},a) -Q_i(s_i,a_i) \right)
+\end{equation}\]</span></p>
+<p>Expected SARSA is less volatile than SARSA because the latter is strongly impacted by the random choice of <span class="math inline">\(a_{i+1}\)</span>. In expected SARSA, the average smoothes the learning process.</p>
+</div>
+</div>
+<div id="the-curse-of-dimensionality" class="section level2" number="16.2">
+<h2>
+<span class="header-section-number">16.2</span> The curse of dimensionality<a class="anchor" aria-label="anchor" href="#the-curse-of-dimensionality"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let us first recall that reinforcement learning is a framework that is not linked to a particular algorithm. In fact, different tools can very well co-exist in a RL task (AlphaGo combined both tree methods and neural networks, see <span class="citation"><a href="solutions-to-exercises.html#ref-silver2016mastering" role="doc-biblioref">Silver et al.</a> (<a href="solutions-to-exercises.html#ref-silver2016mastering" role="doc-biblioref">2016</a>)</span>). Nonetheless, any RL attempt will always rely on the three key concepts: the states, actions and rewards. In factor investing, they are fairly easy to identify, though there is always room for interpretation. Actions are evidently defined by portfolio compositions. The states can be viewed as the current values that describe the economy: as a first-order approximation, it can be assumed that the feature levels fulfill this role (possibly conditioned or complemented with macro-economic data). The rewards are even more straightforward. Returns or any relevant performance metric<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;e.g., Sharpe ratio which is for instance used in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref"&gt;Moody et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref"&gt;1998&lt;/a&gt;)&lt;/span&gt;, &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref"&gt;Bertoluzzo and Corazza&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref"&gt;2012&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref"&gt;Aboussalah and Lee&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt; or drawdown-based ratios, as in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-almahdi2017adaptive" role="doc-biblioref"&gt;Almahdi and Yang&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-almahdi2017adaptive" role="doc-biblioref"&gt;2017&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>35</sup></a> can account for rewards.</p>
+<p>A major problem lies in the dimensionality of both states and actions. Assuming an absence of leverage (no negative weights), the actions take values on the simplex
+<span class="math display" id="eq:simplex">\[\begin{equation}
+\tag{16.13}
+\mathbb{S}_N=\left\{ \mathbf{x} \in \mathbb{R}^N\left|\sum_{n=1}^Nx_n=1, \ x_n\ge 0, \ \forall n=1,\dots,N \right.\right\}
+\end{equation}\]</span>
+and assuming that all features have been uniformized, their space is <span class="math inline">\([0,1]^{NK}\)</span>. Needless to say, the dimensions of both spaces are numerically impractical.</p>
+<p>A simple solution to this problem is discretization: each space is divided into a small number of categories. Some authors do take this route. In <span class="citation"><a href="solutions-to-exercises.html#ref-yang2018investor" role="doc-biblioref">S. Y. Yang, Yu, and Almahdi</a> (<a href="solutions-to-exercises.html#ref-yang2018investor" role="doc-biblioref">2018</a>)</span>, the state space is discretized into three values depending on volatility, and actions are also split into three categories. <span class="citation"><a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">Bertoluzzo and Corazza</a> (<a href="solutions-to-exercises.html#ref-bertoluzzo2012testing" role="doc-biblioref">2012</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">Xiong et al.</a> (<a href="solutions-to-exercises.html#ref-xiong2018practical" role="doc-biblioref">2018</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-taghian2020learning" role="doc-biblioref">Taghian, Asadi, and Safabakhsh</a> (<a href="solutions-to-exercises.html#ref-taghian2020learning" role="doc-biblioref">2020</a>)</span> also choose three possible actions (buy, hold, sell). In <span class="citation"><a href="solutions-to-exercises.html#ref-almahdi2019constrained" role="doc-biblioref">Almahdi and Yang</a> (<a href="solutions-to-exercises.html#ref-almahdi2019constrained" role="doc-biblioref">2019</a>)</span>, the learner is expected to yield binary signals for buying or shorting. <span class="citation"><a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">Garcı́a-Galicia, Carsteanu, and Clempner</a> (<a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">2019</a>)</span> consider a larger state space (8 elements) but restrict the action set to 3 options.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Some recent papers consider arbitrary weights (e.g., &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-jiang2017deep" role="doc-biblioref"&gt;Z. Jiang, Xu, and Liang&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-jiang2017deep" role="doc-biblioref"&gt;2017&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref"&gt;Yu et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;) for a limited number of assets.&lt;/p&gt;'><sup>36</sup></a> In terms of the state space, all articles assume that the state of the economy is determined by prices (or returns).</p>
+<p>One strong limitation of these approaches is the marked simplification they imply. Realistic discretizations are numerically intractable when investing in multiple assets. Indeed, splitting the unit interval in <span class="math inline">\(h\)</span> points yields <span class="math inline">\(h^{NK}\)</span> possibilities for feature values. The number of options for weight combinations is exponentially increasing with <span class="math inline">\(N\)</span>. As an example: just 10 possible values for 10 features of 10 stocks yield <span class="math inline">\(10^{100}\)</span> permutations.</p>
+<p>The problems mentioned above are of course not restricted to portfolio construction. Many solutions have been proposed to solve Markov Decision Processes in continuous spaces. We refer for instance to Section 4 in <span class="citation"><a href="solutions-to-exercises.html#ref-powell2011review" role="doc-biblioref">Powell and Ma</a> (<a href="solutions-to-exercises.html#ref-powell2011review" role="doc-biblioref">2011</a>)</span> for a review of early methods (outside finance).</p>
+<p>This curse of dimensionality is accompanied by the fundamental question of training data. Two options are conceivable: market data versus simulations. Under a given controlled generator of samples, it is hard to imagine that the algorithm will beat the solution that maximizes a given utility function. If anything, it should converge towards the static optimal solution under a stationary data generating process (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">Chaouki et al.</a> (<a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">2020</a>)</span> for trading tasks), which is by the way a very strong modelling assumption.</p>
+<p>This leaves market data as a preferred solution but even with large datasets, there is little chance to cover all the (actions, states) combinations mentioned above. Characteristics-based datasets have depths that run through a few decades of monthly data, which means several hundreds of time-stamps at most. This is by far too limited to allow for a reliable learning process. It is always possible to generate synthetic data (as in <span class="citation"><a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref">Yu et al.</a> (<a href="solutions-to-exercises.html#ref-yu2019model" role="doc-biblioref">2019</a>)</span>), but it is unclear that this will solidly improve the performance of the algorithm.</p>
+</div>
+<div id="policy-gradient" class="section level2" number="16.3">
+<h2>
+<span class="header-section-number">16.3</span> Policy gradient<a class="anchor" aria-label="anchor" href="#policy-gradient"><i class="fas fa-link"></i></a>
+</h2>
+<div id="principle-2" class="section level3" number="16.3.1">
+<h3>
+<span class="header-section-number">16.3.1</span> Principle<a class="anchor" aria-label="anchor" href="#principle-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Beyond the discretization of action and state spaces, a powerful trick is <strong>parametrization</strong>. When <span class="math inline">\(a\)</span> and <span class="math inline">\(s\)</span> can take discrete values, action-value functions must be computed for all pairs <span class="math inline">\((a,s)\)</span>, which can be prohibitively cumbersome. An elegant way to circumvent this problem is to assume that the policy is driven by a relatively modest number of parameters. The learning process is then focused on optimizing this set of parameters <span class="math inline">\(\boldsymbol{\theta}\)</span>. We then write <span class="math inline">\(\pi_{\boldsymbol{\theta}}(a,s)\)</span> for the probability of choosing action <span class="math inline">\(a\)</span> in state <span class="math inline">\(s\)</span>. One intuitive way to define <span class="math inline">\(\pi_{\boldsymbol{\theta}}(a,s)\)</span> is to resort to a soft-max form:
+<span class="math display" id="eq:policyex">\[\begin{equation}
+\tag{16.14}
+\pi_{\boldsymbol{\theta}}(a,s) = \frac{e^{\boldsymbol{\theta}'\textbf{h}(a,s)}}{\sum_{b}e^{\boldsymbol{\theta}'\textbf{h}(b,s)}},
+\end{equation}\]</span>
+where the output of function <span class="math inline">\(\textbf{h}(a,s)\)</span>, which has the same dimension as <span class="math inline">\(\boldsymbol{\theta}\)</span> is called a feature vector representing the pair <span class="math inline">\((a,s)\)</span>. Typically, <span class="math inline">\(\textbf{h}\)</span> can very well be a simple neural network with two input units and an output dimension equal to the length of <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
+<p>One desired property for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is that it be differentiable with respect to <span class="math inline">\(\boldsymbol{\theta}\)</span> so that <span class="math inline">\(\boldsymbol{\theta}\)</span> can be improved via some gradient method. The most simple and intuitive results about policy gradients are known in the case of episodic tasks (finite horizon) for which it is sought to maximize the average gain <span class="math inline">\(\mathbb{E}_{\boldsymbol{\theta}}[G_t]\)</span> where the gain is defined in Equation <a href="RL.html#eq:gain6">(16.3)</a>. The expectation is computed according to a particular policy that depends on <span class="math inline">\(\boldsymbol{\theta}\)</span>, this is why we use a simple subscript. One central result is the so-called policy gradient theorem which states that</p>
+<p><span class="math display" id="eq:PGT">\[\begin{equation}
+\tag{16.15}
+\nabla \mathbb{E}_{\boldsymbol{\theta}}[G_t]=\mathbb{E}_{\boldsymbol{\theta}} \left[G_t\frac{\nabla \pi_{\boldsymbol{\theta}}}{\pi_{\boldsymbol{\theta}}} \right].
+\end{equation}\]</span></p>
+<p>This result can then be used for <strong>gradient ascent</strong>: when seeking to maximize a quantity, the parameter change must go in the upward direction:</p>
+<p><span class="math display" id="eq:ascent">\[\begin{equation}
+\tag{16.16}
+\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \eta \nabla \mathbb{E}_{\boldsymbol{\theta}}[G_t].
+\end{equation}\]</span></p>
+<p>
+This simple update rule is known as the <strong>REINFORCE</strong> algorithm. One improvement of this simple idea is to add a baseline, and we refer to section 13.4 of <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span> for a detailed account on this topic.</p>
+</div>
+<div id="extensions-2" class="section level3" number="16.3.2">
+<h3>
+<span class="header-section-number">16.3.2</span> Extensions<a class="anchor" aria-label="anchor" href="#extensions-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>A popular extension of REINFORCE is the so-called <strong>actor-critic</strong> (AC) method which combines policy gradient with <span class="math inline">\(Q\)</span>- or <span class="math inline">\(v\)</span>-learning. The AC algorithm can be viewed as some kind of mix between policy gradient and SARSA. A central requirement is that the state-value function <span class="math inline">\(v(\cdot)\)</span> be a differentiable function of some parameter vector <span class="math inline">\(\textbf{w}\)</span> (it is often taken to be a neural network). The update rule is then </p>
+<p><span class="math display" id="eq:ascentAC">\[\begin{equation}
+\tag{16.17}
+\boldsymbol{\theta} \leftarrow \boldsymbol{\theta} + \eta \left(R_{t+1}+\gamma v(S_{t+1},\textbf{w})-v(S_t,\textbf{w}) \right)\frac{\nabla \pi_{\boldsymbol{\theta}}}{\pi_{\boldsymbol{\theta}}},
+\end{equation}\]</span>
+but the trick is that the vector <span class="math inline">\(\textbf{w}\)</span> must also be updated. The actor is the policy side which is what drives decision making. The critic side is the value function that evaluates the actor’s performance. As learning progresses (each time both sets of parameters are updated), both sides improve. The exact algorithmic formulation is a bit long and we refer to Section 13.5 in <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span> for the precise sequence of steps of AC.</p>
+<p>Another interesting application of parametric policies is outlined in <span class="citation"><a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">Aboussalah and Lee</a> (<a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">2020</a>)</span>. In their article, the authors define a trading policy that is based on a recurrent neural network. Thus, the parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> in this case encompasses all weights and biases in the network.</p>
+<p>Another favorable feature of parametric policies is that they are compatible with continuous sets of actions. Beyond the form <a href="RL.html#eq:policyex">(16.14)</a>, there are other ways to shape <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span>. If <span class="math inline">\(\mathcal{A}\)</span> is a subset of <span class="math inline">\(\mathbb{R}\)</span>, and <span class="math inline">\(f_{\boldsymbol{\Omega}}\)</span> is a density function with parameters <span class="math inline">\(\boldsymbol{\Omega}\)</span>, then a candidate form for <span class="math inline">\(\pi_{\boldsymbol{\theta}}\)</span> is</p>
+<p><span class="math display" id="eq:parpol">\[\begin{equation}
+\tag{16.18}
+\pi_{\boldsymbol{\theta}} = f_{\boldsymbol{\Omega}(s,\boldsymbol{\theta})}(a),
+\end{equation}\]</span>
+in which the parameters <span class="math inline">\(\boldsymbol{\Omega}\)</span> are in turn functions of the states and of the underlying (second order) parameters <span class="math inline">\(\boldsymbol{\theta}\)</span>.</p>
+<p>While the Gaussian distribution (see section 13.7 in <span class="citation"><a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">Sutton and Barto</a> (<a href="solutions-to-exercises.html#ref-sutton2018reinforcement" role="doc-biblioref">2018</a>)</span>) is often a preferred choice, they would require some processing to lie inside the unit interval. One easy way to obtain such values is to apply the normal cumulative distribution function to the output. In <span class="citation"><a href="solutions-to-exercises.html#ref-wang2019continuous" role="doc-biblioref">H. Wang and Zhou</a> (<a href="solutions-to-exercises.html#ref-wang2019continuous" role="doc-biblioref">2019</a>)</span>, the multivariate Gaussian policy is theoretically explored, but it assumes no constraint on weights.</p>
+<p>Some natural parametric distributions emerge as alternatives. If only one asset is traded, then the Bernoulli distribution can be used to determine whether or not to buy the asset. If a riskless asset is available, the beta distribution offers more flexibility because the values for the proportion invested in the risky asset span the whole interval; the remainder can be invested into the safe asset. When many assets are traded, things become more complicated because of the budget constraint. One ideal candidate is the Dirichlet distribution because it is defined on a simplex (see Equation <a href="RL.html#eq:simplex">(16.13)</a>):
+<span class="math display">\[f_{\boldsymbol{\alpha}}(w_1,\dots,w_n)=\frac{1}{B(\boldsymbol{\alpha})}\prod_{n=1}^Nw_n^{\alpha_n-1},\]</span>
+where <span class="math inline">\(B(\boldsymbol{\alpha})\)</span> is the multinomial beta function:
+<span class="math display">\[B(\boldsymbol{\alpha})=\frac{\prod_{n=1}^N\Gamma(\alpha_n)}{\Gamma\left(\sum_{n=1}^N\alpha_n \right)}.\]</span></p>
+<p>If we set <span class="math inline">\(\pi=\pi_{\boldsymbol{\alpha}}=f_{\boldsymbol{\alpha}}\)</span>, the link with factors or characteristics can be coded through <span class="math inline">\({\boldsymbol{\alpha}}\)</span> via a linear form:
+<span class="math display">\[\begin{equation}
+(\textbf{F1}) \quad  \alpha_{n,t}=\theta_{0,t} + \sum_{k=1}^K \theta_{t}^{(k)}x_{t,n}^{(k)},
+\end{equation}\]</span>
+which is highly tractable, but may violate the condition that <span class="math inline">\(\alpha_{n,t}&gt;0\)</span> for some values of <span class="math inline">\(\theta_{k,t}\)</span>. Indeed, during the learning process, an update in <span class="math inline">\(\boldsymbol{\theta}\)</span> might yield values that are out of the feasible set of <span class="math inline">\(\boldsymbol{\alpha}_t\)</span>. In this case, it is possible to resort to a trick that is widely used in online learning (see, e.g., section 2.3.1 in <span class="citation"><a href="solutions-to-exercises.html#ref-hoi2018online" role="doc-biblioref">Hoi et al.</a> (<a href="solutions-to-exercises.html#ref-hoi2018online" role="doc-biblioref">2018</a>)</span>). The idea is simply to find the acceptable solution that is closest to the suggestion from the algorithm. If we call <span class="math inline">\(\boldsymbol{\theta}^*\)</span> the result of an update rule from a given algorithm, then the closest feasible vector is
+<span class="math display">\[\begin{equation}
+\boldsymbol{\theta}= \underset{\textbf{z} \in \Theta(\textbf{x}_t)}{\min} ||\boldsymbol{\theta}^*-\textbf{z}||^2,
+\end{equation}\]</span>
+where <span class="math inline">\(||\cdot||\)</span> is the Euclidean norm and <span class="math inline">\(\Theta(\textbf{x}_t)\)</span> is the feasible set, that is, the set of vectors <span class="math inline">\(\boldsymbol{\theta}\)</span> such that the <span class="math inline">\(\alpha_{n,t}=\theta_{0,t} + \sum_{k=1}^K \theta_{t}^{(k)}x_{t,n}^{(k)}\)</span> are all non-negative.</p>
+<p>A second option for the form of the policy, <span class="math inline">\(\pi^2_{\boldsymbol{\theta}_t}\)</span>, is slightly more complex but remains always valid (i.e., has positive <span class="math inline">\(\alpha_{n,t}\)</span> values):
+<span class="math display">\[\begin{equation}
+(\textbf{F2}) \quad  \alpha_{n,t}=\exp \left(\theta_{0,t} + \sum_{k=1}^K \theta_{t}^{(k)}x_{t,n}^{(k)}\right),
+\end{equation}\]</span>
+which is simply the exponential of the first version. With some algebra, it is possible to derive the policy gradients. The policies <span class="math inline">\(\pi^j_{\boldsymbol{\theta}_t}\)</span> are defined by the Equations <span class="math inline">\((\textbf{Fj})\)</span> above. Let <span class="math inline">\(\digamma\)</span> denote the digamma function. Let <span class="math inline">\(\textbf{1}\)</span> denote the <span class="math inline">\(\mathbb{R}^N\)</span> vector of all ones. We have
+<span class="math display">\[\begin{align*}
+\frac{\nabla_{\boldsymbol{\theta}_t} \pi^1_{\boldsymbol{\theta}_t}}{\pi^1_{\boldsymbol{\theta}_t}}&amp;= \sum_{n=1}^N \left( \digamma \left( \textbf{1}'\textbf{X}_t\boldsymbol{\theta}_t \right) - \digamma(\textbf{x}_{t,n}\boldsymbol{\theta}_t) + \ln w_n \right) \textbf{x}_{t,n}' \\
+\frac{\nabla_{\boldsymbol{\theta}_t} \pi^2_{\boldsymbol{\theta}_t}}{\pi^2_{\boldsymbol{\theta}_t}}&amp;= \sum_{n=1}^N \left( \digamma \left( \textbf{1}'e^{\textbf{X}_{t}\boldsymbol{\theta}_t} \right) - \digamma(e^{\textbf{x}_{t,n}\boldsymbol{\theta}_t}) + \ln w_n \right) e^{\textbf{x}_{t,n}\boldsymbol{\theta}_t} \textbf{x}_{t,n}' 
+\end{align*}\]</span>
+where <span class="math inline">\(e^{\textbf{X}}\)</span> is the element-wise exponential of a matrix <span class="math inline">\(\textbf{X}\)</span>.</p>
+<p>The allocation can then either be made by direct sampling, or using the mean of the distribution <span class="math inline">\((\textbf{1}'\boldsymbol{\alpha})^{-1}\boldsymbol{\alpha}\)</span>. Lastly, a technical note: Dirichlet distributions can only be used for small portfolios because the scaling constant in the density becomes numerically intractable for large values of <span class="math inline">\(N\)</span> (e.g., above 50). More details on this idea are laid out in <span class="citation"><a href="solutions-to-exercises.html#ref-andre2020dirichlet" role="doc-biblioref">André and Coqueret</a> (<a href="solutions-to-exercises.html#ref-andre2020dirichlet" role="doc-biblioref">2020</a>)</span>.</p>
+</div>
+</div>
+<div id="simple-examples" class="section level2" number="16.4">
+<h2>
+<span class="header-section-number">16.4</span> Simple examples<a class="anchor" aria-label="anchor" href="#simple-examples"><i class="fas fa-link"></i></a>
+</h2>
+<div id="q-learning-with-simulations" class="section level3" number="16.4.1">
+<h3>
+<span class="header-section-number">16.4.1</span> Q-learning with simulations<a class="anchor" aria-label="anchor" href="#q-learning-with-simulations"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+To illustrate the gist of the problems mentioned above, we propose two implementations of <span class="math inline">\(Q\)</span>-learning. For simplicity, the first one is based on simulations. This helps understand the learning process in a simplified framework. We consider two assets: one risky and one riskless, with return equal to zero. The returns for the risky process follow an autoregressive model of order one (AR(1)): <span class="math inline">\(r_{t+1}=a+\rho r_t+\epsilon_{t+1}\)</span> with <span class="math inline">\(|\rho|&lt;1\)</span> and <span class="math inline">\(\epsilon\)</span> following a standard white noise with variance <span class="math inline">\(\sigma^2\)</span>. In practice, individual (monthly) returns are seldom autocorrelated, but adjusting the autocorrelation helps understand if the algorithm learns correctly (see exercise below).</p>
+<p>The environment consists only in observing the past return <span class="math inline">\(r_t\)</span>. Since we seek to estimate the <span class="math inline">\(Q\)</span> function, we need to discretize this state variable. The simplest choice is to resort to a binary variable: equal to -1 (negative) if <span class="math inline">\(r_t&lt;0\)</span> and to +1 (positive) if <span class="math inline">\(r_t\ge 0\)</span>. The actions are summarized by the quantity invested in the risky asset. It can take 5 values: 0 (risk-free portfolio), 0.25, 0.5, 0.75 and 1 (fully invested in the risky asset). This is for instance the same choice as in <span class="citation"><a href="solutions-to-exercises.html#ref-pendharkar2018trading" role="doc-biblioref">Pendharkar and Cusatis</a> (<a href="solutions-to-exercises.html#ref-pendharkar2018trading" role="doc-biblioref">2018</a>)</span>.</p>
+<p>The landscape of R libraries for RL is surprisingly sparse. We resort to the package <em>ReinforcementLearning</em> which has an intuitive implementation of <span class="math inline">\(Q\)</span>-learning (another option would be the <em>reinforcelearn</em> package). It requires a dataset with the usual inputs: state, action, reward and subsequent state. We start by simulating the returns: they drive the states and the rewards (portfolio returns). The actions are sampled randomly. Technically, the main function of the package requires that states and actions be of character type. The data is built in the chunk below.</p>
+<div class="sourceCode" id="cb244"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ReinforcementLearning</span><span class="op">)</span>                              <span class="co"># Package for RL</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>                                                <span class="co"># Fixing the random seed</span>
+<span class="va">n_sample</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">^</span><span class="fl">5</span>                                            <span class="co"># Number of samples to be generated</span>
+<span class="va">rho</span> <span class="op">&lt;-</span> <span class="fl">0.8</span>                                                  <span class="co"># Autoregressive parameter</span>
+<span class="va">sd</span> <span class="op">&lt;-</span> <span class="fl">0.4</span>                                                   <span class="co"># Std. dev. of noise</span>
+<span class="va">a</span> <span class="op">&lt;-</span> <span class="fl">0.06</span> <span class="op">*</span> <span class="va">rho</span>                                             <span class="co"># Scaled mean of returns</span>
+<span class="va">data_RL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/tibble.html">tibble</a></span><span class="op">(</span>returns <span class="op">=</span> <span class="va">a</span><span class="op">/</span><span class="va">rho</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/arima.sim.html">arima.sim</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n_sample</span>, <span class="co"># Returns via AR(1) simulation</span>
+                                      <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>ar <span class="op">=</span> <span class="va">rho</span><span class="op">)</span>,       
+                                      sd <span class="op">=</span> <span class="va">sd</span><span class="op">)</span>,
+                  action <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="va">n_sample</span><span class="op">)</span><span class="op">*</span><span class="fl">4</span><span class="op">)</span><span class="op">/</span><span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>  <span class="co"># Random action (portfolio)</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>new_state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/if_else.html">if_else</a></span><span class="op">(</span><span class="va">returns</span> <span class="op">&lt;</span> <span class="fl">0</span>, <span class="st">"neg"</span>, <span class="st">"pos"</span><span class="op">)</span>,  <span class="co"># Coding of state</span>
+           reward <span class="op">=</span> <span class="va">returns</span> <span class="op">*</span> <span class="va">action</span>,                       <span class="co"># Reward = portfolio return</span>
+           state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/lag.html">lag</a></span><span class="op">(</span><span class="va">new_state</span><span class="op">)</span>,                          <span class="co"># Next state</span>
+           action <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">action</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span>                                               <span class="co"># Remove one missing state</span>
+<span class="va">data_RL</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="op">)</span>                                          <span class="co"># Show first lines</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 5
+##   returns action new_state  reward state
+##     &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;       &lt;dbl&gt; &lt;chr&gt;
+## 1  -0.474 0.5    neg       -0.237  neg  
+## 2  -0.185 0.25   neg       -0.0463 neg  
+## 3   0.146 0.25   pos        0.0364 neg  
+## 4   0.543 0.75   pos        0.407  pos  
+## 5   0.202 0.75   pos        0.152  pos  
+## 6   0.376 0.25   pos        0.0940 pos</code></pre>
+<p></p>
+<p>There are 3 parameters in the implementation of the <em>Q</em>-learning algorithm:</p>
+<ul>
+<li>
+<span class="math inline">\(\eta\)</span>, which is the learning rate in the updating Equation <a href="RL.html#eq:QLupdate">(16.8)</a>. In <em>ReinforcementLearning</em>, this is coded as <em>alpha</em>;<br>
+</li>
+<li>
+<span class="math inline">\(\gamma\)</span>, the discounting rate for the rewards (also shown in Equation <a href="RL.html#eq:QLupdate">(16.8)</a>);<br>
+</li>
+<li>and <span class="math inline">\(\epsilon\)</span>, which controls the rate of exploration versus exploitation (see Equation <a href="RL.html#eq:egreedy">(16.10)</a>).</li>
+</ul>
+<div class="sourceCode" id="cb246"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span>,                       <span class="co"># Learning rate</span>
+                gamma <span class="op">=</span> <span class="fl">0.7</span>,                       <span class="co"># Discount factor for rewards</span>
+                epsilon <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>                     <span class="co"># Exploration rate</span>
+
+<span class="va">fit_RL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ReinforcementLearning/man/ReinforcementLearning.html">ReinforcementLearning</a></span><span class="op">(</span><span class="va">data_RL</span>,           <span class="co"># Main RL function</span>
+                               s <span class="op">=</span> <span class="st">"state"</span>, 
+                               a <span class="op">=</span> <span class="st">"action"</span>, 
+                               r <span class="op">=</span> <span class="st">"reward"</span>, 
+                               s_new <span class="op">=</span> <span class="st">"new_state"</span>, 
+                               control <span class="op">=</span> <span class="va">control</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit_RL</span><span class="op">)</span>   <span class="co"># Show the output</span></code></pre></div>
+<pre><code>## State-Action function Q
+##          0.25         0         1      0.75      0.5
+## neg 0.2473169 0.4216894 0.1509653 0.1734538 0.229004
+## pos 1.0721669 0.7561417 1.4739050 1.1214795 1.045047
+## 
+## Policy
+## neg pos 
+## "0" "1" 
+## 
+## Reward (last iteration)
+## [1] 2588.659</code></pre>
+<p></p>
+<p>The output shows the <em>Q</em> function, which depends naturally both on states and actions. When the state is negative, large risky positions (action equal to 0.75 or 1.00) are associated with the smallest average rewards, whereas small positions yield the highest average rewards. When the state is positive, the average rewards are the highest for the largest allocations. The rewards in both cases are almost a monotonic function of the proportion invested in the risky asset. Thus, the recommendation of the algorithm (i.e., the policy) is to be fully invested in a positive state and to refrain from investing in a negative state. Given the positive autocorrelation of the underlying process, this does make sense.</p>
+<p>Basically, the algorithm has simply learned that positive (<em>resp.</em> negative) returns are more likely to follow positive (<em>resp</em>. negative) returns. While this is somewhat reassuring, it is by no means impressive, and much simpler tools would yield similar conclusions and guidance.</p>
+</div>
+<div id="RLemp2" class="section level3" number="16.4.2">
+<h3>
+<span class="header-section-number">16.4.2</span> Q-learning with market data<a class="anchor" aria-label="anchor" href="#RLemp2"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>The second application is based on the financial dataset. To reduce the dimensionality of the problem, we will assume that:<br>
+- only one feature (price-to-book ratio) captures the state of the environment. This feature is processed so that is has only a limited number of possible values;<br>
+- actions take values over a discrete set consisting of three positions: +1 (buy the market), -1 (sell the market) and 0 (hold no risky positions);<br>
+- only two assets are traded: those with stock_id equal to 3 and 4 - they both have 245 days of trading data.</p>
+<p>The construction of the dataset is unelegantly coded below.</p>
+<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">return_3</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span>  <span class="co"># Return of asset 3</span>
+<span class="va">return_4</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span>  <span class="co"># Return of asset 4</span>
+<span class="va">pb_3</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">Pb</span><span class="op">)</span>           <span class="co"># P/B ratio of asset 3</span>
+<span class="va">pb_4</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">Pb</span><span class="op">)</span>           <span class="co"># P/B ratio of asset 4</span>
+<span class="va">action_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pb_3</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>                     <span class="co"># Action for asset 3 (random)</span>
+<span class="va">action_4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pb_4</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fl">3</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>                     <span class="co"># Action for asset 4 (random)</span>
+
+<span class="va">RL_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/tibble.html">tibble</a></span><span class="op">(</span><span class="va">return_3</span>, <span class="va">return_4</span>,                            <span class="co"># Building the dataset</span>
+                  <span class="va">pb_3</span>, <span class="va">pb_4</span>,
+                  <span class="va">action_3</span>, <span class="va">action_4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>action <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">action_3</span>, <span class="va">action_4</span><span class="op">)</span>,                   <span class="co"># Uniting actions</span>
+           pb_3 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">5</span> <span class="op">*</span> <span class="va">pb_3</span><span class="op">)</span>,                               <span class="co"># Simplifying states (P/B)</span>
+           pb_4 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">5</span> <span class="op">*</span> <span class="va">pb_4</span><span class="op">)</span>,                               <span class="co"># Simplifying states (P/B)</span>
+           state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">pb_3</span>, <span class="va">pb_4</span><span class="op">)</span>,                            <span class="co"># Uniting states</span>
+           reward <span class="op">=</span> <span class="va">action_3</span><span class="op">*</span><span class="va">return_3</span> <span class="op">+</span> <span class="va">action_4</span><span class="op">*</span><span class="va">return_4</span>,       <span class="co"># Computing rewards</span>
+           new_state <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/lead-lag.html">lead</a></span><span class="op">(</span><span class="va">state</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                          <span class="co"># Infer new state</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">pb_3</span>, <span class="op">-</span><span class="va">pb_4</span>, <span class="op">-</span><span class="va">action_3</span>,                       <span class="co"># Remove superfluous vars.</span>
+                  <span class="op">-</span><span class="va">action_4</span>, <span class="op">-</span><span class="va">return_3</span>, <span class="op">-</span><span class="va">return_4</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="va">RL_data</span><span class="op">)</span>                                                    <span class="co"># Showing the result</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 4
+##   action state reward new_state
+##   &lt;chr&gt;  &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;    
+## 1 -1 -1  1 1   -0.061 1 1      
+## 2 0 1    1 1    0     1 1      
+## 3 -1 0   1 1   -0.018 1 1      
+## 4 0 -1   1 1    0.011 1 1      
+## 5 -1 1   1 1   -0.036 1 1      
+## 6 -1 -1  1 1   -0.056 1 1</code></pre>
+<p></p>
+<p>Actions and states have to be merged to yield all possible combinations. To simplify the states, we round 5 times the price-to-book ratios.</p>
+<p>We keep the same hyperparameters as in the previous example. Columns below stand for actions: the first (<span class="math inline">\(resp.\)</span> second) number notes the position in the first (<span class="math inline">\(resp.\)</span> second) asset. The rows correspond to states. The scaled P/B ratios are separated by a point (e.g., “X2.3” means that the first (<span class="math inline">\(resp.\)</span> second) asset has a scaled P/B of 2 (<span class="math inline">\(resp.\)</span> 3).</p>
+<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_RL2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ReinforcementLearning/man/ReinforcementLearning.html">ReinforcementLearning</a></span><span class="op">(</span><span class="va">RL_data</span>,           <span class="co"># Main RL function</span>
+                               s <span class="op">=</span> <span class="st">"state"</span>, 
+                               a <span class="op">=</span> <span class="st">"action"</span>, 
+                               r <span class="op">=</span> <span class="st">"reward"</span>, 
+                               s_new <span class="op">=</span> <span class="st">"new_state"</span>, 
+                               control <span class="op">=</span> <span class="va">control</span><span class="op">)</span>
+<span class="va">fit_RL2</span><span class="op">$</span><span class="va">Q</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">fit_RL2</span><span class="op">$</span><span class="va">Q</span>, <span class="fl">3</span><span class="op">)</span> <span class="co"># Round the Q-matrix</span>
+<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">fit_RL2</span><span class="op">)</span>                   <span class="co"># Show the output </span></code></pre></div>
+<pre><code>## State-Action function Q
+##       0 0    0 1   0 -1  -1 -1   -1 0   -1 1   1 -1    1 0    1 1
+## 0 2 0.000  0.000  0.000 -0.017  0.000  0.000  0.000  0.002  0.000
+## 0 3 0.000  0.000  0.003  0.000  0.000  0.000  0.030  0.000  0.000
+## 3 1 0.002  0.000  0.005  0.000 -0.002  0.000  0.000  0.000  0.000
+## 2 1 0.005  0.018  0.009 -0.028  0.010 -0.003  0.021  0.008 -0.004
+## 2 2 0.000  0.010  0.000  0.014  0.000  0.000 -0.013  0.006  0.000
+## 2 3 0.000  0.000  0.000  0.000  0.000  0.020  0.000 -0.034  0.000
+## 1 1 0.002 -0.005 -0.022 -0.011 -0.002 -0.009 -0.020 -0.014 -0.023
+## 1 2 0.006  0.016  0.006  0.028 -0.001  0.001  0.020  0.020 -0.001
+## 1 3 0.001  0.004  0.004 -0.011  0.000  0.003  0.005  0.003  0.010
+## 
+## Policy
+##     0 2     0 3     3 1     2 1     2 2     2 3     1 1     1 2     1 3 
+##   "1 0"  "1 -1"  "0 -1"  "1 -1" "-1 -1"  "-1 1"   "0 0" "-1 -1"   "1 1" 
+## 
+## Reward (last iteration)
+## [1] -1.296</code></pre>
+<p></p>
+<p>The output shows that there are many combinations of states and actions that are not spanned by the data: basically, the <span class="math inline">\(Q\)</span> function has a zero and it is likely that the combination has not been explored. Some states seem to be more often represented (“X1.1,” “X1.2” and “X2.1”), others, less (“X3.1” and “X3.2”). It is hard to make any sense of the recommendations. Some states close “X0.1” and “X1.1” but the outcomes related to them are very different (buy and short versus hold and buy). Moreover, there is no coherence and no monotonicity in actions with respect to individual state values: low values of states can be associated to very different actions.</p>
+<p>One reason why these conclusions do not appear trustworthy pertains to the data size. With only 200+ time points and 99 state-action pairs (11 times 9), this yields on average only two data points to compute the <span class="math inline">\(Q\)</span> function. This could be improved by testing more random actions, but the limits of the sample size would eventually (rapidly) be reached anyway. This is left as an exercise (see below).</p>
+</div>
+</div>
+<div id="concluding-remarks" class="section level2" number="16.5">
+<h2>
+<span class="header-section-number">16.5</span> Concluding remarks<a class="anchor" aria-label="anchor" href="#concluding-remarks"><i class="fas fa-link"></i></a>
+</h2>
+<p>Reinforcement learning has been applied to financial problems for a long time. Early contributions in the late 1990s include <span class="citation"><a href="solutions-to-exercises.html#ref-neuneier1996optimal" role="doc-biblioref">Neuneier</a> (<a href="solutions-to-exercises.html#ref-neuneier1996optimal" role="doc-biblioref">1996</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-moody1997optimization" role="doc-biblioref">Moody and Wu</a> (<a href="solutions-to-exercises.html#ref-moody1997optimization" role="doc-biblioref">1997</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref">Moody et al.</a> (<a href="solutions-to-exercises.html#ref-moody1998performance" role="doc-biblioref">1998</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-neuneier1998enhancing" role="doc-biblioref">Neuneier</a> (<a href="solutions-to-exercises.html#ref-neuneier1998enhancing" role="doc-biblioref">1998</a>)</span>. Since then, many researchers in the computer science field have sought to apply RL techniques to portfolio problems. The advent of massive datasets and the increase in dimensionality make it hard for RL tools to adapt well to very rich environments that are encountered in factor investing.</p>
+<p>Recently, some approaches seek to adapt RL to continuous action spaces (<span class="citation"><a href="solutions-to-exercises.html#ref-wang2019continuous" role="doc-biblioref">H. Wang and Zhou</a> (<a href="solutions-to-exercises.html#ref-wang2019continuous" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">Aboussalah and Lee</a> (<a href="solutions-to-exercises.html#ref-aboussalah2020continuous" role="doc-biblioref">2020</a>)</span>) but not to high-dimensional state spaces. These spaces are those required in factor investing because all firms yield hundreds of data points characterizing their economic situation. In addition, applications of RL in financial frameworks have a particularity compared to many typical RL tasks: in financial markets, actions of agents have <strong>no impact on the environment</strong> (unless the agent is able to perform massive trades, which is rare and ill-advised because it pushes prices in the wrong direction). This lack of impact of actions may possibly mitigate the efficiency of traditional RL approaches.</p>
+<p>Those are challenges that will need to be solved in order for RL to become competitive with alternative (supervised) methods. Nevertheless, the progressive (online-like) way RL works seems suitable for non-stationary environments: the algorithm slowly shifts paradigms as new data arrives. In stationary environments, it has been shown that RL manages to converge to optimal solutions (<span class="citation"><a href="solutions-to-exercises.html#ref-kong2019new" role="doc-biblioref">Kong et al.</a> (<a href="solutions-to-exercises.html#ref-kong2019new" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">Chaouki et al.</a> (<a href="solutions-to-exercises.html#ref-chaouki2020deep" role="doc-biblioref">2020</a>)</span>). Therefore, in non-stationary markets, RL could be a recourse to build dynamic predictions that adapt to changing macroeconomic conditions. More research needs to be carried out in this field on large dimensional datasets.</p>
+<p>We end this chapter by underlining that reinforcement learning has also been used to estimate complex theoretical models (<span class="citation"><a href="solutions-to-exercises.html#ref-halperin2018market" role="doc-biblioref">Halperin and Feldshteyn</a> (<a href="solutions-to-exercises.html#ref-halperin2018market" role="doc-biblioref">2018</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">Garcı́a-Galicia, Carsteanu, and Clempner</a> (<a href="solutions-to-exercises.html#ref-garcia2019continuous" role="doc-biblioref">2019</a>)</span>). The research in the field is incredibly diversified and is orientated towards many directions. It is likely that captivating work will be published in the near future.</p>
+</div>
+<div id="exercises" class="section level2" number="16.6">
+<h2>
+<span class="header-section-number">16.6</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li><p>Test what happens if the process for generating returns has a negative autocorrelation. What is the impact on the <span class="math inline">\(Q\)</span> function and the policy?</p></li>
+<li><p>Keeping the same 2 assets as in Section <a href="RL.html#RLemp2">16.4.2</a>, increases the size of RL_data by testing <strong>all possible action combinations</strong> for each original data point. Re-run the <span class="math inline">\(Q\)</span>-learning function and see what happens.</p></li>
+</ol>
+</div>
+</div>
+
+
+
+.container-fluid main {
+max-width: 60rem;
+}
+
+<div class="chapter-nav">
+<div class="prev"><a href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></div>
+<div class="next"><a href="data-description.html"><span class="header-section-number">17</span> Data description</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#RL"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li>
+<a class="nav-link" href="#theoretical-layout"><span class="header-section-number">16.1</span> Theoretical layout</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#general-framework"><span class="header-section-number">16.1.1</span> General framework</a></li>
+<li><a class="nav-link" href="#q-learning"><span class="header-section-number">16.1.2</span> Q-learning</a></li>
+<li><a class="nav-link" href="#sarsa"><span class="header-section-number">16.1.3</span> SARSA</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#the-curse-of-dimensionality"><span class="header-section-number">16.2</span> The curse of dimensionality</a></li>
+<li>
+<a class="nav-link" href="#policy-gradient"><span class="header-section-number">16.3</span> Policy gradient</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#principle-2"><span class="header-section-number">16.3.1</span> Principle</a></li>
+<li><a class="nav-link" href="#extensions-2"><span class="header-section-number">16.3.2</span> Extensions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#simple-examples"><span class="header-section-number">16.4</span> Simple examples</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#q-learning-with-simulations"><span class="header-section-number">16.4.1</span> Q-learning with simulations</a></li>
+<li><a class="nav-link" href="#RLemp2"><span class="header-section-number">16.4.2</span> Q-learning with market data</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#concluding-remarks"><span class="header-section-number">16.5</span> Concluding remarks</a></li>
+<li><a class="nav-link" href="#exercises"><span class="header-section-number">16.6</span> Exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+</div>
+
+  
+
+  
+
+</div>
+ <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

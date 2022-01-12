@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 7 Neural networks | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 7 Neural networks | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 7 Neural networks | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } Neural networks (NNs) are an immensely rich and complicated topic. In this chapter, we introduce the simple ideas and concepts behind the most simple...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } Neural networks (NNs) are an immensely rich and complicated topic. In this chapter, we introduce the simple ideas and concepts behind the most simple...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } Neural networks (NNs) are an immensely rich and complicated topic. In this chapter, we introduce the simple ideas and concepts behind the most simple...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="active" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="NN" class="section level1" number="7">
+<h1>
+<span class="header-section-number">7</span> Neural networks<a class="anchor" aria-label="anchor" href="#NN"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>Neural networks (NNs) are an immensely rich and complicated topic. In this chapter, we introduce the simple ideas and concepts behind the most simple architectures of NNs. For more exhaustive treatments on NN idiosyncracies, we refer to the monographs by <span class="citation"><a href="solutions-to-exercises.html#ref-haykin2009neural" role="doc-biblioref">Haykin</a> (<a href="solutions-to-exercises.html#ref-haykin2009neural" role="doc-biblioref">2009</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-du2013neural" role="doc-biblioref">K.-L. Du and Swamy</a> (<a href="solutions-to-exercises.html#ref-du2013neural" role="doc-biblioref">2013</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-goodfellow2016deep" role="doc-biblioref">Goodfellow et al.</a> (<a href="solutions-to-exercises.html#ref-goodfellow2016deep" role="doc-biblioref">2016</a>)</span>. The latter is available freely online: www.deeplearningbook.org. For a practical introduction, we recommend the great book of <span class="citation"><a href="solutions-to-exercises.html#ref-chollet2017deep" role="doc-biblioref">Chollet</a> (<a href="solutions-to-exercises.html#ref-chollet2017deep" role="doc-biblioref">2017</a>)</span>.</p>
+<p>For starters, we briefly comment on the qualification “neural network.” Most experts agree that the term is not very well chosen, as NNs have little to do with how the human brain works (of which we know not that much). This explains why they are often referred to as “artificial neural networks” - we do not use the adjective for notational simplicity. Because we consider it more appropriate, we recall the definition of NNs given by François Chollet: “<em>chains of differentiable, parameterised geometric functions, trained with gradient descent (with gradients obtained via the chain rule)</em>.”</p>
+<p>Early references of neural networks in finance are <span class="citation"><a href="solutions-to-exercises.html#ref-bansal1993no" role="doc-biblioref">Bansal and Viswanathan</a> (<a href="solutions-to-exercises.html#ref-bansal1993no" role="doc-biblioref">1993</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-eakins1998analyzing" role="doc-biblioref">Eakins, Stansell, and Buck</a> (<a href="solutions-to-exercises.html#ref-eakins1998analyzing" role="doc-biblioref">1998</a>)</span>. Both have very different goals. In the first one, the authors aim to estimate a <strong>nonlinear form</strong> for the pricing kernel. In the second one, the purpose is to identify and quantify relationships between institutional investments in stocks and the attributes of the firms (an early contribution towards factor investing). An early review (<span class="citation"><a href="solutions-to-exercises.html#ref-burrell1997impact" role="doc-biblioref">Burrell and Folarin</a> (<a href="solutions-to-exercises.html#ref-burrell1997impact" role="doc-biblioref">1997</a>)</span>) lists financial applications of NNs during the 1990s. More recently, <span class="citation"><a href="solutions-to-exercises.html#ref-sezer2019financial" role="doc-biblioref">Sezer, Gudelek, and Ozbayoglu</a> (<a href="solutions-to-exercises.html#ref-sezer2019financial" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-jiang2020applications" role="doc-biblioref">W. Jiang</a> (<a href="solutions-to-exercises.html#ref-jiang2020applications" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-lim2020time" role="doc-biblioref">Lim and Zohren</a> (<a href="solutions-to-exercises.html#ref-lim2020time" role="doc-biblioref">2021</a>)</span> survey the attempts to forecast financial time series with deep-learning models, mainly by computer science scholars.</p>
+<p>The pure predictive ability of NNs in financial markets is a popular subject and we further cite for example <span class="citation"><a href="solutions-to-exercises.html#ref-kimoto1990stock" role="doc-biblioref">Kimoto et al.</a> (<a href="solutions-to-exercises.html#ref-kimoto1990stock" role="doc-biblioref">1990</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-enke2005use" role="doc-biblioref">Enke and Thawornwong</a> (<a href="solutions-to-exercises.html#ref-enke2005use" role="doc-biblioref">2005</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-zhang2009stock" role="doc-biblioref">Y. Zhang and Wu</a> (<a href="solutions-to-exercises.html#ref-zhang2009stock" role="doc-biblioref">2009</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-guresen2011using" role="doc-biblioref">Guresen, Kayakutlu, and Daim</a> (<a href="solutions-to-exercises.html#ref-guresen2011using" role="doc-biblioref">2011</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-krauss2017deep" role="doc-biblioref">Krauss, Do, and Huck</a> (<a href="solutions-to-exercises.html#ref-krauss2017deep" role="doc-biblioref">2017</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-fischer2018deep" role="doc-biblioref">Fischer and Krauss</a> (<a href="solutions-to-exercises.html#ref-fischer2018deep" role="doc-biblioref">2018</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-aldridge2019neural" role="doc-biblioref">Aldridge and Avellaneda</a> (<a href="solutions-to-exercises.html#ref-aldridge2019neural" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-babiak2020deep" role="doc-biblioref">Babiak and Barunik</a> (<a href="solutions-to-exercises.html#ref-babiak2020deep" role="doc-biblioref">2020</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-ma2020portfolio" role="doc-biblioref">Y. Ma, Han, and Wang</a> (<a href="solutions-to-exercises.html#ref-ma2020portfolio" role="doc-biblioref">2020</a>)</span>, and <span class="citation"><a href="solutions-to-exercises.html#ref-soleymani2020financial" role="doc-biblioref">Soleymani and Paquet</a> (<a href="solutions-to-exercises.html#ref-soleymani2020financial" role="doc-biblioref">2020</a>)</span>.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Neural networks have also been recently applied to derivatives pricing and hedging, see for instance the work of &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-buehler2019deep" role="doc-biblioref"&gt;Buehler et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-buehler2019deep" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt; and &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-andersson2020deep" role="doc-biblioref"&gt;Andersson and Oosterlee&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-andersson2020deep" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt; and the survey by &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-ruf2019neural" role="doc-biblioref"&gt;Ruf and Wang&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-ruf2019neural" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;. In &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-wu2020cross" role="doc-biblioref"&gt;Wu et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-wu2020cross" role="doc-biblioref"&gt;2020&lt;/a&gt;)&lt;/span&gt;, it is found that deep learning is efficient for selecting performing hedge funds. Some article find that NNs underperform in the task of stock market prediction (and on tabular data more generally). &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-wei2021absolute" role="doc-biblioref"&gt;Y. Wei&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-wei2021absolute" role="doc-biblioref"&gt;2021&lt;/a&gt;)&lt;/span&gt; argues that it is because RMSE is not suited for stock return forecasts for which it is the direction that matters (though of course, the direction could also be the label!). &lt;/p&gt;'><sup>18</sup></a> The last reference even combines several types of NNs embedded inside an overarching reinforcement learning structure. This list is very far from exhaustive. In the field of financial economics, recent research on neural networks includes:</p>
+<ul>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-feng2019deep" role="doc-biblioref">Feng, Polson, and Xu</a> (<a href="solutions-to-exercises.html#ref-feng2019deep" role="doc-biblioref">2019</a>)</span> use neural networks to find factors that are the best at explaining the cross-section of stock returns.<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">2020b</a>)</span> map firm attributes and macro-economic variables into future returns. This creates a strong predictive tool that is able to forecast future returns very accurately.<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-chen2019deep" role="doc-biblioref">Luyang Chen, Pelger, and Zhu</a> (<a href="solutions-to-exercises.html#ref-chen2019deep" role="doc-biblioref">2020</a>)</span> estimate the pricing kernel with a complex neural network structure including a generative adversarial network. This again gives crucial information on the structure of expected stock returns and can be used for portfolio construction (by building an accurate maximum Sharpe ratio policy).</li>
+</ul>
+<div id="the-original-perceptron" class="section level2" number="7.1">
+<h2>
+<span class="header-section-number">7.1</span> The original perceptron<a class="anchor" aria-label="anchor" href="#the-original-perceptron"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+The origins of NNs go back at least to <span class="citation"><a href="solutions-to-exercises.html#ref-rosenblatt1958perceptron" role="doc-biblioref">Rosenblatt</a> (<a href="solutions-to-exercises.html#ref-rosenblatt1958perceptron" role="doc-biblioref">1958</a>)</span>. Its aim is binary classification. For simplicity, let us assume that the output is <span class="math inline">\(\{0\)</span> = do not invest<span class="math inline">\(\}\)</span> versus <span class="math inline">\(\{1\)</span> = invest<span class="math inline">\(\}\)</span> (e.g., derived from return, negative versus positive). Given the current nomenclature, a perceptron can be defined as an activated linear mapping. The model is the following:</p>
+<p><span class="math display">\[f(\mathbf{x})=\left\{ \begin{array}{lll}
+1 &amp; \text{if } \mathbf{x}'\mathbf{w}+b &gt;0\\
+0  &amp;\text{otherwise}
+\end{array}\right.\]</span>
+The vector of weights <span class="math inline">\(\mathbf{w}\)</span> scales the variables and the bias <span class="math inline">\(b\)</span> shifts the decision barrier. Given values for <span class="math inline">\(b\)</span> and <span class="math inline">\(w_i\)</span>, the error is <span class="math inline">\(\epsilon_i=y_i-1_{\left\{\sum_{j=1}^Jx_{i,j}w_j+w_0&gt;0\right\}}\)</span>. As is customary, we set <span class="math inline">\(b=w_0\)</span> and add an initial constant column to <span class="math inline">\(x\)</span>: <span class="math inline">\(x_{i,0}=1\)</span>, so that <span class="math inline">\(\epsilon_i=y_i-1_{\left\{\sum_{j=0}^Jx_{i,j}w_j&gt;0\right\}}\)</span>. In contrast to regressions, perceptrons do not have closed-form solutions. The optimal weights can only be approximated. Just like for regression, one way to derive good weights is to minimize the sum of squared errors. To this purpose, the simplest way to proceed is to</p>
+<ol style="list-style-type: decimal">
+<li>compute the current model value at point <span class="math inline">\(\textbf{x}_i\)</span>: <span class="math inline">\(\tilde{y}_i=1_{\left\{\sum_{j=0}^Jw_jx_{i,j}&gt;0\right\}}\)</span>,</li>
+<li>adjust the weight vector: <span class="math inline">\(w_j \leftarrow w_j + \eta (y_i-\tilde{y}_i)x_{i,j}\)</span>,</li>
+</ol>
+<p>which amounts to shifting the weights in the  direction. Just like for tree methods, the scaling factor <span class="math inline">\(\eta\)</span> is the learning rate. A large <span class="math inline">\(\eta\)</span> will imply large shifts: learning will be rapid but convergence may be slow or may even not occur. A small <span class="math inline">\(\eta\)</span> is usually preferable, as it helps reduce the risk of overfitting.</p>
+<p>In Figure <a href="NN.html#fig:perceptron">7.1</a>, we illustrate this mechanism. The initial model (dashed grey line) was trained on 7 points (3 red and 4 blue). A new black point comes in.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:perceptron"></span>
+<img src="images/NN_percep_scheme.png" alt="Scheme of a perceptron." width="450px"><p class="caption">
+FIGURE 7.1: Scheme of a perceptron.
+</p>
+</div>
+<ul>
+<li>if the point is red, there is no need for adjustment: it is labelled correctly as it lies on the right side of the border.<br>
+</li>
+<li>if the point is blue, then the model needs to be updated appropriately. Given the rule mentioned above, this means adjusting the slope of the line downwards. Depending on <span class="math inline">\(\eta\)</span>, the shift will be sufficient to change the classification of the new point - or not.</li>
+</ul>
+<p>At the time of its inception, the perceptron was an immense breakthrough which received an intense media coverage (see <span class="citation"><a href="solutions-to-exercises.html#ref-olazaran1996sociological" role="doc-biblioref">Olazaran</a> (<a href="solutions-to-exercises.html#ref-olazaran1996sociological" role="doc-biblioref">1996</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-anderson2000talking" role="doc-biblioref">Anderson and Rosenfeld</a> (<a href="solutions-to-exercises.html#ref-anderson2000talking" role="doc-biblioref">2000</a>)</span>). Its rather simple structure was progressively generalized to networks (combinations) of perceptrons. Each one of them is a simple unit, and units are gathered into layers. The next section describes the organization of simple multilayer perceptrons (MLPs).</p>
+</div>
+<div id="multilayer-perceptron" class="section level2" number="7.2">
+<h2>
+<span class="header-section-number">7.2</span> Multilayer perceptron<a class="anchor" aria-label="anchor" href="#multilayer-perceptron"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="introduction-and-notations" class="section level3" number="7.2.1">
+<h3>
+<span class="header-section-number">7.2.1</span> Introduction and notations<a class="anchor" aria-label="anchor" href="#introduction-and-notations"><i class="fas fa-link"></i></a>
+</h3>
+<p>A perceptron can be viewed as a linear model to which is applied a particular function: the Heaviside (step) function. Other choices of functions are naturally possible. In the NN jargon, they are called activation functions. Their purpose is to introduce nonlinearity in otherwise very linear models.</p>
+<p>Just like for random forests with trees, the idea behind neural networks is to combine perceptron-like building blocks. A popular representation of neural networks is shown in Figure <a href="NN.html#fig:NNnaive">7.2</a>. This scheme is overly simplistic. It hides what is really going on: there is a perceptron in each green circle and each output is activated by some function before it is sent to the final output aggregation. This is why such a model is called a Multilayer Perceptron (MLP).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:NNnaive"></span>
+<img src="images/nn.png" alt="Simplified scheme of a multi-layer perceptron." width="480px"><p class="caption">
+FIGURE 7.2: Simplified scheme of a multi-layer perceptron.
+</p>
+</div>
+<p>A more faithful account of what is going on is laid out in Figure <a href="NN.html#fig:MLperceptron">7.3</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:MLperceptron"></span>
+<img src="images/NN_scheme.png" alt="Detailed scheme of a perceptron with 2 intermediate layers." width="793"><p class="caption">
+FIGURE 7.3: Detailed scheme of a perceptron with 2 intermediate layers.
+</p>
+</div>
+<p>Before we proceed with comments, we introduce some notation that will be used thoughout the chapter.</p>
+<ul>
+<li>The data is separated into a matrix <span class="math inline">\(\textbf{X}=x_{i,j}\)</span> of features and a vector of output values <span class="math inline">\(\textbf{y}=y_i\)</span>. <span class="math inline">\(\textbf{x}\)</span> or <span class="math inline">\(\textbf{x}_i\)</span> denotes one line of <span class="math inline">\(\textbf{X}\)</span>.</li>
+<li>A neural network will have <span class="math inline">\(L\ge1\)</span> layers and for each layer <span class="math inline">\(l\)</span>, the number of units is <span class="math inline">\(U_l\ge1\)</span>.</li>
+<li>The weights for unit <span class="math inline">\(k\)</span> located in layer <span class="math inline">\(l\)</span> are denoted with <span class="math inline">\(\textbf{w}_{k}^{(l)}=w_{k,j}^{(l)}\)</span> and the corresponding biases <span class="math inline">\(b_{k}^{(l)}\)</span>. The length of <span class="math inline">\(\textbf{w}_{k}^{(l)}\)</span> is equal to <span class="math inline">\(U_{l-1}\)</span>. <span class="math inline">\(k\)</span> refers to the location of the unit in layer <span class="math inline">\(l\)</span> while <span class="math inline">\(j\)</span> to the unit in layer <span class="math inline">\(l-1\)</span>.</li>
+<li>Outputs (post-activation) are denoted <span class="math inline">\(o_{i,k}^{(l)}\)</span> for instance <span class="math inline">\(i\)</span>, layer <span class="math inline">\(l\)</span> and unit <span class="math inline">\(k\)</span>.</li>
+</ul>
+<p>The process is the following. When entering the network, the data goes though the initial linear mapping:<br><span class="math display">\[v_{i,k}^{(1)}=\textbf{x}_i'\textbf{w}^{(1)}_k+b_k^{(1)},  \text{for } l=1, \quad k \in [1,U_1],  \]</span><br>
+which is then transformed by a non-linear function <span class="math inline">\(f^{1}\)</span>. The result of this alteration is then given as input of the next layer and so on. The linear forms will be repeated (with different weights) for each layer of the network:
+<span class="math display">\[v_{i,k}^{(l)}=(\textbf{o}^{(l-1)}_i)'\textbf{w}^{(l)}_k+b_k^{(l)}, \text{for } l \ge 2,  \quad k \in [1,U_l]. \]</span><br>
+The connections between the layers are the so-called outputs, which are basically the linear mappings to which the activation functions <span class="math inline">\(f^{(l)}\)</span> have been applied. The output of layer <span class="math inline">\(l\)</span> is the input of layer <span class="math inline">\(l+1\)</span>.
+<span class="math display">\[o_{i,k}^{(l)}=f^{(l)}\left(v_{i,k}^{(l)}\right).\]</span><br>
+Finally, the terminal stage aggregates the outputs from the last layer:<br><span class="math display">\[\tilde{y}_i =f^{(L+1)} \left((\textbf{o}^{(L)}_i)'\textbf{w}^{(L+1)}+b^{(L+1)}\right).\]</span></p>
+<p>In the forward-propagation of the input, the activation function naturally plays an important role. In Figure <a href="NN.html#fig:activationf">7.4</a>, we plot the most usual activation functions used by neural network libraries.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:activationf"></span>
+<img src="images/activation.png" alt="Plot of the most common activation functions." width="450"><p class="caption">
+FIGURE 7.4: Plot of the most common activation functions.
+</p>
+</div>
+<p>Let us rephrase the process through the lens of factor investing. The input <span class="math inline">\(\textbf{x}\)</span> are the characteristics of the firms. The first step is to multiply their value by weights and add a bias. This is performed for all the units of the first layer. The output, which is a linear combination of the input is then transformed by the activation function. Each unit provides one value and all of these values are fed to the second layer following the same process. This is iterated until the end of the network. The purpose of the last layer is to yield an output shape that corresponds to the label: if the label is numerical, the output is a single number, if it is categorical, then usually it is a vector with length equal to the number of categories. This vector indicates the probability that the value belongs to one particular category.</p>
+<p>It is possible to use a final activation function after the output. This can have a huge importance on the result. Indeed, if the labels are returns, applying a sigmoid function at the very end will be disastrous because the sigmoid is always positive.</p>
+</div>
+<div id="universal-approximation" class="section level3" number="7.2.2">
+<h3>
+<span class="header-section-number">7.2.2</span> Universal approximation<a class="anchor" aria-label="anchor" href="#universal-approximation"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>One reason neural networks work well is that they are <em>universal approximators</em>. Given any bounded continuous function, there exists a one-layer network that can approximate this function up to arbitrary precision (see <span class="citation"><a href="solutions-to-exercises.html#ref-cybenko1989approximation" role="doc-biblioref">Cybenko</a> (<a href="solutions-to-exercises.html#ref-cybenko1989approximation" role="doc-biblioref">1989</a>)</span> for early references, section 4.2 in <span class="citation"><a href="solutions-to-exercises.html#ref-du2013neural" role="doc-biblioref">K.-L. Du and Swamy</a> (<a href="solutions-to-exercises.html#ref-du2013neural" role="doc-biblioref">2013</a>)</span> and section 6.4.1 in <span class="citation"><a href="solutions-to-exercises.html#ref-goodfellow2016deep" role="doc-biblioref">Goodfellow et al.</a> (<a href="solutions-to-exercises.html#ref-goodfellow2016deep" role="doc-biblioref">2016</a>)</span> for more exhaustive lists of papers, and <span class="citation"><a href="solutions-to-exercises.html#ref-guliyev2018approximation" role="doc-biblioref">Guliyev and Ismailov</a> (<a href="solutions-to-exercises.html#ref-guliyev2018approximation" role="doc-biblioref">2018</a>)</span> for recent results).</p>
+<p>Formally, a one-layer perceptron is defined by
+<span class="math display">\[f_n(\textbf{x})=\sum_{l=1}^nc_l\phi(\textbf{x}\textbf{w}_l+\textbf{b}_l)+c_0,\]</span>
+where <span class="math inline">\(\phi\)</span> is a (non-constant) bounded continuous function. Then, for any <span class="math inline">\(\epsilon&gt;0\)</span>, it is possible to find one <span class="math inline">\(n\)</span> such that for any continuous function <span class="math inline">\(f\)</span> on the unit hypercube <span class="math inline">\([0,1]^d\)</span>,
+<span class="math display">\[|f(\textbf{x})-f_n(\textbf{x})|&lt; \epsilon, \quad \forall \textbf{x} \in [0,1]^d.\]</span></p>
+<p>This result is rather intuitive: it suffices to add units to the layer to improve the fit. The process is more or less analogous to polynomial approximation, though some subtleties arise depending on the properties of the activations functions (boundedness, smoothness, convexity, etc.). We refer to <span class="citation"><a href="solutions-to-exercises.html#ref-costarelli2016survey" role="doc-biblioref">Costarelli, Spigler, and Vinti</a> (<a href="solutions-to-exercises.html#ref-costarelli2016survey" role="doc-biblioref">2016</a>)</span> for a survey on this topic.</p>
+<p>The raw results on universal approximation imply that any well-behaved function <span class="math inline">\(f\)</span> can be approached sufficiently closely by a simple neural network, as long as the number of units can be arbitrarily large. Now, they do not directly relate to the learning phase, i.e., when the model is optimized with respect to a particular dataset. In a series of papers (<span class="citation"><a href="solutions-to-exercises.html#ref-barron1993universal" role="doc-biblioref">Barron</a> (<a href="solutions-to-exercises.html#ref-barron1993universal" role="doc-biblioref">1993</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-barron1994approximation" role="doc-biblioref">Barron</a> (<a href="solutions-to-exercises.html#ref-barron1994approximation" role="doc-biblioref">1994</a>)</span>, notably), Barron gives a much more precise characterization of what neural networks can achieve. In <span class="citation"><a href="solutions-to-exercises.html#ref-barron1993universal" role="doc-biblioref">Barron</a> (<a href="solutions-to-exercises.html#ref-barron1993universal" role="doc-biblioref">1993</a>)</span> it is for instance proved a more precise version of universal approximation: for particular neural networks (with sigmoid activation), <span class="math inline">\(\mathbb{E}[(f(\textbf{x})-f_n(\textbf{x}))^2]\le c_f/n\)</span>, which gives a speed of convergence related to the size of the network. In the expectation, the random term is <span class="math inline">\(\textbf{x}\)</span>: this corresponds to the case where the data is considered to be a sample of i.i.d. observations of a fixed distribution (this is the most common assumption in machine learning).</p>
+<p>Below, we state one important result that is easy to interpret; it is taken from <span class="citation"><a href="solutions-to-exercises.html#ref-barron1994approximation" role="doc-biblioref">Barron</a> (<a href="solutions-to-exercises.html#ref-barron1994approximation" role="doc-biblioref">1994</a>)</span>.</p>
+<p>In the sequel, <span class="math inline">\(f_n\)</span> corresponds to a possibly penalized neural network with only one intermediate layer with <span class="math inline">\(n\)</span> units and sigmoid activation function. Moreover, both the supports of the predictors and the label are assumed to be bounded (which is not a major constraint). The most important metric in a regression exercise is the mean squared error (MSE) and the main result is a bound (in order of magnitude) on this quantity. For <span class="math inline">\(N\)</span> randomly sampled i.i.d. points <span class="math inline">\(y_i=f(x_i)+\epsilon_i\)</span> on which <span class="math inline">\(f_n\)</span> is trained, the best possible empirical MSE behaves like</p>
+<p><span class="math display" id="eq:univapprox">\[\begin{equation}
+\tag{7.1}
+\mathbb{E}\left[(f(x)-f_n(x))^2 \right]=\underbrace{O\left(\frac{c_f}{n} \right)}_{\text{size of network}}+\ \underbrace{O\left(\frac{nK \log(N)}{N} \right)}_{\text{size of sample}},
+\end{equation}\]</span>
+where <span class="math inline">\(K\)</span> is the dimension of the input (number of columns) and <span class="math inline">\(c_f\)</span> is a constant that depends on the generator function <span class="math inline">\(f\)</span>. The above quantity provides a bound on the error that can be achieved by the best possible neural network given a dataset of size <span class="math inline">\(N\)</span>.</p>
+<p>There are clearly two components in the decomposition of this bound. The first one pertains to the complexity of the network. Just as in the original universal approximation theorem, the error decreases with the number of units in the network. But this is not enough! Indeed, the sample size is of course a key driver in the quality of learning (of i.i.d. observations). The second component of the bound indicates that the error decreases at a slightly slower pace with respect to the number of observations (<span class="math inline">\(\log(N)/N\)</span>) and is linear in the number of units and the size of the input. This clearly underlines the link (trade-off?) between sample size and model complexity: having a very complex model is useless if the sample is small just like a simple model will not catch the fine relationships in a large dataset.</p>
+<p>Overall, a neural network is a possibly very complicated function with a lot of parameters. In linear regressions, it is possible to increase the fit by spuriously adding exogenous variables. In neural networks, it suffices to increase the number of parameters by arbitrarily adding units to the layer(s). This is of course a very bad idea because high-dimensional networks will mostly capture the particularities of the sample they are trained on.</p>
+</div>
+<div id="backprop" class="section level3" number="7.2.3">
+<h3>
+<span class="header-section-number">7.2.3</span> Learning via back-propagation<a class="anchor" aria-label="anchor" href="#backprop"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>Just like for tree methods, neural networks are trained by minimizing some loss function subject to some penalization:
+<span class="math display">\[O=\sum_{i=1}^I \text{loss}(y_i,\tilde{y}_i)+ \text{penalization},\]</span>
+where <span class="math inline">\(\tilde{y}_i\)</span> are the values obtained by the model and <span class="math inline">\(y_i\)</span> are the <em>true</em> values of the instances. A simple requirement that eases computation is that the loss function be differentiable. The most common choices are the squared error for regression tasks and cross-entropy for classification tasks. We discuss the technicalities of classification in the next subsection.</p>
+<p>The training of a neural network amounts to alter the weights (and biases) of all units in all layers so that <span class="math inline">\(O\)</span> defined above is the smallest possible. To ease the notation and given that the <span class="math inline">\(y_i\)</span> are fixed, let us write <span class="math inline">\(D(\tilde{y}_i(\textbf{W}))=\text{loss}(y_i,\tilde{y}_i)\)</span>, where <span class="math inline">\(\textbf{W}\)</span> denotes the entirety of weights and biases in the network. The updating of the weights will be performed via gradient descent, i.e., via</p>
+<p><span class="math display" id="eq:graddesc">\[\begin{equation}
+\tag{7.2}
+\textbf{W} \leftarrow \textbf{W}-\eta  \frac{\partial D(\tilde{y}_i) }{\partial \textbf{W}}.
+\end{equation}\]</span></p>
+<p> </p>
+<p>This mechanism is the most classical in the optimization literature and we illustrate it in Figure <a href="NN.html#fig:newton">7.5</a>. We highlight the possible suboptimality of large learning rates. In the diagram, the descent associated with the high <span class="math inline">\(\eta\)</span> will oscillate around the optimal point, whereas the one related to the small eta will converge more directly.</p>
+<p>The complicated task in the above equation is to compute the gradient (derivative) which tells in which direction the adjustment should be done. The problem is that the successive nested layers and associated activations require many iterations of the chain rule for differentiation.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:newton"></span>
+<img src="images/Newton.png" alt="Outline of gradient descent." width="288"><p class="caption">
+FIGURE 7.5: Outline of gradient descent.
+</p>
+</div>
+<p>The most common way to approximate a derivative is probably the finite difference method. Under the usual assumptions (the loss is twice differentiable), the centered difference satisfies:</p>
+<p><span class="math display">\[\frac{\partial D(\tilde{y}_i(w_k))}{\partial w_k} = \frac{D(\tilde{y}_i(w_k+h))-D(\tilde{y}_i(w_k-h))}{2h}+O(h^2),\]</span>
+where <span class="math inline">\(h&gt;0\)</span> is some arbitrarily small number. In spite of its apparent simplicity, this method is costly computationally because it requires a number of operations of the magnitude of the number of weights.</p>
+<p>Luckily, there is a small trick that can considerably ease and speed up the computation. The idea is to simply follow the chain rule and recycle terms along the way. Let us start by recalling 
+<span class="math display">\[\tilde{y}_i =f^{(L+1)} \left((\textbf{o}^{(L)}_i)'\textbf{w}^{(L+1)}+b^{(L+1)}\right)=f^{(L+1)}\left(b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k} \right),\]</span> so that if we differentiate with the most immediate weights and biases, we get:
+<span class="math display" id="eq:backprop1">\[\begin{align}
+\frac{\partial D(\tilde{y}_i)}{\partial w_k^{(L+1)}}&amp;=D'(\tilde{y}_i) \left(f^{(L+1)} \right)'\left( b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k}  \right)o^{(L)}_{i,k} \\   \tag{7.3}
+&amp;= D'(\tilde{y}_i) \left(f^{(L+1)} \right)'\left( v^{(L+1)}_{i,k}  \right)o^{(L)}_{i,k} \\
+\frac{\partial D(\tilde{y}_i)}{\partial b^{(L+1)}}&amp;=D'(\tilde{y}_i) \left(f^{(L+1)} \right)'\left( b^{(L+1)}+\sum_{k=1}^{U_L} w^{(L+1)}_ko^{(L)}_{i,k}  \right). 
+\end{align}\]</span></p>
+<p>This is the easiest part. We must now go back one layer and this can only be done via the chain rule. To access layer <span class="math inline">\(L\)</span>, we recall identity <span class="math inline">\(v_{i,k}^{(L)}=(\textbf{o}^{(L-1)}_i)'\textbf{w}^{(L)}_k+b_k^{(L)}=b_k^{(L)}+\sum_{j=1}^{U_L}o^{(L-1)}_{i,j}w^{(L)}_{k,j}\)</span>.
+We can then proceed:</p>
+<p><span class="math display">\[\begin{align}
+\frac{\partial D(\tilde{y}_i)}{\partial w_{k,j}^{(L)}}&amp;=\frac{\partial D(\tilde{y}_i)}{\partial v^{(L)}_{i,k}}\frac{\partial v^{(L)}_{i,k}}{\partial w_{k,j}^{(L)}} = \frac{\partial D(\tilde{y}_i)}{\partial v^{(L)}_{i,k}}o^{(L-1)}_{i,j}\\
+&amp;=\frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}} \frac{\partial o^{(L)}_{i,k} }{\partial v^{(L)}_{i,k}}  o^{(L-1)}_{i,j} = \frac{\partial D(\tilde{y}_i)}{\partial o^{(L)}_{i,k}}  (f^{(L)})'(v_{i,k}^{(L)})  o^{(L-1)}_{i,j} \\
+&amp;=\underbrace{D'(\tilde{y}_i) \left(f^{(L+1)} \right)'\left(v^{(L+1)}_{i,k}  \right)}_{\text{computed above!}} w^{(L+1)}_k (f^{(L)})'(v_{i,k}^{(L)})  o^{(L-1)}_{i,j},
+\end{align}\]</span></p>
+<p>where, as we show in the last line, one part of the derivative was already computed in the previous step (Equation <a href="NN.html#eq:backprop1">(7.3)</a>). Hence, we can recycle this number and only focus on the right part of the expression.</p>
+<p>The magic of the so-called back-propagation is that this will hold true for each step of the differentiation. When computing the gradient for weights and biases in layer <span class="math inline">\(l\)</span>, there will be two parts: one that can be recycled from previous layers and another, local part, that depends only on the values and activation function of the current layer. A nice illustration of this process is given by the Google developer team: playground.tensorflow.org.</p>
+<p>When the data is formatted using tensors, it is possible to resort to vectorization so that the number of calls is limited to an order of the magnitude of the number of nodes (units) in the network.</p>
+<p>The back-propagation algorithm can be summarized as follows. Given a sample of points (possibly just one):</p>
+<ol style="list-style-type: decimal">
+<li>the data flows from left as is described in Figure <a href="NN.html#fig:backp">7.6</a>. The blue arrows show the <strong>forward pass</strong>;<br>
+</li>
+<li>this allows the computation of the error or loss function;<br>
+</li>
+<li>all derivatives of this function (w.r.t. weights and biases) are computed, starting from the last layer and diffusing to the left (hence the term back-propagation) - the green arrows show the <strong>backward pass</strong>;<br>
+</li>
+<li>all weights and biases can be updated to take the sample points into account (the model is adjusted to reduce the loss/error stemming from these points).</li>
+</ol>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:backp"></span>
+<img src="images/backprop.png" alt="Diagram of back-propagation." width="768"><p class="caption">
+FIGURE 7.6: Diagram of back-propagation.
+</p>
+</div>
+<p>This operation can be performed any number of times with different sample sizes. We discuss this issue in Section <a href="NN.html#howdeep">7.3</a>.</p>
+<p>The learning rate <span class="math inline">\(\eta\)</span> can be refined. One option to reduce overfitting is to impose that after each epoch, the intensity of the update decreases. One possible parametric form is <span class="math inline">\(\eta=\alpha e^{- \beta t}\)</span>, where <span class="math inline">\(t\)</span> is the epoch and <span class="math inline">\(\alpha,\beta&gt;0\)</span>. One further sophistication is to resort to so-called <em>momentum</em> (which originates from <span class="citation"><a href="solutions-to-exercises.html#ref-polyak1964some" role="doc-biblioref">Polyak</a> (<a href="solutions-to-exercises.html#ref-polyak1964some" role="doc-biblioref">1964</a>)</span>):
+<span class="math display" id="eq:gradmom">\[\begin{align}
+\tag{7.4}
+\textbf{W}_{t+1} &amp; \leftarrow  \textbf{W}_{t} - \textbf{m}_t \quad \text{with} \nonumber \\
+\textbf{m}_t &amp; \leftarrow \eta  \frac{\partial D(\tilde{y}_i)}{\partial \textbf{W}_{t}}+\gamma \textbf{m}_{t-1},
+\end{align}\]</span>
+where <span class="math inline">\(t\)</span> is the index of the weight update. The idea of momentum is to speed up the convergence by including a memory term of the last adjustment (<span class="math inline">\(\textbf{m}_{t-1}\)</span>) and going in the same direction in the current update. The parameter <span class="math inline">\(\gamma\)</span> is often taken to be 0.9.</p>
+<p>More complex and enhanced methods have progressively been developed:<br>
+- <span class="citation"><a href="solutions-to-exercises.html#ref-nesterov1983method" role="doc-biblioref">Nesterov</a> (<a href="solutions-to-exercises.html#ref-nesterov1983method" role="doc-biblioref">1983</a>)</span> improves the momentum term by forecasting the future shift in parameters;<br>
+- Adagrad (<span class="citation"><a href="solutions-to-exercises.html#ref-duchi2011adaptive" role="doc-biblioref">Duchi, Hazan, and Singer</a> (<a href="solutions-to-exercises.html#ref-duchi2011adaptive" role="doc-biblioref">2011</a>)</span>) uses a different learning rate for each parameter;<br>
+- Adadelta (<span class="citation"><a href="solutions-to-exercises.html#ref-zeiler2012adadelta" role="doc-biblioref">Zeiler</a> (<a href="solutions-to-exercises.html#ref-zeiler2012adadelta" role="doc-biblioref">2012</a>)</span>) and Adam (<span class="citation"><a href="solutions-to-exercises.html#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba</a> (<a href="solutions-to-exercises.html#ref-kingma2014adam" role="doc-biblioref">2014</a>)</span>) combine the ideas of Adagrad and momentum.</p>
+<p>Lastly, in some degenerate case, some gradients may explode and push weights far from their optimal values. In order to avoid this phenomenon, learning libraries implement gradient clipping. The user specifies a maximum magnitude for gradients, usually expressed as a norm. Whenever the gradient surpasses this magnitude, it is rescaled to reach the authorized threshold. Thus, the direction remains the same, but the adjustment is smaller.</p>
+</div>
+<div id="NNclass" class="section level3" number="7.2.4">
+<h3>
+<span class="header-section-number">7.2.4</span> Further details on classification<a class="anchor" aria-label="anchor" href="#NNclass"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>In decision trees, the ultimate goal is to create homogeneous clusters, and the process to reach this goal was outlined in the previous chapter. For neural networks, things work differently because the objective is explicitly to minimize the error between the prediction <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> and a target label <span class="math inline">\(\textbf{y}_i\)</span>. Again, here <span class="math inline">\(\textbf{y}_i\)</span> is a vector full of zeros with only one <em>one</em> denoting the class of the instance.</p>
+<p>Facing a classification problem, the trick is to use an appropriate activation function at the very end of the network. The dimension of the terminal output of the network should be equal to <span class="math inline">\(J\)</span> (number of classes to predict), and if, for simplicity, we write <span class="math inline">\(\textbf{x}_i\)</span> for the values of this output, the most commonly used activation is the so-called <em>softmax</em> function:</p>
+<p><span class="math display">\[\tilde{\textbf{y}}_i=s(\textbf{x})_i=\frac{e^{x_i}}{\sum_{j=1}^Je^{x_j}}.\]</span></p>
+<p>The justification of this choice is straightforward: it can take any value as input (over the real line) and it sums to one over any (finite-valued) output. Similarly as for trees, this yields a ‘probability’ vector over the classes. Often, the chosen loss is a generalization of the entropy used for trees. Given the target label <span class="math inline">\(\textbf{y}_i=(y_{i,1},\dots,y_{i,L})=(0,0,\dots,0,1,0,\dots,0)\)</span> and the predicted output <span class="math inline">\(\tilde{\textbf{y}}_i=(\tilde{y}_{i,1},\dots,\tilde{y}_{i,L})\)</span>, the cross-entropy is defined as</p>
+<p><span class="math display" id="eq:crossentropy">\[\begin{equation}
+\tag{7.5}
+\text{CE}(\textbf{y}_i,\tilde{\textbf{y}}_i)=-\sum_{j=1}^J\log(\tilde{y}_{i,j})y_{i,j}.
+\end{equation}\]</span></p>
+<p>Basically, it is a proxy of the dissimilarity between its two arguments. One simple interpretation is the following. For the nonzero label value, the loss is <span class="math inline">\(-\log(\tilde{y}_{i,l})\)</span>, while for all others, it is zero. In the log, the loss will be minimal if <span class="math inline">\(\tilde{y}_{i,l}=1\)</span>, which is exactly what we seek (i.e., <span class="math inline">\(y_{i,l}=\tilde{y}_{i,l}\)</span>). In applications, this best case scenario will not happen, and the loss will simply increase when <span class="math inline">\(\tilde{y}_{i,l}\)</span> drifts away downwards from one.</p>
+</div>
+</div>
+<div id="howdeep" class="section level2" number="7.3">
+<h2>
+<span class="header-section-number">7.3</span> How deep we should go and other practical issues<a class="anchor" aria-label="anchor" href="#howdeep"><i class="fas fa-link"></i></a>
+</h2>
+<p>Beyond the ones presented in the previous sections, the user faces many degrees of freedom when building a neural network. We present a few classical choices that are available when constructing and training neural networks.</p>
+<div id="architectural-choices" class="section level3" number="7.3.1">
+<h3>
+<span class="header-section-number">7.3.1</span> Architectural choices<a class="anchor" aria-label="anchor" href="#architectural-choices"><i class="fas fa-link"></i></a>
+</h3>
+<p>Arguably, the first choice pertains to the structure of the network. Beyond the dichotomy feed-forward versus recurrent (see Section <a href="#recurrent-networks"><strong>??</strong></a>), the immediate question is: how big (or how deep) the networks should be.
+First of all, let us calculate the number of parameters (i.e., weights plus biases) that are estimated (optimized) in a network.</p>
+<ul>
+<li>For the first layer, this gives <span class="math inline">\((U_0+1)U_1\)</span> parameters, where <span class="math inline">\(U_0\)</span> is the number of columns in <span class="math inline">\(\mathbb{X}\)</span> (i.e., number of explanatory variables) and <span class="math inline">\(U_1\)</span> is the number of units in the layer.<br>
+</li>
+<li>For layer <span class="math inline">\(l\in[2,L]\)</span>, the number of parameters is <span class="math inline">\((U_{l-1}+1)U_l\)</span>.<br>
+</li>
+<li>For the final output, there are simply <span class="math inline">\(U_L+1\)</span> parameters.<br>
+</li>
+<li>In total, this means the total number of values to optimize is
+<span class="math display">\[\mathcal{N}=\left(\sum_{l=1}^L(U_{l-1}+1)U_l\right)+U_L+1\]</span>
+</li>
+</ul>
+<p>As in any model, the number of parameters should be much smaller than the number of instances. There is no fixed ratio, but it is preferable if the sample size is <em>at least</em> ten times larger than the number of parameters. Below a ratio of 5, the risk of overfitting is high. Given the amount of data readily available, this constraint is seldom an issue, unless one wishes to work with a very large network.</p>
+<p>The number of hidden layers in current financial applications rarely exceeds three or four. The number of units per layer <span class="math inline">\((U_k)\)</span> is often chosen to follow the geometric pyramid rule (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-masters1993practical" role="doc-biblioref">Masters</a> (<a href="solutions-to-exercises.html#ref-masters1993practical" role="doc-biblioref">1993</a>)</span>). If there are <span class="math inline">\(L\)</span> hidden layers, with <span class="math inline">\(I\)</span> features in the input and <span class="math inline">\(O\)</span> dimensions in the output (for regression tasks, <span class="math inline">\(O=1\)</span>), then, for the <span class="math inline">\(k^{th}\)</span> layer, a rule of thumb for the number of units is
+<span class="math display">\[U_k\approx \left\lfloor O\left( \frac{I}{O}\right)^{\frac{L+1-k}{L+1}}\right\rfloor.\]</span>
+If there is only one intermediate layer, the recommended proxy is the integer part of <span class="math inline">\(\sqrt{IO}\)</span>. If not, the network starts with many units and the number of unit decreases exponentially towards the output size. Often, the number of layers is a power of two because, in high dimensions, networks are trained on Graphics Processing Units (GPUs) or Tensor Processing Units (TPUs). Both pieces of hardware can be used optimally when the inputs have sizes equals to powers of two.</p>
+<p>Several studies have shown that very large architectures do not always perform better than more shallow ones (e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">2020b</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-orimoloye2019comparing" role="doc-biblioref">Orimoloye et al.</a> (<a href="solutions-to-exercises.html#ref-orimoloye2019comparing" role="doc-biblioref">2019</a>)</span> for high frequency data, i.e., not factor-based). As a rule of thumb, a maximum of three hidden layers seem to be sufficient for prediction purposes.</p>
+</div>
+<div id="frequency-of-weight-updates-and-learning-duration" class="section level3" number="7.3.2">
+<h3>
+<span class="header-section-number">7.3.2</span> Frequency of weight updates and learning duration<a class="anchor" aria-label="anchor" href="#frequency-of-weight-updates-and-learning-duration"><i class="fas fa-link"></i></a>
+</h3>
+<p>In the expression <a href="NN.html#eq:graddesc">(7.2)</a>, it is implicit that the computation is performed for one given instance. If the sample size is very large (hundreds of thousands or millions of instances), updating the weights according to each point is computationally too costly. The updating is then performed on groups of instances which are called batches. The sample is (randomly) split into batches of fixed sizes and each update is performed following the rule:</p>
+<p><span class="math display" id="eq:gradbatch">\[\begin{equation}
+\tag{7.6}
+\textbf{W} \leftarrow \textbf{W}-\eta  \frac{\partial \sum_{i \in \text{batch}} D(\tilde{y}_i)/\text{card}(\text{batch}) }{\partial \textbf{W}}.
+\end{equation}\]</span></p>
+<p>The change in weights is computed over the average loss computed over all instances in the batch. The terminology for training includes:</p>
+<ul>
+<li>
+<strong>epoch</strong>: one epoch is reached when each instance of the sample has contributed to the update of the weights (i.e., the training). Often, training a NN requires several epochs and up to a few dozen.<br>
+</li>
+<li>
+<strong>batch size</strong>: the batch size is the number of samples used for one single update of weights.<br>
+</li>
+<li>
+<strong>iterations</strong>: the number of iterations can mean alternatively the ratio of sample size divided by batch size or this ratio multiplied by the number of epochs. It’s either the number of weight updates required to reach one epoch or the total number of updates during the whole training.</li>
+</ul>
+<p>When the batch is equal to only one instance, the method is referred to as ‘stochastic gradient descent’ (SGD): the instance is chosen randomly. When the batch size is strictly above one and below the total number of instances, the learning is performed via ‘mini’ batches, that is, small groups of instances. The batches are also chosen randomly, but without replacement in the sample because for one epoch, the union of batches must be equal to the full training sample.</p>
+<p>It is impossible to know in advance what a good number of epochs is. Sometimes, the network stops learning after just 5 epochs (the validation loss does not decrease anymore). In some cases when the validation sample is drawn from a distribution close to that of the training sample, the network continues to learn even after 200 epochs. It is up to the user to test different values to evaluate the learning speed. In the examples below, we keep the number of epochs low for computational purposes.</p>
+</div>
+<div id="penalizations-and-dropout" class="section level3" number="7.3.3">
+<h3>
+<span class="header-section-number">7.3.3</span> Penalizations and dropout<a class="anchor" aria-label="anchor" href="#penalizations-and-dropout"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+At each level (layer), it is possible to enforce constraints or penalizations on the weights (and biases). Just as for tree methods, this helps slow down the learning to prevent overfitting on the training sample. Penalizations are enforced directly on the loss function and the objective function takes the form</p>
+<p><span class="math display">\[O=\sum_{i=1}^I \text{loss}(y_i,\tilde{y}_i)+ \sum_{k} \lambda_k||\textbf{W}_k||_1+ \sum_j\delta_j||\textbf{W}_j||_2^2,\]</span>
+where the subscripts <span class="math inline">\(k\)</span> and <span class="math inline">\(j\)</span> pertain to the weights to which the <span class="math inline">\(L^1\)</span> and (or) <span class="math inline">\(L^2\)</span> penalization is applied.</p>
+<p>In addition, specific constraints can be enforced on the weights directly during the training. Typically, two types of constraints are used:</p>
+<ul>
+<li>norm constraints: a maximum norm is fixed for the weight vectors or matrices;<br>
+</li>
+<li>non-negativity constraint: all weights must be positive or zero.</li>
+</ul>
+<p>Lastly, another (somewhat exotic) way to reduce the risk of overfitting is simply to reduce the size (number of parameters) of the model. <span class="citation"><a href="solutions-to-exercises.html#ref-srivastava2014dropout" role="doc-biblioref">Srivastava et al.</a> (<a href="solutions-to-exercises.html#ref-srivastava2014dropout" role="doc-biblioref">2014</a>)</span> propose to omit units during training (hence the term ‘<strong>dropout</strong>’). The weights of randomly chosen units are set to zero during training. All links from and to the unit are ignored, which mechanically shrinks the network. In the testing phase, all units are back, but the values (weights) must be scaled to account for the missing activations during the training phase.</p>
+<p>The interested reader can check the advice compiled in <span class="citation"><a href="solutions-to-exercises.html#ref-bengio2012practical" role="doc-biblioref">Bengio</a> (<a href="solutions-to-exercises.html#ref-bengio2012practical" role="doc-biblioref">2012</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-hanin2018start" role="doc-biblioref">Hanin and Rolnick</a> (<a href="solutions-to-exercises.html#ref-hanin2018start" role="doc-biblioref">2018</a>)</span>, and <span class="citation"><a href="solutions-to-exercises.html#ref-smith2018disciplined" role="doc-biblioref">L. N. Smith</a> (<a href="solutions-to-exercises.html#ref-smith2018disciplined" role="doc-biblioref">2018</a>)</span> for further tips on how to configure neural networks. A paper dedicated to hyperparameter tuning for stock return prediction is <span class="citation"><a href="solutions-to-exercises.html#ref-lee2020hyperparameter" role="doc-biblioref">Lee</a> (<a href="solutions-to-exercises.html#ref-lee2020hyperparameter" role="doc-biblioref">2020</a>)</span>.</p>
+</div>
+</div>
+<div id="code-samples-and-comments-for-vanilla-mlp" class="section level2" number="7.4">
+<h2>
+<span class="header-section-number">7.4</span> Code samples and comments for vanilla MLP<a class="anchor" aria-label="anchor" href="#code-samples-and-comments-for-vanilla-mlp"><i class="fas fa-link"></i></a>
+</h2>
+<p>There are several frameworks and libraries that allow robust and flexible constructions of neural networks. Among them, Keras and Tensorflow (developed by Google) are probably the most used at the time we write this book (PyTorch, from Facebook, is one alternative). For simplicity and because we believe it is the best choice, we implement the NN with Keras (which is the high level API of Tensorflow, see <a href="https://www.tensorflow.org" class="uri">https://www.tensorflow.org</a>). The original Python implementation is referenced on <a href="https://keras.io" class="uri">https://keras.io</a>, and the details for the R version can be found here: <a href="https://keras.rstudio.com" class="uri">https://keras.rstudio.com</a>. We recommend a thorough installation before proceeding. Because the native versions of Tensorflow and Keras are written in Python (and accessed by R via the <em>reticulate</em> package), a running version of Python is required below. To install Keras, please follow the instructions provided at <a href="https://keras.rstudio.com" class="uri">https://keras.rstudio.com</a>.</p>
+<p>In this section, we provide a detailed (though far from exhaustive) account of how to train neural networks with Keras. For the sake of completeness, we proceed in two steps. The first one relates to a very simple regression exercise. Its purpose is to get the reader familiar with the syntax of Keras. In the second step, we lay out many of the options proposed by Keras to perform a classification exercise. With these two examples, we thus cover most of the mainstream topics falling under the umbrella of feed-forward multilayered perceptrons.</p>
+<div id="regression-example" class="section level3" number="7.4.1">
+<h3>
+<span class="header-section-number">7.4.1</span> Regression example<a class="anchor" aria-label="anchor" href="#regression-example"><i class="fas fa-link"></i></a>
+</h3>
+<p>Before we head to the core of the NN, a short stage of data preparation is required. Just as for penalized regressions (glmnet package) and boosted trees (xgboost package), the data must be sorted into four parts which are the combination of two dichotomies: training versus testing and labels versus features. We define the corresponding variables below. For simplicity, the first example is a regression exercise. A classification task will be detailed below.</p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">NN_train_features</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">features</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>    <span class="co"># Training features</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                                                      <span class="co"># Matrix = important</span>
+<span class="va">NN_train_labels</span> <span class="op">&lt;-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>                           <span class="co"># Training labels</span>
+<span class="va">NN_test_features</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>, <span class="va">features</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>      <span class="co"># Testing features</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                                                      <span class="co"># Matrix = important</span>
+<span class="va">NN_test_labels</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>                             <span class="co"># Testing labels</span></code></pre></div>
+<p></p>
+<p>In Keras, the training of neural networks is performed through three steps:</p>
+<ol style="list-style-type: decimal">
+<li>Defining the structure/architecture of the network;<br>
+</li>
+<li>Setting the loss function and learning process (options on the updating of weights);<br>
+</li>
+<li>Train by specifying the batch sizes and number of rounds (epochs).</li>
+</ol>
+<p>We start with a very simple architecture with two hidden layers.</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://keras.rstudio.com">keras</a></span><span class="op">)</span>
+<span class="co"># install_keras() # To complete installation</span>
+<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">model</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># No activation means linear activation: f(x) = x.</span></code></pre></div>
+<p></p>
+<p>The definition of the structure is very intuitive and uses the <em>sequential</em> syntax in which one input is iteratively transformed by a layer until the last iteration which gives the output. Each layer depends on two parameters: the number of units and the activation function that is applied to the output of the layer. One important point is the input_shape parameter for the first layer. It is required for the first layer and is equal to the number of features. For the subsequent layers, the input_shape is dictated by the number of units of the previous layer; hence it is not required. The activations that are currently available are listed on <a href="https://keras.io/activations/" class="uri">https://keras.io/activations/</a>. We use the hyperbolic tangent in the second-to-last layer because it yields both positive and negative outputs. Of course, the last layer can generate negative values as well, but it’s preferable to satisfy this property one step ahead of the final output.</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                             <span class="co"># Model specification</span>
+  loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model</span><span class="op">)</span>                                 <span class="co"># Model architecture</span></code></pre></div>
+<pre><code>## Model: "sequential_24"
+## __________________________________________________________________________________________
+## Layer (type)                            Output Shape                        Param #       
+## ==========================================================================================
+## dense_63 (Dense)                        (None, 16)                          1504          
+## __________________________________________________________________________________________
+## dense_62 (Dense)                        (None, 8)                           136           
+## __________________________________________________________________________________________
+## dense_61 (Dense)                        (None, 1)                           9             
+## ==========================================================================================
+## Total params: 1,649
+## Trainable params: 1,649
+## Non-trainable params: 0
+## __________________________________________________________________________________________</code></pre>
+<p></p>
+<p>The summary of the model lists the layers in their order from input to output (forward pass). Because we are working with 93 features, the number of parameters for the first layer (16 units) is 93 plus one (for the bias) multiplied by 16, which makes 1504. For the second layer, the number of inputs is equal to the size of the output from the previous layer (16). Hence given the fact that the second layer has 8 units, the total number of parameters is (16+1)*8 = 136.</p>
+<p>We set the loss function to the standard mean squared error. Other losses are listed on <a href="https://keras.io/losses/" class="uri">https://keras.io/losses/</a>, some of them work only for regressions (MSE, MAE) and others only for classification (categorical cross-entropy, see Equation <a href="NN.html#eq:crossentropy">(7.5)</a>). The RMS propragation optimizer is the classical mini-batch back-propagation implementation. For other weight updating algorithms, we refer to <a href="https://keras.io/optimizers/" class="uri">https://keras.io/optimizers/</a>. The metric is the function used to assess the quality of the model. It can be different from the loss: for instance, using entropy for training and accuracy as the performance metric.</p>
+<p>The final stage fits the model to the data and requires some additional training parameters:</p>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_NN</span> <span class="op">&lt;-</span> <span class="va">model</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                       <span class="co"># Training features</span>
+      <span class="va">NN_train_labels</span>,                                         <span class="co"># Training labels</span>
+      epochs <span class="op">=</span> <span class="fl">10</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Training parameters</span>
+      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, <span class="va">NN_test_labels</span><span class="op">)</span> <span class="co"># Test data</span>
+  <span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span>                                   <span class="co"># Plot, evidently!</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:NN3"></span>
+<img src="ML_factor_files/figure-html/NN3-1.png" alt="Output from a trained neural network (regression task)." width="480"><p class="caption">
+FIGURE 7.7: Output from a trained neural network (regression task).
+</p>
+</div>
+<p></p>
+<p>The batch size is quite arbitrary. For technical reasons pertaining to training on GPUs, these sizes are often powers of 2.</p>
+<p>In Keras, the plot of the trained model shows four different curves (shown here in Figure <a href="NN.html#fig:NN3">7.7</a>). The top graph displays the improvement (or lack thereof) in loss as the number of epochs increases. Usually, the algorithm starts by learning rapidly and then converges to a point where any additional epoch does not improve the fit. In the example above, this point arrives rather quickly because it is hard to notice any gain beyond the fourth epoch. The two colors show the performance on the two samples: the training sample and the testing sample. By construction, the loss will always improve (even marginally) on the training sample. When the impact is negligible on the testing sample (the curve is flat, as is the case here), the model fails to generalize out-of-sample: the gains obtained by training on the original sample do not translate to gains on previously unseen data; thus, the model seems to be learning noise.</p>
+<p>The second graph shows the same behavior but is computed using the metric function. The correlation (in absolute terms) between the two curves (loss and metric) is usually high. If one of them is flat, the other should be as well.</p>
+<p>In order to obtain the parameters of the model, the user can call get_weights(model).<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In case of package conflicts, use keras::get_weights(model). Indeed, another package in the machine learning landscape, &lt;em&gt;yardstick&lt;/em&gt;, uses the function name “get_weights.”&lt;/p&gt;"><sup>19</sup></a> We do not execute the code here because the size of the output is much too large, as there are thousands of weights.</p>
+<p>Finally, from a practical point of view, the prediction is obtained via the usual predict() function. We use this function below on the testing sample to calculate the hit ratio.</p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">*</span> <span class="va">NN_test_labels</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.5327883</code></pre>
+<p></p>
+<p>Again, the hit ratio lies between 50% and 55%, which <em>seems</em> reasonably good. Most of the time, neural networks have their weights initialized randomly. Hence, two independently trained networks with the same architecture and same training data may well lead to very different predictions and performance! One way to bypass this issue is to freeze the random number generator. Models can also be easily exchanged by loading weights via the set_weights() function.</p>
+</div>
+<div id="classification-example" class="section level3" number="7.4.2">
+<h3>
+<span class="header-section-number">7.4.2</span> Classification example<a class="anchor" aria-label="anchor" href="#classification-example"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+We pursue our exploration of neural networks with a much more detailed example. The aim is to carry out a classification task on the binary label R1M_Usd_C. Before we proceed, we need to format the label properly. To this purpose, we resort to one-hot encoding (see Section <a href="Data.html#categorical-labels">4.5.2</a>).</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.decisionpatterns.com">dummies</a></span><span class="op">)</span>                                            <span class="co"># Package for one-hot encoding</span>
+<span class="va">NN_train_labels_C</span> <span class="op">&lt;-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dummies/man/dummy.html">dummy</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># One-hot encoding of the label</span>
+<span class="va">NN_test_labels_C</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dummies/man/dummy.html">dummy</a></span><span class="op">(</span><span class="op">)</span>    <span class="co"># One-hot encoding of the label</span></code></pre></div>
+<p></p>
+<p>The labels NN_train_labels_C and NN_test_labels_C have two columns: the first flags the instances with above median returns and the second flags those with below median returns. Note that we do not alter the feature variables: they remain unchanged. Below, we set the structure of the networks with many additional features compared to the first one.</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">model_C</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'tanh'</span>,               <span class="co"># Nb units &amp; activation</span>
+              input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span>,         <span class="co"># Size of input</span>
+              kernel_initializer <span class="op">=</span> <span class="st">"random_normal"</span>,          <span class="co"># Initialization of weights</span>
+              kernel_constraint <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/constraints.html">constraint_nonneg</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>   <span class="co"># Weights should be nonneg</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dropout.html">layer_dropout</a></span><span class="op">(</span>rate <span class="op">=</span> <span class="fl">0.25</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>                             <span class="co"># Dropping out 25% units</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'elu'</span>,                 <span class="co"># Nb units &amp; activation</span>
+              bias_initializer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/initializer_constant.html">initializer_constant</a></span><span class="op">(</span><span class="fl">0.2</span><span class="op">)</span>,  <span class="co"># Initialization of biases</span>
+              kernel_regularizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/regularizer_l1.html">regularizer_l2</a></span><span class="op">(</span><span class="fl">0.01</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="co"># Penalization of weights </span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>             <span class="co"># Softmax for categorical output</span></code></pre></div>
+<p></p>
+<p>Before we start commenting on the many options used above, we highlight that Keras models, unlike many R variables, are mutable objects. This means that any piping %&gt;% after calling a model will alter it. Hence, successive trainings do not start from scratch but from the result of the previous training.</p>
+<p>First, the options used above and below were chosen as illustrative examples and do not serve to particularly improve the quality of the model. The first change compared to Section <a href="NN.html#regression-example">7.4.1</a> is the activation functions. The first two are simply new cases, while the third one (for the output layer) is imperative. Indeed, since the goal is classification, the dimension of the output must be equal to the number of categories of the labels. The activation that yields a multivariate is the softmax function. Note that we must also specify the number of classes (categories) in the terminal layer.</p>
+<p>The second major innovation is options pertaining to parameters. One family of options deals with the initialization of weights and biases. In Keras, weights are referred to as the ‘kernel.’ The list of initializers is quite long and we suggest the interested reader has a look at the Keras reference (<a href="https://keras.io/initializers/" class="uri">https://keras.io/initializers/</a>). Most of them are random, but some of them are constant.</p>
+<p>Another family of options is the constraints and norm penalization that are applied on the weights and biases during training. In the above example, the weights of the first layer are coerced to be non-negative, while the weights of the second layer see their magnitude penalized by a factor (0.01) times their <span class="math inline">\(L^2\)</span> norm. </p>
+<p>Lastly, the final novelty is the dropout layer (see Section <a href="NN.html#penalizations-and-dropout">7.3.3</a>) between the first and second layers. According to this layer, one fourth of the units in the first layer will be (randomly) omitted during training.</p>
+<p>The specification of the training is outlined below.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_C</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                               <span class="co"># Model specification</span>
+  loss <span class="op">=</span> <span class="st">'binary_crossentropy'</span>,                  <span class="co"># Loss function</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_adam.html">optimizer_adam</a></span><span class="op">(</span>lr <span class="op">=</span> <span class="fl">0.005</span>,         <span class="co"># Optimisation method (weight updating)</span>
+                             beta_1 <span class="op">=</span> <span class="fl">0.9</span>, 
+                             beta_2 <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span>,        
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'categorical_accuracy'</span><span class="op">)</span>            <span class="co"># Output metric</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_C</span><span class="op">)</span>                                   <span class="co"># Model structure</span></code></pre></div>
+<pre><code>## Model: "sequential_25"
+## __________________________________________________________________________________________
+## Layer (type)                            Output Shape                        Param #       
+## ==========================================================================================
+## dense_66 (Dense)                        (None, 16)                          1504          
+## __________________________________________________________________________________________
+## dropout_4 (Dropout)                     (None, 16)                          0             
+## __________________________________________________________________________________________
+## dense_65 (Dense)                        (None, 8)                           136           
+## __________________________________________________________________________________________
+## dense_64 (Dense)                        (None, 2)                           18            
+## ==========================================================================================
+## Total params: 1,658
+## Trainable params: 1,658
+## Non-trainable params: 0
+## __________________________________________________________________________________________</code></pre>
+<p></p>
+<p>Here again, many changes have been made: all levels have been revised. The loss is now the cross-entropy. Because we work with two categories, we resort to a specific choice (binary cross-entropy), but the more general form is the option categorical_crossentropy and works for any number of classes (strictly above 1). The optimizer is also different and allows for several parameters and we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-kingma2014adam" role="doc-biblioref">Kingma and Ba</a> (<a href="solutions-to-exercises.html#ref-kingma2014adam" role="doc-biblioref">2014</a>)</span>. Simply put, the two beta parameters control decay rates for exponentially weighted moving averages used in the update of weights. The two averages are estimates for the first and second moment of the gradient and can be exploited to increase the speed of learning. The performance metric in the above chunk is the categorical accuracy. In multiclass classification, the accuracy is defined as the average accuracy over all classes and all predictions. Since a prediction for one instance is a vector of weights, the ‘terminal’ prediction is the class that is associated with the largest weight. The accuracy then measures the proportion of times when the prediction is equal to the realized value (i.e., when the class is correctly guessed by the model).</p>
+<p>Finally, we proceed with the training of the model.</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_NN_C</span> <span class="op">&lt;-</span> <span class="va">model_C</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                   <span class="co"># Training features</span>
+      <span class="va">NN_train_labels_C</span>,                                   <span class="co"># Training labels</span>
+      epochs <span class="op">=</span> <span class="fl">20</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                       <span class="co"># Training parameters</span>
+      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, 
+                             <span class="va">NN_test_labels_C</span><span class="op">)</span>,            <span class="co"># Test data</span>
+      verbose <span class="op">=</span> <span class="fl">0</span>,                                         <span class="co"># No comments from algo</span>
+      callbacks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://keras.rstudio.com/reference/callback_early_stopping.html">callback_early_stopping</a></span><span class="op">(</span>monitor <span class="op">=</span> <span class="st">"val_loss"</span>,    <span class="co"># Early stopping:</span>
+                                min_delta <span class="op">=</span> <span class="fl">0.001</span>,       <span class="co"># Improvement threshold</span>
+                                patience <span class="op">=</span> <span class="fl">3</span>,            <span class="co"># Nb epochs with no improvmt </span>
+                                verbose <span class="op">=</span> <span class="fl">0</span>              <span class="co"># No warnings</span>
+        <span class="op">)</span>
+      <span class="op">)</span>
+  <span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN_C</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:NN3C"></span>
+<img src="ML_factor_files/figure-html/NN3C-1.png" alt="Output from a trained neural network (classification task) with early stopping." width="400px"><p class="caption">
+FIGURE 7.8: Output from a trained neural network (classification task) with early stopping.
+</p>
+</div>
+<p></p>
+<p>There is only one major difference here compared to the previous training call. In Keras, callbacks are functions that can be used at given stages of the learning process. In the above example, we use one such function to stop the algorithm when no progress has been made for some time.</p>
+<p>When datasets are large, the training can be long, especially when batch sizes are small and/or the number of epochs is high. It is not guaranteed that going to the full number of epochs is useful, as the loss or metric functions may be plateauing much sooner. Hence, it can be very convenient to stop the process if no improvement is achieved during a specified time-frame. We set the number of epochs to 20, but the process will likely stop before that.</p>
+<p>In the above code, the improvement is focused on validation accuracy (“val_loss”; one alternative is “val_acc”). The min_delta value sets the minimum improvement that needs to be attained for the algorithm to continue. Therefore, unless the validation accuracy gains 0.001 points at each epoch, the training will stop. Nevertheless, some flexibility is introduced via the patience parameter, which in our case asserts that the halting decision is made only after three consecutive epochs with no improvement. In the option, the verbose parameter dictates the amount of comments that is made by the function. For simplicity, we do not want any comments, hence this value is set to zero.</p>
+<p>In Figure <a href="NN.html#fig:NN3C">7.8</a>, the two graphs yield very different curves. One reason for that is the scale of the second graph. The range of accuracies is very narrow. Any change in this range does not represent much variation overall. The pattern is relatively clear on the training sample: the loss decreases, while the accuracy improves. Unfortunately, this does not translate to the testing sample which indicates that the model does not generalize well out-of-sample.</p>
+</div>
+<div id="custloss" class="section level3" number="7.4.3">
+<h3>
+<span class="header-section-number">7.4.3</span> Custom losses<a class="anchor" aria-label="anchor" href="#custloss"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In Keras, it is possible to define user-specified loss functions. This may be interesting in some cases. For instance, the quadratic error has three terms <span class="math inline">\(y_i^2\)</span>, <span class="math inline">\(\tilde{y}_i^2\)</span> and <span class="math inline">\(-2y_i\tilde{y}_i\)</span>. In practice, it can make sense to focus more on the latter term because it is the most essential: we do want predictions and realized values to have the same sign! Below we show how to optimize on a simple (product) function in Keras, <span class="math inline">\(l(y_i,\tilde{y}_i)=(\tilde{y}_i-\tilde{m})^2-\gamma (y_i-m)(\tilde{y}_i-\tilde{m})\)</span>, where <span class="math inline">\(m\)</span> and <span class="math inline">\(\tilde{m}\)</span> are the sample averages of <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\tilde{y}_i\)</span>. With <span class="math inline">\(\gamma&gt;2\)</span>, we give more weight to the cross term. We start with a simple architecture.</p>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_custom</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">model_custom</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_train_features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># No activation means linear activation: f(x) = x.</span></code></pre></div>
+<p></p>
+<p>Then we code the loss function and integrate it to the model. The important trick is to resort to functions that are specific to the library (the k_<em>functions</em>). We code the variance of predicted values minus the scaled covariance between realized and predicted values. Below we use a scale of five.</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Defines the loss, we use gamma = 5</span>
+<span class="va">metric_cust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/custom_metric.html">custom_metric</a></span><span class="op">(</span><span class="st">"custom_loss"</span>, 
+                             <span class="kw">function</span><span class="op">(</span><span class="va">y_true</span>, <span class="va">y_pred</span><span class="op">)</span> <span class="op">{</span>
+                               <span class="fu"><a href="https://keras.rstudio.com/reference/k_mean.html">k_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">-</span><span class="fl">5</span><span class="op">*</span><span class="fu"><a href="https://keras.rstudio.com/reference/k_mean.html">k_mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_true</span> <span class="op">-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_true</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="op">(</span><span class="va">y_pred</span> <span class="op">-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/k_mean.html">k_mean</a></span><span class="op">(</span><span class="va">y_pred</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+                             <span class="op">}</span><span class="op">)</span>
+
+<span class="va">model_custom</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                                          <span class="co"># Model specification</span>
+  loss <span class="op">=</span>  <span class="va">metric_cust</span>, <span class="co">#function(y_true, y_pred) custom_loss(y_true, y_pred),  # New loss function!</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,                               <span class="co"># Optim method </span>
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>                             <span class="co"># Output metric</span>
+<span class="op">)</span></code></pre></div>
+<p></p>
+<p>Finally, we are ready to train and briefly evaluate the performance of the model.</p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_NN_cust</span> <span class="op">&lt;-</span> <span class="va">model_custom</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_train_features</span>,                                       <span class="co"># Training features</span>
+      <span class="va">NN_train_labels</span>,                                         <span class="co"># Training labels</span>
+      epochs <span class="op">=</span> <span class="fl">10</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Training parameters</span>
+      validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">NN_test_features</span>, <span class="va">NN_test_labels</span><span class="op">)</span> <span class="co"># Test data</span>
+  <span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN_cust</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span>  </code></pre></div>
+<div class="inline-figure"><img src="ML_factor_files/figure-html/NN2cust-1.png" width="672" style="display: block; margin: auto;"></div>
+<p></p>
+<p>The curves may go in opposite direction. One reason for that is that while improving correlation between realized and predicted values, we are also increasing the sum of squared predicted returns.</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model_custom</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">*</span> <span class="va">NN_test_labels</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.4469434</code></pre>
+<p></p>
+<p>The outcome could be improved. There are several directions that could help. One of them is arguably that the model should be dynamic and not static (see Chapter <a href="backtest.html#backtest">12</a>).</p>
+</div>
+</div>
+<div id="RNN" class="section level2" number="7.5">
+<h2>
+<span class="header-section-number">7.5</span> Recurrent networks<a class="anchor" aria-label="anchor" href="#RNN"><i class="fas fa-link"></i></a>
+</h2>
+<div id="presentation" class="section level3" number="7.5.1">
+<h3>
+<span class="header-section-number">7.5.1</span> Presentation<a class="anchor" aria-label="anchor" href="#presentation"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Multilayer perceptrons are feed-forward networks because the data flows from left to right with no looping in between. For some particular tasks with sequential linkages (e.g., time-series or speech recognition), it might be useful to keep track of what happened with the previous sample (i.e., there is a natural ordering). One simple way to model ‘memory’ would be to consider the following network with only one intermediate layer:
+<span class="math display">\[\begin{align*}
+\tilde{y}_i&amp;=f^{(y)}\left(\sum_{j=1}^{U_1}h_{i,j}w^{(y)}_j+b^{(2)}\right) \\
+\textbf{h}_{i} &amp;=f^{(h)}\left(\sum_{k=1}^{U_0}x_{i,k}w^{(h,1)}_k+b^{(1)}+ \underbrace{\sum_{k=1}^{U_1}  w^{(h,2)}_{k}h_{i-1,k}}_{\text{memory part}} \right),
+\end{align*}\]</span></p>
+<p>where <span class="math inline">\(h_0\)</span> is customarily set at zero (vector-wise).</p>
+<p>These kinds of models are often referred to as <span class="citation"><a href="solutions-to-exercises.html#ref-elman1990finding" role="doc-biblioref">Elman</a> (<a href="solutions-to-exercises.html#ref-elman1990finding" role="doc-biblioref">1990</a>)</span> models or to <span class="citation"><a href="solutions-to-exercises.html#ref-jordan1997serial" role="doc-biblioref">Jordan</a> (<a href="solutions-to-exercises.html#ref-jordan1997serial" role="doc-biblioref">1997</a>)</span> models if in the latter case <span class="math inline">\(h_{i-1}\)</span> is replaced by <span class="math inline">\(y_{i-1}\)</span> in the computation of <span class="math inline">\(h_i\)</span>. Both types of models fall under the overarching umbrella of Recurrent Neural Networks (RNNs).</p>
+<p>The <span class="math inline">\(h_i\)</span> is usually called the state or the hidden layer. The training of this model is complicated and must be done by unfolding the network over all instances to obtain a simple feed-forward network and train it regularly. We illustrate the unfolding principle in Figure <a href="NN.html#fig:recnet">7.9</a>. It shows a very deep network. The first input impacts the first layer and then the second one via <span class="math inline">\(h_1\)</span> and all following layers in the same fashion. Likewise, the second input impacts all layers except the first and each instance <span class="math inline">\(i-1\)</span> is going to impact the output <span class="math inline">\(\tilde{y}_i\)</span> and all outputs <span class="math inline">\(\tilde{y}_j\)</span> for <span class="math inline">\(j \ge i\)</span>. In Figure <a href="NN.html#fig:recnet">7.9</a>, the parameters that are trained are shown in blue. They appear many times, in fact, at each level of the unfolded network.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:recnet"></span>
+<img src="images/RN.png" alt="Unfolding a recurrent network." width="680px"><p class="caption">
+FIGURE 7.9: Unfolding a recurrent network.
+</p>
+</div>
+<p>The main problem with the above architecture is the loss of memory induced by <strong>vanishing gradients</strong>. Because of the depth of the model, the chain rule used in the back-propagation will imply a large number of products of derivatives of activation functions. Now, as is shown in Figure <a href="NN.html#fig:activationf">7.4</a>, these functions are very smooth and their derivatives are most of the time smaller than one (in absolute value). Hence, multiplying many numbers smaller than one leads to very small figures: beyond some layers, the learning does not propagate because the adjustments are too small.</p>
+<p>One way to prevent this progressive discounting of the memory was introduced in <span class="citation"><a href="solutions-to-exercises.html#ref-hochreiter1997long" role="doc-biblioref">Hochreiter and Schmidhuber</a> (<a href="solutions-to-exercises.html#ref-hochreiter1997long" role="doc-biblioref">1997</a>)</span> (Long-Short Term Memory - LSTM model). This model was subsequently simplified by the authors <span class="citation"><a href="solutions-to-exercises.html#ref-chung2015gated" role="doc-biblioref">Chung et al.</a> (<a href="solutions-to-exercises.html#ref-chung2015gated" role="doc-biblioref">2015</a>)</span> and we present this more parsimonious model below. The Gated Recurrent Unit (GRU) is a slightly more complicated version of the vanilla recurrent network defined above. It has the following representation:
+<span class="math display">\[\begin{align*}
+\tilde{y}_i&amp;=z_i\tilde{y}_{i-1}+ (1-z_i)\tanh \left(\textbf{w}_y'\textbf{x}_i+ b_y+ u_yr_i\tilde{y}_{i-1}\right) \quad \text{output (prediction)} \\
+z_i &amp;= \text{sig}(\textbf{w}_z'\textbf{x}_i+b_z+u_z\tilde{y}_{i-1})  \hspace{9mm} \text{`update gate'} \ \in (0,1)\\
+r_i &amp;= \text{sig}(\textbf{w}_r'\textbf{x}_i+b_r+u_r\tilde{y}_{i-1}) \hspace{9mm} \text{`reset gate'}  \ \in (0,1).
+\end{align*}\]</span>
+In compact form, this gives
+<span class="math display">\[\tilde{y}_i=\underbrace{z_i}_{\text{weight}}\underbrace{\tilde{y}_{i-1}}_{\text{past value}}+ \underbrace{(1-z_i)}_{\text{weight}}\underbrace{\tanh \left(\textbf{w}_y'\textbf{x}_i+ b_y+ u_yr_i\tilde{y}_{i-1}\right)}_{\text{candidate value (classical RNN)}}, \]</span></p>
+<p>where the <span class="math inline">\(z_i\)</span> decides the optimal mix between the current and past values. For the candidate value, <span class="math inline">\(r_i\)</span> decides which amount of past/memory to retain. <span class="math inline">\(r_i\)</span> is commonly referred to as the ‘<em>reset gate</em>’ and <span class="math inline">\(z_i\)</span> to the ‘<em>update gate</em>.’</p>
+<p>There are some subtleties in the training of a recurrent network. Indeed, because of the chaining between the instances, each batch must correspond to a coherent time series. A logical choice is thus one batch per asset with instances (logically) chronologically ordered. Lastly, one option in some frameworks is to keep some memory between the batches by passing the final value of <span class="math inline">\(\tilde{y}_i\)</span> to the next batch (for which it will be <span class="math inline">\(\tilde{y}_0\)</span>). This is often referred to as the stateful mode and should be considered meticulously. It does not seem desirable in a portfolio prediction setting if the batch size corresponds to all observations for each asset: there is no particular link between assets. If the dataset is divided into several parts for each given asset, then the training must be handled very cautiously.</p>
+<p>Reccurrent networks and LSTM especially have been found to be good forecasting tools in financial contexts (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-fischer2018deep" role="doc-biblioref">Fischer and Krauss</a> (<a href="solutions-to-exercises.html#ref-fischer2018deep" role="doc-biblioref">2018</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-wang2019portfolio" role="doc-biblioref">W. Wang et al.</a> (<a href="solutions-to-exercises.html#ref-wang2019portfolio" role="doc-biblioref">2020</a>)</span>, and <span class="citation"><a href="solutions-to-exercises.html#ref-fister2021two" role="doc-biblioref">Fister, Perc, and Jagrič</a> (<a href="solutions-to-exercises.html#ref-fister2021two" role="doc-biblioref">2021</a>)</span>).</p>
+</div>
+<div id="code-and-results-2" class="section level3" number="7.5.2">
+<h3>
+<span class="header-section-number">7.5.2</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results-2"><i class="fas fa-link"></i></a>
+</h3>
+<p>Recurrent networks are theoretically more complicated compared to multilayered perceptrons. In practice, they are also more challenging in their implementation. Indeed, the serial linkages require more attention compared to feed-forward architectures. In an asset pricing framework, we must separate the assets because the stock-specific time series cannot be bundled together. The learning will be sequential, one stock at a time.</p>
+<p>The dimensions of variables are crucial. In Keras, they are defined for RNNs as:</p>
+<ol style="list-style-type: decimal">
+<li>The size of the batch: in our case, it will be the number of assets. Indeed, the recurrence relationship holds at the asset level, hence each asset will represent a new batch on which the model will learn.<br>
+</li>
+<li>The time steps: in our case, it will simply be the number of dates.<br>
+</li>
+<li>The number of features: in our case, there is only one possible figure which is the number of predictors.</li>
+</ol>
+<p>For simplicity and in order to reduce computation times, we will use the same subset of stocks as that from Section <a href="lasso.html#sparseex">5.2.2</a>. This yields a perfectly rectangular dataset in which all dates have the same number of observations.</p>
+<p>First, we create some new, intermediate variables.</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_rnn</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>                                  <span class="co"># Dedicated dataset</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">stock_ids_short</span><span class="op">)</span>
+<span class="va">training_sample_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">data_rnn</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="va">separation_date</span><span class="op">)</span>
+<span class="va">testing_sample_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">data_rnn</span>, <span class="va">date</span> <span class="op">&gt;</span> <span class="va">separation_date</span><span class="op">)</span>
+<span class="va">nb_stocks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">stock_ids_short</span><span class="op">)</span>                     <span class="co"># Nb stocks </span>
+<span class="va">nb_feats</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span>                             <span class="co"># Nb features</span>
+<span class="va">nb_dates_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">training_sample</span><span class="op">)</span> <span class="op">/</span> <span class="va">nb_stocks</span>      <span class="co"># Nb training dates (size of sample)</span>
+<span class="va">nb_dates_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">)</span> <span class="op">/</span> <span class="va">nb_stocks</span>        <span class="co"># Nb testing dates</span></code></pre></div>
+<p></p>
+<p>Then, we construct the variables we will pass as arguments. We recall that the data file was ordered first by stocks and then by date (see Section <a href="notdata.html#dataset">1.2</a>).</p>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">train_features_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span><span class="va">NN_train_features</span>,           <span class="co"># Formats the training data into array</span>
+                            dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_train</span>, <span class="va">nb_stocks</span>, <span class="va">nb_feats</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="co"># Tricky order</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>                                      <span class="co"># The order is: stock, date, feature </span>
+<span class="va">test_features_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span><span class="va">NN_test_features</span>,             <span class="co"># Formats the testing data into array</span>
+                           dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_test</span>, <span class="va">nb_stocks</span>, <span class="va">nb_feats</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>  <span class="co"># Tricky order</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>                                      <span class="co"># The order is: stock, date, feature </span>
+<span class="va">train_labels_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">NN_train_labels</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_train</span>, <span class="va">nb_stocks</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>
+<span class="va">test_labels_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">NN_test_labels</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/array.html">array</a></span><span class="op">(</span>dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_dates_test</span>, <span class="va">nb_stocks</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p></p>
+<p>Finally, we move towards the training part. For simplicity, we only consider a simple RNN with only one layer. The structure is outlined below. In terms of recurrence structure, we pick a Gated Recurrent Unit (GRU). </p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_RNN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_gru.html">layer_gru</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>,                              <span class="co"># Nb units in hidden layer</span>
+            batch_input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_stocks</span>,         <span class="co"># Dimensions = tricky part!</span>
+                                  <span class="va">nb_dates_train</span>, 
+                                  <span class="va">nb_feats</span><span class="op">)</span>, 
+            activation <span class="op">=</span> <span class="st">'tanh'</span>,                     <span class="co"># Activation function</span>
+            return_sequences <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>             <span class="co"># Return all the sequence</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                             <span class="co"># Final aggregation layer</span>
+<span class="va">model_RNN</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>
+  loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,                       <span class="co"># Loss = quadratic</span>
+  optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,                   <span class="co"># Backprop</span>
+  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>                 <span class="co"># Output metric MAE</span>
+<span class="op">)</span></code></pre></div>
+<p></p>
+<p>There are many options available for recurrent layers. For GRUs, we refer to the Keras documentation <a href="https://keras.rstudio.com/reference/layer_gru.html" class="uri">https://keras.rstudio.com/reference/layer_gru.html</a>. We comment briefly on the option return_sequences which we activate. In many cases, the output is simply the terminal value of the sequence. If we do not require the entirety of the sequence to be returned, we will face a problem in the dimensionality because the label is indeed a full sequence.
+Once the structure is determined, we can move forward to the training stage.</p>
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_RNN</span> <span class="op">&lt;-</span> <span class="va">model_RNN</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">train_features_rnn</span>,   <span class="co"># Training features        </span>
+                             <span class="va">train_labels_rnn</span>,                <span class="co"># Training labels</span>
+                             epochs <span class="op">=</span> <span class="fl">10</span>,                     <span class="co"># Number of rounds</span>
+                             batch_size <span class="op">=</span> <span class="va">nb_stocks</span>,          <span class="co"># Length of sequences</span>
+                             verbose <span class="op">=</span> <span class="fl">0</span><span class="op">)</span>                     <span class="co"># No comments</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_RNN</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggtheme.html">theme_light</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:RNN2"></span>
+<img src="ML_factor_files/figure-html/RNN2-1.png" alt="Output from a trained recurrent neural network (regression task)." width="600"><p class="caption">
+FIGURE 7.10: Output from a trained recurrent neural network (regression task).
+</p>
+</div>
+<p></p>
+<p>Compared to our previous models, the major difference both in the ouptut (the graph on Figure <a href="NN.html#fig:RNN2">7.10</a>) and the input (the code) is the absence of validation (or testing) data. One reason for that is because Keras is very restrictive on RNNs and imposes that both the training and testing samples share the same dimensions. In our situation this is obviously not the case, hence we must bypass this obstacle by duplicating the model.</p>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">new_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_gru.html">layer_gru</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, 
+            batch_input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">nb_stocks</span>,          <span class="co"># New dimensions</span>
+                                  <span class="va">nb_dates_test</span>, 
+                                  <span class="va">nb_feats</span><span class="op">)</span>, 
+            activation <span class="op">=</span> <span class="st">'tanh'</span>,                      <span class="co"># Activation function</span>
+            return_sequences <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span>              <span class="co"># Return the full sequence</span>
+  <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                              <span class="co"># Output dimension</span>
+<span class="va">new_model</span> <span class="op"><a href="https://keras.rstudio.com/reference/pipe.html">%&gt;%</a></span> <span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://keras.rstudio.com/reference/get_weights.html">set_weights</a></span><span class="op">(</span><span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://keras.rstudio.com/reference/get_weights.html">get_weights</a></span><span class="op">(</span><span class="va">model_RNN</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p></p>
+<p>Finally, once the new model is ready, and with the matching dimensions, we can push forward to predicting the test values. We resort to the predict() function and immediately compute the hit ratio obtained by the model.</p>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">pred_rnn</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">new_model</span>, <span class="va">test_features_rnn</span>, batch_size <span class="op">=</span> <span class="va">nb_stocks</span><span class="op">)</span> <span class="co"># Predictions</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="va">pred_rnn</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">test_labels_rnn</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span>           <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.4961166</code></pre>
+<p></p>
+<p>The hit ratio is close to 50%, hence the model does hardly better than coin tossing.</p>
+<p>Before we close this section on RNNs, we mention a new type architecture, called <span class="math inline">\(\alpha\)</span>-RNN which are simpler compared to LSTMs and GRUs. They consist in vanilla RNNs to which a simple autocorrelation is added to generate long term memory. We refer to the paper <span class="citation"><a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">Matthew F. Dixon</a> (<a href="solutions-to-exercises.html#ref-dixon2020industrial" role="doc-biblioref">2020</a>)</span> for more details on this subject.</p>
+</div>
+</div>
+<div id="tabular-networks-tabnets" class="section level2" number="7.6">
+<h2>
+<span class="header-section-number">7.6</span> Tabular networks (TabNets)<a class="anchor" aria-label="anchor" href="#tabular-networks-tabnets"><i class="fas fa-link"></i></a>
+</h2>
+<p> </p>
+<p>The superiority of neural networks in tasks related to computer vision and natural language processing is now well established. However, in many ML tournaments in the 2010 decade, neural networks have often been surpassed by tree-based models when dealing with tabular data (see <span class="citation"><a href="solutions-to-exercises.html#ref-shwartz2021tabular" role="doc-biblioref">Shwartz-Ziv and Armon</a> (<a href="solutions-to-exercises.html#ref-shwartz2021tabular" role="doc-biblioref">2021</a>)</span>). This puzzle encouraged researchers to construct novel NN structures that are better suited to tabular databases. Examples include <span class="citation"><a href="solutions-to-exercises.html#ref-arik2019tabnet" role="doc-biblioref">Arik and Pfister</a> (<a href="solutions-to-exercises.html#ref-arik2019tabnet" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-popov2019neural" role="doc-biblioref">Popov, Morozov, and Babenko</a> (<a href="solutions-to-exercises.html#ref-popov2019neural" role="doc-biblioref">2019</a>)</span>. Surprisingly, the reverse idea also exists: <span class="citation"><a href="solutions-to-exercises.html#ref-nuti2019adaptive" role="doc-biblioref">Nuti, Rugama, and Thommen</a> (<a href="solutions-to-exercises.html#ref-nuti2019adaptive" role="doc-biblioref">2019</a>)</span> try to adapt trees and random forests so that they behave more like neural networks. The interested reader can have a look at the original papers. In this subsection, we detail the architecture introduced in <span class="citation"><a href="solutions-to-exercises.html#ref-arik2019tabnet" role="doc-biblioref">Arik and Pfister</a> (<a href="solutions-to-exercises.html#ref-arik2019tabnet" role="doc-biblioref">2020</a>)</span>, the so-called TabNets. Even if they are quite young, neural networks for tabular data already have their own survey, <span class="citation"><a href="solutions-to-exercises.html#ref-borisov2021deep" role="doc-biblioref">Borisov et al.</a> (<a href="solutions-to-exercises.html#ref-borisov2021deep" role="doc-biblioref">2021</a>)</span>.</p>
+<div id="the-zoo-of-layers" class="section level3" number="7.6.1">
+<h3>
+<span class="header-section-number">7.6.1</span> The zoo of layers<a class="anchor" aria-label="anchor" href="#the-zoo-of-layers"><i class="fas fa-link"></i></a>
+</h3>
+<p>In Figure <a href="NN.html#fig:MLperceptron">7.3</a>, both layers are of the same type. They take a vector of inputs and return a number which is a linear combination of these inputs. In the ML jargon, this type of layer is called “<em>fully connected</em>” (FC). In Keras syntax, they are referred to as “<em>layer_dense</em>.”</p>
+<p></p>
+<p>There are many other layer types. The recurrent layer described in the previous section <a href="NN.html#RNN">7.5</a> is one example and convolutional layers (see next section <a href="NN.html#CNN">7.7.3</a>) are another family of layers. One simple yet useful layer is batch normalization (BN). The idea is that before processing the output of a previous layer, we want to normalize the information that is coming to a new layer. In most of our applications, the inputs and outputs are matrices and BN amounts to perform the same two operations on the columns of these matrices. the first operation is to retrieve the mean, so that column averages are zero. The second operation is to divide by the standard deviation, so that column variances are equal to one. One useful property is that then all inputs have relatively similar statistical properties (though not necessarily the same distributions).</p>
+<p>In ML papers, models and architectures are thus represented as series of layers. In short, Figure <a href="NN.html#fig:MLperceptron">7.3</a> could be written:
+<span class="math display">\[\text{input} \rightarrow FC \rightarrow FC \rightarrow \text{output},\]</span></p>
+<p>which has the advantage of being compact, but which also omits some important details, like the numbers of units per layer and the nature of the activation functions. Modern deep learning models are so complex that succinct overviews like this one are easier to read.</p>
+<p>
+Another interesting layer type is the Gated Linear Unit (GLU). Given a matrix input <span class="math inline">\(\textbf{X}\)</span>, the GLU yields
+<span class="math display">\[\text{GLU}(\textbf{X}) = (\textbf{XW} + \textbf{b}) \cdot \sigma(\textbf{XW} + \textbf{b}),\]</span>
+where “<span class="math inline">\(\cdot\)</span>” is the Hadamard (element-wise) matrix product and <span class="math inline">\(\sigma\)</span> is the sigmoid function (GLUs can be generalized to other easily differentiable functions).</p>
+</div>
+<div id="sparsemax-activation" class="section level3" number="7.6.2">
+<h3>
+<span class="header-section-number">7.6.2</span> Sparsemax activation<a class="anchor" aria-label="anchor" href="#sparsemax-activation"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>Before we proceed to a direct presentation of TabNets, we need to present an interesting concept introduced by
+<span class="citation"><a href="solutions-to-exercises.html#ref-martins2016softmax" role="doc-biblioref">Martins and Astudillo</a> (<a href="solutions-to-exercises.html#ref-martins2016softmax" role="doc-biblioref">2016</a>)</span>: the sparsemax transform. The original idea of sparsemax is to simplify the softmax activation function for multiclass outputs. At the final stage of a classification network (see Section <a href="NN.html#NNclass">7.2.4</a>), the activation is often taken to be <span class="math inline">\(e^{x_i}/\sum_{j=1}^Je^{x_j}\)</span>, where the vector <span class="math inline">\(\textbf{x}\)</span> is the output of the final layer. Because of the property of the exponential function, this means that all classes will end up with a strictly positive score or probability. This is not desirable because often we prefer decisions that are clear-cut, i.e., when an improbable class gets a zero probability.</p>
+<p>To force weak values to zeros, <span class="citation"><a href="solutions-to-exercises.html#ref-martins2016softmax" role="doc-biblioref">Martins and Astudillo</a> (<a href="solutions-to-exercises.html#ref-martins2016softmax" role="doc-biblioref">2016</a>)</span> resort to a special projection which they call sparsemax. The starting point is the <span class="math inline">\(N-1\)</span>-dimensional simplex</p>
+<p><span class="math display">\[ \mathbb{S}_N=\left\{ \mathbf{x} \in \mathbb{R}^N \left|\sum_{n=1}^Nx_n=1, \ x_n\ge 0, \ \forall n=1,\dots N.\right.\right\} \]</span>
+This space encompasses all possible combinations of probabilities for a classification outcome with <span class="math inline">\(N\)</span> classes. Given a vector <span class="math inline">\(\textbf{x}\)</span>, the sparsemax function is defined as
+<span class="math display">\[\text{sparsemax}(\textbf{x}) = \underset{\textbf{z} \in \mathbb{S}_N}{\text{argmin}} \ ||\textbf{z} - \textbf{x}||,\]</span>
+which is equal to the projection of <span class="math inline">\(\textbf{x}\)</span> onto <span class="math inline">\(\mathbb{S}_N\)</span>. We illustrate the difference between softmax and sparsemax functions in dimension 1 in Figure <a href="NN.html#fig:sparsemax">7.11</a>. It is clear that the outcome is much clearer for the sparsemax function: when the input is small, the output is zero and when it is large, the output in one. This generates discrepancies that are easier to handle. In large dimension, this yields sparse outputs, which have desirable properties (smaller encoding sizes, simpler interpretation).</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:sparsemax"></span>
+<img src="ML_factor_files/figure-html/sparsemax-1.png" alt="Softmax versus sparsemax in 1 dimension." width="600"><p class="caption">
+FIGURE 7.11: Softmax versus sparsemax in 1 dimension.
+</p>
+</div>
+</div>
+<div id="feature-selection-1" class="section level3" number="7.6.3">
+<h3>
+<span class="header-section-number">7.6.3</span> Feature selection<a class="anchor" aria-label="anchor" href="#feature-selection-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>One key element in TabNets is the fact that they are, so to speak “<em>one-size fits all</em>” (akin to Auto-ML, they aim at providing a packaged solution that can tackle a large spectrum of problems.). This is why the batch normalization layers are to useful: they can handle very different type of numerical inputs.</p>
+<p>The first important component of TabNets is feature selection. The rationale is that we want to learn more intensely from the predictors which matter and not lose time on noisy variables. As is customary for “vanilla” NNs, we consider the case of a rectangular (matrix-shaped) batch <span class="math inline">\(\textbf{f}\)</span> of size <span class="math inline">\(B \times K\)</span>. In TabNets, the selection of features takes the form of a <em>mask</em>, that is, another matrix of the same dimension that multiplies (i.e., discounts) its values. If the mask value for an element is 1, the feature remains, if it is zero, it disappears (metaphorically speaking), and in between the two, its important is simply attenuated.</p>
+<p>In TabNets, learning is sequential and consists of <em>step</em>. Each step indexed by <span class="math inline">\(i\)</span>. The mask applied to features at step <span class="math inline">\(i\)</span> is <span class="math inline">\(\textbf{M}[i]\)</span>, so that masked features are <span class="math inline">\(\textbf{M}[i] \cdot \textbf{f}\)</span>, where again <span class="math inline">\(\cdot\)</span> denotes the Hadamard product.</p>
+<p>[To be completed]</p>
+</div>
+<div id="the-full-architecture" class="section level3" number="7.6.4">
+<h3>
+<span class="header-section-number">7.6.4</span> The full architecture<a class="anchor" aria-label="anchor" href="#the-full-architecture"><i class="fas fa-link"></i></a>
+</h3>
+<p>[Under construction]</p>
+</div>
+<div id="code-and-results-3" class="section level3" number="7.6.5">
+<h3>
+<span class="header-section-number">7.6.5</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>In R, TabNets are coded via the <strong>torch</strong> framework. They require both packages torch &amp; tabnet to be installed. We start by defining the network structure, i.e., setting the hyperparameters. We also resort to the package <strong>parsnip</strong> from the <strong>tidymodels</strong> suite, which allows a uniform grammar in model declaration.</p>
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs">torch</a></span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"torch"</span>, <span class="st">"tabnet"</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://torch.mlverse.org/docs">torch</a></span><span class="op">)</span>          <span class="co"># General framework for NNs</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/mlverse/tabnet">tabnet</a></span><span class="op">)</span>         <span class="co"># Package for tabular networks</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/recipes">recipes</a></span><span class="op">)</span>        <span class="co"># Uniform ML models</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>            <span class="co"># Random seed</span>
+
+<span class="va">tab_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tabnet/man/tabnet.html">tabnet</a></span><span class="op">(</span>
+  mode <span class="op">=</span> <span class="st">"regression"</span>,  <span class="co"># ML task</span>
+  epochs <span class="op">=</span> <span class="fl">5</span>,           <span class="co"># Nb epochs / rounds</span>
+  batch_size <span class="op">=</span> <span class="fl">4000</span>,    <span class="co"># Batch size</span>
+  virtual_batch_size <span class="op">=</span> <span class="fl">1024</span>,
+  penalty <span class="op">=</span> <span class="fl">1</span>,
+  learn_rate <span class="op">=</span> <span class="fl">0.01</span>,
+  decision_width <span class="op">=</span> <span class="fl">16</span>,
+  attention_width <span class="op">=</span> <span class="fl">8</span>,
+  num_independent <span class="op">=</span> <span class="fl">1</span>,
+  num_shared <span class="op">=</span> <span class="fl">1</span>,
+  num_steps <span class="op">=</span> <span class="fl">5</span>,
+  momentum <span class="op">=</span> <span class="fl">0.02</span>
+<span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/pkg/parsnip/man/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"torch"</span><span class="op">)</span> </code></pre></div>
+<p>Next, we provide the features and label required to learn. We train it on a smaller dataset for simplicity. Note that the syntax is the same as that of simple models in R (e.g., generalized linear models).</p>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_short</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>         <span class="co"># Shorter dataset</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">stock_ids_short</span>,
+         <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="st">"date"</span>, <span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">fit_tabnet</span> <span class="op">&lt;-</span> <span class="va">tab_model</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">~</span> <span class="va">Div_Yld</span> <span class="op">+</span> <span class="va">Eps</span> <span class="op">+</span> <span class="va">Mkt_Cap_12M_Usd</span> <span class="op">+</span> <span class="va">Mom_11M_Usd</span> <span class="op">+</span> <span class="va">Pb</span> <span class="op">+</span> <span class="va">Vol1Y_Usd</span>, 
+      data <span class="op">=</span> <span class="va">data_short</span><span class="op">)</span>   </code></pre></div>
+<p>Finally, we make some predictions and compute the hit ratio.</p>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tab_pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tabnet</span>,
+                    <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                                                <span class="co"># A test set</span>
+                      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">stock_ids_short</span>,
+                                    <span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+                      <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="st">"date"</span>, <span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                                                <span class="co"># A test set</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">stock_ids_short</span>,
+                <span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op">*</span> <span class="va">tab_pred</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.5061184</code></pre>
+</div>
+</div>
+<div id="other-common-architectures" class="section level2" number="7.7">
+<h2>
+<span class="header-section-number">7.7</span> Other common architectures<a class="anchor" aria-label="anchor" href="#other-common-architectures"><i class="fas fa-link"></i></a>
+</h2>
+<p>In this section, we present other network structures. Because they are less mainstream and often harder to implement, we do not propose code examples and stick to theoretical introductions.</p>
+<div id="generative-aversarial-networks" class="section level3" number="7.7.1">
+<h3>
+<span class="header-section-number">7.7.1</span> Generative adversarial networks<a class="anchor" aria-label="anchor" href="#generative-aversarial-networks"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The idea of Generative Adversarial Networks (GANs) is to improve the accuracy of a classical neural network by trying to fool it. This very popular idea was introduced by <span class="citation"><a href="solutions-to-exercises.html#ref-goodfellow2014generative" role="doc-biblioref">Goodfellow et al.</a> (<a href="solutions-to-exercises.html#ref-goodfellow2014generative" role="doc-biblioref">2014</a>)</span>. Imagine you are an expert in Picasso paintings and that you boast about being able to easily recognize any piece of work from the painter. One way to refine your skill is to test them against a counterfeiter. A true expert should be able to discriminate between a true original Picasso and one emanating from a forger. This is the principle of GANs.</p>
+<p>GANs consist in two neural networks: the first one tries to learn and the second one tries to fool the first (induce it into error). Just like in the example above, there are also two sets of data: one (<span class="math inline">\(\textbf{x}\)</span>) is true (or correct), stemming from a classical training sample and the other one (<span class="math inline">\(\textbf{z}\)</span>) is fake and generated by the counterfeiter network.</p>
+<p>In the GAN nomenclature, the network that learns is <span class="math inline">\(D\)</span> because it is supposed to discriminate, while the forger is <span class="math inline">\(G\)</span> because it generates false data. In their original formulation, GANs are aimed at classifying. To ease the presentation, we keep this scope. The discriminant network has a simple (scalar) output: the probability that its input comes from true data (versus fake data). The input of <span class="math inline">\(G\)</span> is some arbitrary noise and its output has the same shape/form as the input of <span class="math inline">\(D\)</span>.</p>
+<p>We state the theoretical formula of a GAN directly and comment on it below. <span class="math inline">\(D\)</span> and <span class="math inline">\(G\)</span> play the following minimax game:
+<span class="math display" id="eq:GAN">\[\begin{equation}
+\tag{7.7}
+\underset{G}{\min} \ \underset{D}{\max} \ \left\{ \mathbb{E}[\log(D(\textbf{x}))]+\mathbb{E}[\log(1-D(G(\textbf{z})))] \right\}.
+\end{equation}\]</span></p>
+<p>First, let us decompose this expression in its two parts (the optimizers). The first part (i.e., the first max) is the classical one: the algorithm seeks to maximize the probability of assigning the correct label to all examples it seeks to classify. As is done in economics and finance, the program does not maximize <span class="math inline">\(D(\textbf{x})\)</span> itself on average, but rather a functional form (like a utility function).</p>
+<p>On the left side, since the expectation is driven by <span class="math inline">\(\textbf{x}\)</span>, the objective must be increasing in the output. On the right side, where the expectation is evaluated over the fake instances, the right classification is the opposite, i.e., <span class="math inline">\(1-D(G(\textbf{z}))\)</span>.</p>
+<p>The second, overarching, part seeks to minimize the performance of the algorithm on the simulated data: it aims at shrinking the odds that <span class="math inline">\(D\)</span> finds out that the data is indeed corrupt. A summarized version of the structure of the network is provided below in Figure <a href="NN.html#eq:GAN2">(7.8)</a>.</p>
+<p><span class="math display" id="eq:GAN2">\[\begin{equation}
+\tag{7.8}
+\left. \begin{array}{rlll} 
+\text{training sample}  = \textbf{x} = \text{true data} &amp;&amp; \\
+\text{noise}= \textbf{z} \quad \overset{G}{\rightarrow} \quad  \text{fake data}  &amp;
+\end{array} \right\} \overset{D}{\rightarrow} \text{output = probability for label}
+\end{equation}\]</span></p>
+<p>In ML-based asset pricing, the most notable application of GANs was introduced in <span class="citation"><a href="solutions-to-exercises.html#ref-chen2019deep" role="doc-biblioref">Luyang Chen, Pelger, and Zhu</a> (<a href="solutions-to-exercises.html#ref-chen2019deep" role="doc-biblioref">2020</a>)</span>. Their aim is to make use of the method of moment expression
+<span class="math display">\[\mathbb{E}[M_{t+1}r_{t+1,n}g(I_t,I_{t,n})]=0,\]</span>
+which is an application of Equation <a href="factor.html#eq:SDFGMM">(3.7)</a> where the instrumental variables <span class="math inline">\(I_{t,n}\)</span> are firm-dependent (e.g., characteristics and attributes) while the <span class="math inline">\(I_t\)</span> are macro-economic variables (aggregate dividend yield, volatility level, credit spread, term spread, etc.). The function <span class="math inline">\(g\)</span> yields a <span class="math inline">\(d\)</span>-dimensional output, so that the above equation leads to <span class="math inline">\(d\)</span> moment conditions. The trick is to model the SDF as an unknown combination of assets <span class="math inline">\(M_{t+1}=1-\sum_{n=1}^Nw(I_t,I_{t,n})r_{t+1,n}\)</span>. The primary discriminatory network (<span class="math inline">\(D\)</span>) is the one that approximates the SDF via the weights <span class="math inline">\(w(I_t,I_{t,n})\)</span>. The secondary generative network is the one that creates the moment condition through <span class="math inline">\(g(I_t,I_{t,n})\)</span> in the above equation.</p>
+<p>The full specification of the network is given by the program:
+<span class="math display">\[\underset{w}{\text{min}} \ \underset{g}{\text{max}} \ \sum_{j=1}^N \left\| \mathbb{E} \left[\left(1-\sum_{n=1}^Nw(I_t,I_{t,n})r_{t+1,n} \right)r_{t+1,j}g(I_t,I_{t,j})\right] \right\|^2,\]</span></p>
+<p>where the <span class="math inline">\(L^2\)</span> norm applies on the <span class="math inline">\(d\)</span> values generated via <span class="math inline">\(g\)</span>. The asset pricing equations (moments) are not treated as equalities but as a relationship that is approximated. The network defined by <span class="math inline">\(\textbf{w}\)</span> is the asset pricing modeler and tries to determine the best possible model, while the network defined by <span class="math inline">\(\textbf{g}\)</span> seeks to find the worst possible conditions so that the model performs badly. We refer to the original article for the full specification of both networks. In their empirical section, <span class="citation"><a href="solutions-to-exercises.html#ref-chen2019deep" role="doc-biblioref">Luyang Chen, Pelger, and Zhu</a> (<a href="solutions-to-exercises.html#ref-chen2019deep" role="doc-biblioref">2020</a>)</span> report that adopting a strong structure driven by asset pricing imperatives add values compared to a pure predictive ‘vanilla’ approach such as the one detailed in <span class="citation"><a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">2020b</a>)</span>. The out-of-sample behavior of decile sorted portfolios (based on the model’s prediction) display a monotonic pattern with respect to the order of the deciles.</p>
+<p>GANs can also be used to generate artificial financial data (see <span class="citation"><a href="solutions-to-exercises.html#ref-efimov2019using" role="doc-biblioref">Efimov and Xu</a> (<a href="solutions-to-exercises.html#ref-efimov2019using" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-marti2019corrgan" role="doc-biblioref">Marti</a> (<a href="solutions-to-exercises.html#ref-marti2019corrgan" role="doc-biblioref">2019</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-wiese2019quant" role="doc-biblioref">Wiese et al.</a> (<a href="solutions-to-exercises.html#ref-wiese2019quant" role="doc-biblioref">2020</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-ni2020conditional" role="doc-biblioref">Ni et al.</a> (<a href="solutions-to-exercises.html#ref-ni2020conditional" role="doc-biblioref">2020</a>)</span>, and, relatedly, <span class="citation"><a href="solutions-to-exercises.html#ref-buehler2020generating" role="doc-biblioref">Buehler et al.</a> (<a href="solutions-to-exercises.html#ref-buehler2020generating" role="doc-biblioref">2020</a>)</span>), but this topic is outside the scope of the book.</p>
+</div>
+<div id="autoencoders" class="section level3" number="7.7.2">
+<h3>
+<span class="header-section-number">7.7.2</span> Autoencoders<a class="anchor" aria-label="anchor" href="#autoencoders"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In the recent literature, autoencoders (AEs) are used in <span class="citation"><a href="solutions-to-exercises.html#ref-huck2019large" role="doc-biblioref">Huck</a> (<a href="solutions-to-exercises.html#ref-huck2019large" role="doc-biblioref">2019</a>)</span> (portfolio management), and <span class="citation"><a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">2020a</a>)</span> (asset pricing).<br>
+AEs are a strange family of neural networks because they are classified among non-supervised algorithms. In the supervised jargon, their label is equal to the input. Like GANS, autoencoders consist of two networks, though the structure is very different: the first network encodes the input into some intermediary output (usually called the code), and the second network decodes the code into a modified version of the input.</p>
+<p><span class="math display">\[\begin{array}{ccccccccc}
+\textbf{x} &amp; &amp;\overset{E}{\longrightarrow} &amp;&amp; \textbf{z} &amp;&amp; \overset{D}{\longrightarrow} &amp;&amp; \textbf{x}' \\
+\text{input} &amp;&amp; \text{encoder} &amp;&amp; \text{code} &amp;&amp; \text{decoder} &amp;&amp; \text{modified input}
+\end{array}\]</span></p>
+<p>Because autoencoders do not belong to the large family of supervised algorithms, we postpone their presentation to Section <a href="unsup.html#ae">15.2.3</a>.</p>
+<p>The article <span class="citation"><a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">2020a</a>)</span> resorts to the idea of AEs while at the same time augmenting the complexity of their asset pricing model. From the simple specification <span class="math inline">\(r_t=\boldsymbol{\beta}_{t-1}\textbf{f}_t+e_t\)</span> (we omit asset dependence for notational simplicity), they add the assumptions that the betas depend on firm characteristics, while the factors are possibly nonlinear functions of the returns themselves. The model takes the following form:
+<span class="math display" id="eq:AEgu">\[\begin{equation}
+\tag{7.9}
+r_{t,i}=\textbf{NN}_{\textbf{beta}}(\textbf{x}_{t-1,i})+\textbf{NN}_{\textbf{factor}}(\textbf{r}_t)+e_{t,i},
+\end{equation}\]</span>
+where <span class="math inline">\(\textbf{NN}_{\textbf{beta}}\)</span> and <span class="math inline">\(\textbf{NN}_{\textbf{factor}}\)</span> are two neural networks. The above equation <em>looks</em> like an autoencoder because the returns are both inputs and outputs. However, the additional complexity comes from the second neural network <span class="math inline">\(\textbf{NN}_{\textbf{beta}}\)</span>. Modern neural network libraries such as Keras allow for customized models like the one above. The coding of this structure is left as exercise (see below).</p>
+</div>
+<div id="CNN" class="section level3" number="7.7.3">
+<h3>
+<span class="header-section-number">7.7.3</span> A word on convolutional networks<a class="anchor" aria-label="anchor" href="#CNN"><i class="fas fa-link"></i></a>
+</h3>
+<p>Neural networks gained popularity during the 2010 decade thanks to a series of successes in computer vision competitions. The algorithms behind these advances are convolutional neural networks (CNNs). While they may seem a surprising choice for financial predictions, several teams of researchers in the Computer Science field have proposed approaches that rely on this variation of neural networks (<span class="citation"><a href="solutions-to-exercises.html#ref-chen2016financial" role="doc-biblioref">J.-F. Chen et al.</a> (<a href="solutions-to-exercises.html#ref-chen2016financial" role="doc-biblioref">2016</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-loreggia2016deep" role="doc-biblioref">Loreggia et al.</a> (<a href="solutions-to-exercises.html#ref-loreggia2016deep" role="doc-biblioref">2016</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-dingli2017financial" role="doc-biblioref">Dingli and Fournier</a> (<a href="solutions-to-exercises.html#ref-dingli2017financial" role="doc-biblioref">2017</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-tsantekidis2017forecasting" role="doc-biblioref">Tsantekidis et al.</a> (<a href="solutions-to-exercises.html#ref-tsantekidis2017forecasting" role="doc-biblioref">2017</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-hoseinzade2019cnnpred" role="doc-biblioref">Hoseinzade and Haratizadeh</a> (<a href="solutions-to-exercises.html#ref-hoseinzade2019cnnpred" role="doc-biblioref">2019</a>)</span>). Recently, <span class="citation"><a href="solutions-to-exercises.html#ref-jiang2020re" role="doc-biblioref">J. Jiang, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-jiang2020re" role="doc-biblioref">2020</a>)</span> propose to extract signals from images of price trends.
+Hence, we briefly present the principle in this final section on neural networks. We lay out the presentation for CNNs of dimension two, but they can also be used in dimension one or three.</p>
+<p>The reason why CNNs are useful is because they allow to progressively reduce the dimension of a large dataset by keeping local information. An image is a rectangle of pixels. Each pixel is usually coded via three layers, one for each color: red, blue and green. But to keep things simple, let’s just consider one layer of, say 1,000 by 1,000 pixels, with one value for each pixel. In order to analyze the content of this image, a <strong>convolutional layer</strong> will reduce the dimension of inputs by resorting to some convolution. Visually, this simplification is performed by scanning and altering the values using rectangles with arbitrary weights.</p>
+<p>Figure <a href="NN.html#fig:cnnscheme">7.12</a> sketches this process (it is strongly inspired by <span class="citation"><a href="solutions-to-exercises.html#ref-hoseinzade2019cnnpred" role="doc-biblioref">Hoseinzade and Haratizadeh</a> (<a href="solutions-to-exercises.html#ref-hoseinzade2019cnnpred" role="doc-biblioref">2019</a>)</span>). The original data is a matrix <span class="math inline">\((I\times K)\)</span> <span class="math inline">\(x_{i,k}\)</span> and the weights are also a matrix <span class="math inline">\(w_{j,l}\)</span> of size <span class="math inline">\((J\times L)\)</span> with <span class="math inline">\(J&lt;I\)</span> and <span class="math inline">\(L&lt;K\)</span>. The scanning transforms each rectangle of size <span class="math inline">\((J\times L)\)</span> into one real number. Hence, the output has a smaller size: <span class="math inline">\((I-J+1)\times(K-L+1)\)</span>. If <span class="math inline">\(I=K=1,000\)</span> and <span class="math inline">\(J=L=201\)</span>, then the output has dimension <span class="math inline">\((800\times 800)\)</span> which is already much smaller. The output values are given by
+<span class="math display">\[o_{i,k}=\sum_{j=1}^J\sum_{l=1}^Lw_{j,l}x_{i+j-1,k+l-1}.\]</span></p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:cnnscheme"></span>
+<img src="images/cnn_scheme.png" alt="Scheme of a convolutional unit. Note: the dimensions are general and do not correspond to the number of squares." width="480px"><p class="caption">
+FIGURE 7.12: Scheme of a convolutional unit. Note: the dimensions are general and do not correspond to the number of squares.
+</p>
+</div>
+<p>Iteratively reducing the dimension of the output via sequences of convolutional layers like the one presented above would be costly in computation and could give rise to overfitting because the number of weights would be incredibly large. In order to efficiently reduce the size of outputs, <strong>pooling layers</strong> are often used. The job of pooling units is to simplify matrices by reducing them to a simple metric such as the minimum, maximum or average value of the matrix:</p>
+<p><span class="math display">\[o_{i,k}=f(x_{i+j-1,k+l-1}, 1\le j\le J, 1 \le l\le L),\]</span></p>
+<p>where <span class="math inline">\(f\)</span> is the minimum, maximum or average value. We show examples of pooling in Figure <a href="NN.html#fig:cnnpooling">7.13</a> below. In order to increase the speed of compression, it is possible to add a stride to omit cells. A stride value of <span class="math inline">\(v\)</span> will perform the operation only every <span class="math inline">\(v\)</span> value and hence bypass intermediate steps. In Figure <a href="NN.html#fig:cnnpooling">7.13</a>, the two cases on the left do not resort to pooling, hence the reduction in dimension is exactly equal to the size of the pooling size. When stride is into action (right pane), the reduction is more marked. From a 1,000 by 1,000 input, a 2-by-2 pooling layer with stride 2 will yield a 500-by-500 output: the dimension is shrinked fourfold, as in the right scheme of Figure <a href="NN.html#fig:cnnpooling">7.13</a>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:cnnpooling"></span>
+<img src="images/cnn_pooling.png" alt="Scheme of pooling units." width="500px"><p class="caption">
+FIGURE 7.13: Scheme of pooling units.
+</p>
+</div>
+<p>With these tools in hand, it is possible to build new predictive tools. In <span class="citation"><a href="solutions-to-exercises.html#ref-hoseinzade2019cnnpred" role="doc-biblioref">Hoseinzade and Haratizadeh</a> (<a href="solutions-to-exercises.html#ref-hoseinzade2019cnnpred" role="doc-biblioref">2019</a>)</span>, predictors such as price quotes, technical indicators and macro-economic data are fed to a complex neural network with 6 layers in order to predict the sign of price variations. While this is clearly an interesting computer science exercise, the deep economic motivation behind this choice of architecture remains unclear. <span class="citation"><a href="solutions-to-exercises.html#ref-sangadiev2020deepfolio" role="doc-biblioref">Sangadiev et al.</a> (<a href="solutions-to-exercises.html#ref-sangadiev2020deepfolio" role="doc-biblioref">2020</a>)</span> use CNN to build portfolios relying on limit order book data.</p>
+</div>
+</div>
+<div id="coding-exercises-3" class="section level2" number="7.8">
+<h2>
+<span class="header-section-number">7.8</span> Coding exercises<a class="anchor" aria-label="anchor" href="#coding-exercises-3"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>The purpose of the exercise is to code the autoencoder model described in <span class="citation"><a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2019autoencoder" role="doc-biblioref">2020a</a>)</span> (see Section <a href="NN.html#autoencoders">7.7.2</a>). When coding NNs, the dimensions must be rigorously reported. This is why we reproduce a diagram of the model in Figure <a href="NN.html#fig:AEgu">7.14</a> which clearly shows the inputs and outputs along with their dimensions.</li>
+</ol>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:AEgu"></span>
+<img src="images/AE.png" alt="Scheme of the autoencoder pricing model." width="500px"><p class="caption">
+FIGURE 7.14: Scheme of the autoencoder pricing model.
+</p>
+</div>
+<p>In order to harness the full potential of Keras, it is imperative to switch to more general formulations of NNs. This can be done via the so-called <em>functional API</em>: <a href="https://keras.rstudio.com/articles/functional_api.html" class="uri">https://keras.rstudio.com/articles/functional_api.html</a>.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>The purpose of the exercise is to demonstrate the universal approximation of simple NNs. Let’s take a simple function, say sin(x) over the interval [0,6]. Use a simple feed-forward neural network with one layer and 16 units to mimic this function. Then try with 128 units and see how it improves the fit.</li>
+</ol>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:exoUA"></span>
+<img src="ML_factor_files/figure-html/exoUA-1.png" alt="Goal: approximate this simple function." width="400px"><p class="caption">
+FIGURE 7.15: Goal: approximate this simple function.
+</p>
+</div>
+
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></div>
+<div class="next"><a href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#NN"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="nav-link" href="#the-original-perceptron"><span class="header-section-number">7.1</span> The original perceptron</a></li>
+<li>
+<a class="nav-link" href="#multilayer-perceptron"><span class="header-section-number">7.2</span> Multilayer perceptron</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#introduction-and-notations"><span class="header-section-number">7.2.1</span> Introduction and notations</a></li>
+<li><a class="nav-link" href="#universal-approximation"><span class="header-section-number">7.2.2</span> Universal approximation</a></li>
+<li><a class="nav-link" href="#backprop"><span class="header-section-number">7.2.3</span> Learning via back-propagation</a></li>
+<li><a class="nav-link" href="#NNclass"><span class="header-section-number">7.2.4</span> Further details on classification</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#howdeep"><span class="header-section-number">7.3</span> How deep we should go and other practical issues</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#architectural-choices"><span class="header-section-number">7.3.1</span> Architectural choices</a></li>
+<li><a class="nav-link" href="#frequency-of-weight-updates-and-learning-duration"><span class="header-section-number">7.3.2</span> Frequency of weight updates and learning duration</a></li>
+<li><a class="nav-link" href="#penalizations-and-dropout"><span class="header-section-number">7.3.3</span> Penalizations and dropout</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#code-samples-and-comments-for-vanilla-mlp"><span class="header-section-number">7.4</span> Code samples and comments for vanilla MLP</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#regression-example"><span class="header-section-number">7.4.1</span> Regression example</a></li>
+<li><a class="nav-link" href="#classification-example"><span class="header-section-number">7.4.2</span> Classification example</a></li>
+<li><a class="nav-link" href="#custloss"><span class="header-section-number">7.4.3</span> Custom losses</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#RNN"><span class="header-section-number">7.5</span> Recurrent networks</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#presentation"><span class="header-section-number">7.5.1</span> Presentation</a></li>
+<li><a class="nav-link" href="#code-and-results-2"><span class="header-section-number">7.5.2</span> Code and results</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#tabular-networks-tabnets"><span class="header-section-number">7.6</span> Tabular networks (TabNets)</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#the-zoo-of-layers"><span class="header-section-number">7.6.1</span> The zoo of layers</a></li>
+<li><a class="nav-link" href="#sparsemax-activation"><span class="header-section-number">7.6.2</span> Sparsemax activation</a></li>
+<li><a class="nav-link" href="#feature-selection-1"><span class="header-section-number">7.6.3</span> Feature selection</a></li>
+<li><a class="nav-link" href="#the-full-architecture"><span class="header-section-number">7.6.4</span> The full architecture</a></li>
+<li><a class="nav-link" href="#code-and-results-3"><span class="header-section-number">7.6.5</span> Code and results</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#other-common-architectures"><span class="header-section-number">7.7</span> Other common architectures</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#generative-aversarial-networks"><span class="header-section-number">7.7.1</span> Generative adversarial networks</a></li>
+<li><a class="nav-link" href="#autoencoders"><span class="header-section-number">7.7.2</span> Autoencoders</a></li>
+<li><a class="nav-link" href="#CNN"><span class="header-section-number">7.7.3</span> A word on convolutional networks</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#coding-exercises-3"><span class="header-section-number">7.8</span> Coding exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

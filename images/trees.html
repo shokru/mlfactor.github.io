@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 6 Tree-based methods | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 6 Tree-based methods | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 6 Tree-based methods | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; }   Classification and regression trees are simple yet powerful clustering algorithms popularized by the monograph of Breiman et al. (1984). Decision...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; }   Classification and regression trees are simple yet powerful clustering algorithms popularized by the monograph of Breiman et al. (1984). Decision...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; }   Classification and regression trees are simple yet powerful clustering algorithms popularized by the monograph of Breiman et al. (1984). Decision...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="active" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="trees" class="section level1" number="6">
+<h1>
+<span class="header-section-number">6</span> Tree-based methods<a class="anchor" aria-label="anchor" href="#trees"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>
+  
+Classification and regression trees are simple yet powerful clustering algorithms popularized by the monograph of <span class="citation"><a href="solutions-to-exercises.html#ref-breiman1984classification" role="doc-biblioref">Breiman et al.</a> (<a href="solutions-to-exercises.html#ref-breiman1984classification" role="doc-biblioref">1984</a>)</span>. Decision trees and their extensions are known to be quite efficient forecasting tools when working on tabular data. A large proportion of winning solutions in ML contests (especially on the Kaggle website<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;See www.kaggle.com. &lt;/p&gt;"><sup>14</sup></a>) resort to improvements of simple trees. For instance, the meta-study in bioinformatics by <span class="citation"><a href="solutions-to-exercises.html#ref-olson2018data" role="doc-biblioref">Olson et al.</a> (<a href="solutions-to-exercises.html#ref-olson2018data" role="doc-biblioref">2018</a>)</span> finds that boosted trees and random forests are the top 2 algorithms from a group of 13, excluding neural networks.</p>
+<p>Recently, the surge in Machine Learning applications in Finance has led to multiple publications that use trees in portfolio allocation problems. A long, though not exhaustive, list includes: <span class="citation"><a href="solutions-to-exercises.html#ref-ballings2015evaluating" role="doc-biblioref">Ballings et al.</a> (<a href="solutions-to-exercises.html#ref-ballings2015evaluating" role="doc-biblioref">2015</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-patel2015predicting" role="doc-biblioref">Patel et al.</a> (<a href="solutions-to-exercises.html#ref-patel2015predicting" role="doc-biblioref">2015a</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-patel2015bpredicting" role="doc-biblioref">Patel et al.</a> (<a href="solutions-to-exercises.html#ref-patel2015bpredicting" role="doc-biblioref">2015b</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-moritz2016tree" role="doc-biblioref">Moritz and Zimmermann</a> (<a href="solutions-to-exercises.html#ref-moritz2016tree" role="doc-biblioref">2016</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-krauss2017deep" role="doc-biblioref">Krauss, Do, and Huck</a> (<a href="solutions-to-exercises.html#ref-krauss2017deep" role="doc-biblioref">2017</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">2020b</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-guida2019big" role="doc-biblioref">Guida and Coqueret</a> (<a href="solutions-to-exercises.html#ref-guida2019big" role="doc-biblioref">2018a</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-simonian2019machine" role="doc-biblioref">Simonian et al.</a> (<a href="solutions-to-exercises.html#ref-simonian2019machine" role="doc-biblioref">2019</a>)</span>. One notable contribution is <span class="citation"><a href="solutions-to-exercises.html#ref-bryzgalova2019forest" role="doc-biblioref">Bryzgalova, Pelger, and Zhu</a> (<a href="solutions-to-exercises.html#ref-bryzgalova2019forest" role="doc-biblioref">2019</a>)</span> in which the authors create factors from trees by sorting portfolios via simple trees, which they call <em>Asset Pricing Trees</em>. Another recent article (<span class="citation"><a href="solutions-to-exercises.html#ref-he2021panel" role="doc-biblioref">X. He et al.</a> (<a href="solutions-to-exercises.html#ref-he2021panel" role="doc-biblioref">2021</a>)</span>) seeks to create global splitting criteria for the purpose of asset pricing.</p>
+<p>In this chapter, we review the methodologies associated to trees and their applications in portfolio choice.</p>
+<div id="simple-trees" class="section level2" number="6.1">
+<h2>
+<span class="header-section-number">6.1</span> Simple trees<a class="anchor" aria-label="anchor" href="#simple-trees"><i class="fas fa-link"></i></a>
+</h2>
+<div id="principle" class="section level3" number="6.1.1">
+<h3>
+<span class="header-section-number">6.1.1</span> Principle<a class="anchor" aria-label="anchor" href="#principle"><i class="fas fa-link"></i></a>
+</h3>
+<p>Decision trees seek to partition datasets into <strong>homogeneous clusters</strong>. Given an exogenous variable <span class="math inline">\(\mathbf{Y}\)</span> and features <span class="math inline">\(\mathbf{X}\)</span>, trees iteratively split the sample into groups (usually two at a time) which are as homogeneous in <span class="math inline">\(\mathbf{Y}\)</span> as possible. The splits are made according to one variable within the set of features. A short word on nomenclature: when <span class="math inline">\(\mathbf{Y}\)</span> consists of real numbers, we talk about <em>regression trees</em> and when <span class="math inline">\(\mathbf{Y}\)</span> is categorical, we use the term <em>classification trees</em>.</p>
+<p>Before formalizing this idea, we illustrate this process in Figure <a href="trees.html#fig:treescheme">6.1</a>. There are 12 stars with three features: color, size and complexity (number of branches).</p>
+<div class="figure">
+<span style="display:block;" id="fig:treescheme"></span>
+<img src="images/tree_scheme.png" alt="Elementary tree scheme; visualization of the splitting process." width="826"><p class="caption">
+FIGURE 6.1: Elementary tree scheme; visualization of the splitting process.
+</p>
+</div>
+<p>The dependent variable is the color (let’s consider the wavelength associated to the color for simplicity). The first split is made according to size or complexity. Clearly, complexity is the better choice: complicated stars are blue and green, while simple stars are yellow, orange and red. Splitting according to size would have mixed blue and yellow stars (small ones) and green and orange stars (large ones).</p>
+<p>The second step is to split the two clusters one level further. Since only one variable (size) is relevant, the secondary splits are straightforward. In the end, our stylized tree has four consistent clusters. The analogy with factor investing is simple: the color represents performance: red for high performance and blue for mediocre performance. The features (size and complexity of stars) are replaced by firm-specific attributes, such as capitalization, accounting ratios, etc. Hence, the purpose of the exercise is to find the characteristics that allow to split firms into the ones that will perform well versus those likely to fare more poorly.</p>
+<p>We now turn to the technical construction of regression trees (splitting process). We follow the standard literature as exposed in <span class="citation"><a href="solutions-to-exercises.html#ref-breiman1984classification" role="doc-biblioref">Breiman et al.</a> (<a href="solutions-to-exercises.html#ref-breiman1984classification" role="doc-biblioref">1984</a>)</span> or in chapter 9 of <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">Hastie, Tibshirani, and Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">2009</a>)</span>. Given a sample of (<span class="math inline">\(y_i\)</span>,<span class="math inline">\(\mathbf{x}_i\)</span>) of size <span class="math inline">\(I\)</span>, a <em>regression</em> tree seeks the splitting points that minimize the total variation of the <span class="math inline">\(y_i\)</span> inside the two child clusters. These two clusters need not have the same size. In order to do that, it proceeds in two steps. First, it finds, for each feature <span class="math inline">\(x_i^{(k)}\)</span>, the best splitting point (so that the clusters are homogeneous in <span class="math inline">\(\mathbf{Y}\)</span>). Second, it selects the feature that achieves the highest level of homogeneity.</p>
+<p>Homogeneity in regression trees is closely linked to variance. Since we want the <span class="math inline">\(y_i\)</span> inside each cluster to be similar, we seek to <strong>minimize their variability</strong> (or <strong>dispersion</strong>) inside each cluster and then sum the two figures. We cannot sum the variances because this would not take into account the relative sizes of clusters. Hence, we work with <em>total</em> variation, which is the variance times the number of elements in the clusters.</p>
+<p>Below, the notation is a bit heavy because we resort to superscripts <span class="math inline">\(k\)</span> (the index of the feature), but it is largely possible to ignore these superscripts to ease understanding. The first step is to find the best split for each feature, that is, solve <span class="math inline">\(\underset{c^{(k)}}{\text{argmin}} \ V^{(k)}_I(c^{(k)})\)</span> with
+<span class="math display" id="eq:node">\[\begin{equation}
+\tag{6.1}
+V^{(k)}_I(c^{(k}))= \underbrace{\sum_{x_i^{(k)}&lt;c^{(k)}}\left(y_i-m_I^{k,-}(c^{(k)}) \right)^2}_{\text{Total dispersion of first cluster}} + \underbrace{\sum_{x_i^{(k)}&gt;c^{(k)}}\left(y_i-m_I^{k,+}(c^{(k)}) \right)^2}_{\text{Total dispersion of second cluster}},
+\end{equation}\]</span>
+where
+<span class="math display">\[\begin{align*}
+m_I^{k,-}(c^{(k)})&amp;=\frac{1}{\#\{i,x_i^{(k)}&lt;c^{(k)} \}}\sum_{\{x_i^{(k)}&lt;c^{(k)} \}}y_i \quad \text{ and } \\ m_I^{k,+}(c^{(k)})&amp;=\frac{1}{\#\{i,x_i^{(k)}&gt;c^{(k)} \}}\sum_{\{x_i^{(k)}&gt;c^{(k)} \}}y_i
+\end{align*}\]</span>
+are the average values of <span class="math inline">\(Y\)</span>, conditional on <span class="math inline">\(X^{(k)}\)</span> being smaller or larger than <span class="math inline">\(c\)</span>. The cardinal function <span class="math inline">\(\#\{\cdot\}\)</span> counts the number of instances of its argument. For feature <span class="math inline">\(k\)</span>, the optimal split <span class="math inline">\(c^{k,*}\)</span> is thus the one for which the total dispersion over the two subgroups is the smallest.</p>
+<p>The optimal splits satisfy <span class="math inline">\(c^{k,*}= \underset{c^{(k)}}{\text{argmin}} \ V^{(k)}_I(c^{(k)})\)</span>. Of all the possible splitting variables, the tree will choose the one that minimizes the total dispersion not only over all splits, but also over all variables: <span class="math inline">\(k^*=\underset{k}{\text{argmin}} \ V^{(k)}_I(c^{k,*})\)</span>.</p>
+<p>After one split is performed, the procedure continues on the two newly formed clusters. There are several criteria that can determine when to stop the splitting process (see Section <a href="trees.html#pruning-criteria">6.1.3</a>). One simple criterion is to fix a maximum number of levels (the depth) for the tree. A usual condition is to impose a minimum gain that is expected for each split. If the reduction in dispersion after the split is only marginal and below a specified threshold, then the split is not executed. For further technical discussions on decision trees, we refer for instance to section 9.2.4 of <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">Hastie, Tibshirani, and Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">2009</a>)</span>.</p>
+<p>When the tree is built (trained), a prediction for new instances is easy to make. Given its feature values, the instance ends up in one leaf of the tree. Each leaf has an average value for the label: this is the predicted outcome. Of course, this only works when the label is numerical. We discuss below the changes that occur when it is categorical.</p>
+</div>
+<div id="treeclass" class="section level3" number="6.1.2">
+<h3>
+<span class="header-section-number">6.1.2</span> Further details on classification<a class="anchor" aria-label="anchor" href="#treeclass"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Classification exercises are somewhat more complex than regression tasks. The most obvious difference is the measure of dispersion or heterogeneity. This loss function which must take into account the fact that the final output is not a simple number, but a vector. The output <span class="math inline">\(\tilde{\textbf{y}}_i\)</span> has as many elements as there are categories in the label and each element is the probability that the instance belongs to the corresponding category.</p>
+<p>For instance, if there are 3 categories: <em>buy</em>, <em>hold</em> and <em>sell</em>, then each instance would have a label with as many columns as there are classes. Following our example, one label would be (1,0,0) for a <em>buy</em> position for instance. We refer to Section <a href="Data.html#categorical-labels">4.5.2</a> for a introduction on this topic.</p>
+<p>Inside a tree, labels are aggregated at each cluster level. A typical output would look like (0.6,0.1,0.3): they are the proportions of each class represented within the cluster. In this case, the cluster has 60% of <em>buy</em>, 10% of <em>hold</em> and 30% of <em>sell</em>.</p>
+<p>The loss function must take into account this multidimensionality of the label. When building trees, since the aim is to favor homogeneity, the loss penalizes outputs that are not concentrated towards one class. Indeed, facing a diversified output of (0.3,0.4,0.3) is much harder to handle than the concentrated case of (0.8,0.1,0.1).</p>
+<p>The algorithm is thus seeking purity: it searches a splitting criterion that will lead to clusters that are as pure as possible, i.e., with one very dominant class, or at least just a few dominant classes. There are several metrics proposed by the literature and all are based on the proportions generated by the output. If there are <span class="math inline">\(J\)</span> classes, we denote these proportions with <span class="math inline">\(p_j\)</span>. For each leaf, the usual loss functions are:</p>
+<ul>
+<li>the Gini impurity index: <span class="math inline">\(1-\sum_{j=1}^Jp_j^2;\)</span><br>
+</li>
+<li>the misclassification error: <span class="math inline">\(1-\underset{j}{\text{max}}\, p_j;\)</span><br>
+</li>
+<li>entropy: <span class="math inline">\(-\sum_{j=1}^J\log(p_j)p_j.\)</span>
+</li>
+</ul>
+<p>The Gini index is nothing but one minus the Herfindahl index which measures the diversification of a portfolio. Trees seek partitions that are the least diversified. The minimum value of the Gini index is zero and reached when one <span class="math inline">\(p_j=1\)</span> and all others are equal to zero. The maximum value is equal to <span class="math inline">\(1-1/J\)</span> and is reached when all <span class="math inline">\(p_j=1/J\)</span>. Similar relationships hold for the other two losses. One drawback of the misclassification error is its lack of differentiability which explains why the other two options are often favored.</p>
+<p>Once the tree is grown, new instances automatically belong to one final leaf. This leaf is associated to the proportions of classes it nests. Usually, to make a prediction, the class with highest proportion (or probability) is chosen when a new instance is associated with the leaf.</p>
+</div>
+<div id="pruning-criteria" class="section level3" number="6.1.3">
+<h3>
+<span class="header-section-number">6.1.3</span> Pruning criteria<a class="anchor" aria-label="anchor" href="#pruning-criteria"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+When building a tree, the splitting process can be pursued until the full tree is grown, that is, when:</p>
+<ul>
+<li>all instances belong to separate leaves, and/or<br>
+</li>
+<li>all leaves comprise instances that cannot be further segregated based on the current set of features.</li>
+</ul>
+<p>At this stage, the splitting process cannot be pursued.</p>
+<p>Obviously, fully grown trees often lead to almost perfect fits when the predictors are relevant, numerous and numerical. Nonetheless, the fine grained idiosyncrasies of the training sample are of little interest for out-of-sample predictions. For instance, being able to perfectly match the patterns of 2000 to 2006 will probably not be very interesting in the period from 2007 to 2009. The most reliable sections of the trees are those closest to the root because they embed large portions of the data: the average values in the early clusters are trustworthy because the are computed on a large number of observations. The first splits are those that matter the most because they determine the most general patterns. The deepest splits only deal with the peculiarities of the sample.</p>
+<p>Thus, it is imperative to limit the size of the tree to avoid overfitting. There are several ways to prune the tree and all depend on some particular criteria. We list a few of them below:</p>
+<ul>
+<li>Impose a minimum number of instances for each terminal node (leaf). This ensures that each final cluster is composed of a sufficient number of observations. Hence, the average value of the label will be reliable because it is calculated on a large amount of data.<br>
+</li>
+<li>Similarly, it can be imposed that a cluster has a minimal size before even considering any further split. This criterion is of course related to the one above.<br>
+</li>
+<li>Require a certain threshold of improvement in the fit. If a split does not sufficiently reduce the loss, then it can be deemed unnecessary. The user specifies a small number <span class="math inline">\(\epsilon&gt;0\)</span> and a split is only validated if the loss obtained post-split is smaller than <span class="math inline">\(1-\epsilon\)</span> times the loss before the split.<br>
+</li>
+<li>Limit the depth of the tree. The depth is defined as the overal maximum number of splits between the root and any leaf of the tree.</li>
+</ul>
+<p>In the example below, we implement all of these criteria at the same time, but usually, two of them at most should suffice.</p>
+</div>
+<div id="code-and-interpretation" class="section level3" number="6.1.4">
+<h3>
+<span class="header-section-number">6.1.4</span> Code and interpretation<a class="anchor" aria-label="anchor" href="#code-and-interpretation"><i class="fas fa-link"></i></a>
+</h3>
+<p>We start with a simple tree and its interpretation. We use the package <em>rpart</em> and its plotting engine <em>rpart.plot</em>. The label is the future 1-month return and the features are all predictors available in the sample. The tree is trained on the full sample.</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bethatkinson/rpart">rpart</a></span><span class="op">)</span>              <span class="co"># Tree package  </span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.milbo.org/rpart-plot/index.html">rpart.plot</a></span><span class="op">)</span>         <span class="co"># Tree plot package</span>
+<span class="va">formula</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"R1M_Usd ~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">features</span>, collapse <span class="op">=</span> <span class="st">" + "</span><span class="op">)</span><span class="op">)</span> <span class="co"># Defines the model </span>
+<span class="va">formula</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html">as.formula</a></span><span class="op">(</span><span class="va">formula</span><span class="op">)</span>                                   <span class="co"># Forcing formula object</span>
+<span class="va">fit_tree</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>,
+             data <span class="op">=</span> <span class="va">data_ml</span>,     <span class="co"># Data source: full sample</span>
+             minbucket <span class="op">=</span> <span class="fl">3500</span>,   <span class="co"># Min nb of obs required in each terminal node (leaf)</span>
+             minsplit <span class="op">=</span> <span class="fl">8000</span>,    <span class="co"># Min nb of obs required to continue splitting</span>
+             cp <span class="op">=</span> <span class="fl">0.0001</span>,        <span class="co"># Precision: smaller = more leaves</span>
+             maxdepth <span class="op">=</span> <span class="fl">3</span>        <span class="co"># Maximum depth (i.e. tree levels)</span>
+             <span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/pkg/rpart.plot/man/rpart.plot.html">rpart.plot</a></span><span class="op">(</span><span class="va">fit_tree</span><span class="op">)</span>             <span class="co"># Plot the tree</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:rpart1"></span>
+<img src="ML_factor_files/figure-html/rpart1-1.png" alt="Simple characteristics-based tree. The dependent variable is the 1 month future return." width="400px"><p class="caption">
+FIGURE 6.2: Simple characteristics-based tree. The dependent variable is the 1 month future return.
+</p>
+</div>
+<p></p>
+<p>There usually exists a convention in the representation of trees. At each node, a condition describes the split with a Boolean expression. If the expression is <strong>true</strong>, then the instance goes to the <strong>left cluster</strong>; if not, it goes to the <em>right</em> cluster. Given the whole sample, the initial split in this tree (Figure <a href="trees.html#fig:rpart1">6.2</a>) is performed according to the price-to-book ratio. If the Pb score (or value) of the instance is above 0.025, then the instance is placed in the left bucket; otherwise, it goes in the <strong>right bucket</strong>.</p>
+<p>At each node, there are two important metrics. The first one is the average value of the label in the cluster, and the second one is the proportion of instances in the cluster. At the top of the tree, all instances (100%) are present and the average 1-month future return is 1.3%. One level below, the left cluster is by far the most crowded, with roughly 98% of observations averaging a 1.2% return. The right cluster is much smaller (2%) but concentrates instances with a much higher average return (5.9%). This is possibly an idiosyncracy of the sample.</p>
+<p>The splitting process continues similarly at each node until some condition is satisfied (typically here: the maximum depth is reached). A color codes the average return: from white (low return) to blue (high return). The leftmost cluster with the lowest average return consists of firms that satisfy <em>all</em> the following criteria:</p>
+<ul>
+<li>have a Pb score above 0.025;<br>
+</li>
+<li>have a 3-month market capitalization score above 0.16;<br>
+</li>
+<li>have a score of average daily volume over the past 3 months above 0.85.</li>
+</ul>
+<p>Notice that one peculiarity of trees is their possible heterogeneity in cluster sizes. Sometimes, a few clusters gather almost all of the observations while a few small groups embed some outliers. This is not a favorable property of trees, as small groups are more likely to be flukes and may fail to generalize out-of-sample.</p>
+<p>This is why we imposed restrictions during the construction of the tree. The first one (minbucket = 3500 in the code) imposes that each cluster consists of at least 3500 instances. The second one (minsplit) further imposes that a cluster comprises at least 8000 observations in order to pursue the splitting process. These values logically depend on the size of the training sample. The cp = 0.0001 parameter in the code requires any split to reduce the loss below 0.9999 times its original value before the split. Finally, the maximum depth of three essentially means that there are at most three splits between the root of the tree and any terminal leaf.</p>
+<p>The complexity of the tree (measured by the number of terminal leaves) is a decreasing function of minbucket, minsplit and cp and an increasing function of maximum depth.</p>
+<p>Once the model has been trained (i.e., the tree is grown), a prediction for any instance is the average value of the label within the cluster where the instance should land.</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree</span>, <span class="va">data_ml</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span><span class="op">)</span> <span class="co"># Test (prediction) on the first six instances of the sample</span></code></pre></div>
+<pre><code>##          1          2          3          4          5          6 
+## 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066</code></pre>
+<p></p>
+<p>Given the figure, we immediately conclude that these first six instances all belong to the second cluster (starting from the left).</p>
+<p>As a verification of the first splits, we plot the smoothed average of future returns, conditionally on market capitalization, price-to-book ratio and trading volume.</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">stat_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Mkt_Cap_3M_Usd</span>, y <span class="op">=</span> <span class="va">R1M_Usd</span>, color <span class="op">=</span> <span class="st">"Market Cap"</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">stat_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Pb</span>, y <span class="op">=</span> <span class="va">R1M_Usd</span>, color <span class="op">=</span> <span class="st">"Price-to-Book"</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">stat_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Advt_3M_Usd</span>, y <span class="op">=</span> <span class="va">R1M_Usd</span>, color <span class="op">=</span> <span class="st">"Volume"</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">xlab</a></span><span class="op">(</span><span class="st">"Predictor"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="fl">11</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/labs.html">labs</a></span><span class="op">(</span>color <span class="op">=</span> <span class="st">"Characteristic"</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:rpart3mkt"></span>
+<img src="ML_factor_files/figure-html/rpart3mkt-1.png" alt="Average of 1-month future returns, conditionally on market capitalization, price-to-book and volatility scores." width="400px"><p class="caption">
+FIGURE 6.3: Average of 1-month future returns, conditionally on market capitalization, price-to-book and volatility scores.
+</p>
+</div>
+<p></p>
+<p>The graph shows the relevance of clusters based on market capitalizations and price-to-book ratios. For low score values of these two features, the average return is high (close to +4% on a monthly basis on the left of the curves). The pattern is more pronounced compared to volume for instance.</p>
+<p>Finally, we assess the predictive quality of a single tree on the testing set (the tree is grown on the training set). We use a deeper tree, with a maximum depth of five.</p>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_tree2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>, 
+             data <span class="op">=</span> <span class="va">training_sample</span>,     <span class="co"># Data source: training sample</span>
+             minbucket <span class="op">=</span> <span class="fl">1500</span>,           <span class="co"># Min nb of obs required in each terminal node (leaf)</span>
+             minsplit <span class="op">=</span> <span class="fl">4000</span>,            <span class="co"># Min nb of obs required to continue splitting</span>
+             cp <span class="op">=</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller cp = more leaves</span>
+             maxdepth <span class="op">=</span> <span class="fl">5</span>                <span class="co"># Maximum depth (i.e. tree levels)</span>
+             <span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree2</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
+<pre><code>## [1] 0.03700039</code></pre>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree2</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.5416619</code></pre>
+<p></p>
+<p>The mean squared error is usually hard to interpret. It’s not easy to map an error on returns into the impact on investment decisions. The hit ratio is a more intuitive indicator because it evaluates the proportion of correct guesses (and hence profitable investments). Obviously, it is not perfect: 55% of small gains can be mitigated by 45% of large losses. Nonetheless, it is a popular metric and moreover it corresponds to the usual accuracy measure often computed in binary classification exercises. Here, an accuracy of 0.542 is satisfactory. Even if any number above 50% may seem valuable, it must not be forgotten that transaction costs will curtail benefits. Hence, the benchmark threshold is probably at least at 52%.</p>
+</div>
+</div>
+<div id="random-forests" class="section level2" number="6.2">
+<h2>
+<span class="header-section-number">6.2</span> Random forests<a class="anchor" aria-label="anchor" href="#random-forests"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+While trees give intuitive representations of relationships between <span class="math inline">\(\mathbf{Y}\)</span> and <span class="math inline">\(\mathbf{X}\)</span>, they can be improved via the simple idea of ensembles in which predicting tools are <em>combined</em> (this topic of <strong>model aggregation</strong> is discussed both more generally and in more details in Chapter <a href="ensemble.html#ensemble">11</a>).</p>
+<div id="principle-1" class="section level3" number="6.2.1">
+<h3>
+<span class="header-section-number">6.2.1</span> Principle<a class="anchor" aria-label="anchor" href="#principle-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Most of the time, when having several modelling options at hand, it is not obvious upfront which individual model is the best, hence a combination seems a reasonable path towards the diversification of prediction errors (when they are not too correlated). Some theoretical foundations of model diversification were laid out in <span class="citation"><a href="solutions-to-exercises.html#ref-schapire1990strength" role="doc-biblioref">Schapire</a> (<a href="solutions-to-exercises.html#ref-schapire1990strength" role="doc-biblioref">1990</a>)</span>.</p>
+<p>More practical considerations were proposed later in <span class="citation"><a href="solutions-to-exercises.html#ref-ho1995random" role="doc-biblioref">T. K. Ho</a> (<a href="solutions-to-exercises.html#ref-ho1995random" role="doc-biblioref">1995</a>)</span> and more importantly in <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span> which is the major reference for random forests. Bagging is successfully used in <span class="citation"><a href="solutions-to-exercises.html#ref-yin2020equity" role="doc-biblioref">Yin</a> (<a href="solutions-to-exercises.html#ref-yin2020equity" role="doc-biblioref">2020</a>)</span> to aggregate equity forecasts. There are two ways to create multiple predictors from simple trees, and random forests combine both:</p>
+<ul>
+<li>first, the model can be trained on similar yet different datasets. One way to achieve this is via bootstrap: the instances are resampled with or without replacement (for each individual tree), yielding new training data each time a new tree is built.<br>
+</li>
+<li>second, the data can be altered by curtailing the number of predictors. Alternative models are built based on different sets of features. The user chooses how many features to retain and then the algorithm selects these features randomly at each try.</li>
+</ul>
+<p>Hence, it becomes simple to grow many different trees and the ensemble is simply a <strong>weighted combination</strong> of all trees. Usually, equal weights are used, which is an agnostic and robust choice. We illustrate the idea of simple combinations (also referred to as bagging) in Figure <a href="trees.html#fig:RF">6.4</a> below. The terminal prediction is simply the mean of all intermediate predictions.</p>
+<div class="figure">
+<span style="display:block;" id="fig:RF"></span>
+<img src="images/tree_RF.png" alt="Combining tree outputs via random forests." width="826"><p class="caption">
+FIGURE 6.4: Combining tree outputs via random forests.
+</p>
+</div>
+<p>Random forests, because they are built on the idea of bootstrapping, are more efficient than simple trees. They are used by <span class="citation"><a href="solutions-to-exercises.html#ref-ballings2015evaluating" role="doc-biblioref">Ballings et al.</a> (<a href="solutions-to-exercises.html#ref-ballings2015evaluating" role="doc-biblioref">2015</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-patel2015predicting" role="doc-biblioref">Patel et al.</a> (<a href="solutions-to-exercises.html#ref-patel2015predicting" role="doc-biblioref">2015a</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-krauss2017deep" role="doc-biblioref">Krauss, Do, and Huck</a> (<a href="solutions-to-exercises.html#ref-krauss2017deep" role="doc-biblioref">2017</a>)</span>, and <span class="citation"><a href="solutions-to-exercises.html#ref-huck2019large" role="doc-biblioref">Huck</a> (<a href="solutions-to-exercises.html#ref-huck2019large" role="doc-biblioref">2019</a>)</span> and they are shown to perform very well in these papers. The original theoretical properties of random forests are demonstrated in <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span> for classification trees. In classification exercises, the decision is taken by a vote: each tree votes for a particular class and the class with the most votes wins (with possible random picks in case of ties). <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span> defines the margin function as
+<span class="math display">\[mg=M^{-1}\sum_{m=1}^M1_{\{h_m(\textbf{x})=y\}}-\max_{j\neq y}\left(M^{-1}\sum_{m=1}^M1_{\{h_m(\textbf{x})=j\}}\right),\]</span>
+where the left part is the average number of votes based on the <span class="math inline">\(M\)</span> trees <span class="math inline">\(h_m\)</span> for the correct class (the models <span class="math inline">\(h_m\)</span> based on <span class="math inline">\(\textbf{x}\)</span> matches the data value <span class="math inline">\(y\)</span>). The right part is the maximum average for any other class. The margin reflects the confidence that the aggregate forest will classify properly. The generalization error is the probability that <span class="math inline">\(mg\)</span> is strictly negative. <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span> shows that the inaccuracy of the aggregation (as measured by generalization error) is bounded by <span class="math inline">\(\bar{\rho}(1-s^2)/s^2\)</span>, where<br>
+- <span class="math inline">\(s\)</span> is the strength (average quality<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The strength is measured as the average margin, i.e. the average of &lt;span class="math inline"&gt;\(mg\)&lt;/span&gt; when there is only one tree.&lt;/p&gt;'><sup>15</sup></a>) of the individual classifiers and<br>
+- <span class="math inline">\(\bar{\rho}\)</span> is the average correlation between the learners.</p>
+<p>Notably, <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span> also shows that as the number of trees grows to infinity, the inaccuracy converges to some finite number which explains why random forests are not prone to overfitting.</p>
+<p>While the original paper of <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span> is dedicated to classification models, many articles have since then tackled the problem of regression trees. We refer the interested reader to <span class="citation"><a href="solutions-to-exercises.html#ref-biau2012analysis" role="doc-biblioref">Biau</a> (<a href="solutions-to-exercises.html#ref-biau2012analysis" role="doc-biblioref">2012</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-scornet2015consistency" role="doc-biblioref">Scornet et al.</a> (<a href="solutions-to-exercises.html#ref-scornet2015consistency" role="doc-biblioref">2015</a>)</span>. Finally, further results on classifying ensembles can be obtained in <span class="citation"><a href="solutions-to-exercises.html#ref-biau2008consistency" role="doc-biblioref">Biau, Devroye, and Lugosi</a> (<a href="solutions-to-exercises.html#ref-biau2008consistency" role="doc-biblioref">2008</a>)</span> and we mention the short survey paper by <span class="citation"><a href="solutions-to-exercises.html#ref-denil2014narrowing" role="doc-biblioref">Denil, Matheson, and De Freitas</a> (<a href="solutions-to-exercises.html#ref-denil2014narrowing" role="doc-biblioref">2014</a>)</span> which sums up recent results in this field.</p>
+</div>
+<div id="code-and-results-1" class="section level3" number="6.2.2">
+<h3>
+<span class="header-section-number">6.2.2</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Several implementations of random forests exist. For simplicity, we choose to work with the original R library, but another choice could be the one developed by h2o, which is a highly efficient meta-environment for machine learning (coded in Java).</p>
+<p>The syntax of randomForest follows that of many ML libraries. The full list of options for some random forest implementations is prohibitively large.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;See, e.g., &lt;a href="http://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/reference/h2o.randomForest.html" class="uri"&gt;http://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/reference/h2o.randomForest.html&lt;/a&gt;&lt;/p&gt;'><sup>16</sup></a> Below, we train a model and exhibit the predictions for the first 5 instances of the testing sample.</p>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">randomForest</a></span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>                                <span class="co"># Sets the random seed</span>
+<span class="va">fit_RF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula</span>,             <span class="co"># Same formula as for simple trees!</span>
+                 data <span class="op">=</span> <span class="va">training_sample</span>,    <span class="co"># Data source: training sample</span>
+                 sampsize <span class="op">=</span> <span class="fl">10000</span>,          <span class="co"># Size of (random) sample for each tree</span>
+                 replace <span class="op">=</span> <span class="cn">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span>
+                 nodesize <span class="op">=</span> <span class="fl">250</span>,            <span class="co"># Minimum size of terminal cluster</span>
+                 ntree <span class="op">=</span> <span class="fl">40</span>,                <span class="co"># Nb of random trees</span>
+                 mtry <span class="op">=</span> <span class="fl">30</span>                  <span class="co"># Nb of predictive variables for each tree</span>
+    <span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span><span class="op">)</span>       <span class="co"># Prediction over the first 5 test instances </span></code></pre></div>
+<pre><code>##            1            2            3            4            5 
+##  0.009787728  0.012507087  0.008722386  0.009398814 -0.011511758</code></pre>
+<p></p>
+<p>One first comment is that each instance has its own prediction, which contrasts with the outcome of simple tree-based outcomes. Combining many trees leads to tailored forecasts. Note that the second line of the chunk freezes the random number generation. Indeed, random forests are by construction contingent on the arbitrary combinations of instances and features that are chosen to build the individual learners.</p>
+<p>In the above example, each individual learner (tree) is built on 10,000 randomly chosen instances (without replacement) and each terminal leaf (cluster) must comprise at least 240 elements (observations). In total, 40 trees are aggregated and each tree is constructed based on 30 randomly chosen predictors (out of the whole set of features).</p>
+<p>Unlike for simple trees, it is not possible to simply illustrate the outcome of the learning process (though solutions exist, see Section <a href="interp.html#surr">13.1.1</a>). It could be possible to extract all 40 trees, but a synthetic visualization is out-of-reach. A simplified view can be obtained via variable importance, as is discussed in Section <a href="interp.html#variable-importance">13.1.2</a>.</p>
+<p>Finally, we can assess the accuracy of the model.</p>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
+<pre><code>## [1] 0.03698197</code></pre>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.5370186</code></pre>
+<p></p>
+<p>The MSE is smaller than 4% and the hit ratio is close to 54%, which is reasonably above both 50% and 52% thresholds.</p>
+<p>Let’s see if we can improve the hit ratio by resorting to a classification exercise. We start by training the model on a new formula (the label is R1M_Usd_C).</p>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">formula_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"R1M_Usd_C ~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">features</span>, collapse <span class="op">=</span> <span class="st">" + "</span><span class="op">)</span><span class="op">)</span> <span class="co"># Defines the model </span>
+<span class="va">formula_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html">as.formula</a></span><span class="op">(</span><span class="va">formula_C</span><span class="op">)</span>                                   <span class="co"># Forcing formula object</span>
+<span class="va">fit_RF_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula_C</span>,         <span class="co"># New formula! </span>
+                 data <span class="op">=</span> <span class="va">training_sample</span>,    <span class="co"># Data source: training sample</span>
+                 sampsize <span class="op">=</span> <span class="fl">20000</span>,          <span class="co"># Size of (random) sample for each tree</span>
+                 replace <span class="op">=</span> <span class="cn">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span>
+                 nodesize <span class="op">=</span> <span class="fl">250</span>,            <span class="co"># Minimum size of terminal cluster</span>
+                 ntree <span class="op">=</span> <span class="fl">40</span>,                <span class="co"># Number of random trees</span>
+                 mtry <span class="op">=</span> <span class="fl">30</span>                  <span class="co"># Number of predictive variables for each tree </span>
+    <span class="op">)</span></code></pre></div>
+<p></p>
+<p>We can then assess the proportion of correct (binary) guesses.
+</p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF_C</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">==</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.4971371</code></pre>
+<p></p>
+<p>The accuracy is disappointing. There are two potential explanations for this (beyond the possibility of very different patterns in the training and testing sets). The first one is the sample size, which may be too small. The original training set has more than 200,000 observations, hence we retain only one in 10 in the above training specification. We are thus probably sidelining relevant information and the cost can be heavy. The second reason is the number of predictors, which is set to 30, i.e., one third of the total at our disposal. Unfortunately, this leaves room for the algorithm to pick less pertinent predictors. The default numbers of predictors chosen by the routines are <span class="math inline">\(\sqrt{p}\)</span> and <span class="math inline">\(p/3\)</span> for classification and regression tasks, respectively. Here <span class="math inline">\(p\)</span> is the total number of features.</p>
+</div>
+</div>
+<div id="adaboost" class="section level2" number="6.3">
+<h2>
+<span class="header-section-number">6.3</span> Boosted trees: Adaboost<a class="anchor" aria-label="anchor" href="#adaboost"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+The idea of boosting is slightly more advanced compared to agnostic aggregation. In random forest, we hope that the diversification through many trees will improve the overall quality of the model. In boosting, it is sought to iteratively improve the model whenever a new tree is added. There are many ways to boost learning and we present two that can easily be implemented with trees. The first one (Adaboost, for adaptive boosting) improves the learning process by progressively focusing on the instances that yield the largest errors. The second one (xgboost) is a flexible algorithm in which each new tree is only focused on the minimization of the training sample loss.</p>
+<div id="methodology" class="section level3" number="6.3.1">
+<h3>
+<span class="header-section-number">6.3.1</span> Methodology<a class="anchor" aria-label="anchor" href="#methodology"><i class="fas fa-link"></i></a>
+</h3>
+<p>The origins of adaboost go back to <span class="citation"><a href="solutions-to-exercises.html#ref-freund1997decision" role="doc-biblioref">Freund and Schapire</a> (<a href="solutions-to-exercises.html#ref-freund1997decision" role="doc-biblioref">1997</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-freund1996experiments" role="doc-biblioref">Freund and Schapire</a> (<a href="solutions-to-exercises.html#ref-freund1996experiments" role="doc-biblioref">1996</a>)</span>, and for the sake of completeness, we also mention the book dedicated to boosting by <span class="citation"><a href="solutions-to-exercises.html#ref-schapire2012boosting" role="doc-biblioref">Schapire and Freund</a> (<a href="solutions-to-exercises.html#ref-schapire2012boosting" role="doc-biblioref">2012</a>)</span>. Extensions of these ideas are proposed in <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2000additive" role="doc-biblioref">J. Friedman et al.</a> (<a href="solutions-to-exercises.html#ref-friedman2000additive" role="doc-biblioref">2000</a>)</span> (the so-called real Adaboost algorithm) and in <span class="citation"><a href="solutions-to-exercises.html#ref-drucker1997improving" role="doc-biblioref">Drucker</a> (<a href="solutions-to-exercises.html#ref-drucker1997improving" role="doc-biblioref">1997</a>)</span> (for regression analysis). Theoretical treatments were derived by <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2004population" role="doc-biblioref">Breiman et al.</a> (<a href="solutions-to-exercises.html#ref-breiman2004population" role="doc-biblioref">2004</a>)</span>.</p>
+<p>We start by directly stating the general structure of the algorithm:</p>
+<ul>
+<li>set equal weights <span class="math inline">\(w_i=I^{-1}\)</span>;<br>
+</li>
+<li>For <span class="math inline">\(m=1,\dots,M\)</span> do:</li>
+</ul>
+<ol style="list-style-type: decimal">
+<li>Find a learner <span class="math inline">\(l_m\)</span> that minimizes the weighted loss <span class="math inline">\(\sum_{i=1}^Iw_iL(l_m(\textbf{x}_i),\textbf{y}_i)\)</span>;</li>
+<li>Compute a learner weight
+<span class="math display" id="eq:adaboostam">\[\begin{equation}
+\tag{6.2}
+a_m=f_a(\textbf{w},l_m(\textbf{x}),\textbf{y});
+\end{equation}\]</span>
+</li>
+<li>Update the instance weights
+<span class="math display" id="eq:adaboostw">\[\begin{equation}
+\tag{6.3}
+w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
+\end{equation}\]</span>
+</li>
+<li>Normalize the <span class="math inline">\(w_i\)</span> to sum to one.</li>
+</ol>
+<ul>
+<li>The output for instance <span class="math inline">\(\textbf{x}_i\)</span> is a simple function of <span class="math inline">\(\sum_{m=1}^M a_ml_m(\textbf{x}_i)\)</span>,
+<span class="math display" id="eq:adaboosty">\[\begin{equation}
+\tag{6.4}
+\tilde{y}_i=f_y\left(\sum_{m=1}^M a_ml_m(\textbf{x}_i) \right).
+\end{equation}\]</span>
+</li>
+</ul>
+<p>Let us comment on the steps of the algorithm. The formulation holds for many variations of Adaboost and we will specify the functions <span class="math inline">\(f_a\)</span> and <span class="math inline">\(f_w\)</span> below.</p>
+<ol style="list-style-type: decimal">
+<li>The first step seeks to find a learner (tree) <span class="math inline">\(l_m\)</span> that minimizes a weighted loss. Here the base loss function <span class="math inline">\(L\)</span> essentially depends on the task (regression versus classification).<br>
+</li>
+<li>The second and third steps are the most interesting because they are the heart of Adaboost: they define the way the algorithm adapts sequentially. Because the purpose is to aggregate models, a more sophisticated approach compared to uniform weights for learners is a tailored weight for each learner. A natural property (for <span class="math inline">\(f_a\)</span>) should be that a learner that yields a smaller error should have a larger weight because it is more accurate.<br>
+</li>
+<li>The third step is to change the weights of observations. In this case, because the model aims at improving the learning process, <span class="math inline">\(f_w\)</span> is constructed to give more weight on observations for which the current model does not do a good job (i.e., generates the largest errors). Hence, the next learner will be incentivized to pay more attention to these pathological cases.<br>
+</li>
+<li>The third step is a simple scaling procedure.</li>
+</ol>
+<p>In Table <a href="trees.html#tab:adaboost">6.1</a>, we detail two examples of weighting functions used in the literature. For the original Adaboost (<span class="citation"><a href="solutions-to-exercises.html#ref-freund1996experiments" role="doc-biblioref">Freund and Schapire</a> (<a href="solutions-to-exercises.html#ref-freund1996experiments" role="doc-biblioref">1996</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-freund1997decision" role="doc-biblioref">Freund and Schapire</a> (<a href="solutions-to-exercises.html#ref-freund1997decision" role="doc-biblioref">1997</a>)</span>), the label is binary with values +1 and -1 only. The second example stems from <span class="citation"><a href="solutions-to-exercises.html#ref-drucker1997improving" role="doc-biblioref">Drucker</a> (<a href="solutions-to-exercises.html#ref-drucker1997improving" role="doc-biblioref">1997</a>)</span> and is dedicated to regression analysis (with real-valued label). The interested reader can have a look at other possibilities in <span class="citation"><a href="solutions-to-exercises.html#ref-schapire2003boosting" role="doc-biblioref">Schapire</a> (<a href="solutions-to-exercises.html#ref-schapire2003boosting" role="doc-biblioref">2003</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-ridgeway1999boosting" role="doc-biblioref">Ridgeway, Madigan, and Richardson</a> (<a href="solutions-to-exercises.html#ref-ridgeway1999boosting" role="doc-biblioref">1999</a>)</span>.</p>
+<div class="inline-table"><table class="table table-sm">
+<caption>
+<span id="tab:adaboost">TABLE 6.1: </span> Examples of functions for Adaboost-like algorithms.</caption>
+<colgroup>
+<col width="33%">
+<col width="33%">
+<col width="33%">
+</colgroup>
+<thead><tr class="header">
+<th></th>
+<th>Bin. classif. (orig. Adaboost)</th>
+<th>Regression (Drucker (1997))</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Individual error</td>
+<td><span class="math inline">\(\epsilon_i=\textbf{1}_{\left\{y_i\neq l_m(\textbf{x}_i) \right\}}\)</span></td>
+<td><span class="math inline">\(\epsilon_i=\frac{|y_i- l_m(\textbf{x}_i)|}{\underset{i}{\max}|y_i- l_m(\textbf{x}_i)|}\)</span></td>
+</tr>
+<tr class="even">
+<td>Weight of learner via <span class="math inline">\(f_a\)</span>
+</td>
+<td>
+<span class="math inline">\(f_a=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>,with <span class="math inline">\(\epsilon=I^{-1}\sum_{i=1}^Iw_i \epsilon_i\)</span>
+</td>
+<td>
+<span class="math inline">\(f_a=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>,with <span class="math inline">\(\epsilon=I^{-1}\sum_{i=1}^Iw_i \epsilon_i\)</span>
+</td>
+</tr>
+<tr class="odd">
+<td>Weight of instances via <span class="math inline">\(f_w(i)\)</span>
+</td>
+<td><span class="math inline">\(f_w=f_a\epsilon_i\)</span></td>
+<td><span class="math inline">\(f_w=f_a\epsilon_i\)</span></td>
+</tr>
+<tr class="even">
+<td>Output function via <span class="math inline">\(f_y\)</span>
+</td>
+<td><span class="math inline">\(f_y(x) = \text{sign}(x)\)</span></td>
+<td>weighted median of predictions</td>
+</tr>
+</tbody>
+</table></div>
+<p>Let us comment on the original Adaboost specification. The basic error term <span class="math inline">\(\epsilon_i=\textbf{1}_{\left\{y_i\neq l_m(\textbf{x}_i) \right\}}\)</span> is a dummy number indicating if the prediction is correct (we recall only two values are possible, +1 and -1). The average error <span class="math inline">\(\epsilon\in [0,1]\)</span> is simply a weighted average of individual errors and the weight of the <span class="math inline">\(m^{th}\)</span> learner defined in Equation <a href="trees.html#eq:adaboostam">(6.2)</a> is given by <span class="math inline">\(a_m=\log\left(\frac{1-\epsilon}{\epsilon} \right)\)</span>. The function <span class="math inline">\(x\mapsto \log((1-x)x^{-1})\)</span> decreases on <span class="math inline">\([0,1]\)</span> and switches sign (from positive to negative) at <span class="math inline">\(x=1/2\)</span>. Hence, when the average error is small, the learner has a large positive weight, but when the error becomes large, the learner can even obtain a negative weight. Indeed, the threshold <span class="math inline">\(\epsilon&gt;1/2\)</span> indicated that the learner is wrong more than 50% of the time. Obviously, this indicates a problem and the learner should even be discarded.</p>
+<p>The change in instance weights follows a similar logic. The new weight is proportional to <span class="math inline">\(w_i\left(\frac{1-\epsilon}{\epsilon} \right)^{\epsilon_i}\)</span>. If the prediction is right and <span class="math inline">\(\epsilon_i=0\)</span>, the weight is unchanged. If the prediction is wrong and <span class="math inline">\(\epsilon_i=1\)</span>, the weight is adjusted depending on the aggregate error <span class="math inline">\(\epsilon\)</span>. If the error is small and the learner efficient (<span class="math inline">\(\epsilon&lt;1/2\)</span>), then <span class="math inline">\((1-\epsilon)/\epsilon&gt;1\)</span> and the weight of the instance increases. This means that for the next round, the learner will have to focus more on instance <span class="math inline">\(i\)</span>.</p>
+<p>Lastly, the final prediction of the model corresponds to the sign of the weighted sums of individual predictions: if the sum is positive, the model will predict +1 and it will yield -1 otherwise.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;The Real Adaboost of &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-friedman2000additive" role="doc-biblioref"&gt;J. Friedman et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-friedman2000additive" role="doc-biblioref"&gt;2000&lt;/a&gt;)&lt;/span&gt; has a different output: the probability of belonging to a particular class.&lt;/p&gt;'><sup>17</sup></a> The odds of a zero sum are negligible. In the case of numerical labels, the process is slightly more complicated and we refer to Section 3, step 8 of <span class="citation"><a href="solutions-to-exercises.html#ref-drucker1997improving" role="doc-biblioref">Drucker</a> (<a href="solutions-to-exercises.html#ref-drucker1997improving" role="doc-biblioref">1997</a>)</span> for more details on how to proceed.</p>
+<p>We end this presentation with one word on instance weighting. There are two ways to deal with this topic. The first one works at the level of the loss functions. For regression trees, Equation <a href="trees.html#eq:node">(6.1)</a> would naturally generalize to
+<span class="math display">\[V^{(k)}_N(c^{(k)}, \textbf{w})= \sum_{x_i^{(k)}&lt;c^{(k)}}w_i\left(y_i-m_N^{k,-}(c^{(k)}) \right)^2 + \sum_{x_i^{(k)}&gt;c^{(k)}}w_i\left(y_i-m_N^{k,+}(c^{(k)}) \right)^2,\]</span></p>
+<p>and hence an instance with a large weight <span class="math inline">\(w_i\)</span> would contribute more to the dispersion of its cluster. For classification objectives, the alteration is more complex and we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-ting2002instance" role="doc-biblioref">Ting</a> (<a href="solutions-to-exercises.html#ref-ting2002instance" role="doc-biblioref">2002</a>)</span> for one example of an instance-weighted tree-growing algorithm. The idea is closely linked to the alteration of the misclassification risk via a loss matrix (see Section 9.2.4 in <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">Hastie, Tibshirani, and Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2009elements" role="doc-biblioref">2009</a>)</span>).</p>
+<p>The second way to enforce instance weighting is via random sampling. If instances have weights <span class="math inline">\(w_i\)</span>, then the training of learners can be performed over a sample that is randomly extracted with distribution equal to <span class="math inline">\(w_i\)</span>. In this case, an instance with a larger weight will have more chances to be represented in the training sample. The original adaboost algorithm relies on this method.</p>
+</div>
+<div id="illustration" class="section level3" number="6.3.2">
+<h3>
+<span class="header-section-number">6.3.2</span> Illustration<a class="anchor" aria-label="anchor" href="#illustration"><i class="fas fa-link"></i></a>
+</h3>
+<p>Below, we test an implementation of the original Adaboost classifier. As such, we work with the R1M_Usd_C variable and change the model formula. The computational cost of Adaboost is high on large datasets, thus we work with a smaller sample and we only impose three iterations.</p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/souravc83/fastAdaboost">fastAdaboost</a></span><span class="op">)</span>                                                     <span class="co"># Adaboost package </span>
+<span class="va">subsample</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">52000</span><span class="op">)</span><span class="op">*</span><span class="fl">4</span>                                                  <span class="co"># Target small sample</span>
+<span class="va">fit_adaboost_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/fastAdaboost/man/adaboost.html">adaboost</a></span><span class="op">(</span><span class="va">formula_C</span>,                                     <span class="co"># Model spec.</span>
+                         data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">training_sample</span><span class="op">[</span><span class="va">subsample</span>,<span class="op">]</span><span class="op">)</span>,  <span class="co"># Data source</span>
+                         nIter <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>                                       <span class="co"># Number of trees              </span></code></pre></div>
+<p></p>
+<p>Finally, we evaluate the performance of the classifier. </p>
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_adaboost_C</span>, <span class="va">testing_sample</span><span class="op">)</span><span class="op">$</span><span class="va">class</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.5028202</code></pre>
+<p></p>
+<p>The accuracy (as evaluated by the hit ratio) is clearly not satisfactory. One reason for this may be the restrictions we enforced for the training (smaller sample and only three trees).</p>
+</div>
+</div>
+<div id="boosted-trees-extreme-gradient-boosting" class="section level2" number="6.4">
+<h2>
+<span class="header-section-number">6.4</span> Boosted trees: extreme gradient boosting<a class="anchor" aria-label="anchor" href="#boosted-trees-extreme-gradient-boosting"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+The ideas behind <strong>tree boosting</strong> were popularized, among others, by <span class="citation"><a href="solutions-to-exercises.html#ref-mason2000boosting" role="doc-biblioref">Mason et al.</a> (<a href="solutions-to-exercises.html#ref-mason2000boosting" role="doc-biblioref">2000</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2001greedy" role="doc-biblioref">J. H. Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2001greedy" role="doc-biblioref">2001</a>)</span>, and <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2002stochastic" role="doc-biblioref">J. H. Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2002stochastic" role="doc-biblioref">2002</a>)</span>. In this case, the combination of learners (prediction tools) is not agnostic as in random forest, but adapted (or optimized) at the learner level. At each step <span class="math inline">\(s\)</span>, the sum of models <span class="math inline">\(M_S=\sum_{s=1}^{S-1}m_s+m_S\)</span> is such that the last learner <span class="math inline">\(m_S\)</span> was precisely designed to reduce the loss of <span class="math inline">\(M_S\)</span> on the training sample.</p>
+<p>Below, we follow closely the original work of <span class="citation"><a href="solutions-to-exercises.html#ref-chen2016xgboost" role="doc-biblioref">T. Chen and Guestrin</a> (<a href="solutions-to-exercises.html#ref-chen2016xgboost" role="doc-biblioref">2016</a>)</span> because their algorithm yields incredibly accurate predictions and also because it is highly customizable. It is their implementation that we use in our empirical section. The other popular alternative is lightgbm (see <span class="citation"><a href="solutions-to-exercises.html#ref-ke2017lightgbm" role="doc-biblioref">G. Ke et al.</a> (<a href="solutions-to-exercises.html#ref-ke2017lightgbm" role="doc-biblioref">2017</a>)</span>). What XGBoost seeks to minimize is the objective
+<span class="math display">\[O=\underbrace{\sum_{i=1}^I \text{loss}(y_i,\tilde{y}_i)}_{\text{error term}} \quad + \underbrace{\sum_{j=1}^J\Omega(T_j)}_{\text{regularization term}}.\]</span>
+The first term (over all instances) measures the distance between the true label and the output from the model. The second term (over all trees) penalizes models that are too complex.</p>
+<p>For simplicity, we propose the full derivation with the simplest loss function <span class="math inline">\(\text{loss}(y,\tilde{y})=(y-\tilde{y})^2\)</span>, so that:
+<span class="math display">\[O=\sum_{i=1}^I \left(y_i-m_{J-1}(\mathbf{x}_i)-T_J(\mathbf{x}_i)\right)^2+ \sum_{j=1}^J\Omega(T_j).\]</span></p>
+<div id="managing-loss" class="section level3" number="6.4.1">
+<h3>
+<span class="header-section-number">6.4.1</span> Managing loss<a class="anchor" aria-label="anchor" href="#managing-loss"><i class="fas fa-link"></i></a>
+</h3>
+<p>Let us assume that we have already built all trees <span class="math inline">\(T_{j}\)</span> up to <span class="math inline">\(j=1,\dots,J-1\)</span> (and hence model <span class="math inline">\(M_{J-1}\)</span>): how to choose tree <span class="math inline">\(T_J\)</span> optimally? We rewrite
+<span class="math display">\[\begin{align*}
+O&amp;=\sum_{i=1}^I \left(y_i-m_{J-1}(\mathbf{x}_i)-T_J(\mathbf{x}_i)\right)^2+ \sum_{j=1}^J\Omega(T_j) \\
+&amp;=\sum_{i=1}^I\left\{y_i^2+m_{J-1}(\mathbf{x}_i)^2+T_J(\mathbf{x}_i)^2 \right\} + \sum_{j=1}^{J-1}\Omega(T_j)+\Omega(T_J) \quad \text{(squared terms + penalization)}\\
+&amp; \quad -2 \sum_{i=1}^I\left\{y_im_{J-1}(\mathbf{x}_i)+y_iT_J(\mathbf{x}_i)-m_{J-1}(\mathbf{x}_i) T_J(\mathbf{x}_i))\right\}\quad \text{(cross terms)} \\
+&amp;= \sum_{i=1}^I\left\{-2 y_iT_J(\mathbf{x}_i)+2m_{J-1}(\mathbf{x}_i) T_J(\mathbf{x}_i))+T_J(\mathbf{x}_i)^2 \right\} +\Omega(T_J) + c
+\end{align*}\]</span>
+All terms known at step <span class="math inline">\(J\)</span> (i.e., indexed by <span class="math inline">\(J-1\)</span>) vanish because they do not enter the optimization scheme. They are embedded in the constant <span class="math inline">\(c\)</span>.</p>
+<p>Things are fairly simple with quadratic loss. For more complicated loss functions, Taylor expansions are used (see the original paper).</p>
+</div>
+<div id="penalization" class="section level3" number="6.4.2">
+<h3>
+<span class="header-section-number">6.4.2</span> Penalization<a class="anchor" aria-label="anchor" href="#penalization"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In order to go any further, we need to specify the way the penalization works. For a given tree <span class="math inline">\(T\)</span>, we specify its structure by <span class="math inline">\(T(x)=w_{q(x)}\)</span>, where <span class="math inline">\(w\)</span> is the output value of some leaf and <span class="math inline">\(q(\cdot)\)</span> is the function that maps an input to its final leaf. This encoding is illustrated in Figure <a href="trees.html#fig:treeq">6.5</a>. The function <span class="math inline">\(q\)</span> indicates the path, while the vector <span class="math inline">\(\textbf{w}=w_i\)</span> codes the terminal leaf values.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:treeq"></span>
+<img src="images/tree_q.png" alt="Coding a decision tree: decomposition between structure and node and leaf values. " width="400px"><p class="caption">
+FIGURE 6.5: Coding a decision tree: decomposition between structure and node and leaf values.
+</p>
+</div>
+<p>We write <span class="math inline">\(l=1,\dots,L\)</span> for the indices of the leaves of the tree. In XGBoost, complexity is defined as:
+<span class="math display">\[\Omega(T)=\gamma L+\frac{\lambda}{2}\sum_{l=1}^Lw_l^2,\]</span>
+where</p>
+<ul>
+<li>the first term penalizes the <strong>total number of leaves</strong>;<br>
+</li>
+<li>the second term penalizes the <strong>magnitude of output values</strong> (this helps reduce variance).</li>
+</ul>
+<p>The first penalization term reduces the depth of the tree, while the second shrinks the size of the adjustments that will come from the latest tree.</p>
+</div>
+<div id="aggregation" class="section level3" number="6.4.3">
+<h3>
+<span class="header-section-number">6.4.3</span> Aggregation<a class="anchor" aria-label="anchor" href="#aggregation"><i class="fas fa-link"></i></a>
+</h3>
+<p>We aggregate both sections of the objective (loss and penalization). We write <span class="math inline">\(I_l\)</span> for the set of the indices of the instances belonging to leaf <span class="math inline">\(l\)</span>. Then,<br><span class="math display">\[\begin{align*}
+O&amp;= 2\sum_{i=1}^I\left\{ -y_iT_J(\mathbf{x}_i)+m_{J-1}(\mathbf{x}_i) T_J(\mathbf{x}_i))+\frac{T_J(\mathbf{x}_i)^2}{2} \right\} + \gamma L+\frac{\lambda}{2}\sum_{l=1}^Lw_l^2 \\
+&amp;=2\sum_{i=1}^I\left\{- y_iw_{q(\mathbf{x}_i)}+m_{J-1}(\mathbf{x}_i)w_{q(\mathbf{x}_i)})+\frac{w_{q(\mathbf{x}_i)}^2}{2} \right\} + \gamma L+\frac{\lambda}{2}\sum_{l=1}^Lw_l^2 \\
+&amp;=2 \sum_{l=1}^L \left(w_l\sum_{i\in I_l}(-y_i +m_{J-1}(\mathbf{x}_i))+ \frac{w_l^2}{2}\sum_{i\in I_l}\left(1+\frac{\lambda}{2}\right)\right)+ \gamma L
+\end{align*}\]</span><br>
+The function is of the form <span class="math inline">\(aw_l+\frac{b}{2}w_l^2\)</span>, which has minimum values <span class="math inline">\(-\frac{a^2}{2b}\)</span> at point <span class="math inline">\(w_l=-a/b\)</span>. Thus, writing #(.) for the cardinal function that counts the number of items in a set,
+<span class="math display" id="eq:xgbweight">\[\begin{align}
+\tag{6.5}
+\mathbf{\rightarrow} \quad w^*_l&amp;=\frac{\sum_{i\in I_l}(y_i -m_{J-1}(\mathbf{x}_i))}{\left(1+\frac{\lambda}{2}\right)\#\{i\in I_l\}}, \text{ so that} \\
+O_L(q)&amp;=-\frac{1}{2}\sum_{l=1}^L \frac{\left(\sum_{i\in I_l}(y_i -m_{J-1}(\mathbf{x}_i))\right)^2}{\left(1+\frac{\lambda}{2}\right)\#\{i\in I_l\}}+\gamma L, \nonumber
+\end{align}\]</span>
+where we added the dependence of the objective both in <span class="math inline">\(q\)</span> (structure of tree) and <span class="math inline">\(L\)</span> (number of leaves). Indeed, the meta-shape of the tree remains to be determined.</p>
+</div>
+<div id="tree-structure" class="section level3" number="6.4.4">
+<h3>
+<span class="header-section-number">6.4.4</span> Tree structure<a class="anchor" aria-label="anchor" href="#tree-structure"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Final problem: the <strong>tree structure</strong>! Let us take a step back. In the construction of a simple regression tree, the output value at each node is equal to the average value of the label within the node (or cluster). When adding a new tree in order to reduce the loss, the node values must be computed completely differently, which is the purpose of Equation <a href="trees.html#eq:xgbweight">(6.5)</a>.</p>
+<p>Nonetheless, the growing of the iterative trees follows similar lines as simple trees. Features must be tested in order to pick the one that minimizes the objective for each given split. The final question is then: what’s the best depth and when to stop growing the tree? The method is to</p>
+<ul>
+<li>proceed node-by-node;<br>
+</li>
+<li>for each node, look at whether a split is useful (in terms of objective) or not: <span class="math display">\[\text{Gain}=\frac{1}{2}\left(\text{Gain}_L+\text{Gain}_R-\text{Gain}_O \right)-\gamma\]</span><br>
+</li>
+<li>each gain is computed with respect to the instances in each bucket (cluster): <span class="math display">\[\text{Gain}_\mathcal{X}= \frac{\left(\sum_{i\in I_\mathcal{X}}(y_i -m_{J-1}(\mathbf{x}_i))\right)^2}{\left(1+\frac{\lambda}{2}\right)\#\{i\in I_\mathcal{X}\}},\]</span>
+where <span class="math inline">\(I_\mathcal{X}\)</span> is the set of instances within cluster <span class="math inline">\(\mathcal{X}\)</span>.</li>
+</ul>
+<p><span class="math inline">\(\text{Gain}_O\)</span> is the original gain (no split) and <span class="math inline">\(\text{Gain}_L\)</span> and <span class="math inline">\(\text{Gain}_R\)</span> are the gains of the left and right clusters, respectively. One word about the <span class="math inline">\(-\gamma\)</span> adjustment in the above formula: there is one unit of new leaves (two new minus one old)! This makes a one leaf difference; hence <span class="math inline">\(\Delta L =1\)</span> and the penalization intensity for each new leaf is equal to <span class="math inline">\(\gamma\)</span>.</p>
+<p>Lastly, we underline the fact that XGBoost also applies a <strong>learning rate</strong>: each new tree is scaled by a factor <span class="math inline">\(\eta\)</span>, with <span class="math inline">\(\eta \in (0,1]\)</span>. After each step of boosting the new tree <span class="math inline">\(T_J\)</span> sees its values discounted by multiplying them by <span class="math inline">\(\eta\)</span>. This is very useful because a pure aggregation of 100 optimized trees is the best way to overfit the training sample.</p>
+</div>
+<div id="boostext" class="section level3" number="6.4.5">
+<h3>
+<span class="header-section-number">6.4.5</span> Extensions<a class="anchor" aria-label="anchor" href="#boostext"><i class="fas fa-link"></i></a>
+</h3>
+<p>Several additional features are available to further prevent boosted trees to overfit. Indeed, given a sufficiently large number of trees, the aggregation is able to match the training sample very well, but may fail to generalize well out-of-sample.</p>
+<p>Following the pioneering work of <span class="citation"><a href="solutions-to-exercises.html#ref-srivastava2014dropout" role="doc-biblioref">Srivastava et al.</a> (<a href="solutions-to-exercises.html#ref-srivastava2014dropout" role="doc-biblioref">2014</a>)</span>, the DART (Dropout for Additive Regression Trees) model was proposed by <span class="citation"><a href="solutions-to-exercises.html#ref-rashmi2015dart" role="doc-biblioref">Rashmi and Gilad-Bachrach</a> (<a href="solutions-to-exercises.html#ref-rashmi2015dart" role="doc-biblioref">2015</a>)</span>. The idea is to omit a specified number of trees during training. The trees that are removed from the model are chosen randomly. The full specifications can be found at <a href="https://xgboost.readthedocs.io/en/latest/tutorials/dart.html" class="uri">https://xgboost.readthedocs.io/en/latest/tutorials/dart.html</a> and we use a 10% dropout in the first example below..</p>
+<p>Monotonicity constraints are another element that is featured both in xgboost and lightgbm. Sometimes, it is expected that one particular feature has a monotonic impact on the label. For instance, if one deeply believes in momentum, then past returns should have an increasing impact on future returns (in the cross-section of stocks).</p>
+<p>Given the recursive nature of the splitting algorithm, it is possible to choose when to perform a split (according to a particular variable) and when not to. In Figure <a href="trees.html#fig:monotonic">6.6</a>, we show how the algorithm proceeds. All splits are performed according to the same feature. For the first split, things are easy because it suffices to verify that the averages of each cluster are ranked in the right direction. Things are more complicated for the splits that occur below. Indeed, the average values set by all above splits matter as they give bounds for acceptable values for the future average values in lower splits. If a split violates these bounds, then it is overlooked and another variable will be chosen instead.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:monotonic"></span>
+<img src="images/tree_monotonic.png" alt="Imposing monotonic constraints. The constraints are shown in bold blue in the bottom leaves." width="590"><p class="caption">
+FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold blue in the bottom leaves.
+</p>
+</div>
+</div>
+<div id="boostcode" class="section level3" number="6.4.6">
+<h3>
+<span class="header-section-number">6.4.6</span> Code and results<a class="anchor" aria-label="anchor" href="#boostcode"><i class="fas fa-link"></i></a>
+</h3>
+<p>In this section, we train a model using the <em>XGBoost</em> library. Other options include <em>catboost</em>, <em>gbm</em>, <em>lightgbm</em>, and <em>h2o</em>’s own version of boosted machines. Unlike many other packages, the XGBoost function requires a particular syntax and dedicated formats. The first step is thus to encapsulate the data accordingly.</p>
+<p>Moreover, because training times can be long, we shorten the training sample as advocated in <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>. We retain only the 40% most extreme observations (in terms of label values: top 20% and bottom 20%) and work with the small subset of features. In all coding sections dedicated to boosted trees in this book, the models will be trained with only 7 features.</p>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmlc/xgboost">xgboost</a></span><span class="op">)</span>                                                <span class="co"># The package for boosted trees</span>
+<span class="va">train_features_xgb</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="op">|</span> 
+               <span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>            <span class="co"># Extreme values only!</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>       <span class="co"># Independent variable</span>
+<span class="va">train_label_xgb</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="op">|</span> 
+               <span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                      <span class="co"># Dependent variable</span>
+<span class="va">train_matrix_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html">xgb.DMatrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_features_xgb</span>, 
+                                label <span class="op">=</span> <span class="va">train_label_xgb</span><span class="op">)</span>        <span class="co"># XGB format!</span></code></pre></div>
+<p></p>
+<p>The second (optional) step is to determine the monotonicity constraints that we want to impose. For simplicity, we will only enforce three constraints on</p>
+<ol style="list-style-type: decimal">
+<li>market capitalization (negative, because large firms have smaller returns under the size anomaly);<br>
+</li>
+<li>price-to-book ratio (negative, because overvalued firms also have smaller returns under the value anomaly);<br>
+</li>
+<li>past annual returns (positive, because winners outperform losers under the momentum anomaly).</li>
+</ol>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">mono_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span>                   <span class="co"># Initialize the vector</span>
+<span class="va">mono_const</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">features</span> <span class="op">==</span> <span class="st">"Mkt_Cap_12M_Usd"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Decreasing in market cap</span>
+<span class="va">mono_const</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">features</span> <span class="op">==</span> <span class="st">"Pb"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>              <span class="co"># Decreasing in price-to-book</span>
+<span class="va">mono_const</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">features</span> <span class="op">==</span> <span class="st">"Mom_11M_Usd"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span>        <span class="co"># Increasing in past return</span></code></pre></div>
+<p></p>
+<p>The third step is to train the model on the formatted training data. We include the monotonicity constraints and the DART feature (via <em>rate_drop</em>). Just like random forests, boosted trees can grow individual trees on subsets of the data: both row-wise (by selecting random instances) and column-wise (by keeping a smaller portion of predictors). These options are implemented below with the <em>subsample</em> and <em>colsample_bytree</em> in the arguments of the function.</p>
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_xgb</span>,     <span class="co"># Data source </span>
+              eta <span class="op">=</span> <span class="fl">0.3</span>,                          <span class="co"># Learning rate</span>
+              objective <span class="op">=</span> <span class="st">"reg:squarederror"</span>,     <span class="co"># Objective function</span>
+              max_depth <span class="op">=</span> <span class="fl">4</span>,                      <span class="co"># Maximum depth of trees</span>
+              subsample <span class="op">=</span> <span class="fl">0.6</span>,                    <span class="co"># Train on random 60% of sample</span>
+              colsample_bytree <span class="op">=</span> <span class="fl">0.7</span>,             <span class="co"># Train on random 70% of predictors</span>
+              lambda <span class="op">=</span> <span class="fl">1</span>,                         <span class="co"># Penalisation of leaf values</span>
+              gamma <span class="op">=</span> <span class="fl">0.1</span>,                        <span class="co"># Penalisation of number of leaves</span>
+              nrounds <span class="op">=</span> <span class="fl">30</span>,                       <span class="co"># Number of trees used (rather low here)</span>
+              monotone_constraints <span class="op">=</span> <span class="va">mono_const</span>,  <span class="co"># Monotonicity constraints</span>
+              rate_drop <span class="op">=</span> <span class="fl">0.1</span>,                    <span class="co"># Drop rate for DART</span>
+              verbose <span class="op">=</span> <span class="fl">0</span>                         <span class="co"># No comment from the algo </span>
+    <span class="op">)</span></code></pre></div>
+<pre><code>## [14:55:38] WARNING: amalgamation/../src/learner.cc:576: 
+## Parameters: { "rate_drop" } might not be used.
+## 
+##   This could be a false alarm, with some parameters getting used by language bindings but
+##   then being mistakenly passed down to XGBoost core, or some parameter actually being used
+##   but getting flagged wrongly here. Please open an issue if you find any such cases.</code></pre>
+<p></p>
+<p>Finally, we evaluate the performance of the model. Note that before that, a proper formatting of the testing sample is required.</p>
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">xgb_test</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                <span class="co"># Test sample =&gt; XGB format</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
+<pre><code>## [1] 0.03908854</code></pre>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.5077626</code></pre>
+<p></p>
+<p>The performance is comparable to those observed for other predictive tools. As a final exercise, we show one implementation of a classification task under XGBoost. Only the label changes. In XGBoost, labels must be coded with integer number, starting at zero exactly. In R, factors are numerically coded as integer numbers starting from one, hence the mapping is simple.</p>
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">train_label_C</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="op">|</span>          <span class="co"># Either low 20% returns </span>
+               <span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>   <span class="co"># Or top 20% returns</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd_C</span><span class="op">)</span>
+<span class="va">train_matrix_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html">xgb.DMatrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_features_xgb</span>, 
+                              label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">train_label_C</span> <span class="op">==</span> <span class="st">"TRUE"</span><span class="op">)</span><span class="op">)</span> <span class="co"># XGB format!</span></code></pre></div>
+<p></p>
+<p>When working with categories, the loss function is usually the softmax function (see Section <a href="notdata.html#notations">1.1</a>).</p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_xgb_C</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_C</span>,  <span class="co"># Data source (pipe input)</span>
+              eta <span class="op">=</span> <span class="fl">0.8</span>,                        <span class="co"># Learning rate</span>
+              objective <span class="op">=</span> <span class="st">"multi:softmax"</span>,      <span class="co"># Objective function</span>
+              num_class <span class="op">=</span> <span class="fl">2</span>,                    <span class="co"># Number of classes</span>
+              max_depth <span class="op">=</span> <span class="fl">4</span>,                    <span class="co"># Maximum depth of trees</span>
+              nrounds <span class="op">=</span> <span class="fl">10</span>,                     <span class="co"># Number of trees used</span>
+              verbose <span class="op">=</span> <span class="fl">0</span>                       <span class="co"># No warning message </span>
+    <span class="op">)</span></code></pre></div>
+<p></p>
+<p>We can then proceed to the assessment of the quality of the model. We adjust the prediction to the value of the true label and count the proportion of accurate forecasts.</p>
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb_C</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.495613</code></pre>
+<p></p>
+<p>Consistently with the previous classification attempts, the results are underwhelming, as if switching to binary labels incurred a loss of information.</p>
+</div>
+<div id="instweight" class="section level3" number="6.4.7">
+<h3>
+<span class="header-section-number">6.4.7</span> Instance weighting<a class="anchor" aria-label="anchor" href="#instweight"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In the computation of the aggregate loss, it is possible to introduce some flexibility and assign weights to instances:
+<span class="math display">\[O=\underbrace{\sum_{i=1}^I\mathcal{W}_i \times \text{loss}(y_i,\tilde{y}_i)}_{\text{weighted error term}} \quad + \underbrace{\sum_{j=1}^J\Omega(T_j)}_{\text{regularization term (unchanged)}}.\]</span></p>
+<p>In factor investing, these weights can very well depend on the feature values (<span class="math inline">\(\mathcal{W}_i=\mathcal{W}_i(\textbf{x}_i)\)</span>). For instance, for one particular characteristic <span class="math inline">\(\textbf{x}^k\)</span>, weights can be increasing thereby giving more importance to assets with high values of this characteristic (e.g., value stocks are favored compared to growth stocks). One other option is to increase weights when the values of the characteristic become more extreme (deep value and deep growth stocks have larger weights). If the features are uniform, the weights can simply be <span class="math inline">\(\mathcal{W}_i(x_i^k)\propto|x_i^k-0.5|\)</span>: firms with median value 0.5 have zero weight and as the feature value shifts towards 0 or 1, the weight increases. Specifying weights on instances biases the learning process just like views introduced à la <span class="citation"><a href="solutions-to-exercises.html#ref-black1992global" role="doc-biblioref">Black and Litterman</a> (<a href="solutions-to-exercises.html#ref-black1992global" role="doc-biblioref">1992</a>)</span> influence the asset allocation process. The difference is that the nudge is performed well ahead of the portfolio choice problem.</p>
+<p>In xgboost, the implementation instance weighting is done very early, in the definition of the xgb.DMatrix:</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">inst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">train_features_xgb</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Random weights</span>
+<span class="va">inst_weights</span> <span class="op">&lt;-</span> <span class="va">inst_weights</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">inst_weights</span><span class="op">)</span>              <span class="co"># Normalization</span>
+<span class="va">train_matrix_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html">xgb.DMatrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_features_xgb</span>, 
+                                label <span class="op">=</span> <span class="va">train_label_xgb</span>,
+                                weight <span class="op">=</span> <span class="va">inst_weights</span><span class="op">)</span>        <span class="co"># Weights!</span></code></pre></div>
+<p></p>
+<p>Then, in the subsequent stages, the optimization will be performed with these hard-coded weights. The splitting points can be altered (via the total weighted loss in clusters) and the terminal weight values <a href="trees.html#eq:xgbweight">(6.5)</a> are also impacted.</p>
+</div>
+</div>
+<div id="discussion" class="section level2" number="6.5">
+<h2>
+<span class="header-section-number">6.5</span> Discussion<a class="anchor" aria-label="anchor" href="#discussion"><i class="fas fa-link"></i></a>
+</h2>
+<p>We end this chapter by a discussion on the choice of predictive engine with a view towards portfolio construction. As recalled in Chapter <a href="intro.html#intro">2</a>, the ML signal is just one building stage of construction of the investment strategy. At some point, this signal must be translated into portfolio weights.</p>
+<p>From this perspective, simple trees appear suboptimal. Tree depths are usually set between 3 and 6. This implies between 8 and 64 terminal leaves at most, with possibly very unbalanced clusters. The likelihood of having one cluster with 20% to 30% of the sample is high. This means that when it comes to predictions, roughly 20% to 30% of the instances will be given the same value.</p>
+<p>On the other side of the process, portfolio policies commonly have a fixed number of assets. Thus, having assets with equal signals does not permit to discriminate and select a subset to be included in the portfolio. For instance, if the policy requires exactly 100 stocks and 105 stocks have the same signal, the signal cannot be used for selection purposes. It would have to be combined with exogenous information such as the covariance matrix in a mean-variance type allocation.</p>
+<p>Overall, this is one reason to prefer aggregate models. When the number of learners is sufficiently large (5 is almost enough), the predictions for assets will be unique and tailored to these assets. It then becomes possible to discriminate via the signal and select only those assets that have the most favorable signal. In practice, random forests and boosted trees are probably the best choices.</p>
+</div>
+<div id="coding-exercises-2" class="section level2" number="6.6">
+<h2>
+<span class="header-section-number">6.6</span> Coding exercises<a class="anchor" aria-label="anchor" href="#coding-exercises-2"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li><p>Using the <em>formula</em> in the chunks above, build two simple trees on the training sample with only one parameter: cp. For the first tree, take cp=0.001 and for the second take cp=0.01. Evaluate the performance of both models on the testing sample. Comment.</p></li>
+<li><p>With the smaller set of predictors, build random forests on the training sample. Restrict the learning on 30,000 instances and over 5 predictors. Construct the forests on 10, 20, 40, 80 and 160 trees and evaluate their performance on the training sample. Is complexity worthwhile in this case and why?</p></li>
+<li><p>Plot a tree based on data from calendar year 2008 and then from 2009. Compare.</p></li>
+</ol>
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></div>
+<div class="next"><a href="NN.html"><span class="header-section-number">7</span> Neural networks</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#trees"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li>
+<a class="nav-link" href="#simple-trees"><span class="header-section-number">6.1</span> Simple trees</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#principle"><span class="header-section-number">6.1.1</span> Principle</a></li>
+<li><a class="nav-link" href="#treeclass"><span class="header-section-number">6.1.2</span> Further details on classification</a></li>
+<li><a class="nav-link" href="#pruning-criteria"><span class="header-section-number">6.1.3</span> Pruning criteria</a></li>
+<li><a class="nav-link" href="#code-and-interpretation"><span class="header-section-number">6.1.4</span> Code and interpretation</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#random-forests"><span class="header-section-number">6.2</span> Random forests</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#principle-1"><span class="header-section-number">6.2.1</span> Principle</a></li>
+<li><a class="nav-link" href="#code-and-results-1"><span class="header-section-number">6.2.2</span> Code and results</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#adaboost"><span class="header-section-number">6.3</span> Boosted trees: Adaboost</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#methodology"><span class="header-section-number">6.3.1</span> Methodology</a></li>
+<li><a class="nav-link" href="#illustration"><span class="header-section-number">6.3.2</span> Illustration</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#boosted-trees-extreme-gradient-boosting"><span class="header-section-number">6.4</span> Boosted trees: extreme gradient boosting</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#managing-loss"><span class="header-section-number">6.4.1</span> Managing loss</a></li>
+<li><a class="nav-link" href="#penalization"><span class="header-section-number">6.4.2</span> Penalization</a></li>
+<li><a class="nav-link" href="#aggregation"><span class="header-section-number">6.4.3</span> Aggregation</a></li>
+<li><a class="nav-link" href="#tree-structure"><span class="header-section-number">6.4.4</span> Tree structure</a></li>
+<li><a class="nav-link" href="#boostext"><span class="header-section-number">6.4.5</span> Extensions</a></li>
+<li><a class="nav-link" href="#boostcode"><span class="header-section-number">6.4.6</span> Code and results</a></li>
+<li><a class="nav-link" href="#instweight"><span class="header-section-number">6.4.7</span> Instance weighting</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#discussion"><span class="header-section-number">6.5</span> Discussion</a></li>
+<li><a class="nav-link" href="#coding-exercises-2"><span class="header-section-number">6.6</span> Coding exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

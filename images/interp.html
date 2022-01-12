@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 13 Interpretability | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 13 Interpretability | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 13 Interpretability | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } This chapter is dedicated to the techniques that help understand the way models process inputs into outputs. Two recent books (Molnar (2019) available...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } This chapter is dedicated to the techniques that help understand the way models process inputs into outputs. Two recent books (Molnar (2019) available...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } This chapter is dedicated to the techniques that help understand the way models process inputs into outputs. Two recent books (Molnar (2019) available...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="active" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="interp" class="section level1" number="13">
+<h1>
+<span class="header-section-number">13</span> Interpretability<a class="anchor" aria-label="anchor" href="#interp"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>
+This chapter is dedicated to the techniques that help understand the way models process inputs into outputs. Two recent books (<span class="citation"><a href="solutions-to-exercises.html#ref-molnar2019interpretable" role="doc-biblioref">Molnar</a> (<a href="solutions-to-exercises.html#ref-molnar2019interpretable" role="doc-biblioref">2019</a>)</span> available at <a href="https://christophm.github.io/interpretable-ml-book/" class="uri">https://christophm.github.io/interpretable-ml-book/</a>, and <span class="citation"><a href="solutions-to-exercises.html#ref-biecek2021explanatory" role="doc-biblioref">Biecek and Burzykowski</a> (<a href="solutions-to-exercises.html#ref-biecek2021explanatory" role="doc-biblioref">2021</a>)</span>, available at <a href="https://ema.drwhy.ai" class="uri">https://ema.drwhy.ai</a>) are entirely devoted to this topic and we highly recommend to have a look at them. The survey of <span class="citation"><a href="solutions-to-exercises.html#ref-belle2020principles" role="doc-biblioref">Belle and Papantonis</a> (<a href="solutions-to-exercises.html#ref-belle2020principles" role="doc-biblioref">2020</a>)</span> is also worthwhile. Another more introductory and less technical reference is <span class="citation"><a href="solutions-to-exercises.html#ref-hall2019introduction" role="doc-biblioref">Patrick Hall and Gill</a> (<a href="solutions-to-exercises.html#ref-hall2019introduction" role="doc-biblioref">2019</a>)</span>.
+Obviously, in this chapter, we will adopt a tone which is factor-investing orientated and discuss examples related to ML models trained on a financial dataset.</p>
+<p>Quantitative tools that aim for interpretability of ML models are required to satisfy two simple conditions:</p>
+<ol style="list-style-type: decimal">
+<li>That they provide information about the model.<br>
+</li>
+<li>That they are highly comprehensible.</li>
+</ol>
+<p>Often, these tools generate graphical outputs which are easy to read and yield immediate conclusions.</p>
+<p>In attempts to white-box complex machine learning models, one dichotomy stands out:</p>
+<ul>
+<li>
+<strong>Global models</strong> seek to determine the relative role of features in the construction of the predictions once the model has been trained. This is done at the global level, so that the patterns that are shown in the interpretation hold <em>on average</em> over the whole training set.<br>
+</li>
+<li>
+<strong>Local models</strong> aim to characterize how the model behaves around one particular instance by considering small variations around this instance. The way these variations are processed by the original model allows to simplify it by approximating it, e.g., in a linear fashion. This approximation can for example determine the sign and magnitude of the impact of each relevant feature in the vicinity of the original instance.</li>
+</ul>
+<p><span class="citation"><a href="solutions-to-exercises.html#ref-molnar2019interpretable" role="doc-biblioref">Molnar</a> (<a href="solutions-to-exercises.html#ref-molnar2019interpretable" role="doc-biblioref">2019</a>)</span> proposes another classification of interpretability solutions by splitting interpretations that depend on one particular model (e.g., linear regression or decision tree) versus the interpretations that can be obtained for any kind of model. In the sequel, we present the methods according to the global versus local dichotomy.</p>
+<p>Beyond the traditional approaches we present below, we wish to highlight two other methods: Sirus (<span class="citation"><a href="solutions-to-exercises.html#ref-benard2021sirus" role="doc-biblioref">Bénard et al.</a> (<a href="solutions-to-exercises.html#ref-benard2021sirus" role="doc-biblioref">2021</a>)</span>) and Rulefit (<span class="citation"><a href="solutions-to-exercises.html#ref-friedman2008predictive" role="doc-biblioref">J. H. Friedman and Popescu</a> (<a href="solutions-to-exercises.html#ref-friedman2008predictive" role="doc-biblioref">2008</a>)</span>). Both are implemented in R.</p>
+<div id="global-interpretations" class="section level2" number="13.1">
+<h2>
+<span class="header-section-number">13.1</span> Global interpretations<a class="anchor" aria-label="anchor" href="#global-interpretations"><i class="fas fa-link"></i></a>
+</h2>
+<div id="surr" class="section level3" number="13.1.1">
+<h3>
+<span class="header-section-number">13.1.1</span> Simple models as surrogates<a class="anchor" aria-label="anchor" href="#surr"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Let us start with the simplest example of all. In a linear model,
+<span class="math display">\[y_i=\alpha+\sum_{k=1}^K\beta_kx_i^k+\epsilon_i,\]</span>
+the following elements are usually extracted from the estimation of the <span class="math inline">\(\beta_k\)</span>:</p>
+<ul>
+<li>the <span class="math inline">\(R^2\)</span>, which appreciates the <strong>global fit</strong> of the model (possibly penalized to prevent overfitting with many regressors). The <span class="math inline">\(R^2\)</span> is usually computed in-sample;<br>
+</li>
+<li>the sign of the estimates <span class="math inline">\(\hat{\beta}_k\)</span>, which indicates the <strong>direction</strong> of the impact of each feature <span class="math inline">\(x^k\)</span> on <span class="math inline">\(y\)</span>;</li>
+<li>the <span class="math inline">\(t\)</span>-statistics <span class="math inline">\(t_{\hat{\beta_k}}\)</span>, which evaluate the <strong>magnitude</strong> of this impact: regardless of its direction, large statistics in absolute value reveal prominent variables. Often, the <span class="math inline">\(t\)</span>-statistics are translated into <span class="math inline">\(p\)</span>-values which are computed under some suitable distributional assumptions.</li>
+</ul>
+<p>The last two indicators are useful because they inform the user on which features matter the most and on the sign of the effect of each predictor. This gives a simplified view of how the model processes the features into the output. Most tools that aim to explain black boxes follow the same principles.</p>
+<p>Decision trees, because they are easy to picture, are also great models for interpretability. Thanks to this favorable feature, they are target benchmarks for simple models. Recently, <span class="citation"><a href="solutions-to-exercises.html#ref-vidal2020born" role="doc-biblioref">Vidal, Pacheco, and Schiffer</a> (<a href="solutions-to-exercises.html#ref-vidal2020born" role="doc-biblioref">2020</a>)</span> propose a method to reduce an ensemble of trees into a unique tree. The aim is to propose a simpler model that behaves exactly like the complex one.</p>
+<p>More generally, it is an intuitive idea to resort to simple models to proxy more complex algorithms. One simple way to do so is to build so-called <strong>surrogate</strong> models. The process is simple: </p>
+<ol style="list-style-type: decimal">
+<li>train the original model <span class="math inline">\(f\)</span> on features <span class="math inline">\(\textbf{X}\)</span> and labels <span class="math inline">\(\textbf{y}\)</span>;<br>
+</li>
+<li>train a simpler model <span class="math inline">\(g\)</span> to explain the predictions of the trained model <span class="math inline">\(\hat{f}\)</span> given the features <span class="math inline">\(\textbf{X}\)</span>:
+<span class="math display">\[\hat{f}(\textbf{X})=g(\textbf{X})+\textbf{error}\]</span>
+</li>
+</ol>
+<p>The estimated model <span class="math inline">\(\hat{g}\)</span> explains how the initial model <span class="math inline">\(\hat{f}\)</span> maps the features into the labels. To illustrate this, we use the <em>iml</em> package (see <span class="citation"><a href="solutions-to-exercises.html#ref-molnar2018iml" role="doc-biblioref">Molnar, Casalicchio, and Bischl</a> (<a href="solutions-to-exercises.html#ref-molnar2018iml" role="doc-biblioref">2018</a>)</span>). The simpler model is a tree with a depth of two.</p>
+<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://christophm.github.io/iml/">iml</a></span><span class="op">)</span>
+<span class="va">mod</span> <span class="op">&lt;-</span> <span class="va"><a href="https://christophm.github.io/iml/reference/Predictor.html">Predictor</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fit_RF</span>, 
+                     data <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span> 
+<span class="va">dt</span> <span class="op">&lt;-</span> <span class="va"><a href="https://christophm.github.io/iml/reference/TreeSurrogate.html">TreeSurrogate</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">mod</span>, maxdepth <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">dt</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:imlsurr"></span>
+<img src="ML_factor_files/figure-html/imlsurr-1.png" alt="Example of surrogate tree." width="500px"><p class="caption">
+FIGURE 13.1: Example of surrogate tree.
+</p>
+</div>
+<p></p>
+<p>The representation of the tree is different, compared to those seen in Chapter <a href="trees.html#trees">6</a>. Indeed, the four possible outcomes (determined by the conditions in the top lines) no longer yield a simple value (average of the label), but more information is given, in the form of a box plot (including the interquartile range and outliers). In the above representation, it is the top right cluster that seems to have the highest rewards, with especially many upward outliers. This cluster consists of small firms with volatile past returns.</p>
+</div>
+<div id="variable-importance" class="section level3" number="13.1.2">
+<h3>
+<span class="header-section-number">13.1.2</span> Variable importance (tree-based)<a class="anchor" aria-label="anchor" href="#variable-importance"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+One incredibly favorable feature of simple decision trees is their interpretability. Their visual representation is clear and straightforward. Just like regressions (which are another building block in ML), simple trees are easy to comprehend and do not suffer from the black-box rebuke that is often associated with more sophisticated tools.</p>
+<p>Indeed, both random forests and boosted trees fail to provide perfectly accurate accounts of what is happening inside the engine. In contrast, it is possible to compute the aggregate share (or importance) of each feature in the determination of the structure of the tree once it has been trained.</p>
+<p>After training, it is possible to compute, at each node <span class="math inline">\(n\)</span> the gain <span class="math inline">\(G(n)\)</span> obtained by the subsequent split if there are any, i.e., if the node is not a terminal leaf. It is also easy to determine which variable is chosen to perform the split, hence we write <span class="math inline">\(\mathcal{N}_k\)</span> the set of nodes for which feature <span class="math inline">\(k\)</span> is chosen for the partition. Then, the global importance of each feature is given by
+<span class="math display">\[I(k)=\sum_{n\in \mathcal{N}_k}G(n),\]</span>
+and it is often rescaled so that the sum of <span class="math inline">\(I(k)\)</span> across all <span class="math inline">\(k\)</span> is equal to one. In this case, <span class="math inline">\(I(k)\)</span> measures the relative contribution of feature <span class="math inline">\(k\)</span> in the reduction of loss during the training. A variable with high importance will have a greater impact on predictions. Generally, these variables are those that are located close to the root of the tree.</p>
+<p>Below, we take a look at the results obtained from the tree-based models trained in Chapter <a href="trees.html#trees">6</a>. We start by recycling the output from the three regression models we used. Notice that each fitted output has its own structure and importance vectors have different names.</p>
+<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tree_VI</span> <span class="op">&lt;-</span> <span class="va">fit_tree</span><span class="op">$</span><span class="va">variable.importance</span>  <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                        <span class="co"># VI from tree model</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/as_tibble.html">as_tibble</a></span><span class="op">(</span>rownames <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                    <span class="co"># Transform in tibble </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"Feature"</span><span class="op">)</span>                                   <span class="co"># Add feature column</span>
+<span class="va">RF_VI</span> <span class="op">&lt;-</span> <span class="va">fit_RF</span><span class="op">$</span><span class="va">importance</span>  <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                     <span class="co"># VI from random forest</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/as_tibble.html">as_tibble</a></span><span class="op">(</span>rownames <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                    <span class="co"># Transform in tibble </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/rownames.html">rownames_to_column</a></span><span class="op">(</span><span class="st">"Feature"</span><span class="op">)</span>                                   <span class="co"># Add feature column</span>
+<span class="va">XGB_VI</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.importance.html">xgb.importance</a></span><span class="op">(</span>model <span class="op">=</span> <span class="va">fit_xgb</span><span class="op">)</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span>                     <span class="co"># VI from boosted trees</span>
+<span class="va">VI_trees</span> <span class="op">&lt;-</span> <span class="va">tree_VI</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">RF_VI</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">XGB_VI</span><span class="op">)</span>      <span class="co"># Aggregate the VIs</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">VI_trees</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Tree"</span>, <span class="st">"RF"</span>, <span class="st">"XGB"</span><span class="op">)</span>                   <span class="co"># New column names</span>
+<span class="va">norm_1</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">}</span>                           <span class="co"># Normalizing function</span>
+<span class="va">VI_trees</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="va">na.omit</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate_all.html">mutate_if</a></span><span class="op">(</span><span class="va">is.numeric</span>,  <span class="va">norm_1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>         <span class="co"># Plotting sequence</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">model</span>, value <span class="op">=</span> <span class="va">value</span>, <span class="op">-</span><span class="va">Feature</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Feature</span>, y <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">model</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_col</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">35</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:VItrees"></span>
+<img src="ML_factor_files/figure-html/VItrees-1.png" alt="Variable importance for tree-based models." width="500px"><p class="caption">
+FIGURE 13.2: Variable importance for tree-based models.
+</p>
+</div>
+<p></p>
+<p>In the above code, tibbles are like dataframes (they are the v2.0 of dataframes, so to speak).
+Given the way the graph is coded, Figure <a href="interp.html#fig:VItrees">13.2</a> is in fact misleading. Indeed, by construction, the simple tree model only has a small number of features with nonzero importance: in the above graph, there are only 3: capitalization, price-to-book and volatility. In contrast, because random forest and boosted trees are much more complex, they give some importance to many predictors. The graph shows the variables related to the simple tree model only. For scale reasons, the normalization is performed <em>after</em> the subset of features is chosen. We preferred to limit the number of features shown on the graph for obvious readability concerns.</p>
+<p>There are differences in the way the models rely on the features. For instance, the most important feature changes from a model to the other: the simple tree model gives the most importance to the price-to-book ratio, while the random forest bets more on volatility and boosted trees give more weight to capitalization.</p>
+<p>One defining property of random forests is that they give a chance to all features. Indeed, by randomizing the choice of predictors, each individual exogenous variable has a shot at explaining the label. Along with boosted trees, the allocation of importance is more balanced across predictors, compared to the simple tree which puts most of its eggs in just a few baskets.</p>
+</div>
+<div id="variable-importance-agnostic" class="section level3" number="13.1.3">
+<h3>
+<span class="header-section-number">13.1.3</span> Variable importance (agnostic)<a class="anchor" aria-label="anchor" href="#variable-importance-agnostic"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The idea of quantifying the importance of each feature in the learning process can be extended to nontree-based models. We refer to the papers mentioned in the study by <span class="citation"><a href="solutions-to-exercises.html#ref-fisher2018all" role="doc-biblioref">Fisher, Rudin, and Dominici</a> (<a href="solutions-to-exercises.html#ref-fisher2018all" role="doc-biblioref">2019</a>)</span> for more information on this stream of the literature. The premise is the same as above: the aim is to quantify to what extent one feature contributes to the learning process.</p>
+<p>One way to track the added value of one particular feature is to look at what happens if its values inside the training set are entirely shuffled. If the original feature plays an important role in the explanation of the dependent variable, then the shuffled version of the feature will lead to a much higher loss.</p>
+<p>The baseline method to assess feature importance in the general case is the following:</p>
+<ol style="list-style-type: decimal">
+<li>Train the model on the original data and compute the associated loss <span class="math inline">\(l^*\)</span>.<br>
+</li>
+<li>For each feature <span class="math inline">\(k\)</span>, create a new training dataset in which the feature’s values are randomly permuted. Then, evaluate the loss <span class="math inline">\(l_k\)</span> of the model based on this altered sample.<br>
+</li>
+<li>Rank the variable importance of each feature, computed as a difference <span class="math inline">\(\text{VI}_k=l_k-l^*\)</span> or a ratio <span class="math inline">\(\text{VI}_k=l_k/l^*\)</span>.</li>
+</ol>
+<p>Whether to compute the losses on the training set or the testing set is an open question and remains to the appreciation of the analyst.
+The above procedure is of course random and can be repeated so that the importances are averaged over several trials: this improves the stability of the results. This algorithm is implemented in the FeatureImp() function of the <em>iml</em> R package developed by the author of <span class="citation"><a href="solutions-to-exercises.html#ref-molnar2019interpretable" role="doc-biblioref">Molnar</a> (<a href="solutions-to-exercises.html#ref-molnar2019interpretable" role="doc-biblioref">2019</a>)</span>. We also recommend the <em>vip</em> package, see <span class="citation"><a href="solutions-to-exercises.html#ref-greenwell2020variable" role="doc-biblioref">Greenwell and Boehmke</a> (<a href="solutions-to-exercises.html#ref-greenwell2020variable" role="doc-biblioref">Forthcoming</a>)</span>.<br>
+Below, we implement this algorithm manually so to speak for the features appearing in Figure <a href="interp.html#fig:VItrees">13.2</a>. We test this approach on ridge regressions and recycle the variables used in Chapter <a href="lasso.html#lasso">5</a>. We start by the first step: computing the loss on the original training sample.</p>
+<div class="sourceCode" id="cb203"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_ridge_0</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x_penalized_train</span>, <span class="va">y_penalized_train</span>,                   <span class="co"># Trained model</span>
+                      alpha <span class="op">=</span> <span class="fl">0</span>, lambda <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span> 
+<span class="va">l_star</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_penalized_train</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge_0</span>, <span class="va">x_penalized_train</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># Loss</span></code></pre></div>
+<p></p>
+<p>Next, we evaluate the loss when each of the predictors has been sequentially shuffled. To reduce computation time, we only make one round of shuffling.</p>
+<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">l</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">)</span>                                                             <span class="co"># Initialize</span>
+<span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">VI_trees</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>                                          <span class="co"># Loop on the features</span>
+    <span class="va">feat_name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">VI_trees</span><span class="op">[</span><span class="va">i</span>,<span class="fl">1</span><span class="op">]</span><span class="op">)</span>
+    <span class="va">temp_data</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span>         <span class="co"># Temp feature matrix</span>
+    <span class="va">temp_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">temp_data</span><span class="op">)</span> <span class="op">==</span> <span class="va">feat_name</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span>          <span class="co"># Shuffles the values</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">temp_data</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">temp_data</span><span class="op">)</span> <span class="op">==</span> <span class="va">feat_name</span><span class="op">)</span><span class="op">]</span>
+               <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/pull.html">pull</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+    <span class="va">x_penalized_temp</span> <span class="op">&lt;-</span> <span class="va">temp_data</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                    <span class="co"># Predictors into matrix</span>
+    <span class="va">l</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">y_penalized_train</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge_0</span>, <span class="va">x_penalized_temp</span><span class="op">)</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># = Loss</span>
+<span class="op">}</span></code></pre></div>
+<p></p>
+<p>Finally, we plot the results.</p>
+<div class="sourceCode" id="cb205"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>Feature <span class="op">=</span> <span class="va">VI_trees</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, loss <span class="op">=</span> <span class="va">l</span> <span class="op">-</span> <span class="va">l_star</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Feature</span>, y <span class="op">=</span> <span class="va">loss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_col</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">35</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:VIglobal2"></span>
+<img src="ML_factor_files/figure-html/VIglobal2-1.png" alt="Variable importance for a ridge regression model." width="450px"><p class="caption">
+FIGURE 13.3: Variable importance for a ridge regression model.
+</p>
+</div>
+<p></p>
+<p>The resulting importances are in line with thoses of the tree-based models: the most prominent variables are volatility-based, market capitalization-based, and the price-to-book ratio; these closely match the variables from Figure <a href="interp.html#fig:VItrees">13.2</a>. Note that in some cases (e.g., the share turnover), the score can even be negative, which means that the predictions are more accurate than the baseline model when the values of the predictor are shuffled!</p>
+</div>
+<div id="partial-dependence-plot" class="section level3" number="13.1.4">
+<h3>
+<span class="header-section-number">13.1.4</span> Partial dependence plot<a class="anchor" aria-label="anchor" href="#partial-dependence-plot"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Partial dependence plots (PDPs) aim at showing the relationship between the output of a model and the value of a feature (we refer to section 8.2 of <span class="citation"><a href="solutions-to-exercises.html#ref-friedman2001greedy" role="doc-biblioref">J. H. Friedman</a> (<a href="solutions-to-exercises.html#ref-friedman2001greedy" role="doc-biblioref">2001</a>)</span> for an early treatment of this subject).</p>
+<p>Let us fix a feature <span class="math inline">\(k\)</span>. We want to understand the <strong>average impact</strong> of <span class="math inline">\(k\)</span> on the predictions of the trained model <span class="math inline">\(\hat{f}\)</span>. In order to do so, we assume that the feature space is random and we split it in two: <span class="math inline">\(k\)</span> versus <span class="math inline">\(-k\)</span>, which stands for all features except for <span class="math inline">\(k\)</span>. The partial dependence plot is defined as</p>
+<p><span class="math display" id="eq:pdp">\[\begin{equation}
+\tag{13.1} 
+\bar{f}_k(x_k)=\mathbb{E}[\hat{f}(\textbf{x}_{-k},x_k)]=\int \hat{f}(\textbf{x}_{-k},x_k)d\mathbb{P}_{-k}(\textbf{x}_{-k}),
+\end{equation}\]</span></p>
+<p>where <span class="math inline">\(d\mathbb{P}_{-k}(\cdot)\)</span> is the (multivariate) distribution of the non-<span class="math inline">\(k\)</span> features <span class="math inline">\(\textbf{x}_{-k}\)</span>. The above function takes the feature values <span class="math inline">\(x_k\)</span> as argument and keeps all other features frozen via their sample distributions: this shows the impact of feature <span class="math inline">\(k\)</span> solely. In practice, the average is evaluated using Monte-Carlo simulations:</p>
+<p><span class="math display" id="eq:pdpMC">\[\begin{equation}
+\tag{13.2} 
+\bar{f}_k(x_k)\approx \frac{1}{M}\sum_{m=1}^M\hat{f}\left(x_k,\textbf{x}_{-k}^{(m)}\right),
+\end{equation}\]</span>
+where <span class="math inline">\(\textbf{x}_{-k}^{(m)}\)</span> are independent samples of the non-<span class="math inline">\(k\)</span> features.</p>
+<p>Theoretically, PDPs could be computed for more than one feature at a time. In practice, this is only possible for two features (yielding a 3D surface) and is more computationally intense.</p>
+<p>We illustrate this concept below, using the dedicated package <em>iml</em> (interpretable machine learning); see also the <em>pdp</em> package documented in <span class="citation"><a href="solutions-to-exercises.html#ref-greenwell2017pdp" role="doc-biblioref">Greenwell</a> (<a href="solutions-to-exercises.html#ref-greenwell2017pdp" role="doc-biblioref">2017</a>)</span>. The model we seek to explain is the random forest built in Section <a href="trees.html#random-forests">6.2</a>. We recycle some variables used therein. We choose to test the impact of the price-to-book ratio on the outcome of the model.</p>
+<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://christophm.github.io/iml/">iml</a></span><span class="op">)</span>                                         <span class="co"># One package for interpretability</span>
+<span class="va">mod_iml</span> <span class="op">&lt;-</span> <span class="va"><a href="https://christophm.github.io/iml/reference/Predictor.html">Predictor</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fit_RF</span>,                     <span class="co"># This line encapsulates the objects</span>
+                         data <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span>
+<span class="va">pdp_PB</span> <span class="op">=</span> <span class="va"><a href="https://christophm.github.io/iml/reference/FeatureEffect.html">FeatureEffect</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">mod_iml</span>, feature <span class="op">=</span> <span class="st">"Pb"</span><span class="op">)</span>  <span class="co"># This line computes the PDP for p/b ratio</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">pdp_PB</span><span class="op">)</span>                                         <span class="co"># Plot the partial dependence.</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:pdp"></span>
+<img src="ML_factor_files/figure-html/pdp-1.png" alt="Partial dependence plot for the price-to-book ratio on the random forest model." width="450px"><p class="caption">
+FIGURE 13.4: Partial dependence plot for the price-to-book ratio on the random forest model.
+</p>
+</div>
+<p></p>
+<p>The average impact of the price-to-book ratio on the predictions is decreasing. This was somewhat expected, given the conditional average of the dependent variable given the price-to-book ratio. This latter function is depicted in Figure <a href="trees.html#fig:rpart3mkt">6.3</a> and shows a behavior comparable to the above curve: strongly decreasing for small value of P/B and then relatively flat. When the price-to-book ratio is low, firms are undervalued. Hence, their higher returns are in line with the <em>value</em> premium.</p>
+<p>Finally, we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-zhao2019causal" role="doc-biblioref">Zhao and Hastie</a> (<a href="solutions-to-exercises.html#ref-zhao2019causal" role="doc-biblioref">2020</a>)</span> for a theoretical discussion on the <em>causality</em> property of PDPs. Indeed, a deep look at the construction of the PDPs suggests that they could be interpreted as a causal representation of the feature on the model’s output.</p>
+</div>
+</div>
+<div id="local-interpretations" class="section level2" number="13.2">
+<h2>
+<span class="header-section-number">13.2</span> Local interpretations<a class="anchor" aria-label="anchor" href="#local-interpretations"><i class="fas fa-link"></i></a>
+</h2>
+<p>Whereas global interpretations seek to assess the impact of features on the output <span class="math inline">\(overall\)</span>, local methods try to quantify the behavior of the model on particular instances or the neighborhood thereof. Local interpretability has recently gained traction and many papers have been published on this topic. Below, we outline the most widespread methods.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;For instance, we do not mention the work of &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-horel2019towards" role="doc-biblioref"&gt;Horel and Giesecke&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-horel2019towards" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt; but the interested reader can have a look at their work on neural networks (and also at the references cited in the paper).&lt;/p&gt;'><sup>28</sup></a></p>
+<div id="lime" class="section level3" number="13.2.1">
+<h3>
+<span class="header-section-number">13.2.1</span> LIME<a class="anchor" aria-label="anchor" href="#lime"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+LIME (Local Interpretable Model-Agnostic Explanations) is a methodology originally proposed by <span class="citation"><a href="solutions-to-exercises.html#ref-ribeiro2016should" role="doc-biblioref">Ribeiro, Singh, and Guestrin</a> (<a href="solutions-to-exercises.html#ref-ribeiro2016should" role="doc-biblioref">2016</a>)</span>. Their aim is to provide
+a faithful account of the model under two constraints:</p>
+<ul>
+<li>
+<strong>simple interpretability</strong>, which implies a limited number of variables with visual or textual representation. This is to make sure any human can easily understand the outcome of the tool;</li>
+<li>
+<strong>local faithfulness</strong>: the explanation holds for the vicinity of the instance.</li>
+</ul>
+<p>The original (black-box) model is <span class="math inline">\(f\)</span> and we assume we want to approximate its behavior around instance <span class="math inline">\(x\)</span> with the interpretable model <span class="math inline">\(g\)</span>. The simple function <span class="math inline">\(g\)</span> belongs to a larger class <span class="math inline">\(G\)</span>. The vicinity of <span class="math inline">\(x\)</span> is denoted <span class="math inline">\(\pi_x\)</span> and the complexity of <span class="math inline">\(g\)</span> is written <span class="math inline">\(\Omega(g)\)</span>. LIME seeks an interpretation of the form
+<span class="math display">\[\xi(x)=\underset{g \in G}{\text{argmin}} \, \mathcal{L}(f,g,\pi_x)+\Omega(g),\]</span>
+where <span class="math inline">\(\mathcal{L}(f,g,\pi_x)\)</span> is the loss function (error/imprecision) induced by <span class="math inline">\(g\)</span> in the vicinity <span class="math inline">\(\pi_x\)</span> of <span class="math inline">\(x\)</span>. The penalization <span class="math inline">\(\Omega(g)\)</span> is for instance the number of leaves or depth of a tree, or the number of predictors in a linear regression.</p>
+<p>It now remains to define some of the above terms. The vicinity of <span class="math inline">\(x\)</span> is defined by <span class="math inline">\(\pi_x(z)=e^{-D(x,z)^2/\sigma^2},\)</span> where <span class="math inline">\(D\)</span> is some distance measure and <span class="math inline">\(\sigma^2\)</span> some scaling constant. We underline that this function decreases when <span class="math inline">\(z\)</span> shifts away from <span class="math inline">\(x\)</span>.</p>
+<p>The tricky part is the loss function. In order to minimize it, LIME generates artificial samples close to <span class="math inline">\(x\)</span> and averages/sums the error on the label that the simple representation makes. For simplicity, we assume a scalar output for <span class="math inline">\(f\)</span>, hence the formulation is the following:
+<span class="math display">\[\mathcal{L}(f,g,\pi_x)=\sum_z \pi_x(z)(f(z)-g(z))^2\]</span>
+and the errors are weighted according to their distance from the initial instance <span class="math inline">\(x\)</span>: the closest points get the largest weights. In its most basic implementation, the set of models <span class="math inline">\(G\)</span> consists of all linear models.</p>
+<p>In Figure <a href="interp.html#fig:lime">13.5</a>, we provide a simplified diagram of how LIME works. </p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:lime"></span>
+<img src="images/lime.png" alt="Simplistic explanation of LIME: the explained instance is surrounded by a red square. Five points are generated (the triangles) and a weighted linear model is fitted accordingly (dashed grey line)." width="300px"><p class="caption">
+FIGURE 13.5: Simplistic explanation of LIME: the explained instance is surrounded by a red square. Five points are generated (the triangles) and a weighted linear model is fitted accordingly (dashed grey line).
+</p>
+</div>
+<p>For expositional clarity, we work with only one dependent variable. The original training sample is shown with the black points. The fitted (trained) model is represented with the blue line (smoothed conditional average) and we want to approximate how the model works around one particular instance which is highlighted by the red square around it. In order to build the approximation, we sample 5 new points around the instance (the 5 red triangles). Each triangle lies on the blue line (they are model predictions) and has a weight proportional to its size: the triangle closest to the instance has a bigger weight. Using weighted least-squares, we build a linear model that fits to these 5 points (the dashed grey line). This is the outcome of the approximation. It gives the two parameters of the model: the intercept and the slope. Both can be evaluated with standard statistical tests.</p>
+<p>The sign of the slope is important. It is fairly clear that if the instance had been taken closer to <span class="math inline">\(x=0\)</span>, the slope would have probably been almost flat and hence the predictor could be locally discarded. Another important detail is the number of sample points. In our explanation, we take only five, but in practice, a robust estimation usually requires around one thousand points or more. Indeed, when too few neighbors are sampled, the estimation risk is high and the approximation may be rough.</p>
+<p>We proceed with an example of implementation. There are several steps:</p>
+<ol style="list-style-type: decimal">
+<li>Fit a model on some training data.<br>
+</li>
+<li>Wrap everything using the lime() function.<br>
+</li>
+<li>Focus on a few predictors and see their impact over a few particular instances (via the explain() function).</li>
+</ol>
+<p>We start with the first step. This time, we work with a boosted tree model. </p>
+<div class="sourceCode" id="cb207"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lime.data-imaginist.com">lime</a></span><span class="op">)</span>                              <span class="co"># Package for LIME interpretation</span>
+<span class="va">params_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>                        <span class="co"># Parameters of the boosted tree</span>
+    max_depth <span class="op">=</span> <span class="fl">5</span>,                         <span class="co"># Max depth of each tree</span>
+    eta <span class="op">=</span> <span class="fl">0.5</span>,                             <span class="co"># Learning rate </span>
+    gamma <span class="op">=</span> <span class="fl">0.1</span>,                           <span class="co"># Penalization</span>
+    colsample_bytree <span class="op">=</span> <span class="fl">1</span>,                  <span class="co"># Proportion of predictors to be sampled (1 = all)</span>
+    min_child_weight <span class="op">=</span> <span class="fl">10</span>,                 <span class="co"># Min number of instances in each node</span>
+    subsample <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                         <span class="co"># Proportion of instance to be sampled (1 = all)</span>
+<span class="va">xgb_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span><span class="va">params_xgb</span>,         <span class="co"># Training of the model</span>
+                       <span class="va">train_matrix_xgb</span>,   <span class="co"># Training data</span>
+                       nrounds <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>       <span class="co"># Number of trees</span></code></pre></div>
+<p></p>
+<p>Then, we head on to steps two and three. As underlined above, we resort to the lime() and explain() functions.</p>
+<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">explainer</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lime/man/lime.html">lime</a></span><span class="op">(</span><span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>, <span class="va">xgb_model</span><span class="op">)</span> <span class="co"># Step 2.</span>
+<span class="va">explanation</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/lime/man/explain.html">explain</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Step 3.</span>
+                           <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+                           <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>,           <span class="co"># First two instances in train_sample </span>
+                       explainer <span class="op">=</span> <span class="va">explainer</span>,           <span class="co"># Explainer variable created above </span>
+                       n_permutations <span class="op">=</span> <span class="fl">900</span>,            <span class="co"># Nb samples for loss function</span>
+                       dist_fun <span class="op">=</span> <span class="st">"euclidean"</span>,          <span class="co"># Dist.func. "gower" is one alternative</span>
+                       n_features <span class="op">=</span> <span class="fl">6</span>                   <span class="co"># Nb of features shown (important ones)</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/lime/man/plot_features.html">plot_features</a></span><span class="op">(</span><span class="va">explanation</span>, ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>                    <span class="co"># Visual display</span></code></pre></div>
+<div class="inline-figure"><img src="ML_factor_files/figure-html/lime1-1.png" width="450px" style="display: block; margin: auto;"></div>
+<p></p>
+<p>In each graph (one graph corresponds to the explanation around one instance), there are two types of information: the sign of the impact and the magnitude of the impact. The sign is revealed with the color (positive in blue, negative in red) and the magnitude is shown with the size of the rectangles.</p>
+<p>The values to the left of the graphs show the ranges of the features with which the local approximations were computed. </p>
+<p>Lastly, we briefly discuss the choice of distance function chosen in the code. It is used to evaluate the discrepancy between the true instance and a simulated one to give more or less weight to the prediction of the sampled instance. Our dataset comprises only numerical data; hence, the Euclidean distance is a natural choice:</p>
+<p><span class="math display">\[\text{Euclidean}(\textbf{x}, \textbf{y})=\sqrt{\sum_{n=1}^N(x_n-y_n)^2}.\]</span>
+Another possible choice would be the Manhattan distance:
+<span class="math display">\[\text{Manhattan}(\textbf{x}, \textbf{y})=\sum_{n=1}^N|x_n-y_n|.\]</span></p>
+<p>The problem with these two distances is that they fail to handle categorical variables. This is where the Gower distance steps in (<span class="citation"><a href="solutions-to-exercises.html#ref-gower1971general" role="doc-biblioref">Gower</a> (<a href="solutions-to-exercises.html#ref-gower1971general" role="doc-biblioref">1971</a>)</span>). The distance imposes a different treatment on features of different types (classes versus numbers essentially, but it can also handle missing data!). For categorical features, the Gower distance applies a binary treatment: the value is equal to 1 if the features are equal, and to zero if not (i.e., <span class="math inline">\(1_{\{x_n=y_n\}}\)</span>). For numerical features, the spread is quantified as <span class="math inline">\(1-\frac{|x_n-y_n|}{R_n}\)</span>, where <span class="math inline">\(R_n\)</span> is the maximum absolute value the feature can take. All similarity measurements are then aggregated to yield the final score. Note that in this case, the logic is reversed: <span class="math inline">\(\textbf{x}\)</span> and <span class="math inline">\(\textbf{y}\)</span> are very close if the Gower distance is close to one, and they are far away if the distance is close to zero.</p>
+</div>
+<div id="shapley-values" class="section level3" number="13.2.2">
+<h3>
+<span class="header-section-number">13.2.2</span> Shapley values<a class="anchor" aria-label="anchor" href="#shapley-values"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The approach of Shapley values is somewhat different compared to LIME and closer in spirit to PDPs. It originates from cooperative game theory (<span class="citation"><a href="solutions-to-exercises.html#ref-shapley1953value" role="doc-biblioref">Shapley</a> (<a href="solutions-to-exercises.html#ref-shapley1953value" role="doc-biblioref">1953</a>)</span>). The rationale is the following. One way to assess the impact (or usefulness) of a variable is to look at what happens if we remove this variable from the dataset. If this is very detrimental to the quality of the model (i.e., to the accuracy of its predictions), then it means that the variable is substantially valuable.</p>
+<p>Shapley values have been used to attribute risk or performance of portfolios in <span class="citation"><a href="solutions-to-exercises.html#ref-shalit2020shapley" role="doc-biblioref">Shalit</a> (<a href="solutions-to-exercises.html#ref-shalit2020shapley" role="doc-biblioref">2020</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-shalit2020shapley" role="doc-biblioref">Shalit</a> (<a href="solutions-to-exercises.html#ref-shalit2020shapley" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-moehle2021portfolio" role="doc-biblioref">Moehle, Boyd, and Ang</a> (<a href="solutions-to-exercises.html#ref-moehle2021portfolio" role="doc-biblioref">2021</a>)</span>.</p>
+<p>Numerically, the simplest way to proceed is to take all variables and remove one to evaluate its predictive ability. Shapley values are computed on a larger scale because they consider all possible combinations of variables to which they add the target predictor. Formally, this gives:</p>
+<p><span class="math display" id="eq:shapley">\[\begin{equation}
+\tag{13.3} 
+\phi_k=\sum_{S \subseteq \{x_1,\dots,x_K \} \backslash x_k}\underbrace{\frac{\text{Card}(S)!(K-\text{Card}(S)-1)!}{K!}}_{\text{weight of coalition}}\underbrace{\left(\hat{f}_{S \cup \{x_k\}}(S \cup \{x_k\})-\hat{f}_S(S)\right)}_{\text{gain when adding } x_k}
+\end{equation}\]</span></p>
+<span class="math inline">\(S\)</span> is any subset of the  that doesn’t include feature <span class="math inline">\(k\)</span> and its size is Card(<span class="math inline">\(S\)</span>).<br>
+In the equation above, the model <span class="math inline">\(f\)</span> must be altered because it’s impossible to evaluate <span class="math inline">\(f\)</span> when features are missing. In this case, there are several possible options:
+<p>Obviously, Shapley values can take a lot of time to compute if the number of predictors is large. We refer to <span class="citation"><a href="solutions-to-exercises.html#ref-chen2018shapley" role="doc-biblioref">J. Chen et al.</a> (<a href="solutions-to-exercises.html#ref-chen2018shapley" role="doc-biblioref">2018</a>)</span> for a discussion on a simplifying method that reduces computation times in this case.
+Extensions of Shapley values for interpretability are studied in <span class="citation"><a href="solutions-to-exercises.html#ref-lundberg2017unified" role="doc-biblioref">Lundberg and Lee</a> (<a href="solutions-to-exercises.html#ref-lundberg2017unified" role="doc-biblioref">2017</a>)</span>.</p>
+<p>
+The implementation of Shapley values is permitted in R via the <em>iml</em> package. There are two restrictions compared to LIME. First, the features must be filtered upfront because all features are shown on the graph (which becomes illegible beyond 20 features). This is why in the code below, we use the short list of predictors (from Section <a href="notdata.html#dataset">1.2</a>).
+Second, instances are analyzed one at a time.</p>
+<p>We start by fitting a random forest model.</p>
+<div class="sourceCode" id="cb209"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_RF_short</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">~</span><span class="va">.</span>,    <span class="co"># Same formula as for simple trees!</span>
+                 data <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span>,  
+                 sampsize <span class="op">=</span> <span class="fl">10000</span>,          <span class="co"># Size of (random) sample for each tree</span>
+                 replace <span class="op">=</span> <span class="cn">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span>
+                 nodesize <span class="op">=</span> <span class="fl">250</span>,            <span class="co"># Minimum size of terminal cluster</span>
+                 ntree <span class="op">=</span> <span class="fl">40</span>,                <span class="co"># Nb of random trees</span>
+                 mtry <span class="op">=</span> <span class="fl">4</span>                   <span class="co"># Nb of predictive variables for each tree</span>
+    <span class="op">)</span></code></pre></div>
+<p></p>
+<p>We can then analyze the behavior of the model around the first instance of the training sample.</p>
+<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">predictor</span> <span class="op">&lt;-</span> <span class="va"><a href="https://christophm.github.io/iml/reference/Predictor.html">Predictor</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fit_RF_short</span>,    <span class="co"># This wraps the model &amp; data</span>
+                          data <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>, 
+                          y <span class="op">=</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span>
+<span class="va">shapley</span> <span class="op">&lt;-</span> <span class="va"><a href="https://christophm.github.io/iml/reference/Shapley.html">Shapley</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">predictor</span>,                        <span class="co"># Compute the Shapley values...</span>
+                       x.interest <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+                           <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+                           <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/slice.html">slice</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span>              <span class="co"># On the first instance</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">shapley</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_fixed.html">coord_fixed</a></span><span class="op">(</span><span class="fl">1500</span><span class="op">)</span> <span class="op">+</span>                      <span class="co"># Plot</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">35</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/coord_flip.html">coord_flip</a></span><span class="op">(</span><span class="op">)</span>          </code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:shapley"></span>
+<img src="ML_factor_files/figure-html/shapley-1.png" alt="Illustration of the Shapley method." width="450px"><p class="caption">
+FIGURE 13.6: Illustration of the Shapley method.
+</p>
+</div>
+<p></p>
+<p>In the output shown in Figure <a href="interp.html#fig:shapley">13.6</a>, we again obtain the two crucial insights: <strong>sign</strong> of the impact of the feature and <strong>relative importance</strong> (compared to other features).</p>
+</div>
+<div id="breakdown" class="section level3" number="13.2.3">
+<h3>
+<span class="header-section-number">13.2.3</span> Breakdown<a class="anchor" aria-label="anchor" href="#breakdown"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Breakdown (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-staniak2018explanations" role="doc-biblioref">Staniak and Biecek</a> (<a href="solutions-to-exercises.html#ref-staniak2018explanations" role="doc-biblioref">2018</a>)</span>) is a mixture of ideas from PDPs and Shapley values. The core of breakdown is the so-called <strong>relaxed model prediction</strong> defined in Equation <a href="interp.html#eq:breakdown">(13.4)</a>. It is close in spirit to Equation <a href="interp.html#eq:pdp">(13.1)</a>. The difference is that we are working at the local level, i.e., on one particular observation, say <span class="math inline">\(x^*\)</span>. We want to measure the impact of a set of predictors on the prediction associated to <span class="math inline">\(x^*\)</span>; hence, we fix two sets <span class="math inline">\(\textbf{k}\)</span> (fixed features) and <span class="math inline">\(-\textbf{k}\)</span> (free features) and evaluate a <strong>proxy</strong> for the average prediction of the estimated model <span class="math inline">\(\hat{f}\)</span> when the set <span class="math inline">\(\textbf{k}\)</span> of predictors is fixed at the values of <span class="math inline">\(x^*\)</span>, that is, equal to <span class="math inline">\(x^*_{\textbf{k}}\)</span> in the expression below:</p>
+<p><span class="math display" id="eq:breakdown">\[\begin{equation}
+\tag{13.4} 
+\tilde{f}_{\textbf{k}}(x^*)=\frac{1}{M}\sum_{m=1}^M \hat{f}\left(x^{(m)}_{-\textbf{k}},x^*_{\textbf{k}} \right).
+\end{equation}\]</span></p>
+<p>The <span class="math inline">\(x^{(m)}\)</span> in the above expression are either simulated values of instances or simply sampled values from the dataset. The notation implies that the instance has some values replaced by those of <span class="math inline">\(x^*\)</span>, namely those that correspond to the indices <span class="math inline">\(\textbf{k}\)</span>. When <span class="math inline">\(\textbf{k}\)</span> consists of all features, then <span class="math inline">\(\tilde{f}_{\textbf{k}}(x^*)\)</span> is equal to the raw model prediction <span class="math inline">\(\hat{f}(x^*)\)</span> and when <span class="math inline">\(\textbf{k}\)</span> is empty, it is equal to the average sample value of the label (constant prediction).</p>
+<p>The quantity of interest is the so-called contribution of feature <span class="math inline">\(j\notin \textbf{k}\)</span> with respect to data point <span class="math inline">\(x^*\)</span> and set <span class="math inline">\(\textbf{k}\)</span>:</p>
+<p><span class="math display">\[\phi_{\textbf{k}}^j(x^*)=\tilde{f}_{\textbf{k} \cup j}(x^*)-\tilde{f}_{\textbf{k}}(x^*).\]</span></p>
+<p>Just as for Shapley values, the above indicator computes an average impact when augmenting the set of predictors with feature <span class="math inline">\(j\)</span>. By definition, it depends on the set <span class="math inline">\(\textbf{k}\)</span>, so this is one notable difference with Shapley values (that span <em>all</em> permutations). In <span class="citation"><a href="solutions-to-exercises.html#ref-staniak2018explanations" role="doc-biblioref">Staniak and Biecek</a> (<a href="solutions-to-exercises.html#ref-staniak2018explanations" role="doc-biblioref">2018</a>)</span>, the authors devise a procedure that incrementally increases or decreases the set <span class="math inline">\(\textbf{k}\)</span>. This greedy idea helps alleviate the burden of computing all possible combinations of features. Moreover, a very convenient property of their algorithm is that the sum of all contributions is equal to the predicted value:
+<span class="math display">\[\sum_j \phi_{\textbf{k}}^j(x^*)=f(x^*).\]</span></p>
+<p>The visualization makes that very easy to see (as in Figure <a href="interp.html#fig:breakdown">13.7</a> below).</p>
+<p>In order to illustrate one implementation of breakdown, we train a random forest on a limited number of features, as shown below. This will increase the readability of the output of the breakdown.</p>
+<div class="sourceCode" id="cb211"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">formula_short</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"R1M_Usd ~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">features_short</span>, collapse <span class="op">=</span> <span class="st">" + "</span><span class="op">)</span><span class="op">)</span> <span class="co">#  Model </span>
+<span class="va">formula_short</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html">as.formula</a></span><span class="op">(</span><span class="va">formula_short</span><span class="op">)</span>                                   <span class="co">#  Formula format</span>
+<span class="va">fit_RF_short</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula_short</span>, <span class="co"># Same formula as before</span>
+                 data <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span>,  
+                 sampsize <span class="op">=</span> <span class="fl">10000</span>,          <span class="co"># Size of (random) sample for each tree</span>
+                 replace <span class="op">=</span> <span class="cn">FALSE</span>,           <span class="co"># Is the sampling done with replacement?</span>
+                 nodesize <span class="op">=</span> <span class="fl">250</span>,            <span class="co"># Minimum size of terminal cluster</span>
+                 ntree <span class="op">=</span> <span class="fl">12</span>,                <span class="co"># Nb of random trees</span>
+                 mtry <span class="op">=</span> <span class="fl">5</span>                   <span class="co"># Nb of predictive variables for each tree</span>
+    <span class="op">)</span></code></pre></div>
+<p></p>
+<p>Once the model is trained, the syntax for the breakdown of predictions is very simple.</p>
+<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://pbiecek.github.io/breakDown/">breakDown</a></span><span class="op">)</span>
+<span class="va">explain_break</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://pbiecek.github.io/breakDown/reference/broken.html">broken</a></span><span class="op">(</span><span class="va">fit_RF_short</span>, 
+                        <span class="va">data_ml</span><span class="op">[</span><span class="fl">6</span>,<span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>,
+                        data <span class="op">=</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">explain_break</span><span class="op">)</span> </code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:breakdown"></span>
+<img src="ML_factor_files/figure-html/breakdown-1.png" alt="Example of a breakdown output." width="500px"><p class="caption">
+FIGURE 13.7: Example of a breakdown output.
+</p>
+</div>
+<p></p>
+<p>The graphical output is intuitively interpreted. The grey bar is the prediction of the model at the chosen instance. Green bars signal a positive contribution and the yellowish rectangles show the variables with negative impact. The relative sizes indicate the importance of each feature.</p>
+
+</div>
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></div>
+<div class="next"><a href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#interp"><span class="header-section-number">13</span> Interpretability</a></li>
+<li>
+<a class="nav-link" href="#global-interpretations"><span class="header-section-number">13.1</span> Global interpretations</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#surr"><span class="header-section-number">13.1.1</span> Simple models as surrogates</a></li>
+<li><a class="nav-link" href="#variable-importance"><span class="header-section-number">13.1.2</span> Variable importance (tree-based)</a></li>
+<li><a class="nav-link" href="#variable-importance-agnostic"><span class="header-section-number">13.1.3</span> Variable importance (agnostic)</a></li>
+<li><a class="nav-link" href="#partial-dependence-plot"><span class="header-section-number">13.1.4</span> Partial dependence plot</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#local-interpretations"><span class="header-section-number">13.2</span> Local interpretations</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#lime"><span class="header-section-number">13.2.1</span> LIME</a></li>
+<li><a class="nav-link" href="#shapley-values"><span class="header-section-number">13.2.2</span> Shapley values</a></li>
+<li><a class="nav-link" href="#breakdown"><span class="header-section-number">13.2.3</span> Breakdown</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

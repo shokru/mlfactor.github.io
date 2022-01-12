@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 9 Bayesian methods | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 9 Bayesian methods | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 9 Bayesian methods | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="active" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="bayes" class="section level1" number="9">
+<h1>
+<span class="header-section-number">9</span> Bayesian methods<a class="anchor" aria-label="anchor" href="#bayes"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concepts in the subsection below. Good references for Bayesian analysis are <span class="citation"><a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">Gelman et al.</a> (<a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">Kruschke</a> (<a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code. Bayesian inference is used in <span class="citation"><a href="solutions-to-exercises.html#ref-feng2021factor" role="doc-biblioref">Feng and He</a> (<a href="solutions-to-exercises.html#ref-feng2021factor" role="doc-biblioref">2021</a>)</span> to estimate conditional expected returns and residual covariance matrices with a view to portfolio choice.</p>
+<div id="the-bayesian-framework" class="section level2" number="9.1">
+<h2>
+<span class="header-section-number">9.1</span> The Bayesian framework<a class="anchor" aria-label="anchor" href="#the-bayesian-framework"><i class="fas fa-link"></i></a>
+</h2>
+<p>Up to now, the models that have been presented rely on data only. This approach is often referred to as ‘<strong>frequentist</strong>.’ Given one dataset, a frequentist will extract (i.e., estimate) a unique set of optimal parameters and consider it to be the best model. Bayesians, on the other hand, consider datasets as <strong>snapshots of reality</strong> and, for them, parameters are thus random! Instead of estimating one value for parameters (e.g., a coefficient in a linear model), they are more ambitious and try to determine the <strong>whole distribution</strong> of the parameter.</p>
+<p>In order to outline how that can be achieved, we introduce basic notations and results. The foundational concept in Bayesian analysis is the <strong>conditional probability</strong>. Given two random sets (or events) <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, we define the probability of <span class="math inline">\(A\)</span> knowing <span class="math inline">\(B\)</span> (equivalently, the odds of having <span class="math inline">\(A\)</span>, conditionally on having <span class="math inline">\(B\)</span>) as
+<span class="math display">\[P[A|B]=\frac{P[A \cap B]}{P[B]},\]</span>
+that is, the probability of the intersection between the two sets divided by the probability of <span class="math inline">\(B\)</span>. Likewise, the probability that both events occur is equal to <span class="math inline">\(P[A \cap B] = P[A]P[B|A]\)</span>. Given <span class="math inline">\(n\)</span> disjoint events <span class="math inline">\(A_i\)</span>, <span class="math inline">\(i=1,...n\)</span> such that <span class="math inline">\(\sum_{i=1}^nP(A_i)=1\)</span>, then for any event <span class="math inline">\(B\)</span>, the law of total probabilities is (or implies)
+<span class="math display">\[P(B)=\sum_{i=1}^nP(B \cap A_i)= \sum_{i=1}^nP(B|A_i)P(A_i).\]</span></p>
+<p>Given this expression, we can formulate a general version of Bayes’ theorem:
+<span class="math display" id="eq:bayes">\[\begin{equation}
+\tag{9.1}
+P(A_i|B)=\frac{P(A_i)P(B|A_i)}{P(B)}= \frac{P(A_i)P(B|A_i)}{\sum_{i=1}^nP(B|A_i)P(A_i)}.
+\end{equation}\]</span></p>
+<p>Endowed with this result, we can move forward to the core topic of this section, which is the estimation of some parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> (possibly a vector) given a dataset, which we denote with <span class="math inline">\(\textbf{y}\)</span> thereby following the conventions from <span class="citation"><a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">Gelman et al.</a> (<a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span>. This notation is suboptimal in this book nonetheless because in all other chapters, <span class="math inline">\(\textbf{y}\)</span> stands for the label of a dataset.</p>
+<p>In Bayesian analysis, one sophistication (compared to a frequentist approach) comes from the fact that the data is not almighty. The distribution of the parameter <span class="math inline">\(\boldsymbol{\theta}\)</span> will be a mix between some <strong>prior</strong> distribution set by the statistician (the user, the analyst) and the empirical distribution from the data. More precisely, a simple application of Bayes’ formula yields
+<span class="math display" id="eq:bayes2">\[\begin{equation}
+\tag{9.2}
+p(\boldsymbol{\theta}| \textbf{y})=\frac{p(\boldsymbol{\theta})p(\textbf{y} |\boldsymbol{\theta})}{p(\textbf{y})} \propto p(\boldsymbol{\theta})p(\textbf{y} |\boldsymbol{\theta}).
+\end{equation}\]</span></p>
+<p>The interpretation is immediate: the distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> knowing the data <span class="math inline">\(\textbf{y}\)</span> is proportional to the distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> times the distribution of <span class="math inline">\(\textbf{y}\)</span> knowing <span class="math inline">\(\boldsymbol{\theta}\)</span>. The term <span class="math inline">\(p(\textbf{y})\)</span> is often omitted because it is simply a scaling number that ensures that the density sums or integrates to one.</p>
+<p>We use a slightly different notation between Equation <a href="bayes.html#eq:bayes">(9.1)</a> and Equation <a href="bayes.html#eq:bayes2">(9.2)</a>. In the former, <span class="math inline">\(P\)</span> denotes a true probability, i.e., it is a number. In the latter, <span class="math inline">\(p\)</span> stands for the whole probability density function of <span class="math inline">\(\boldsymbol{\theta}\)</span> or <span class="math inline">\(\textbf{y}\)</span>.</p>
+<p>The whole purpose of Bayesian analysis is to compute the so-called <strong>posterior</strong> distribution <span class="math inline">\(p(\boldsymbol{\theta}| \textbf{y})\)</span> via the <strong>prior</strong> distribution <span class="math inline">\(p(\boldsymbol{\theta})\)</span> and the <strong>likelihood function</strong> <span class="math inline">\(p(\textbf{y} |\boldsymbol{\theta})\)</span>. Priors are sometimes qualified as informative, weakly informative or uninformative, depending on the degree to which the user is confident on the relevance and robustness of the prior. The simplest way to define a non-informative prior is to set a constant (uniform) distribution over some realistic interval(s).</p>
+<p>The most challenging part is usually the likelihood function. The easiest way to solve the problem is to resort to a specific distribution (possibly a parametric family) for the distribution of the data and then consider that obsevations are i.i.d., just as in a simple maximum likelihood inference. If we assume that new parameters for the distributions are gathered into <span class="math inline">\(\boldsymbol{\lambda}\)</span>, then the likelihood can be written as
+<span class="math display" id="eq:likelihood">\[\begin{equation}
+\tag{9.3}
+p(\textbf{y} |\boldsymbol{\theta}, \boldsymbol{\lambda})=\prod_{i=1}^I f_{\boldsymbol{\lambda}}(y_i; \boldsymbol{\beta}), 
+\end{equation}\]</span>
+but in this case the problem becomes slightly more complex because adding new parameters changes the posterior distribution to <span class="math inline">\(p(\boldsymbol{\theta}, \boldsymbol{\lambda}|\textbf{y})\)</span>. The user must find out the joint distribution of <span class="math inline">\(\boldsymbol{\theta}\)</span> and <span class="math inline">\(\boldsymbol{\lambda}\)</span> - given <span class="math inline">\(\textbf{y}\)</span>. Because of their nested structure, these models are often called <strong>hierarchical models</strong>.</p>
+<p>Bayesian methods are widely used for portfolio choice. The rationale is that the distribution of asset returns depends on some parameter and the main issue is to determine the posterior distribution. We very briefly review a vast literature below. Bayesian asset allocation is investigated in <span class="citation"><a href="solutions-to-exercises.html#ref-lai2011mean" role="doc-biblioref">Lai et al.</a> (<a href="solutions-to-exercises.html#ref-lai2011mean" role="doc-biblioref">2011</a>)</span> (via stochastic optimization), <span class="citation"><a href="solutions-to-exercises.html#ref-guidolin2016ambiguity" role="doc-biblioref">Guidolin and Liu</a> (<a href="solutions-to-exercises.html#ref-guidolin2016ambiguity" role="doc-biblioref">2016</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-dangl2020optimal" role="doc-biblioref">Dangl and Weissensteiner</a> (<a href="solutions-to-exercises.html#ref-dangl2020optimal" role="doc-biblioref">2020</a>)</span>. Shrinkage techniques (of means and covariance matrices) are tested in <span class="citation"><a href="solutions-to-exercises.html#ref-frost1986empirical" role="doc-biblioref">Frost and Savarino</a> (<a href="solutions-to-exercises.html#ref-frost1986empirical" role="doc-biblioref">1986</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-kan2007optimal" role="doc-biblioref">Kan and Zhou</a> (<a href="solutions-to-exercises.html#ref-kan2007optimal" role="doc-biblioref">2007</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-demiguel2015parameter" role="doc-biblioref">DeMiguel, Martı́n-Utrera, and Nogales</a> (<a href="solutions-to-exercises.html#ref-demiguel2015parameter" role="doc-biblioref">2015</a>)</span>. In a similar vein, <span class="citation"><a href="solutions-to-exercises.html#ref-tu2010incorporating" role="doc-biblioref">Tu and Zhou</a> (<a href="solutions-to-exercises.html#ref-tu2010incorporating" role="doc-biblioref">2010</a>)</span> build priors that are coherent with asset pricing theories. Finally, <span class="citation"><a href="solutions-to-exercises.html#ref-bauder2020bayesian" role="doc-biblioref">Bauder et al.</a> (<a href="solutions-to-exercises.html#ref-bauder2020bayesian" role="doc-biblioref">2020</a>)</span> sample portfolio returns which allows to dervive a Bayesian optimal frontier. We invite the interested reader to also dwelve in the references that are cited within these few articles.</p>
+</div>
+<div id="bayesian-sampling" class="section level2" number="9.2">
+<h2>
+<span class="header-section-number">9.2</span> Bayesian sampling<a class="anchor" aria-label="anchor" href="#bayesian-sampling"><i class="fas fa-link"></i></a>
+</h2>
+<div id="gibbs-sampling" class="section level3" number="9.2.1">
+<h3>
+<span class="header-section-number">9.2.1</span> Gibbs sampling<a class="anchor" aria-label="anchor" href="#gibbs-sampling"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+One adjacent field of applications of Bayes’ theorem is <strong>simulation</strong>. Suppose we want to simulate the multivariate distribution of a random vector <span class="math inline">\(\textbf{X}\)</span> given by its density <span class="math inline">\(p=p(x_1,\dots,x_J)\)</span>. Often, the full distribution is complex, but its marginals are more accessible. Indeed, they are simpler because they depend on only one variable (when all other values are known):
+<span class="math display">\[p(X_j=x_j|X_1= x_1,\dots,X_{j-1}=x_{j-1},X_{j+1}=x_{j+1},\dots,X_J=x_J)=p(X_j=x_j|\textbf{X}_{-j}=\textbf{x}_{-j}),\]</span>
+where we use the compact notation <span class="math inline">\(\textbf{X}_{-j}\)</span> for all variables except <span class="math inline">\(X_j\)</span>. One way to generate samples with law <span class="math inline">\(p\)</span> is the following and relies both on the knowledge of the conditionals <span class="math inline">\(p(x_j|\textbf{x}_{-j})\)</span> and on the notion of <strong>Markov Chain Monte Carlo</strong>, which we outline below. The process is iterative and assumes that it is possible to draw samples of the aforementioned conditionals. We write <span class="math inline">\(x_j^{m}\)</span> for the <span class="math inline">\(m^{th}\)</span> sample of the <span class="math inline">\(j^{th}\)</span> variable (<span class="math inline">\(X_j\)</span>). The simulation starts with a prior (or fixed, or random) sample <span class="math inline">\(\textbf{x}^0=(x^0_1,\dots,x^0_J)\)</span>. Then, for a sufficiently large number of times, say <span class="math inline">\(T\)</span>, new samples are drawn according to
+<span class="math display">\[\begin{align*}
+x_1^{m+1} &amp;= p(X_1|X_2=x_2^{m}, \dots ,X_J=x_J^m) ;\\
+x_2^{m+1} &amp;=p(X_2|X_1=x_1^{m+1}, X_3=x^{m}_3, \dots, X_J=x_J^m); \\
+\dots&amp; \\
+x_J^{m+1}&amp;= p(X_J|X_1=x_1^{m+1}, X_2=x_2^{m+1}, \dots, X_{J-1}=x_{J-1}^{m+1}).
+\end{align*}\]</span></p>
+<p>The important detail is that after each line, the value of the variable is updated. Hence, in the second line, <span class="math inline">\(X_2\)</span> is sampled with the knowledge of <span class="math inline">\(X_1=x_1^{m+1}\)</span> and in the last line, all variables except <span class="math inline">\(X_J\)</span> have been updated to their <span class="math inline">\((m+1)^{th}\)</span> state. The above algorithm is called Gibbs sampling. It relates to Markov chains because each new iteration depends only on the previous one.</p>
+<p>Under some technical assumptions, as <span class="math inline">\(T\)</span> increases, the distribution of <span class="math inline">\(\textbf{x}_T\)</span> converges to that of <span class="math inline">\(p\)</span>. The conditions under which the convergence occurs have been widely discussed in series of articles in the 1990s. The interested reader can have a look for instance at <span class="citation"><a href="solutions-to-exercises.html#ref-tierney1994markov" role="doc-biblioref">Tierney</a> (<a href="solutions-to-exercises.html#ref-tierney1994markov" role="doc-biblioref">1994</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-roberts1994simple" role="doc-biblioref">Roberts and Smith</a> (<a href="solutions-to-exercises.html#ref-roberts1994simple" role="doc-biblioref">1994</a>)</span>, as well as at section 11.7 of <span class="citation"><a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">Gelman et al.</a> (<a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span>.</p>
+<p>Sometimes, the full distribution is complex and the conditional laws are hard to determine and to sample. Then, a more general method, called Metropolis-Hastings, can be used that relies on the rejection method for the simulation of random variables.</p>
+</div>
+<div id="metropolis-hastings-sampling" class="section level3" number="9.2.2">
+<h3>
+<span class="header-section-number">9.2.2</span> Metropolis-Hastings sampling<a class="anchor" aria-label="anchor" href="#metropolis-hastings-sampling"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The Gibbs algorithm can be considered as a particular case of the Metropolis-Hastings (MH) method, which, in its simplest version, was introduced in <span class="citation"><a href="solutions-to-exercises.html#ref-metropolis1949monte" role="doc-biblioref">Metropolis and Ulam</a> (<a href="solutions-to-exercises.html#ref-metropolis1949monte" role="doc-biblioref">1949</a>)</span>. The premise is similar: the aim is to simulate random variables that follow <span class="math inline">\(p(\textbf{x})\)</span> with the ability to sample from a simpler form <span class="math inline">\(p(\textbf{x}|\textbf{y})\)</span> which gives the probability of the future state <span class="math inline">\(\textbf{x}\)</span>, given the past one <span class="math inline">\(\textbf{y}\)</span>.</p>
+<p>Once an initial value for <span class="math inline">\(\textbf{x}\)</span> has been sampled (<span class="math inline">\(\textbf{x}_0\)</span>), each new iteration (<span class="math inline">\(m\)</span>) of the simulation takes place in three stages:</p>
+<ol style="list-style-type: decimal">
+<li>generate a candidate value <span class="math inline">\(\textbf{x}'_{m+1}\)</span> from <span class="math inline">\(p(\textbf{x}|\textbf{x}_m)\)</span>,<br>
+</li>
+<li>compute the acceptance ratio <span class="math inline">\(\alpha=\min\left(\frac{p(\textbf{x}'_{m+1})p(\textbf{x}_{m}|\textbf{x}'_{m+1})}{p(\textbf{x}_{m})p(\textbf{x}'_{m+1}|\textbf{x}_{m})} \right)\)</span><br>
+</li>
+<li>pick <span class="math inline">\(\textbf{x}_{m+1}=\textbf{x}'_{m+1}\)</span> with probability <span class="math inline">\(\alpha\)</span> or stick with the previous value (<span class="math inline">\(\textbf{x}_{m+1}=\textbf{x}_{m}\)</span>) with probability <span class="math inline">\(1-\alpha\)</span>.</li>
+</ol>
+<p>The interpretation of the acceptance ratio is not straightforward in the general case. When the sampling generator is symmetric (<span class="math inline">\(p(\textbf{x}|\textbf{y})=p(\textbf{y}|\textbf{x})\)</span>), the candidate is always chosen whenever <span class="math inline">\(p(\textbf{x}'_{m+1})\ge p(\textbf{x}_{m})\)</span>. If the reverse condition holds (<span class="math inline">\(p(\textbf{x}'_{m+1})&lt; p(\textbf{x}_{m})\)</span>), then the candidate is retained with odds equal to <span class="math inline">\(p(\textbf{x}'_{m+1})/p(\textbf{x}_{m})\)</span>, which is the ratio of likelihoods. The more likely the new proposal, the higher the odds of retaining it.</p>
+<p>Often, the first simulations are discarded in order to leave time to the chain to converge to a high probability region. This procedure (often called ‘<em>burn in</em>’) ensures that the first retained samples are located in a zone that is likely, i.e., that they are more representative of the law we are trying to simulate.</p>
+<p>For the sake of brevity, we stick to a succinct presentation here, but some additional details are outlined in section 11.2 of <span class="citation"><a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">Gelman et al.</a> (<a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span> and in chapter 7 of <span class="citation"><a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">Kruschke</a> (<a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">2014</a>)</span>.</p>
+</div>
+</div>
+<div id="bayesian-linear-regression" class="section level2" number="9.3">
+<h2>
+<span class="header-section-number">9.3</span> Bayesian linear regression<a class="anchor" aria-label="anchor" href="#bayesian-linear-regression"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+Because Bayesian concepts are rather abstract, it is useful to illustrate the theoretical notions with a simple example. In a linear model, <span class="math inline">\(y_i=\textbf{x}_i\textbf{b}+\epsilon_i\)</span> and it is often statistically assumed that the <span class="math inline">\(\epsilon_i\)</span> are i.i.d. and normally distributed with zero mean and variance <span class="math inline">\(\sigma^2\)</span>. Hence, the likelihood of Equation <a href="bayes.html#eq:likelihood">(9.3)</a> translates into
+<span class="math display">\[p(\boldsymbol{\epsilon}|\textbf{b}, \sigma)=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\epsilon_i^2}{2\sigma^2}}.\]</span></p>
+<p>In a regression analysis, the data is given both by <span class="math inline">\(\textbf{y}\)</span> and by <span class="math inline">\(\textbf{X}\)</span>, hence both are reported in the notations. Simply acknowledging that <span class="math inline">\(\boldsymbol{\epsilon}=\textbf{y}-\textbf{Xb}\)</span>, we get
+<span class="math display" id="eq:linlike">\[\begin{align}
+p(\textbf{y},\textbf{X}|\textbf{b}, \sigma)&amp;=\prod_{i=1}^I\frac{e^{-\frac{\epsilon_i^2}{2\sigma}}}{\sigma\sqrt{2\pi}}\\
+&amp;=(\sigma\sqrt{2\pi})^{-I}e^{-\sum_{i=1}^I\frac{\left(y_i-\textbf{x}_i'\textbf{b}\right)^2}{2\sigma^2}}=(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\textbf{b}\right)' \left(\textbf{y}-\textbf{X}\textbf{b}\right)}{2\sigma^2}} \nonumber \\ \tag{9.4}
+&amp;=\underbrace{(\sigma\sqrt{2\pi})^{-I} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)' \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}}}_{\text{depends on } \sigma, \text{ not } \textbf{b}}\times \underbrace{e^{-\frac{(\textbf{b}-\hat{\textbf{b}})'\textbf{X}'\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}}_{\text{ depends on both } \sigma, \text{ and } \textbf{b} }.
+\end{align}\]</span>
+In the last line, the second term is a function of the difference <span class="math inline">\(\textbf{b}-\hat{\textbf{b}}\)</span>, where <span class="math inline">\(\hat{\textbf{b}}=(\textbf{X}'\textbf{X})^{-1}\textbf{X}'\textbf{y}\)</span>. This is not surprising: <span class="math inline">\(\hat{\textbf{b}}\)</span> is a natural benchmark for the mean of <span class="math inline">\(\textbf{b}\)</span>. Moreover, introducing <span class="math inline">\(\hat{\textbf{b}}\)</span> yields a relatively simple form for the probability.</p>
+<p>The above expression is the frequentist (data-based) block of the posterior: the likelihood. If we want to obtain a tractable expression for the posterior, we need to find a prior component that has a form that will combine well with this likelihood. These forms are called <strong>conjugate priors</strong>. A natural candidate for the right part (that depends on both <strong>b</strong> and <span class="math inline">\(\sigma\)</span>) is the multivariate Gaussian density:
+<span class="math display" id="eq:linprior">\[\begin{equation}
+\tag{9.5}
+p[\textbf{b}|\sigma]=\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_0)'\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)}{2\sigma^2}},
+\end{equation}\]</span>
+where we are obliged to condition with respect to <span class="math inline">\(\sigma\)</span>. The density has prior mean <span class="math inline">\(\textbf{b}_0\)</span> and prior covariance matrix <span class="math inline">\(\boldsymbol{\Lambda}_0^{-1}\)</span>. This prior gets us one step closer to the posterior because 
+<span class="math display" id="eq:cascade">\[\begin{align}
+p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto p[\textbf{y},\textbf{X}|\textbf{b},\sigma]p[\textbf{b},\sigma] \nonumber \\
+\tag{9.6}
+&amp;\propto p[\textbf{y},\textbf{X}|\textbf{b},\sigma]p[\textbf{b}|\sigma]p[\sigma]. 
+\end{align}\]</span></p>
+<p>In order to fully specify the cascade of probabilities, we need to take care of <span class="math inline">\(\sigma\)</span> and set a density of the form
+<span class="math display" id="eq:linsig">\[\begin{equation}
+\tag{9.7}
+p[\sigma^2]\propto (\sigma^2)^{-1-a_0}e^{-\frac{b_0}{2\sigma^2}},
+\end{equation}\]</span>
+which is close to that of the left part of <a href="bayes.html#eq:linlike">(9.4)</a>. This corresponds to an inverse gamma distribution for the variance with prior parameters <span class="math inline">\(a_0\)</span> and <span class="math inline">\(b_0\)</span> (this scalar notation is not optimal because it can be confused with the prior mean <span class="math inline">\(\textbf{b}_0\)</span> so we must pay extra attention).</p>
+<p>Now, we can simplify <span class="math inline">\(p[\textbf{b},\sigma|\textbf{y},\textbf{X}]\)</span> with <a href="bayes.html#eq:linlike">(9.4)</a>, <a href="bayes.html#eq:linprior">(9.5)</a> and <a href="bayes.html#eq:linsig">(9.7)</a>:
+<span class="math display">\[\begin{align*}
+p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto 
+(\sigma\sqrt{2\pi})^{-I} \sigma^{-2(1+a_0)} e^{-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)' \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)}{2\sigma^2}} \\
+&amp;\quad \times e^{-\frac{(\textbf{b}-\hat{\textbf{b}})'\textbf{X}'\textbf{X}(\textbf{b}-\hat{\textbf{b}})}{2\sigma^2}}\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_0)'\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)}{2\sigma^2}}e^{-\frac{b_0}{2\sigma^2}} \\
+\end{align*}\]</span>
+which can be rewritten
+<span class="math display">\[\begin{align*}
+p[\textbf{b},\sigma|\textbf{y},\textbf{X}]&amp; \propto  \sigma^{-I-k-2(1+a_0)} \\
+&amp;\times  \exp\left(-\frac{\left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right)' \left(\textbf{y}-\textbf{X}\hat{\textbf{b}}\right) + (\textbf{b}-\hat{\textbf{b}})'\textbf{X}'\textbf{X}(\textbf{b}-\hat{\textbf{b}}) + (\textbf{b}-\textbf{b}_0)'\boldsymbol{\Lambda}_0(\textbf{b}-\textbf{b}_0)+b_0}{2\sigma^2} \right) .
+\end{align*}\]</span></p>
+<p>The above expression is simply a quadratic form in <span class="math inline">\(\textbf{b}\)</span> and it can be rewritten after burdensome algebra in a much more compact manner:
+<span class="math display">\[\begin{equation}
+\label{eq:linpost}
+p(\textbf{b}|\textbf{y},\textbf{X},\sigma) \propto \left[\sigma^{-k}e^{-\frac{(\textbf{b}-\textbf{b}_*)'\boldsymbol{\Lambda}_*(\textbf{b}-\textbf{b}_*)}{2\sigma^2}}\right] \times \left[ (\sigma^2)^{-1-a_*}e^{-\frac{b_*}{2\sigma^2}}  \right],
+\end{equation}\]</span></p>
+<p>where
+<span class="math display">\[\begin{align*}
+\boldsymbol{\Lambda}_* &amp;= \textbf{X}'\textbf{X}+\boldsymbol{\Lambda}_0  \\
+\textbf{b}_*&amp;=  \boldsymbol{\Lambda}_*^{-1}(\boldsymbol{\Lambda}_0\textbf{b}_0+\textbf{X}'\textbf{X}\hat{\textbf{b}}) \\
+a_* &amp; = a_0 + I/2  \\
+b_* &amp;=b_0+\frac{1}{2}\left(\textbf{y}'\textbf{y}+ \textbf{b}_0'\boldsymbol{\Lambda}_0\textbf{b}_0+\textbf{b}_*'\boldsymbol{\Lambda}_*\textbf{b}_* \right).\\
+\end{align*}\]</span></p>
+<p>This expression has two parts: the Gaussian component which relates mostly to <span class="math inline">\(\textbf{b}\)</span>, and the inverse gamma component, entirely dedicated to <span class="math inline">\(\sigma\)</span>. The mix between the prior and the data is clear. The posterior covariance matrix of the Gaussian part (<span class="math inline">\(\boldsymbol{\Lambda}_*\)</span>) is the sum between the prior and a quadratic form from the data. The posterior mean <span class="math inline">\(\textbf{b}_*\)</span> is a weighted average of the prior <span class="math inline">\(\textbf{b}_0\)</span> and the sample estimator <span class="math inline">\(\hat{\textbf{b}}\)</span>. Such blends of quantities estimated from data and a user-supplied version are often called <strong>shrinkages</strong>. For instance, the original matrix of cross-terms <span class="math inline">\(\textbf{X}'\textbf{X}\)</span> is shrunk towards the prior <span class="math inline">\(\boldsymbol{\Lambda}_0\)</span>. This can be viewed as a <strong>regularization</strong> procedure: the pure fit originating from the data is mixed with some ‘external’ ingredient to give some structure to the final estimation.</p>
+<p>The interested reader can also have a look at section 16.3 of <span class="citation"><a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">Greene</a> (<a href="solutions-to-exercises.html#ref-greene2018econometric" role="doc-biblioref">2018</a>)</span> (the case of conjugate priors is treated in subsection 16.3.2).</p>
+<p>The formulae above can be long and risky to implement. Luckily, there is an R package (<span class="math inline">\(spBayes\)</span>) that performs Bayesian inference for linear regression using the conjugate priors. Below, we provide one example of how it works. To simplify the code and curtail computation times, we consider two predictors: market capitalization (size anomaly) and price-to-book ratio (value anomaly). In statistics, the <strong>precision matrix</strong> is the inverse of the covariance matrix. In the parameters, the first two priors relate to the Gaussian law and the last two to the inverse gamma distribution:
+<span class="math display">\[f_\text{invgamma}(x, \alpha, \beta)=\frac{\beta^\alpha}{\Gamma(\alpha)}x^{-1-\alpha}e^{-\frac{\beta}{x}},\]</span>
+where <span class="math inline">\(\alpha\)</span> is the shape and <span class="math inline">\(\beta\)</span> is the scale.</p>
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">prior_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span><span class="op">)</span>                    <span class="co"># Average value of parameters (prior)</span>
+<span class="va">precision_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">prior_mean</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html">solve</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Inverse cov matrix of parameters (prior)</span>
+<span class="va">fit_lmBayes</span> <span class="op">&lt;-</span> <span class="fu">bayesLMConjugate</span><span class="op">(</span>
+    <span class="va">R1M_Usd</span> <span class="op">~</span> <span class="va">Mkt_Cap_3M_Usd</span> <span class="op">+</span> <span class="va">Pb</span>,          <span class="co"># Model: size and value</span>
+    data <span class="op">=</span> <span class="va">testing_sample</span>,                  <span class="co"># Data source, here, the test sample</span>
+    n.samples <span class="op">=</span> <span class="fl">2000</span>,                       <span class="co"># Number of samples used</span>
+    beta.prior.mean <span class="op">=</span> <span class="va">prior_mean</span>,           <span class="co"># Avg prior: size &amp; value rewarded &amp; unit beta</span>
+    beta.prior.precision <span class="op">=</span> <span class="va">precision_mat</span>,   <span class="co"># Precision matrix</span>
+    prior.shape <span class="op">=</span> <span class="fl">0.5</span>,                      <span class="co"># Shape for prior distribution of sigma</span>
+    prior.rate <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>                       <span class="co"># Scale for prior distribution of sigma</span></code></pre></div>
+<p></p>
+<p>In the above specification, we must also provide a prior for the constant. By default, we set its average value to 0.01, which corresponds to a 1% average monthly return. Once the model has been estimated, we can plot the distribution of coefficient estimates.</p>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_lmBayes</span><span class="op">$</span><span class="va">p.beta.tauSq.samples</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Intercept"</span>, <span class="st">"Size"</span>, <span class="st">"Value"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">coefficient</span>, value <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">coefficient</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:lmBayesplot"></span>
+<img src="ML_factor_files/figure-html/lmBayesplot-1.png" alt="Distribution of linear regression coefficients (betas)." width="320px"><p class="caption">
+FIGURE 9.1: Distribution of linear regression coefficients (betas).
+</p>
+</div>
+<p></p>
+<p>The distribution of the constant in Figure <a href="bayes.html#fig:lmBayesplot">9.1</a> is firmly to the right with a small dispersion, hence it is solidly positive. For the size coefficient, it is the opposite; it is negative (small firms are more profitable). With regard to value, it is hard to conclude, the distribution is balanced around zero: there is no clear exposition to the price-to-book ratio variable.</p>
+</div>
+<div id="naive-bayes-classifier" class="section level2" number="9.4">
+<h2>
+<span class="header-section-number">9.4</span> Naive Bayes classifier<a class="anchor" aria-label="anchor" href="#naive-bayes-classifier"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+</p>
+<p>Bayes’ theorem can also be easily applied to <strong>classification</strong>. We formulate it with respect to the label and features and write
+<span class="math display" id="eq:naivebayes">\[\begin{equation}
+\tag{9.8}
+P[\textbf{y} | \textbf{X}] = \frac{P[ \textbf{X} | \textbf{y}]P[\textbf{y}]}{P[\textbf{X}]} \propto P[ \textbf{X} | \textbf{y}]P[\textbf{y}],
+\end{equation}\]</span>
+and then split the input matrix into its column vectors <span class="math inline">\(\textbf{X}=(\textbf{x}_1,\dots,\textbf{x}_K)\)</span>. This yields
+<span class="math display" id="eq:naivebayes2">\[\begin{equation}
+\tag{9.9}
+P[\textbf{y} | \textbf{x}_1,\dots,\textbf{x}_K] \propto P[\textbf{x}_1,\dots,\textbf{x}_K| \textbf{y}]P[\textbf{y}].
+\end{equation}\]</span></p>
+<p>The ‘naive’ qualification of the method comes from a simplifying assumption on the features.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;This assumption can be relaxed, but the algorithms then become more complex and are out of the scope of the current book. One such example that generalizes the naive Bayes approach is &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-friedman1997bayesian" role="doc-biblioref"&gt;N. Friedman, Geiger, and Goldszmidt&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-friedman1997bayesian" role="doc-biblioref"&gt;1997&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>20</sup></a> If they are all mutually independent, then the likelihood in the above expression can be expanded into 
+<span class="math display" id="eq:naivebayes3">\[\begin{equation}
+\tag{9.10}
+P[\textbf{y} | \textbf{x}_1,\dots,\textbf{x}_K] \propto P[\textbf{y}]\prod_{k=1}^K P[\textbf{x}_k| \textbf{y}].
+\end{equation}\]</span></p>
+<p>The next step is to be more specific about the likelihood. This can be done non-parametrically (via kernel estimation) or with common distributions (Gaussian for continuous data, Bernoulli for binary data). In factor investing, the features are continuous, thus the Gaussian law is more adequate:
+<span class="math display">\[P[x_{i,k}=z|\textbf{y}_i= c]=\frac{e^{-\frac{(z-m_c)^2}{2\sigma_c^2}}}{\sigma_c\sqrt{2\pi}},\]</span>
+where <span class="math inline">\(c\)</span> is the value of the classes taken by <span class="math inline">\(y\)</span> and <span class="math inline">\(\sigma_c\)</span> and <span class="math inline">\(m_c\)</span> are the standard error and mean of <span class="math inline">\(x_{i,k}\)</span>, conditional on <span class="math inline">\(y_i\)</span> being equal to <span class="math inline">\(c\)</span>. In practice, each class is spanned, the training set is filtered accordingly and <span class="math inline">\(\sigma_c\)</span> and <span class="math inline">\(m_c\)</span> are taken to be the sample statistics. This Gaussian parametrization is probably ill-suited to our dataset because the features are uniformly distributed. Even after conditioning, it is unlikely that the distribution will be even remotely close to Gaussian. Technically, this can be overcome via a double transformation method. Given a vector of features <span class="math inline">\(\textbf{x}_k\)</span> with empirical cdf <span class="math inline">\(F_{\textbf{x}_k}\)</span>, the variable
+<span class="math display" id="eq:transf">\[\begin{equation}
+\tag{9.11}
+\tilde{\textbf{x}}_k=\Phi^{-1}\left(F_{\textbf{x}_k}(\textbf{x}_k) \right),
+\end{equation}\]</span>
+will have a standard normal law whenever <span class="math inline">\(F_{\textbf{x}_k}\)</span> is not pathological. Non-pathological cases are when the cdf is continuous and strictly increasing and when observations lie in the open interval (0,1). If all features are independent, the transformation should not have any impact on the correlation structure. Otherwise, we refer to the literature on the NORmal-To-Anything (NORTA) method (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-chen2001initialization" role="doc-biblioref">H. Chen</a> (<a href="solutions-to-exercises.html#ref-chen2001initialization" role="doc-biblioref">2001</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2017approximate" role="doc-biblioref">Coqueret</a> (<a href="solutions-to-exercises.html#ref-coqueret2017approximate" role="doc-biblioref">2017</a>)</span>).</p>
+<p>Lastly, the prior <span class="math inline">\(P[\textbf{y}]\)</span> in Equation <a href="bayes.html#eq:naivebayes3">(9.10)</a> is often either taken to be uniform across the classes (<span class="math inline">\(1/K\)</span> for all <span class="math inline">\(k\)</span>) or equal to the sample distribution.</p>
+<p>We illustrate the naive Bayes classification tool with a simple example. While the package <em>e1071</em> embeds such a classifier, the <em>naivebayes</em> library offers more options (Gaussian, Bernoulli, multinomial and nonparametric likelihoods). Below, since the features are uniformly distributed, thus the transformation in <a href="bayes.html#eq:transf">(9.11)</a> amounts to apply the Gaussian quantile function (inverse cdf).</p>
+<p>For visual clarity, we only use the small set of features.</p>
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/majkamichal/naivebayes">naivebayes</a></span><span class="op">)</span>                           <span class="co"># Load package</span>
+<span class="va">gauss_features_train</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>   <span class="co"># Build sample</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`*`</span><span class="op">(</span><span class="fl">0.999</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Features smaller than 1</span>
+    <span class="op">+</span> <span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Features larger than 0</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                               <span class="co"># Inverse Gaussian cdf</span>
+    <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>
+<span class="va">fit_NB_gauss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://majkamichal.github.io/naivebayes//reference/naive_bayes.html">naive_bayes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">gauss_features_train</span>,      <span class="co"># Transformed features</span>
+                            y <span class="op">=</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Label</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/layout.html">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span>,<span class="fl">4</span>,<span class="fl">5</span>,<span class="fl">6</span>,<span class="fl">7</span><span class="op">)</span>, <span class="fl">4</span>, <span class="fl">2</span>, byrow <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,     <span class="co"># Organize graphs</span>
+       widths<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.9</span>,<span class="fl">0.45</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NB_gauss</span>, prob <span class="op">=</span> <span class="st">"conditional"</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:NB"></span>
+<img src="ML_factor_files/figure-html/NB-1.png" alt="Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return." width="500px"><p class="caption">
+FIGURE 9.2: Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return.
+</p>
+</div>
+<p></p>
+<p>The plots in Figure <a href="bayes.html#fig:NB">9.2</a> show the distributions of the features, conditionally on each value of the label. Essentially, those are the densities <span class="math inline">\(P[\textbf{x}_k| \textbf{y}]\)</span>. For each feature, both distributions are very similar.</p>
+<p>As usual, once the model has been trained, the accuracy of predictions can be evaluated.</p>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gauss_features_test</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`*`</span><span class="op">(</span><span class="fl">0.999</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="op">+</span> <span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_NB_gauss</span>, <span class="va">gauss_features_test</span><span class="op">)</span> <span class="op">==</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.4956985</code></pre>
+<p></p>
+<p>The performance of the classifier is not satisfactory as it underperforms a random guess.</p>
+</div>
+<div id="BART" class="section level2" number="9.5">
+<h2>
+<span class="header-section-number">9.5</span> Bayesian additive trees<a class="anchor" aria-label="anchor" href="#BART"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="general-formulation" class="section level3" number="9.5.1">
+<h3>
+<span class="header-section-number">9.5.1</span> General formulation<a class="anchor" aria-label="anchor" href="#general-formulation"><i class="fas fa-link"></i></a>
+</h3>
+<p>Bayesian additive regression trees (BARTs) are an ensemble technique that mixes Bayesian thinking and regression trees. In spirit, they are close to the tree ensembles seen in Chapter <a href="trees.html#trees">6</a>, but they differ greatly in their implementation. In BARTs like in Bayesian regressions, the regularization comes from the prior. The original article is <span class="citation"><a href="solutions-to-exercises.html#ref-chipman2010bart" role="doc-biblioref">Chipman, George, and McCulloch</a> (<a href="solutions-to-exercises.html#ref-chipman2010bart" role="doc-biblioref">2010</a>)</span> and the implementation (in R) follows <span class="citation"><a href="solutions-to-exercises.html#ref-sparapani2019r" role="doc-biblioref">Sparapani, Spanbauer, and McCulloch</a> (<a href="solutions-to-exercises.html#ref-sparapani2019r" role="doc-biblioref">2019</a>)</span>. BARTs have been used in <span class="citation"><a href="solutions-to-exercises.html#ref-shu2021identifying" role="doc-biblioref">Shu and Tiwari</a> (<a href="solutions-to-exercises.html#ref-shu2021identifying" role="doc-biblioref">2021</a>)</span> to identify which characteristics are priced. The authors report that stocks’ market capitalization is the only one that matters.</p>
+<p>Formally, the model is an aggregation of <span class="math inline">\(M\)</span> models, which we write as
+<span class="math display" id="eq:BART">\[\begin{equation}
+\tag{9.12}
+y = \sum_{m=1}^M\mathcal{T}_m(q_m,\textbf{w}_m, \textbf{x}) + \epsilon,
+\end{equation}\]</span>
+where <span class="math inline">\(\epsilon\)</span> is a Gaussian noise with variance <span class="math inline">\(\sigma^2\)</span>, and the <span class="math inline">\(\mathcal{T}_m=\mathcal{T}_m(q_m,\textbf{w}_m, \textbf{x})\)</span> are decision trees with structure <span class="math inline">\(q_m\)</span> and weights vectors <span class="math inline">\(\textbf{w}_m\)</span>. This decomposition of the tree is the one we used for boosted trees and is illustrated in Figure <a href="trees.html#fig:treeq">6.5</a>. <span class="math inline">\(q_m\)</span> codes all splits (variables chosen for the splits and levels of the splits) and the vectors <span class="math inline">\(\textbf{w}_m\)</span> correspond to the leaf values (at the terminal nodes).</p>
+<p>At the macro-level, BARTs can be viewed as traditional Bayesian objects, where the parameters <span class="math inline">\(\boldsymbol{\theta}\)</span> are all of the unknowns coded through <span class="math inline">\(q_m\)</span>, <span class="math inline">\(\textbf{w}_m\)</span> and <span class="math inline">\(\sigma^2\)</span> and where the focus is set on determining the posterior
+<span class="math display" id="eq:bartpost">\[\begin{equation}
+\tag{9.13}
+\left(q_m,\textbf{w}_m,\sigma^2\right) | (\textbf{X}, \textbf{Y}).
+\end{equation}\]</span></p>
+<p>Given particular forms of priors for <span class="math inline">\(\left(q_m,\textbf{w}_m,\sigma^2\right)\)</span>, the algorithm draws the parameters using a combination of Metropolis-Hastings <em>and</em> Gibbs samplers.</p>
+</div>
+<div id="priors" class="section level3" number="9.5.2">
+<h3>
+<span class="header-section-number">9.5.2</span> Priors<a class="anchor" aria-label="anchor" href="#priors"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The definition of priors in tree models is delicate and intricate. The first important assumption is independence: independence between <span class="math inline">\(\sigma^2\)</span> and all other parameters and independence between trees, that is, between couples <span class="math inline">\((q_m,\textbf{w}_m)\)</span> and <span class="math inline">\((q_n,\textbf{w}_n)\)</span> for <span class="math inline">\(m\neq n\)</span>. This assumption makes BARTs closer to random forests in spirit and further from boosted trees. This independence entails</p>
+<p><span class="math display">\[P(\left(q_1,\textbf{w}_1\right),\dots,\left(q_M,\textbf{w}_M\right),\sigma^2)=P(\sigma^2)\prod_{m=1}^MP\left(q_m,\textbf{w}_m\right).\]</span></p>
+<p>Moreover, it is customary (for simplicity) to separate the structure of the tree (<span class="math inline">\(q_m\)</span>) and the terminal weights (<span class="math inline">\(\textbf{w}_m\)</span>), so that by a Bayesian conditioning</p>
+<p><span class="math display" id="eq:bart1">\[\begin{equation}
+\tag{9.14}
+P(\left(q_1,\textbf{w}_1\right),\dots,\left(q_M,\textbf{w}_M\right),\sigma^2)=\underbrace{P(\sigma^2)}_{\text{noise term}}\prod_{m=1}^M\underbrace{P\left(\textbf{w}_m|q_m\right)}_{\text{tree weights}}\underbrace{P(q_m)}_{\text{tree struct.}}
+\end{equation}\]</span></p>
+<p>It remains to formulate the assumptions for each of the three parts.</p>
+<p>We start with the trees’ structures, <span class="math inline">\(q_m\)</span>. Trees are defined by their splits (at nodes) and these splits are characterized by the splitting variable and the splitting level. First, the size of trees is parametrized such that a node at depth <span class="math inline">\(d\)</span> is nonterminal with probability given by
+<span class="math display" id="eq:bartnode">\[\begin{equation}
+\tag{9.15}
+\alpha(1+d)^{-\beta}, \quad \alpha \in (0,1), \quad \beta &gt;0.
+\end{equation}\]</span>
+The authors recommend to set <span class="math inline">\(\alpha = 0.95\)</span> and <span class="math inline">\(\beta=2\)</span>. This gives a probability of 5% to have 1 node, 55% to have 2 nodes, 28% to have 3 nodes, 9% to have 4 nodes and 3% to have 5 nodes. Thus, the aim is to force relatively shallow structures.</p>
+<p>Second, the choice of splitting variables is driven by a generalized Bernoulli (categorical) distribution which defines the odds of picking one particular feature. In the original paper by <span class="citation"><a href="solutions-to-exercises.html#ref-chipman2010bart" role="doc-biblioref">Chipman, George, and McCulloch</a> (<a href="solutions-to-exercises.html#ref-chipman2010bart" role="doc-biblioref">2010</a>)</span>, the vector of probabilities was uniform (each predictor has the same odds of being chosen for the split). This vector can also be random and sampled from a more flexible Dirichlet distribution. The level of the split is drawn uniformly on the set of possible values for the chosen predictor.</p>
+<p>Having determined the prior of structure of the tree <span class="math inline">\(q_m\)</span>, it remains to fix the terminal values at the leaves (<span class="math inline">\(\textbf{w}_m|q_m\)</span>). The weights at all leaves are assumed to follow a Gaussian distribution <span class="math inline">\(\mathcal{N}(\mu_\mu,\sigma_\mu^2)\)</span>, where <span class="math inline">\(\mu_\mu=(y_\text{min}+y_\text{max})/2\)</span> is the center of the range of the label values. The variance <span class="math inline">\(\sigma_\mu^2\)</span> is chosen such that <span class="math inline">\(\mu_\mu\)</span> plus or minus two times <span class="math inline">\(\sigma_\mu^2\)</span> covers 95% of the range observed in the training dataset. Those are default values and can be altered by the user.</p>
+<p>Lastly, for computational purposes similar to those of linear regressions, the parameter <span class="math inline">\(\sigma^2\)</span> (the variance of <span class="math inline">\(\epsilon\)</span> in <a href="bayes.html#eq:BART">(9.12)</a>) is assumed to follow an inverse Gamma law <span class="math inline">\(\text{IG}(\nu/2,\lambda \nu/2)\)</span> akin to that used in Bayesian regressions. The parameters are by default computed from the data so that the distribution of <span class="math inline">\(\sigma^2\)</span> is realistic and prevents overfitting. We refer to the original article, section 2.2.4, for more details on this topic.</p>
+<p>In sum, in addition to <span class="math inline">\(M\)</span> (number of trees), the prior depends on a small number of parameters: <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> (for the tree structure), <span class="math inline">\(\mu_\mu\)</span> and <span class="math inline">\(\sigma_\mu^2\)</span> (for the tree weights) and <span class="math inline">\(\nu\)</span> and <span class="math inline">\(\lambda\)</span> (for the noise term).</p>
+</div>
+<div id="sampling-and-predictions" class="section level3" number="9.5.3">
+<h3>
+<span class="header-section-number">9.5.3</span> Sampling and predictions<a class="anchor" aria-label="anchor" href="#sampling-and-predictions"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The posterior distribution in <a href="bayes.html#eq:bartpost">(9.13)</a> cannot be obtained analytically but simulations are an efficient shortcut to the model <a href="bayes.html#eq:BART">(9.12)</a>. Just as in Gibbs and Metropolis-Hastings sampling, the distribution of simulations is expected to converge to the sought posterior. After some burn-in sample, a prediction for a newly observed set <span class="math inline">\(\textbf{x}_*\)</span> will simply be the average (or median) of the predictions from the simulations. If we assume <span class="math inline">\(S\)</span> simulations after burn-in, then the average is equal to
+<span class="math display">\[\tilde{y}(\textbf{x}_*):=\frac{1}{S}\sum_{s=1}^S\sum_{m=1}^M\mathcal{T}_m\left(q_m^{(s)},\textbf{w}_m^{(s)}, \textbf{x}_*\right).\]</span></p>
+<p>The complex part is naturally to generate the simulations. Each tree is sampled using the Metropolis-Hastings method: a tree is proposed, but it replaces the existing one only under some (possibly random) criterion. This procedure is then repeated in a Gibbs-like fashion.</p>
+<p>Let us start with the MH building block. We seek to simulate the conditional distribution</p>
+<p><span class="math display">\[(q_m,\textbf{w}_m) \ | \ (q_{-m},\textbf{w}_{-m},\sigma^2, \textbf{y}, \textbf{x}),\]</span></p>
+<p>where <span class="math inline">\(q_{-m}\)</span> and <span class="math inline">\(\textbf{w}_{-m}\)</span> collect the structures and weights of all trees except for tree number <span class="math inline">\(m\)</span>. One tour de force in BART is to simplify the above Gibbs draws to
+<span class="math display">\[(q_m,\textbf{w}_m) \ | \ (\textbf{R}_{m},\sigma^2 ),\]</span>
+where <span class="math inline">\(\textbf{R}_{m}=\textbf{y}-\sum_{l \neq m}\mathcal{T}_l(q_l,\textbf{w}_l, \textbf{x})\)</span> is the partial residual on a prediction that excludes the <span class="math inline">\(m^{th}\)</span> tree.</p>
+<p>The new MH proposition for <span class="math inline">\(q_m\)</span> is based on the previous tree and there are three possible (and random) alterations to the tree:<br>
+- growing a terminal node (increase the complexity of the tree by adding a supplementary leaf);<br>
+- pruning a pair of terminal nodes (the opposite operation: reducing complexity);<br>
+- changing splitting rules.</p>
+<p>For simplicity, the third option is often excluded. Once the tree structure is defined (i.e., sampled), the terminal weights are independently drawn according to a Gaussian distribution <span class="math inline">\(\mathcal{N}(\mu_\mu, \sigma_\mu^2)\)</span>.</p>
+<p>After the tree is sampled, the MH principle requires that it be accepted or rejected based on some probability. This probability increases with the odds that the new tree increases the likelihood of the model. Its detailed computation is cumbersome and we refer to section 2.2 in <span class="citation"><a href="solutions-to-exercises.html#ref-sparapani2019r" role="doc-biblioref">Sparapani, Spanbauer, and McCulloch</a> (<a href="solutions-to-exercises.html#ref-sparapani2019r" role="doc-biblioref">2019</a>)</span> for details on the matter.</p>
+<p>Now, we must outline the overarching Gibbs procedure. First, the algorithm starts with trees that are simple nodes. Then, a specified number of loops include the following <em>sequential</em> steps:</p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="55%">
+<col width="44%">
+</colgroup>
+<thead><tr class="header">
+<th align="center">Step</th>
+<th align="left">Task</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="center">1</td>
+<td align="left">sample <span class="math inline">\((q_1,\textbf{w}_1) \ | \ (\textbf{R}_{1},\sigma^2 )\)</span>;</td>
+</tr>
+<tr class="even">
+<td align="center">2</td>
+<td align="left">sample <span class="math inline">\((q_2,\textbf{w}_2) \ | \ (\textbf{R}_{2},\sigma^2 )\)</span>;</td>
+</tr>
+<tr class="odd">
+<td align="center">…</td>
+<td align="left">…;</td>
+</tr>
+<tr class="even">
+<td align="center">m</td>
+<td align="left">sample <span class="math inline">\((q_m,\textbf{w}_m) \ | \ (\textbf{R}_{m},\sigma^2 )\)</span>;</td>
+</tr>
+<tr class="odd">
+<td align="center">…</td>
+<td align="left">…;</td>
+</tr>
+<tr class="even">
+<td align="center">M</td>
+<td align="left">sample <span class="math inline">\((q_M,\textbf{w}_M) \ | \ (\textbf{R}_{M},\sigma^2 )\)</span>; (last tree )</td>
+</tr>
+<tr class="odd">
+<td align="center">M+1</td>
+<td align="left">sample <span class="math inline">\(\sigma^2\)</span> given the full residual <span class="math inline">\(\textbf{R}=\textbf{y}-\sum_{l=1}^M\mathcal{T}_l(q_l,\textbf{w}_l, \textbf{x})\)</span>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p>At each step <span class="math inline">\(m\)</span>, the residual <span class="math inline">\(\textbf{R}_{m}\)</span> is updated with the values from step <span class="math inline">\(m-1\)</span>. We illustrate this process in Figure <a href="bayes.html#fig:bartfig">9.3</a> in which <span class="math inline">\(M=3\)</span>. At step 1, a partition is proposed for the first tree, which is a simple node. In this particular case, the tree is accepted. In this scheme, the terminal weights are omitted for simplicity. At step 2, another partition is proposed for the tree, but it is rejected. In the third step, the proposition for the third is accepted. After the third step, a new value for <span class="math inline">\(\sigma^2\)</span> is drawn and a new round of Gibbs sampling can commence.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:bartfig"></span>
+<img src="images/bart.png" alt="Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed tree is not validated." width="260px"><p class="caption">
+FIGURE 9.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed tree is not validated.
+</p>
+</div>
+</div>
+<div id="code" class="section level3" number="9.5.4">
+<h3>
+<span class="header-section-number">9.5.4</span> Code<a class="anchor" aria-label="anchor" href="#code"><i class="fas fa-link"></i></a>
+</h3>
+<p>There are several R packages that implement BART methods: <em>BART</em>, <em>bartMachine</em> and an older one (the original), <em>BayesTree</em>. The first one is highly efficient, hence we work with it. We resort to only a few parameters, like the power and base, which are the <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> defined in <a href="bayes.html#eq:bartnode">(9.15)</a>. The program is a bit verbose and delivers a few parametric details.</p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">BART</span><span class="op">)</span>                                                           <span class="co"># Load package</span>
+<span class="va">fit_bart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BART/man/gbart.html">gbart</a></span><span class="op">(</span>                                                      <span class="co"># Main function</span>
+    x.train <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>        <span class="co"># Training features</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span>, 
+    y.train <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">R1M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>               <span class="co"># Training label</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> ,        
+    x.test <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>, <span class="va">features_short</span><span class="op">)</span>  <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>         <span class="co"># Testing features</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span>,  
+    type <span class="op">=</span> <span class="st">"wbart"</span>,                                          <span class="co"># Option: label is continuous</span>
+    ntree <span class="op">=</span> <span class="fl">20</span>,                                              <span class="co"># Number of trees in the model </span>
+    nskip <span class="op">=</span> <span class="fl">100</span>,                                             <span class="co"># Size of burn-in sample</span>
+    ndpost <span class="op">=</span> <span class="fl">200</span>,                                            <span class="co"># Number of posteriors drawn</span>
+    power <span class="op">=</span> <span class="fl">2</span>,                                               <span class="co"># beta in the tree structure prior</span>
+    base <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span>                                             <span class="co"># alpha in the tree structure prior</span></code></pre></div>
+<pre><code>## *****Calling gbart: type=1
+## *****Data:
+## data:n,p,np: 198128, 7, 70208
+## y1,yn: -0.049921, 0.024079
+## x1,x[n*p]: 0.010000, 0.810000
+## xp1,xp[np*p]: 0.270000, 0.880000
+## *****Number of Trees: 20
+## *****Number of Cut Points: 100 ... 100
+## *****burn,nd,thin: 100,200,1
+## *****Prior:beta,alpha,tau,nu,lambda,offset: 2,0.95,1.57391,3,2.84908e-31,0.0139209
+## *****sigma: 0.000000
+## *****w (weights): 1.000000 ... 1.000000
+## *****Dirichlet:sparse,theta,omega,a,b,rho,augment: 0,0,1,0.5,1,7,0
+## *****printevery: 100
+## 
+## MCMC
+## done 0 (out of 300)
+## done 100 (out of 300)
+## done 200 (out of 300)
+## time: 36s
+## trcnt,tecnt: 200,200</code></pre>
+<p></p>
+<p>Once the model is trained,<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In the case of BARTs, the training consists exactly in the drawing of posterior samples.&lt;/p&gt;"><sup>21</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>.’</p>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">fit_bart</span><span class="op">$</span><span class="va">yhat.test</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.5432794</code></pre>
+<p></p>
+<p>The performance <em>seems</em> reasonable but is by no means impressive. The data from all sampled trees is available in the <em>fit_bart</em> variable. It has nonetheless a complex structure (as is often the case with trees). The simplest information we can extract is the value of <span class="math inline">\(\sigma\)</span> across all 300 simulations (see Figure <a href="bayes.html#fig:bartsigplot">9.4</a>).</p>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">300</span>, sigma <span class="op">=</span> <span class="va">fit_bart</span><span class="op">$</span><span class="va">sigma</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">simulation</span>, y <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></code></pre></div>
+<div class="figure">
+<span style="display:block;" id="fig:bartsigplot"></span>
+<img src="ML_factor_files/figure-html/bartsigplot-1.png" alt="Evolution of sigma across BART simulations." width="384"><p class="caption">
+FIGURE 9.4: Evolution of sigma across BART simulations.
+</p>
+</div>
+<p>And we see that, as the number of samples increases, <span class="math inline">\(\sigma\)</span> decreases.</p>
+
+</div>
+</div>
+</div>
+
+
+
+.container-fluid main {
+max-width: 60rem;
+}
+
+<div class="chapter-nav">
+<div class="prev"><a href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></div>
+<div class="next"><a href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#bayes"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li><a class="nav-link" href="#the-bayesian-framework"><span class="header-section-number">9.1</span> The Bayesian framework</a></li>
+<li>
+<a class="nav-link" href="#bayesian-sampling"><span class="header-section-number">9.2</span> Bayesian sampling</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#gibbs-sampling"><span class="header-section-number">9.2.1</span> Gibbs sampling</a></li>
+<li><a class="nav-link" href="#metropolis-hastings-sampling"><span class="header-section-number">9.2.2</span> Metropolis-Hastings sampling</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#bayesian-linear-regression"><span class="header-section-number">9.3</span> Bayesian linear regression</a></li>
+<li><a class="nav-link" href="#naive-bayes-classifier"><span class="header-section-number">9.4</span> Naive Bayes classifier</a></li>
+<li>
+<a class="nav-link" href="#BART"><span class="header-section-number">9.5</span> Bayesian additive trees</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#general-formulation"><span class="header-section-number">9.5.1</span> General formulation</a></li>
+<li><a class="nav-link" href="#priors"><span class="header-section-number">9.5.2</span> Priors</a></li>
+<li><a class="nav-link" href="#sampling-and-predictions"><span class="header-section-number">9.5.3</span> Sampling and predictions</a></li>
+<li><a class="nav-link" href="#code"><span class="header-section-number">9.5.4</span> Code</a></li>
+</ul>
+</li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+</div>
+
+  
+
+  
+
+</div>
+ <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

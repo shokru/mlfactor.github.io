@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 10 Validating and tuning | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 10 Validating and tuning | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 10 Validating and tuning | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content="As is shown in Chapters 5 to 11, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or...">
+<meta property="og:description" content="As is shown in Chapters 5 to 11, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or...">
+<meta name="twitter:description" content="As is shown in Chapters 5 to 11, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="active" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="valtune" class="section level1" number="10">
+<h1>
+<span class="header-section-number">10</span> Validating and tuning<a class="anchor" aria-label="anchor" href="#valtune"><i class="fas fa-link"></i></a>
+</h1>
+<p>As is shown in Chapters <a href="lasso.html#lasso">5</a> to <a href="ensemble.html#ensemble">11</a>, ML models require user-specified choices before they can be trained. These choices encompass parameter values (learning rate, penalization intensity, etc.) or architectural choices (e.g., the structure of a network). Alternative designs in ML engines can lead to different predictions, hence selecting a good one can be critical. We refer to the work of <span class="citation"><a href="solutions-to-exercises.html#ref-probst2018tunability" role="doc-biblioref">Probst, Bischl, and Boulesteix</a> (<a href="solutions-to-exercises.html#ref-probst2018tunability" role="doc-biblioref">2018</a>)</span> for a study on the impact of hyperparameter tuning on model performance. For some models (neural networks and boosted trees), the number of degrees of freedom is so large that finding the right parameters can become complicated and challenging. This chapter addresses these issues but the reader must be aware that there is no shortcut to building good models. Crafting an effective model is time-consuming and often the result of many iterations.</p>
+<div id="mlmetrics" class="section level2" number="10.1">
+<h2>
+<span class="header-section-number">10.1</span> Learning metrics<a class="anchor" aria-label="anchor" href="#mlmetrics"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+The parameter values that are set before training are called <strong>hyperparameters</strong>. In order to be able to choose good hyperparameters, it is imperative to define metrics that evaluate the performance of ML models. As is often the case in ML, there is a dichotomy between models that seek to predict numbers (regressions) and those that try to forecast categories (classifications). Before we outline common evaluation benchmarks, we mention the econometric approach of <span class="citation"><a href="solutions-to-exercises.html#ref-li2020conditional" role="doc-biblioref">J. Li, Liao, and Quaedvlieg</a> (<a href="solutions-to-exercises.html#ref-li2020conditional" role="doc-biblioref">2020</a>)</span>. The authors propose to assess the performance of a forecasting method compared to a given benchmark, <strong>conditional</strong> on some external variable. This helps monitor under which (economic) conditions the model beats the benchmark. The full implementation of the test is intricate, and we recommend the interested reader have a look at the derivations in the paper.</p>
+<div id="regression-analysis" class="section level3" number="10.1.1">
+<h3>
+<span class="header-section-number">10.1.1</span> Regression analysis<a class="anchor" aria-label="anchor" href="#regression-analysis"><i class="fas fa-link"></i></a>
+</h3>
+<p> 
+Errors in regression analyses are usually evaluated in a straightforward way. The <span class="math inline">\(L^1\)</span> and <span class="math inline">\(L^2\)</span> norms are mainstream; they are both easy to interpret and to compute. The second one, the root <strong>mean squared error</strong> (RMSE) is differentiable everywhere but harder to grasp and gives more weight to outliers. The first one, the mean absolute error gives the average distance to the realized value but is not differentiable at zero. Formally, we define them as
+<span class="math display" id="eq:MSE">\[\begin{align}
+ \tag{10.1}
+\text{MAE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I|y_i-\tilde{y}_i|, \\  \tag{10.2} 
+\text{MSE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I(y_i-\tilde{y}_i)^2, 
+\end{align}\]</span></p>
+<p>and the RMSE is simply the square root of the MSE. It is always possible to generalize these formulae by adding weights <span class="math inline">\(w_i\)</span> to produce heterogeneity in the importance of instances. Let us briefly comment on the MSE. It is by far the most common loss function in machine learning, but it is not necessarily the exact best choice for return prediction in a portfolio allocation task. If we decompose the loss into its 3 terms, we get the sum of squared realized returns, the sum of squared predicted returns and the product between the two (roughly speaking, a covariance term if we assume zero means). The first term does not matter. The second controls the dispersion around zero of the predictions. The third term is the most interesting from the allocator’s standpoint. The negativity of the cross-product <span class="math inline">\(-2y_i\tilde{y}_i\)</span> is always to the investor’s benefit: either both terms are positive and the model has recognized a profitable asset, or they are negative and it has identified a bad opportunity. It is when <span class="math inline">\(y_i\)</span> and <span class="math inline">\(\tilde{y}_i\)</span> don’t have the same sign that problems arise. Thus, compared to the <span class="math inline">\(\tilde{y}_i^2\)</span>, the cross-term is more important. Nonetheless, algorithms do not optimize with respect to this indicator.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;There are some exceptions, like attempts to optimize more exotic criteria, such as the Spearman rho, which is based on rankings and is close in spirit to maximizing the correlation between the output and the prediction. Because this rho cannot be differentiated, this causes numerical issues. These problems can be partially alleviated when resorting to complex architectures, as in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-engilberge2019sodeep" role="doc-biblioref"&gt;Engilberge et al.&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-engilberge2019sodeep" role="doc-biblioref"&gt;2019&lt;/a&gt;)&lt;/span&gt;. &lt;/p&gt;'><sup>22</sup></a></p>
+<p>These metrics (MSE and RMSE) are widely used outside ML to assess forecasting errors. Below, we present other indicators that are also sometimes used to quantify the quality of a model. In line with the linear regressions, the <span class="math inline">\(R^2\)</span> can be computed in any predictive exercise.
+<span class="math display" id="eq:R2">\[\begin{equation}
+\tag{10.3} 
+R^2(\textbf{y},\tilde{\textbf{y}})=1- \frac{\sum_{i=1}^I(y_i-\tilde{y}_i)^2}{\sum_{i=1}^I(y_i-\bar{y})^2},
+\end{equation}\]</span>
+ 
+where <span class="math inline">\(\bar{y}\)</span> is the sample average of the label. One important difference with the classical <span class="math inline">\(R^2\)</span> is that the above quantity can be computed on the <strong>testing sample</strong> and not on the <strong>training sample</strong>. In this case, the <span class="math inline">\(R^2\)</span> can be negative when the mean squared error in the numerator is larger than the (biased) variance of the testing sample. Sometimes, the average value <span class="math inline">\(\bar{y}\)</span> is omitted in the denominator (as in <span class="citation"><a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">Gu, Kelly, and Xiu</a> (<a href="solutions-to-exercises.html#ref-gu2018empirical" role="doc-biblioref">2020b</a>)</span> for instance). The benefit of removing the average value is that it compares the predictions of the model to a zero prediction. This is particularly relevant with returns because the simplest prediction of all is the constant zero value and the <span class="math inline">\(R^2\)</span> can then measure if the model beats this naive benchmark. A zero prediction is always preferable to a sample average because the latter can be very much period dependent. Also, removing <span class="math inline">\(\bar{y}\)</span> in the denominator makes the metric more conservative as it mechanically reduces the <span class="math inline">\(R^2\)</span>.</p>
+<p>Beyond the simple indicators detailed above, several exotic extensions exist and they all consist in altering the error before taking the averages. Two notable examples are the Mean Absolute Percentage Error (MAPE) and the Mean Square Percentage Error (MSPE). Instead of looking at the raw error, they compute the error relative to the original value (to be predicted). Hence, the error is expressed in a percentage score and the averages are simply equal to:
+<span class="math display" id="eq:MSPE">\[\begin{align}
+\tag{10.4}  
+\text{MAPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left|\frac{y_i-\tilde{y}_i}{y_i}\right|, \\ \tag{10.5}
+\text{MSPE}(\textbf{y},\tilde{\textbf{y}})&amp;=\frac{1}{I}\sum_{i=1}^I\left(\frac{y_i-\tilde{y}_i}{y_i}\right)^2, 
+\end{align}\]</span></p>
+<p>where the latter can be scaled by a square root if need be. When the label is positive with possibly large values, it is possible to scale the magnitude of errors, which can be very large. One way to do this is to resort to the Root Mean Squared Logarithmic Error (RMSLE), defined below:</p>
+<p><span class="math display" id="eq:RMSLE">\[\begin{equation}
+ \tag{10.6} 
+\text{RMSLE}(\textbf{y},\tilde{\textbf{y}})=\sqrt{\frac{1}{I}\sum_{i=1}^I\log\left(\frac{1+y_i}{1+\tilde{y}_i}\right)}, 
+\end{equation}\]</span></p>
+<p>where it is obvious that when <span class="math inline">\(y_i=\tilde{y}_i\)</span>, the error metric is equal to zero.</p>
+<p>Before we move on to categorical losses, we briefly comment on one shortcoming of the MSE, which is by far the most widespread metric and objective in regression tasks. A simple decomposition yields:
+<span class="math display">\[\text{MSE}(\textbf{y},\tilde{\textbf{y}})=\frac{1}{I}\sum_{i=1}^I(y_i^2+\tilde{y}_i^2-2y_i\tilde{y}_i).\]</span></p>
+<p>In the sum, the first term is given, there is nothing to be done about it, hence models focus on the minimization of the other two. The second term is the dispersion of model values. The third term is a cross-product. While variations in <span class="math inline">\(\tilde{y}_i\)</span> do matter, the third term is by far the most important, especially in the cross-section. It is more valuable to reduce the MSE by increasing <span class="math inline">\(y_i\tilde{y}_i\)</span>. This product is indeed positive when the two terms have the same sign, which is exactly what an investor is looking for: <strong>correct directions</strong> for the bets. For some algorithms (like neural networks), it is possible to manually specify custom losses. Maximizing the sum of <span class="math inline">\(y_i\tilde{y}_i\)</span> may be a good alternative to vanilla quadratic optimization (see Section <a href="NN.html#custloss">7.4.3</a> for an example of implementation).</p>
+</div>
+<div id="classification-analysis" class="section level3" number="10.1.2">
+<h3>
+<span class="header-section-number">10.1.2</span> Classification analysis<a class="anchor" aria-label="anchor" href="#classification-analysis"><i class="fas fa-link"></i></a>
+</h3>
+<p>The performance metrics for categorical outcomes are substantially different compared to those of numerical outputs. A large proportion of these metrics are dedicated to binary classes, though some of them can easily be generalized to multiclass models.</p>
+<p>We present the concepts pertaining to these metrics in an increasing order of complexity and start with the two dichotomies true versus false and positive versus negative. In binary classification, it is convenient to think in terms of true versus false. In an investment setting, true can be related to a positive return, or a return being above that of a benchmark - false being the opposite.</p>
+<p>There are then 4 types of possible results for a prediction. Two when the prediction is right (predict true with true realization or predict false with false outcome) and two when the prediction is wrong (predict true with false realization and the opposite). We define the corresponding aggregate metrics below:</p>
+<ul>
+<li>frequency of true positive: <span class="math inline">\(TP=I^{-1}\sum_{i=1}^I1_{\{y_i=\tilde{y}_i=1 \}},\)</span><br>
+</li>
+<li>frequency of true negative: <span class="math inline">\(TN=I^{-1}\sum_{i=1}^I1_{\{y_i=\tilde{y}_i=0 \}},\)</span><br>
+</li>
+<li>frequency of false positive: <span class="math inline">\(FP=I^{-1}\sum_{i=1}^I1_{\{\tilde{y}_i=1,y_i=0 \}},\)</span><br>
+</li>
+<li>frequency of false negative: <span class="math inline">\(FN=I^{-1}\sum_{i=1}^I1_{\{\tilde{y}_i=0,y_i=1 \}},\)</span>
+</li>
+</ul>
+<p>where true is conventionally encoded into 1 and false into 0. The sum of the four figures is equal to one. These four numbers have very different impacts on out-of-sample results, as is shown in Figure <a href="valtune.html#fig:valconfusion">10.1</a>. In this table (also called a <strong>confusion matrix</strong>), it is assumed that some proxy for future profitability is forecast by the model. Each row stands for the model’s prediction and each column for the realization of the profitability. The most important cases are those in the top row, when the model predicts a positive result because it is likely that assets with positive predicted profitability (possibly relative to some benchmark) will end up in the portfolio. Of course, this is not a problem if the asset does well (left cell), but it becomes penalizing if the model is wrong because the portfolio will suffer.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:valconfusion"></span>
+<img src="images/confusion.png" alt="Confusion matrix: summary of binary outcomes." width="500px"><p class="caption">
+FIGURE 10.1: Confusion matrix: summary of binary outcomes.
+</p>
+</div>
+<p>Among the two types of errors, <strong>type I</strong> is the most daunting for investors because it has a direct effect on the portfolio. The <strong>type II</strong> error is simply a missed opportunity and is somewhat less impactful. Finally, true negatives are those assets which are correctly excluded from the portfolio.</p>
+<p>From the four baseline rates, it is possible to derive other interesting metrics:</p>
+<ul>
+<li>
+<strong>Accuracy</strong> = <span class="math inline">\(TP+TN\)</span> is the percentage of correct forecasts;<br>
+</li>
+<li>
+<strong>Recall</strong> = <span class="math inline">\(\frac{TP}{TP+FN}\)</span> measures the ability to detect a winning strategy/asset (left column analysis). Also known as sensitivity or true positive rate (TPR);<br>
+</li>
+<li>
+<strong>Precision</strong> = <span class="math inline">\(\frac{TP}{TP+FP}\)</span> computes the probability of good investments (top row analysis);</li>
+<li>
+<strong>Specificity</strong> = <span class="math inline">\(\frac{TN}{FP+TN}\)</span> measures the proportion of actual negatives that are correctly identified as such (right column analysis);</li>
+<li>
+<strong>Fallout</strong> = <span class="math inline">\(\frac{FP}{FP+TN}=1-\)</span>Specificity is the probability of false alarm (or false positive rate), i.e., the frequence at which the algorithm detects falsely performing assets (right column analysis);<br>
+</li>
+<li>
+<strong>F-score</strong>, <span class="math inline">\(\mathbf{F}_1=2\frac{\text{recall}\times \text{precision}}{\text{recall}+ \text{precision}}\)</span> is the harmonic average of recall and precision.</li>
+</ul>
+<p>All of these items lie in the unit interval and a model is deemed to perform better when they increase (except for fallout for which it is the opposite). Many other indicators also exist, like the false discovery rate or false omission rate, but they are not as mainstream and less cited. Moreover, they are often simple functions of the ones mentioned above.</p>
+<p>A metric that is popular but more complex is the Area Under the (ROC) Curve, often referred to as AUC. The complicated part is the ROC curve where ROC stands for Receiver Operating Characteristic; the name comes from signal theory. We explain how it is built below.</p>
+<p>As seen in Chapters <a href="trees.html#trees">6</a> and <a href="NN.html#NN">7</a>, classifiers generate output that are probabilities that one instance belongs to one class. These probabilities are then translated into a class by choosing the class that has the highest value. In binary classification, the class with a score above 0.5 basically wins.</p>
+<p>In practice, this 0.5 threshold may not be optimal and the model could very well correctly predict false instances when the probability is below 0.4 and true ones otherwise. Hence, it is a natural idea to test what happens if the decision threshold changes. The ROC curve does just that and plots the recall as a function of the fallout when the threshold increases from zero to one.</p>
+<p>When the threshold is equal to 0, true positives are equal to zero because the model never forecasts positive values. Thus, both recall and fallout are equal to zero. When the threshold is equal to one, false negatives shrink to zero and true negatives too, hence recall and fallout are equal to one. The behavior of their relationship in between these two extremes is called the <strong>ROC curve</strong>. We provide stylized examples below in Figure <a href="valtune.html#fig:ROCcurve">10.2</a>. A random classifier would fare equally good for recall and fallout and thus the ROC curve would be a linear line from the point (0,0) to (1,1). To prove this, imagine a sample with a <span class="math inline">\(p\in (0,1)\)</span> proportion of true instances and a classifier that predicts true randomly with a probability <span class="math inline">\(p'\in (0,1)\)</span>. Then because the sample and predictions are independent, <span class="math inline">\(TP=p'p\)</span>, <span class="math inline">\(FP = p'(1-p)\)</span>, <span class="math inline">\(TN=(1-p')(1-p)\)</span> and <span class="math inline">\(FN=(1-p')p\)</span>. Given the above definition, this yields that both recall and fallout are equal to <span class="math inline">\(p'\)</span>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ROCcurve"></span>
+<img src="images/ROCcurve.png" alt="Stylized ROC curves." width="450px"><p class="caption">
+FIGURE 10.2: Stylized ROC curves.
+</p>
+</div>
+<p>An algorithm with a ROC curve above the 45° angle is performing better than an average classifier. Indeed, the curve can be seen as a tradeoff between benefits (probability of detecting good strategies on the <span class="math inline">\(y\)</span> axis) minus costs (odds of selecting the wrong assets on the <span class="math inline">\(x\)</span> axis). Hence being above the 45° is paramount. The best possible classifier has a ROC curve that goes from point (0,0) to point (0,1) to point (1,1). At point (0,1), fallout is null, hence there are no false positives, and recall is equal to one so that there are also no false negatives: the model is always right. The opposite is true: at point (1,0), the model is always wrong.</p>
+<p>Below, we use a particular package (<em>caTools</em>) to compute a ROC curve for a given set of predictions on the testing sample.</p>
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw">if</span><span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html">require</a></span><span class="op">(</span><span class="va">caTools</span><span class="op">)</span><span class="op">)</span><span class="op">{</span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"caTools"</span><span class="op">)</span><span class="op">}</span></code></pre></div>
+<p></p>
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">caTools</span><span class="op">)</span>  <span class="co"># Package for AUC computation</span>
+<span class="fu"><a href="https://rdrr.io/pkg/caTools/man/colAUC.html">colAUC</a></span><span class="op">(</span>X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF_C</span>, <span class="va">testing_sample</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span>, 
+       y <span class="op">=</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span>, 
+       plotROC <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:roc"></span>
+<img src="ML_factor_files/figure-html/roc-1.png" alt="Example of ROC curve." width="450px"><p class="caption">
+FIGURE 10.3: Example of ROC curve.
+</p>
+</div>
+<pre><code>##                    FALSE      TRUE
+## FALSE vs. TRUE 0.5003885 0.5003885</code></pre>
+<p></p>
+<p>In Figure <a href="valtune.html#fig:roc">10.3</a>, the curve is very close to the 45° angle and the model seems as good (or, rather, as bad) as a random classifier.</p>
+<p>Finally, having one entire curve is not practical for comparison purposes, hence the information of the whole curve is synthesized into the area below the curve, i.e., the integral of the corresponding function. The 45° angle (quadrant bisector) has an area of 0.5 (it is half the unit square which has a unit area). Thus, any good model is expected to have an area under the curve (AUC) above 0.5. A perfect model has an AUC of one.</p>
+<p>We end this subsection with a word on multiclass data. When the output (i.e., the label) has more than two categories, things become more complex. It is still possible to compute a confusion matrix, but the dimension is larger and harder to interpret. The simple indicators like <span class="math inline">\(TP\)</span>, <span class="math inline">\(TN\)</span>, etc., must be generalized in a non-standard way. The simplest metric in this case is the cross-entropy defined in Equation <a href="NN.html#eq:crossentropy">(7.5)</a>. We refer to Section <a href="trees.html#treeclass">6.1.2</a> for more details on losses related to categorical labels.</p>
+</div>
+</div>
+<div id="validation" class="section level2" number="10.2">
+<h2>
+<span class="header-section-number">10.2</span> Validation<a class="anchor" aria-label="anchor" href="#validation"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+Validation is the stage at which a model is tested and tuned before it starts to be deployed on real or live data (e.g., for trading purposes). Needless to say, it is critical.</p>
+<div id="the-variance-bias-tradeoff-theory" class="section level3" number="10.2.1">
+<h3>
+<span class="header-section-number">10.2.1</span> The variance-bias tradeoff: theory<a class="anchor" aria-label="anchor" href="#the-variance-bias-tradeoff-theory"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The <strong>variance-bias tradeoff</strong> is one of the core concepts in supervised learning. To explain it, let us assume that the data is generated by the simple model
+<span class="math display">\[y_i=f(\textbf{x}_i)+\epsilon_i, \quad   \mathbb{E}[\boldsymbol{\epsilon}]=0, \quad \mathbb{V}[\boldsymbol{\epsilon}]=\sigma^2,\]</span></p>
+<p>but the model that is estimated yields</p>
+<p><span class="math display">\[y_i=\hat{f}(\textbf{x}_i)+\hat{\epsilon}_i. \]</span></p>
+<p>Given an unknown sample <span class="math inline">\(\textbf{x}\)</span>, the decomposition of the average squared error is</p>
+<p><span class="math display" id="eq:biasvariance">\[\begin{align}
+ \tag{10.7}
+\mathbb{E}[\hat{\epsilon}^2]&amp;=\mathbb{E}[(y-\hat{f}(\textbf{x}))^2]=\mathbb{E}[(f(\textbf{x})+\epsilon-\hat{f}(\textbf{x}))^2]   \\
+&amp;= \underbrace{\mathbb{E}[(f(\textbf{x})-\hat{f}(\textbf{x}))^2]}_{\text{total quadratic error}}+\underbrace{\mathbb{E}[\epsilon^2]}_{\text{irreducible error}} \nonumber \\
+&amp;= \mathbb{E}[\hat{f}(\textbf{x})^2]+\mathbb{E}[f(\textbf{x})^2]-2\mathbb{E}[f(\textbf{x})\hat{f}(\textbf{x})]+\sigma^2\nonumber\\
+&amp;=\mathbb{E}[\hat{f}(\textbf{x})^2]+f(\textbf{x})^2-2f(\textbf{x})\mathbb{E}[\hat{f}(\textbf{x})]+\sigma^2\nonumber\\
+&amp;=\left[ \mathbb{E}[\hat{f}(\textbf{x})^2]-\mathbb{E}[\hat{f}(\textbf{x})]^2\right]+\left[\mathbb{E}[\hat{f}(\textbf{x})]^2+f(\textbf{x})^2-2f(\textbf{x})\mathbb{E}[\hat{f}(\textbf{x})]\right]+\sigma^2\nonumber\\
+&amp;=\underbrace{\mathbb{V}[\hat{f}(\textbf{x})]}_{\text{variance of model}}+ \quad \underbrace{\mathbb{E}[(f(\textbf{x})-\hat{f}(\textbf{x}))]^2}_{\text{squared bias}}\quad +\quad\sigma^2 \nonumber
+\end{align}\]</span></p>
+<p>In the above derivation, <span class="math inline">\(f(x)\)</span> is not random, but <span class="math inline">\(\hat{f}(x)\)</span> is. Also, in the second line, we assumed <span class="math inline">\(\mathbb{E}[\epsilon(f(x)-\hat{f}(x))]=0\)</span>, which may not always hold (though it is a very common assumption). The average squared error thus has three components:</p>
+<ul>
+<li>the variance of the model (over its predictions);<br>
+</li>
+<li>the squared bias of the model;<br>
+</li>
+<li>and one <strong>irreducible error</strong> (independent from the choice of a particular model).</li>
+</ul>
+<p>The last one is immune to changes in models, so the challenge is to minimize the sum of the first two. This is known as the variance-bias tradeoff because reducing one often leads to increasing the other. The goal is thus to assess when a small increase in either one can lead to a larger decrease in the other.</p>
+<p>There are several ways to represent this tradeoff and we display two of them. The first one relates to archery (see Figure <a href="valtune.html#fig:archery">10.4</a>) below. The best case (top left) is when all shots are concentrated in the middle: on average, the archer aims correctly and all the arrows are very close to one another. The worst case (bottom right) is the exact opposite: the average arrow is above the center of the target (the bias is nonzero) and the dispersion of arrows is large.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:archery"></span>
+<img src="images/var_bias_trade.png" alt="First representation of the variance-bias tradeoff." width="450px"><p class="caption">
+FIGURE 10.4: First representation of the variance-bias tradeoff.
+</p>
+</div>
+<p>The most often encountered cases in ML are the other two configurations: either the arrows (predictions) are concentrated in a small perimeter, but the perimeter is not the center of the target; or the arrows are on average well distributed around the center, but they are, on average, far from it.</p>
+<p>The second way the variance bias tradeoff is often depicted is via the notion of <strong>model complexity</strong>. The most simple model of all is a constant one: the prediction is always the same, for instance equal to the average value of the label in the training set. Of course, this prediction will often be far from the realized values of the testing set (its bias will be large), but at least its variance is zero. On the other side of the spectrum, a decision tree with as many leaves as there are instances has a very complex structure. It will probably have a smaller bias, but undoubtedly it is not obvious that this will compensate the increase in variance incurred by the intricacy of the model.</p>
+<p>This facet of the tradeoff is depicted in Figure <a href="valtune.html#fig:varbiastrade">10.5</a> below. To the left of the graph, a simple model has a small variance but a large bias, while to the right it is the opposite for a complex model. Good models often lie somewhere in the middle, but the best mix is hard to find.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:varbiastrade"></span>
+<img src="images/var_bias_trade2.png" alt="Second representation of the variance-bias tradeoff." width="450px"><p class="caption">
+FIGURE 10.5: Second representation of the variance-bias tradeoff.
+</p>
+</div>
+<p>The most tractable theoretical form of the variance-bias tradeoff is the ridge regression.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;Another angle, critical of neural networks is provided in &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref"&gt;Geman, Bienenstock, and Doursat&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-geman1992neural" role="doc-biblioref"&gt;1992&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>23</sup></a> The coefficient estimates in this type of regression are given by <span class="math inline">\(\hat{\mathbf{b}}_\lambda=(\mathbf{X}'\mathbf{X}+\lambda \mathbf{I}_N)^{-1}\mathbf{X}'\mathbf{Y}\)</span> (see Section <a href="lasso.html#penreg">5.1.1</a>), where <span class="math inline">\(\lambda\)</span> is the penalization intensity. Assuming a <em>true</em> linear form for the data generating process (<span class="math inline">\(\textbf{y}=\textbf{Xb}+\boldsymbol{\epsilon}\)</span> where <span class="math inline">\(\textbf{b}\)</span> is unknown and <span class="math inline">\(\sigma^2\)</span> is the variance of errors - which have identity correlation matrix), this yields
+<span class="math display" id="eq:vartrade">\[\begin{align}  
+\mathbb{E}[\hat{\textbf{b}}_\lambda]&amp;=\textbf{b}-\lambda(\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}, \\  \tag{10.8}
+\mathbb{V}[\hat{\textbf{b}}_\lambda]&amp;=\sigma^2(\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1}\textbf{X}'\textbf{X}   (\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1}.
+\end{align}\]</span></p>
+<p>Basically, this means that the bias of the estimator is equal to <span class="math inline">\(-\lambda(\textbf{X}'\textbf{X}+\lambda \textbf{I}_N)^{-1} \textbf{b}\)</span>, which is zero in the absence of penalization (classical regression) and converges to some finite number when <span class="math inline">\(\lambda \rightarrow \infty\)</span>, i.e., when the model becomes constant. Note that if the estimator has a zero bias, then predictions will too: <span class="math inline">\(\mathbb{E}[\textbf{X}(\textbf{b}-\hat{\textbf{b}})]=\textbf{0}\)</span>.</p>
+<p>The variance (of estimates) in the case of an unconstrained regression is equal to <span class="math inline">\(\mathbb{V}[\hat{\textbf{b}}]=\sigma (\textbf{X}'\textbf{X})^{-1}\)</span>. In Equation <a href="valtune.html#eq:vartrade">(10.8)</a>, the <span class="math inline">\(\lambda\)</span> reduces the magnitude of figures in the inverse matrix. The overall effect is that as <span class="math inline">\(\lambda\)</span> increases, the variance decreases and in the limit <span class="math inline">\(\lambda \rightarrow \infty\)</span>, the variance is zero when the model is constant. The variance of predictions is
+<span class="math display">\[\begin{align*}
+\mathbb{V}[\textbf{X}\hat{\textbf{b}}]&amp;=\mathbb{E}[(\textbf{X}\hat{\textbf{b}}-\mathbb{E}[\textbf{X}\hat{\textbf{b}}])(\textbf{X}\hat{\textbf{b}}-\mathbb{E}[\textbf{X}\hat{\textbf{b}}])'] \\
+&amp;= \textbf{X}\mathbb{E}[(\hat{\textbf{b}}-\mathbb{E}[\hat{\textbf{b}}])(\hat{\textbf{b}}-\mathbb{E}[\hat{\textbf{b}}])']\textbf{X}' \\
+&amp;= \textbf{X}\mathbb{V}[\hat{\textbf{b}}]\textbf{X}
+\end{align*}\]</span></p>
+<p>All in all, ridge regressions are very handy because with a single parameter, they are able to provide a cursor that directly tunes the variance-bias tradeoff.</p>
+<p>It’s easy to illustrate how simple it is to display the tradeoff with the ridge regression. In the example below, we recycle the ridge model trained in Chapter <a href="lasso.html#lasso">5</a>.</p>
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">ridge_errors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span>          <span class="co"># Errors from all models</span>
+    <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">100</span>, byrow <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
+<span class="va">ridge_bias</span> <span class="op">&lt;-</span> <span class="va">ridge_errors</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span>                                <span class="co"># Biases</span>
+<span class="va">ridge_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ridge</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>, <span class="va">var</span><span class="op">)</span>          <span class="co"># Variance</span>
+<span class="fu"><a href="https://rdrr.io/pkg/tibble/man/tibble.html">tibble</a></span><span class="op">(</span><span class="va">lambda</span>, <span class="va">ridge_bias</span><span class="op">^</span><span class="fl">2</span>, <span class="va">ridge_var</span>, total <span class="op">=</span> <span class="va">ridge_bias</span><span class="op">^</span><span class="fl">2</span><span class="op">+</span><span class="va">ridge_var</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>  <span class="co"># Plot</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">Error_Component</span>, value <span class="op">=</span> <span class="va">Value</span>, <span class="op">-</span><span class="va">lambda</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">Value</span>, color <span class="op">=</span> <span class="va">Error_Component</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_path.html">geom_line</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ridgetrade"></span>
+<img src="ML_factor_files/figure-html/ridgetrade-1.png" alt="Error decomposition for a ridge regression." width="480"><p class="caption">
+FIGURE 10.6: Error decomposition for a ridge regression.
+</p>
+</div>
+<p></p>
+<p>In Figure <a href="valtune.html#fig:ridgetrade">10.6</a>, the pattern is different from the one depicted in Figure <a href="valtune.html#fig:varbiastrade">10.5</a>. In the graph, when the intensity lambda increases, the magnitude of parameters shrinks and the model becomes simpler. Hence, the most simple model seems like the best choice: adding complexity increases variance but does not improve the bias! One possible reason for that is that features don’t actually carry much predictive value and hence a constant model is just as good as more sophisticated ones based on irrelevant variables.</p>
+</div>
+<div id="the-variance-bias-tradeoff-illustration" class="section level3" number="10.2.2">
+<h3>
+<span class="header-section-number">10.2.2</span> The variance-bias tradeoff: illustration<a class="anchor" aria-label="anchor" href="#the-variance-bias-tradeoff-illustration"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+The variance-bias tradeoff is often presented in theoretical terms that are easy to grasp. It is nonetheless useful to demonstrate how it operates on true algorithmic choices. Below, we take the example of trees because their complexity is easy to evaluate. Basically, a tree with many terminal nodes is more complex than a tree with a handful of clusters.</p>
+<p>We start with the parsimonious model, which we train below.</p>
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_tree_simple</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>, 
+             data <span class="op">=</span> <span class="va">training_sample</span>,     <span class="co"># Data source: training sample</span>
+             cp <span class="op">=</span> <span class="fl">0.0001</span>,                <span class="co"># Precision: smaller = more leaves</span>
+             maxdepth <span class="op">=</span> <span class="fl">2</span>                <span class="co"># Maximum depth (i.e. tree levels)</span>
+             <span class="op">)</span> 
+<span class="fu"><a href="https://rdrr.io/pkg/rpart.plot/man/rpart.plot.html">rpart.plot</a></span><span class="op">(</span><span class="va">fit_tree_simple</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:treesimple"></span>
+<img src="ML_factor_files/figure-html/treesimple-1.png" alt="Simple tree." width="400px"><p class="caption">
+FIGURE 10.7: Simple tree.
+</p>
+</div>
+<p></p>
+<p>The model depicted in Figure <a href="valtune.html#fig:treesimple">10.7</a> only has 4 clusters, which means that the predictions can only take four values. The smallest one is 0.011 and encompasses a large portion of the sample (85%) and the largest one is 0.062 and corresponds to only 4% of the training sample.<br>
+We are then able to compute the bias and the variance of the predictions on the <em>testing</em> set.</p>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree_simple</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="co"># Bias</span></code></pre></div>
+<pre><code>## [1] 0.004973917</code></pre>
+<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree_simple</span>, <span class="va">testing_sample</span><span class="op">)</span><span class="op">)</span>                           <span class="co"># Variance</span></code></pre></div>
+<pre><code>## [1] 0.0001398003</code></pre>
+<p></p>
+<p>On average, the error is slightly positive, with an overall overestimation of 0.005. As expected, the variance is very small (10^{-4}).</p>
+<p>For the complex model, we take the boosted tree that was obtained in Section <a href="trees.html#boostcode">6.4.6</a> (fit_xgb). The model aggregates 40 trees with a maximum depth of 4, it is thus undoubtedly more complex. </p>
+<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="co"># Bias</span></code></pre></div>
+<pre><code>## [1] 0.003347682</code></pre>
+<div class="sourceCode" id="cb132"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span><span class="op">)</span>                           <span class="co"># Variance</span></code></pre></div>
+<pre><code>## [1] 0.00354207</code></pre>
+<p></p>
+<p>The bias is indeed smaller compared to that of the simple model, but in exchange, the variance increases substantially. The net effect (via the <em>squared bias</em>) is in favor of the simpler model.</p>
+</div>
+<div id="the-risk-of-overfitting-principle" class="section level3" number="10.2.3">
+<h3>
+<span class="header-section-number">10.2.3</span> The risk of overfitting: principle<a class="anchor" aria-label="anchor" href="#the-risk-of-overfitting-principle"><i class="fas fa-link"></i></a>
+</h3>
+<p></p>
+<p>The notion of <strong>overfitting</strong> is one of the most important in machine learning. When a model overfits, the accuracy of its predictions will be disappointing, thus it is one major reason why <em>some</em> strategies fail out-of-sample. Therefore, it is important to understand not only what overfitting is, but also how to mitigate its effects.</p>
+<p>One recent reference on this topic and its impact on portfolio strategies is <span class="citation"><a href="solutions-to-exercises.html#ref-hsu2018asset" role="doc-biblioref">Hsu et al.</a> (<a href="solutions-to-exercises.html#ref-hsu2018asset" role="doc-biblioref">2018</a>)</span>, which builds on the work of <span class="citation"><a href="solutions-to-exercises.html#ref-white2000reality" role="doc-biblioref">White</a> (<a href="solutions-to-exercises.html#ref-white2000reality" role="doc-biblioref">2000</a>)</span>. Both of these references do not deal with ML models, but the principle is the same. When given a dataset, a sufficiently intense level of analysis (by a human or a machine) will always be able to detect some patterns. Whether these patterns are spurious or not is the key question.</p>
+<p>In Figure <a href="valtune.html#fig:overfit">10.8</a>, we illustrate this idea with a simple visual example. We try to find a model that maps x into y. The (training) data points are the small black circles. The simplest model is the constant one (only one parameter), but with two parameters (level and slope), the fit is already quite good. This is shown with the blue line. With a sufficient number of parameters, it is possible to build a model that flows through all the points. One example would be a high-dimensional polynomial. One such model is represented with the red line. Now there seems to be a strange point in the dataset and the complex model fits closely to match this point.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:overfit"></span>
+<img src="images/overfitting.png" alt="Illustration of overfitting: a model closely matching training data is rarely a good idea." width="450px"><p class="caption">
+FIGURE 10.8: Illustration of overfitting: a model closely matching training data is rarely a good idea.
+</p>
+</div>
+<p>A new point is added in light green. It is fair to say that it follows the general pattern of the other points. The simple model is not perfect and the error is non-negligible. Nevertheless, the error stemming from the complex model (shown with the dotted gray line) is approximately twice as large. This simplified example shows that models that are too close to the training data will catch idiosyncracies that will not occur in other datasets. A good model would overlook these idiosyncracies and stick to the enduring structure of the data.</p>
+</div>
+<div id="the-risk-of-overfitting-some-solutions" class="section level3" number="10.2.4">
+<h3>
+<span class="header-section-number">10.2.4</span> The risk of overfitting: some solutions<a class="anchor" aria-label="anchor" href="#the-risk-of-overfitting-some-solutions"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+Obviously, the easiest way to avoid overfitting is to resist the temptation of complicated models (e.g., high-dimensional neural networks or tree ensembles).</p>
+<p>The complexity of models is often proxied via two measures: the number of parameters of the model and their magnitude (often synthesized through their norm). These proxies are not perfect because some <em>complex</em> models may only require a small number of parameters (or even small parameter values), but at least they are straightforward and easy to handle. There is no universal way of handling overfitting. Below, we detail a few tricks for some families of ML tools.</p>
+<p>For <strong>regressions</strong>, there are two simple ways to deal with overfitting. The first is the number of parameters, that is, the number of predictors. Sometimes, it can be better to only select a subsample of features, especially if some of them are highly correlated (often, a threshold of 70% is considered as too high for absolute correlations between features). The second solution is penalization (via LASSO, ridge or elasticnet), which helps reduce the magnitude of estimates and thus of the variance of predictions.</p>
+<p>For tree-based methods, there are a variety of ways to reduce the risk of overfitting. When dealing with <strong>simple trees</strong>, the only way to proceed is to limit the number of leaves. This can be done in many ways. First, by imposing a maximum depth. If it is equal to <span class="math inline">\(d\)</span>, then the tree can have at most <span class="math inline">\(2^d\)</span> terminal nodes. It is often advised not to go beyond <span class="math inline">\(d=6\)</span>. The complexity parameter in <em>rpart</em> (cp) is another way to shrink the size of trees: any new split must lead to a reduction in loss at least equal to cp. If not, the split is not deemed useful and is thus not performed. Thus when cp is large, the tree is not grown. The last two parameters available in <em>rpart</em> are the minimum number of instances required in each leaf and the minimum number of instances per cluster requested in order to continue the splitting process. The higher (i.e., the more coercive) these figures are, the harder it is to grow complex trees.</p>
+<p>In addition to these options, <strong>random forests</strong> allow to control for the number of trees in the forest. Theoretically (see <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span>), this parameter is not supposed to impact the risk of overfitting because new trees only help reduce the total error via diversification. In practice, and for the sake of computation times, it is not recommended to go beyond 1,000 trees. Two other hyperparameters are the subsample size (on which each learner is trained) and the number of features retained for learning. They do not have a straightforward impact on bias and tradeoff, but rather on raw performace. For instance, if subsamples are too small, the trees will not learn enough. Same problem if the number of features is too low. On the other hand, choosing a large number of predictors (i.e., close to the total number) may lead to high correlations between each learner’s prediction because the overlap in information contained in the training samples may be high.</p>
+<p><strong>Boosted trees</strong> have other options that can help alleviate the risk of overfitting. The most obvious one is the learning rate, which discounts the impact of each new tree by <span class="math inline">\(\eta \in (0,1)\)</span>. When the learning rate is high, the algorithm learns too quickly and is prone to sticking close to the training data. When it’s low, the model learns very progressively, which can be efficient if there are sufficiently many trees in the ensemble. Indeed, the learning rate and the number of trees must be chosen synchronously: if both are low, the ensemble will learn nothing and if both are large, it will overfit. The arsenal of boosted tree parameters does not stop there. The penalizations, both of score values and of the number of leaves, are naturally a tool to prevent the model from going too deep in the particularities of the training sample. Finally, constraints of monotonicity like those mentioned in Section <a href="trees.html#boostext">6.4.5</a> are also an efficient way to impose some structure on the model and force it to detect particular patterns.</p>
+<p>Lastly <strong>neural networks</strong> also have many options aimed at protecting them against overfitting. Just like for boosted trees, some of them are the learning rate and the penalization of weights and biases (via their norm). Constraints, like nonnegative constraints, can also help when the model theoretically requires positive inputs. Finally, dropout is always a direct way to reduce the dimension (number of parameters) of a network.</p>
+</div>
+</div>
+<div id="the-search-for-good-hyperparameters" class="section level2" number="10.3">
+<h2>
+<span class="header-section-number">10.3</span> The search for good hyperparameters<a class="anchor" aria-label="anchor" href="#the-search-for-good-hyperparameters"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="methods" class="section level3" number="10.3.1">
+<h3>
+<span class="header-section-number">10.3.1</span> Methods<a class="anchor" aria-label="anchor" href="#methods"><i class="fas fa-link"></i></a>
+</h3>
+<p>Let us assume that there are <span class="math inline">\(p\)</span> parameters to be defined before a model is run. The simplest way to proceed is to test different values of these parameters and choose the one that yields the best results. There are mainly two ways to perform these tests: independently and sequentially.</p>
+<p>Independent tests are easy and come in two families: grid (deterministic) search and random exploration. The advantage of a deterministic approach is that it covers the space uniformly and makes sure that no corners are omitted. The drawback is the computation time. Indeed, for each parameter, it seems reasonable to test at least five values, which makes <span class="math inline">\(5^p\)</span> combinations. If <span class="math inline">\(p\)</span> is small (smaller than 3), this is manageable when the backtests are not too lengthy. When <span class="math inline">\(p\)</span> is large, the number of combinations may become prohibitive. This is when random exploration can be useful because in this case, the user specifies the number of tests upfront and the parameters are drawn randomly (usually uniformly over a given range for each parameter). The flaw in random search is that some areas in the parameter space may not be covered, which can be problematic if the best choice is located there. It is nonetheless shown in <span class="citation"><a href="solutions-to-exercises.html#ref-bergstra2012random" role="doc-biblioref">Bergstra and Bengio</a> (<a href="solutions-to-exercises.html#ref-bergstra2012random" role="doc-biblioref">2012</a>)</span> that random exploration is preferable to grid search.</p>
+<p>Both grid and random searches are suboptimal because they are likely to spend time in zones of the parameter space that are irrelevant, thereby wasting computation time. Given a number of parameter points that have been tested, it is preferable to focus the search in areas where the best points are the most likely. This is possible via an interative process that adapts the search after each new point has been tested. In the large field of finance, a few papers dedicated to tuning are <span class="citation"><a href="solutions-to-exercises.html#ref-lee2020hyperparameter" role="doc-biblioref">Lee</a> (<a href="solutions-to-exercises.html#ref-lee2020hyperparameter" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-nystrup2020hyperparameter" role="doc-biblioref">Nystrup, Lindstrom, and Madsen</a> (<a href="solutions-to-exercises.html#ref-nystrup2020hyperparameter" role="doc-biblioref">2020</a>)</span>.</p>
+<p>One other popular approach in this direction is <strong>Bayesian optimization</strong> (BO). The central object is the objective function of the learning process. We call this function <span class="math inline">\(O\)</span> and it can be widely seen as a loss function possibly combined with penalization and constraints. For simplicity here, we will not mention the training/testing samples and they are considered to be fixed. The variable of interest is the vector <span class="math inline">\(\textbf{p}=(p_1,\dots,p_l)\)</span> which synthesizes the hyperparameters (learning rate, penalization intensities, number of models, etc.) that have an impact on <span class="math inline">\(O\)</span>. The program we are interested in is</p>
+<p><span class="math display" id="eq:HPO">\[\begin{equation}
+\tag{10.9}
+\textbf{p}_*=\underset{\textbf{p}}{\text{argmin}} \ O(\textbf{p}).
+\end{equation}\]</span></p>
+<p>The main problem with this optimization is that the computation of <span class="math inline">\(O(\textbf{p})\)</span> is very costly. Therefore, it is critical to choose each trial for <span class="math inline">\(\textbf{p}\)</span> wisely. One key assumption of BO is that the distribution of <span class="math inline">\(O\)</span> is Gaussian and that <span class="math inline">\(O\)</span> can be proxied by a linear combination of the <span class="math inline">\(p_l\)</span>. Said differently, the aim is to build a Bayesian linear regression between the input <span class="math inline">\(\textbf{p}\)</span> and the output (dependent variable) <span class="math inline">\(O\)</span>. Once a model has been estimated, the information that is concentrated in the posterior density of <span class="math inline">\(O\)</span> is used to make an educated guess at where to look for new values of <span class="math inline">\(\textbf{p}\)</span>.</p>
+<p>This educated guess is made based on a so-called <strong>acquisition function</strong>. Suppose we have tested <span class="math inline">\(m\)</span> values for <span class="math inline">\(\textbf{p}\)</span>, which we write <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The current best parameter is written <span class="math inline">\(\textbf{p}_m^*=\underset{1\le k\le m}{\text{argmin}} \ O(\textbf{p}^{(k)})\)</span>. If we test a new point <span class="math inline">\(\textbf{p}\)</span>, then it will lead to an improvement only if <span class="math inline">\(O(\textbf{p})&lt;O(\textbf{p}_m^*)\)</span>, that is if the new objective improves the minimum value that we already know. The average value of this improvement is
+<span class="math display" id="eq:acquisition">\[\begin{equation}
+\tag{10.10}
+\textbf{EI}_m(\textbf{p})=\mathbb{E}_m[[O(\textbf{p}_m^*)-O(\textbf{p})]_+],
+\end{equation}\]</span></p>
+<p>where the positive part <span class="math inline">\([\cdot]_+\)</span> emphasizes that when <span class="math inline">\(O(\textbf{p})\ge O(\textbf{p}_m^*)\)</span>, the gain is zero. The expectation is indexed by <span class="math inline">\(m\)</span> because it is computed with respect to the posterior distribution of <span class="math inline">\(O(\textbf{p})\)</span> based on the <span class="math inline">\(m\)</span> samples <span class="math inline">\(\textbf{p}^{(m)}\)</span>. The best choice for the next sample <span class="math inline">\(\textbf{p}^{m+1}\)</span> is then
+<span class="math display" id="eq:EI">\[\begin{equation}
+\tag{10.11}
+\textbf{p}^{m+1}=\underset{\textbf{p}}{\text{argmax}} \ \textbf{EI}_m(\textbf{p}),
+\end{equation}\]</span>
+which corresponds to the maximum location of the expected improvement. Instead of the EI, the optimization can be performed on other measures, like the probability of improvement, which is <span class="math inline">\(\mathbb{P}_m[O(\textbf{p})&lt;O(\textbf{p}_m^*)]\)</span>.</p>
+<p>In compact form, the iterative process can be outlined as follows:</p>
+<ul>
+<li>
+<strong>step 1</strong>: compute <span class="math inline">\(O(\textbf{p}^{(m)})\)</span> for <span class="math inline">\(m=1,\dots,M_0\)</span> values of parameters.<br>
+</li>
+<li>
+<strong>step 2a</strong>: compute sequentially the posterior density of <span class="math inline">\(O\)</span> on all available points.<br>
+</li>
+<li>
+<strong>step 2b</strong>: compute the optimal new point to test <span class="math inline">\(\textbf{p}^{(m+1)}\)</span> given in Equation <a href="valtune.html#eq:EI">(10.11)</a>.<br>
+</li>
+<li>
+<strong>step 2c</strong>: compute the new objective value <span class="math inline">\(O(\textbf{p}^{(m+1)})\)</span>.<br>
+</li>
+<li>
+<strong>step 3</strong>: repeat steps 2a to 2c as much as deemed reasonable and return the <span class="math inline">\(\textbf{p}^{(m)}\)</span> that yields the smallest objective value.</li>
+</ul>
+<p>The interested reader can have a look at <span class="citation"><a href="solutions-to-exercises.html#ref-snoek2012practical" role="doc-biblioref">Snoek, Larochelle, and Adams</a> (<a href="solutions-to-exercises.html#ref-snoek2012practical" role="doc-biblioref">2012</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-frazier2018tutorial" role="doc-biblioref">Frazier</a> (<a href="solutions-to-exercises.html#ref-frazier2018tutorial" role="doc-biblioref">2018</a>)</span> for more details on the numerical facets of this method.</p>
+<p>Finally, for the sake of completeness, we mention a last way to tune hyperparameters. Since the optimization scheme is <span class="math inline">\(\underset{\textbf{p}}{\text{argmin}} \ O(\textbf{p})\)</span>, a natural way to proceed would be to use the sensitivity of <span class="math inline">\(O\)</span> with respect to <span class="math inline">\(\textbf{p}\)</span>. Indeed, if the gradient <span class="math inline">\(\frac{\partial O}{\partial p_l}\)</span> is known, then a gradient descent will always improve the objective value. The problem is that it is hard to compute a reliable gradient (finite differences can become costly). Nonetheless, some methods (e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-maclaurin2015gradient" role="doc-biblioref">Maclaurin, Duvenaud, and Adams</a> (<a href="solutions-to-exercises.html#ref-maclaurin2015gradient" role="doc-biblioref">2015</a>)</span>) have been applied successfully to optimize over large dimensional parameter spaces.</p>
+<p>We conclude by mentioning the survey <span class="citation"><a href="solutions-to-exercises.html#ref-bouthillier2020survey" role="doc-biblioref">Bouthillier and Varoquaux</a> (<a href="solutions-to-exercises.html#ref-bouthillier2020survey" role="doc-biblioref">2020</a>)</span>, which spans 2 major AI conferences that took place in 2019. It shows that most papers resort to hyperparameter tuning. The two most often cited methods are <em>manual tuning</em> (hand-picking) and <em>grid search</em>.</p>
+</div>
+<div id="example-grid-search" class="section level3" number="10.3.2">
+<h3>
+<span class="header-section-number">10.3.2</span> Example: grid search<a class="anchor" aria-label="anchor" href="#example-grid-search"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In order to illustrate the process of grid search, we will try to find the best parameters for a boosted tree. We seek to quantify the impact of three parameters:</p>
+<ul>
+<li>
+<strong>eta</strong>, the learning rate,<br>
+</li>
+<li>
+<strong>nrounds</strong>, the number of trees that are grown,<br>
+</li>
+<li>
+<strong>lambda</strong>, the weight regularizer which penalizes the objective function through the total sum of squared weights/scores.</li>
+</ul>
+<p>Below, we create a grid with the values we want to test for these parameters.</p>
+<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">eta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.3</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>, <span class="fl">0.9</span><span class="op">)</span>         <span class="co"># Values for eta</span>
+<span class="va">nrounds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span>                 <span class="co"># Values for nrounds</span>
+<span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>, <span class="fl">0.1</span>, <span class="fl">1</span>, <span class="fl">10</span>, <span class="fl">100</span><span class="op">)</span>        <span class="co"># Values for lambda</span>
+<span class="va">pars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span> <span class="co"># Exploring all combinations!</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">pars</span><span class="op">)</span>                                <span class="co"># Let's see the parameters</span></code></pre></div>
+<pre><code>##   Var1 Var2 Var3
+## 1  0.1   10 0.01
+## 2  0.3   10 0.01
+## 3  0.5   10 0.01
+## 4  0.7   10 0.01
+## 5  0.9   10 0.01
+## 6  0.1   50 0.01</code></pre>
+<div class="sourceCode" id="cb136"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">eta</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>
+<span class="va">nrounds</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>
+<span class="va">lambda</span> <span class="op">&lt;-</span> <span class="va">pars</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span></code></pre></div>
+<p></p>
+<p>Given the computational cost of grid search, we perform the exploration on the dataset with the small number of features (which we recycle from Chapter <a href="trees.html#trees">6</a>). In order to avoid the burden of loops, we resort to the functional programming capabilities of R, via the <em>purrr</em> package. This allows us to define a function that will lighten and simplify the code. This function, coded below, takes data and parameter inputs and returns an error metric for the algorithm. We choose the mean squared error to evaluate the impact of hyperparameter values.</p>
+<div class="sourceCode" id="cb137"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">grid_par</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_matrix</span>, <span class="va">test_features</span>, <span class="va">test_label</span>, <span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span>
+    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">train_matrix</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+        <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">.</span>,                            <span class="co"># Data source (pipe input)</span>
+                  eta <span class="op">=</span> <span class="va">eta</span>,                           <span class="co"># Learning rate</span>
+                  objective <span class="op">=</span> <span class="st">"reg:squarederror"</span>,  <span class="co"># Objective function</span>
+                  max_depth <span class="op">=</span> <span class="fl">5</span>,                       <span class="co"># Maximum depth of trees</span>
+                  lambda <span class="op">=</span> <span class="va">lambda</span>,                     <span class="co"># Penalisation of leaf values</span>
+                  gamma <span class="op">=</span> <span class="fl">0.1</span>,                         <span class="co"># Penalisation of number of leaves</span>
+                  nrounds <span class="op">=</span> <span class="va">nrounds</span>,                   <span class="co"># Number of trees used</span>
+                  verbose <span class="op">=</span> <span class="fl">0</span>                          <span class="co"># No comment from algo</span>
+        <span class="op">)</span>
+    
+    <span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">test_features</span><span class="op">)</span>           <span class="co"># Predictions based on model &amp; test values</span>
+    <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span><span class="op">-</span><span class="va">test_label</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>             <span class="co"># Mean squared error</span>
+<span class="op">}</span> </code></pre></div>
+<p></p>
+<p>The grid_par function can then be processed by the functional programming tool <strong>pmap</strong> that is going to perform the loop on parameter values automatically.</p>
+<div class="sourceCode" id="cb138"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># grid_par(train_matrix_xgb, xgb_test, testing_sample$R1M_Usd, 0.1, 3, 0.1) # Possible test </span>
+<span class="va">grd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/purrr/man/map2.html">pmap</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span>,             <span class="co"># Parameters for the grid search</span>
+            <span class="va">grid_par</span>,                               <span class="co"># Function on which to apply the search</span>
+            train_matrix <span class="op">=</span> <span class="va">train_matrix_xgb</span>,        <span class="co"># Input for function: training data</span>
+            test_features <span class="op">=</span> <span class="va">xgb_test</span>,               <span class="co"># Input for function: test features</span>
+            test_label <span class="op">=</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>     <span class="co"># Input for function: test labels (returns) </span>
+<span class="op">)</span> 
+<span class="va">grd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span>, error <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="va">grd</span><span class="op">)</span><span class="op">)</span> <span class="co"># Dataframe with all results</span></code></pre></div>
+<p></p>
+<p>Once the squared mean errors have been gathered, it is possible to plot them. We chose to work with 3 parameters on purpose because their influence can be simultaneuously plotted on one graph.</p>
+<div class="sourceCode" id="cb139"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">grd</span><span class="op">$</span><span class="va">eta</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">eta</span><span class="op">)</span>                                  <span class="co"># Params as categories (for plot)</span>
+<span class="va">grd</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">eta</span>, y <span class="op">=</span> <span class="va">error</span>, fill <span class="op">=</span> <span class="va">eta</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>      <span class="co"># Plot!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_bar.html">geom_bar</a></span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/facet_grid.html">facet_grid</a></span><span class="op">(</span>rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/vars.html">vars</a></span><span class="op">(</span><span class="va">nrounds</span><span class="op">)</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/vars.html">vars</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/theme.html">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/element.html">element_text</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">6</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:gridvisu"></span>
+<img src="ML_factor_files/figure-html/gridvisu-1.png" alt="Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda." width="550px"><p class="caption">
+FIGURE 10.9: Plot of error metrics (SMEs) for many parameter values. Each row of graph corresponds to nrounds and each column to lambda.
+</p>
+</div>
+<p></p>
+<p>In Figure <a href="valtune.html#fig:gridvisu">10.9</a>, the main information is that a small learning rate (<span class="math inline">\(\eta=0.1\)</span>) is detrimental to the quality of the forecasts when the number of trees is small (nrounds=10), which means that the algorithm does not learn enough.</p>
+<p>Grid search can be performed in two stages: the first stage helps locate the zones that are of interest (with the lowest loss/objective values) and then zoom in on these zones with refined values for the parameter on the grid. With the results above, this would mean considering many learners (more than 50, possibly more than 100), and avoiding large learning rates such as <span class="math inline">\(\eta=0.9\)</span> or <span class="math inline">\(\eta=0.8\)</span>.</p>
+</div>
+<div id="example-bayesian-optimization" class="section level3" number="10.3.3">
+<h3>
+<span class="header-section-number">10.3.3</span> Example: Bayesian optimization<a class="anchor" aria-label="anchor" href="#example-bayesian-optimization"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+There are several packages in R that relate to Bayesian optimization. We work with <em>rBayesianOptimization</em>, which is general purpose but also needs more coding involvement.</p>
+<p>Just as for the grid search, we need to code the objective function on which the hyperparameters will be optimized. Under <em>rBayesianOptimization</em>, the output has to have a particular form, with a score and a prediction variable. The function will <em>maximize</em> the score, hence we will define it as <em>minus</em> the mean squared error.</p>
+<div class="sourceCode" id="cb140"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bayes_par_opt</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">train_matrix</span> <span class="op">=</span> <span class="va">train_matrix_xgb</span>,        <span class="co"># Input for func: train data</span>
+                          <span class="va">test_features</span> <span class="op">=</span> <span class="va">xgb_test</span>,               <span class="co"># Input for func: test feats</span>
+                          <span class="va">test_label</span> <span class="op">=</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>,    <span class="co"># Input for func: test label</span>
+                          <span class="va">eta</span>, <span class="va">nrounds</span>, <span class="va">lambda</span><span class="op">)</span><span class="op">{</span>                  <span class="co"># Input for func params</span>
+    <span class="va">fit</span> <span class="op">&lt;-</span> <span class="va">train_matrix</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+        <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">.</span>,                       <span class="co"># Data source (pipe input)</span>
+                  eta <span class="op">=</span> <span class="va">eta</span>,                      <span class="co"># Learning rate</span>
+                  objective <span class="op">=</span> <span class="st">"reg:squarederror"</span>, <span class="co"># Objective function</span>
+                  max_depth <span class="op">=</span> <span class="fl">5</span>,                  <span class="co"># Maximum depth of trees</span>
+                  lambda <span class="op">=</span> <span class="va">lambda</span>,                <span class="co"># Penalisation of leaf values</span>
+                  gamma <span class="op">=</span> <span class="fl">0.1</span>,                    <span class="co"># Penalisation of number of leaves</span>
+                  nrounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">nrounds</span><span class="op">)</span>,       <span class="co"># Number of trees used</span>
+                  verbose <span class="op">=</span> <span class="fl">0</span>                     <span class="co"># No comment from algo</span>
+        <span class="op">)</span>
+
+    <span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">test_features</span><span class="op">)</span>           <span class="co"># Forecast based on fitted model &amp; test values</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Score <span class="op">=</span> <span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">pred</span><span class="op">-</span><span class="va">test_label</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>,      <span class="co"># Minus RMSE</span>
+         Pred <span class="op">=</span> <span class="va">pred</span><span class="op">)</span>                             <span class="co"># Predictions on test set</span>
+<span class="op">}</span></code></pre></div>
+<p></p>
+<p>Once the objective function is defined, it can be plugged into the Bayesian optimizer.</p>
+<div class="sourceCode" id="cb141"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/yanyachen/rBayesianOptimization">rBayesianOptimization</a></span><span class="op">)</span>
+<span class="va">bayes_opt</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rBayesianOptimization/man/BayesianOptimization.html">BayesianOptimization</a></span><span class="op">(</span><span class="va">bayes_par_opt</span>,           <span class="co"># Function to maximize</span>
+                     bounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>eta <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.8</span><span class="op">)</span>,      <span class="co"># Bounds for eta</span>
+                                   lambda <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">1</span><span class="op">)</span>,     <span class="co"># Bounds for lambda</span>
+                                   nrounds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">100</span><span class="op">)</span><span class="op">)</span>,  <span class="co"># Bounds for nrounds</span>
+                     init_points <span class="op">=</span> <span class="fl">10</span>,            <span class="co"># Nb initial points for first estimation</span>
+                     n_iter <span class="op">=</span> <span class="fl">24</span>,                 <span class="co"># Nb optimization steps/trials</span>
+                     acq <span class="op">=</span> <span class="st">"ei"</span>,                  <span class="co"># Acquisition function = expected improvement</span>
+                     verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+##  Best Parameters Found: 
+## Round = 14   eta = 0.3001394 lambda = 0.4517514  nrounds = 10.0000   Value = -0.03793923</code></pre>
+<div class="sourceCode" id="cb143"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">bayes_opt</span><span class="op">$</span><span class="va">Best_Par</span></code></pre></div>
+<pre><code>##        eta     lambda    nrounds 
+##  0.3001394  0.4517514 10.0000000</code></pre>
+<p></p>
+<p>The final parameters indicate that it is advised to resist overfitting: small number of learners and large penalization seem to be the best choices.</p>
+<p>To confirm these results, we plot the relationship between the loss (up to the sign) and two hyperparameters. Each point corresponds to a value tested in the optimization. The best values are clearly to the left of the left graph and to the right of the right graph and the pattern is reliably pronounced. According to these graphs, it seems indeed wiser to pick a smaller number of trees and a larger penalization factor (to maximize minus the loss).</p>
+<div class="sourceCode" id="cb145"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="st"><a href="https://rpkgs.datanovia.com/ggpubr/">"ggpubr"</a></span><span class="op">)</span> <span class="co"># Package for combining plots</span>
+<span class="va">plot_rounds</span> <span class="op">&lt;-</span> <span class="va">bayes_opt</span><span class="op">$</span><span class="va">History</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">nrounds</span>, y <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
+<span class="va">plot_lambda</span> <span class="op">&lt;-</span> <span class="va">bayes_opt</span><span class="op">$</span><span class="va">History</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">lambda</span>, y <span class="op">=</span> <span class="va">Value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/ggpubr/man/ggarrange.html">ggarrange</a></span><span class="op">(</span><span class="va">plot_rounds</span>, <span class="va">plot_lambda</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:bayesoptfig"></span>
+<img src="ML_factor_files/figure-html/bayesoptfig-1.png" alt="Relationship between (minus) the loss and hyperparameter values." width="450px"><p class="caption">
+FIGURE 10.10: Relationship between (minus) the loss and hyperparameter values.
+</p>
+</div>
+<p></p>
+</div>
+</div>
+<div id="short-discussion-on-validation-in-backtests" class="section level2" number="10.4">
+<h2>
+<span class="header-section-number">10.4</span> Short discussion on validation in backtests<a class="anchor" aria-label="anchor" href="#short-discussion-on-validation-in-backtests"><i class="fas fa-link"></i></a>
+</h2>
+<p> 
+The topic of validation in backtests is more complex than it seems. There are in fact two scales at which it can operate, depending on whether the forecasting model is dynamic (updated at each rebalancing) or fixed.</p>
+<p>Let us start with the first option. In this case, the aim is to build a unique model and to test it on different time periods. There is an ongoing debate on the methods that are suitable to validate a model in that case. Usually, it makes sense to test the model on successive dates, moving forward posterior to the training. This is what makes more sense, as it replicates what would happen in a live situation.</p>
+<p>
+In machine learning, a popular approach is to split the data into <span class="math inline">\(K\)</span> partitions and to test <span class="math inline">\(K\)</span> different models: each one is tested on one of the partitions but trained on the <span class="math inline">\(K-1\)</span> others. This so-called <strong>cross-validation</strong> (CV) is proscribed by most experts (and common sense) for a simple reason: most of the time, the training set encompasses data from future dates and tests on past values. Nonetheless, some advocate one particular form of CV that aims at making sure that there is no informational overlap between the training and testing set (Sections 7.4 and 12.4 in <span class="citation"><a href="solutions-to-exercises.html#ref-de2018advances" role="doc-biblioref">De Prado</a> (<a href="solutions-to-exercises.html#ref-de2018advances" role="doc-biblioref">2018</a>)</span>). The premise is that if the structure of the cross-section of returns is constant through time, then training on future points and testing on past data is not problematic as long as there is no overlap. The paper <span class="citation"><a href="solutions-to-exercises.html#ref-schnaubelt2019comparison" role="doc-biblioref">Schnaubelt</a> (<a href="solutions-to-exercises.html#ref-schnaubelt2019comparison" role="doc-biblioref">2019</a>)</span> provides a comprehensive and exhaustive tour in many validation schemes.</p>
+<p>One example cited in <span class="citation"><a href="solutions-to-exercises.html#ref-de2018advances" role="doc-biblioref">De Prado</a> (<a href="solutions-to-exercises.html#ref-de2018advances" role="doc-biblioref">2018</a>)</span> is the reaction to a model to an unseen crisis. Following the market crash of 2008, at least 11 years have followed without any major financial shake. One option to test the reaction of a recent model to a crash would be to train it on recent years (say 2015-2019) and test it on various points (e.g., months) in 2008 to see how it performs.</p>
+<p>The advantage of a fixed model is that validation is easy: for one set of hyperparameters, test the model on a set of dates, and evaluate the performance of the model. Repeat the process for other parameters and choose the best alternative (or use Bayesian optimization).</p>
+<p>The second major option is when the model is updated (retrained) at each rebalancing. The underlying idea here is that the structure of returns evolves through time and a dynamic model will capture the most recent trends. The drawback is that validation must (should?) be rerun at each rebalancing date.</p>
+<p>Let us recall the dimensions of backtests:<br>
+- number of <strong>strategies</strong>: possibly dozens or hundreds, or even more;<br>
+- number of trading <strong>dates</strong>: hundreds for monthly rebalancing;<br>
+- number of <strong>assets</strong>: hundreds or thousands;<br>
+- number of <strong>features</strong>: dozens or hundreds.</p>
+<p>Even with a lot of computational power (GPUs, etc.), training many models over many dates is time-consuming, especially when it comes to hyperparameter tuning when the parameter space is large. Thus, validating models at each trading date of the out-of-sample period is not realistic.</p>
+<p>One solution is to keep an early portion of the training data and to perform a smaller scale validation on this subsample. Hyperparameters are tested on a limited number of dates and most of the time, they exhibit stability: satisfactory parameters for one date are usually acceptable for the next one and the following one as well. Thus, the full backtest can be carried out with these values when updating the models at each period. The backtest nonetheless remains compute-intensive because the model has to be retrained with the most recent data for each rebalancing date.</p>
+
+</div>
+</div>
+
+  <div class="chapter-nav">
+<div class="prev"><a href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></div>
+<div class="next"><a href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#valtune"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li>
+<a class="nav-link" href="#mlmetrics"><span class="header-section-number">10.1</span> Learning metrics</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#regression-analysis"><span class="header-section-number">10.1.1</span> Regression analysis</a></li>
+<li><a class="nav-link" href="#classification-analysis"><span class="header-section-number">10.1.2</span> Classification analysis</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#validation"><span class="header-section-number">10.2</span> Validation</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#the-variance-bias-tradeoff-theory"><span class="header-section-number">10.2.1</span> The variance-bias tradeoff: theory</a></li>
+<li><a class="nav-link" href="#the-variance-bias-tradeoff-illustration"><span class="header-section-number">10.2.2</span> The variance-bias tradeoff: illustration</a></li>
+<li><a class="nav-link" href="#the-risk-of-overfitting-principle"><span class="header-section-number">10.2.3</span> The risk of overfitting: principle</a></li>
+<li><a class="nav-link" href="#the-risk-of-overfitting-some-solutions"><span class="header-section-number">10.2.4</span> The risk of overfitting: some solutions</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#the-search-for-good-hyperparameters"><span class="header-section-number">10.3</span> The search for good hyperparameters</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#methods"><span class="header-section-number">10.3.1</span> Methods</a></li>
+<li><a class="nav-link" href="#example-grid-search"><span class="header-section-number">10.3.2</span> Example: grid search</a></li>
+<li><a class="nav-link" href="#example-bayesian-optimization"><span class="header-section-number">10.3.3</span> Example: Bayesian optimization</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#short-discussion-on-validation-in-backtests"><span class="header-section-number">10.4</span> Short discussion on validation in backtests</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

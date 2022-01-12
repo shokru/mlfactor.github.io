@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 8 Support vector machines | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 8 Support vector machines | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 8 Support vector machines | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } While the origins of support vector machines (SVMs) are old (and go back to Vapnik and Lerner (1963)), their modern treatment was initiated in Boser,...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } While the origins of support vector machines (SVMs) are old (and go back to Vapnik and Lerner (1963)), their modern treatment was initiated in Boser,...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } While the origins of support vector machines (SVMs) are old (and go back to Vapnik and Lerner (1963)), their modern treatment was initiated in Boser,...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="active" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="svm" class="section level1" number="8">
+<h1>
+<span class="header-section-number">8</span> Support vector machines<a class="anchor" aria-label="anchor" href="#svm"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>
+While the origins of support vector machines (SVMs) are old (and go back to <span class="citation"><a href="solutions-to-exercises.html#ref-vapnik1963pattern" role="doc-biblioref">Vapnik and Lerner</a> (<a href="solutions-to-exercises.html#ref-vapnik1963pattern" role="doc-biblioref">1963</a>)</span>), their modern treatment was initiated in <span class="citation"><a href="solutions-to-exercises.html#ref-boser1992training" role="doc-biblioref">Boser, Guyon, and Vapnik</a> (<a href="solutions-to-exercises.html#ref-boser1992training" role="doc-biblioref">1992</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-cortes1995support" role="doc-biblioref">Cortes and Vapnik</a> (<a href="solutions-to-exercises.html#ref-cortes1995support" role="doc-biblioref">1995</a>)</span> (binary classification) and <span class="citation"><a href="solutions-to-exercises.html#ref-drucker1997support" role="doc-biblioref">Drucker et al.</a> (<a href="solutions-to-exercises.html#ref-drucker1997support" role="doc-biblioref">1997</a>)</span> (regression). We refer to <a href="http://www.kernel-machines.org/books" class="uri">http://www.kernel-machines.org/books</a> for an exhaustive bibliography on their theoretical and empirical properties. SVMs have been very popular since their creation among the machine learning community. Nonetheless, other tools (neural networks especially) have gained popularity and progressively replaced SVMs in many applications like computer vision notably.</p>
+<div id="svm-for-classification" class="section level2" number="8.1">
+<h2>
+<span class="header-section-number">8.1</span> SVM for classification<a class="anchor" aria-label="anchor" href="#svm-for-classification"><i class="fas fa-link"></i></a>
+</h2>
+<p>
+As is often the case in machine learning, it is easier to explain a complex tool through an illustration with binary classification. In fact, sometimes, it is originally how the tool was designed (e.g., for the perceptron). Let us consider a simple example in the plane, that is, with two features. In Figure <a href="svm.html#fig:svmscheme">8.1</a>, the goal is to find a model that correctly classifies points: filled circles versus empty squares.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:svmscheme"></span>
+<img src="images/svm.png" alt="Diagram of binary classification with support vectors." width="500px"><p class="caption">
+FIGURE 8.1: Diagram of binary classification with support vectors.
+</p>
+</div>
+<p>A model consists of two weights <span class="math inline">\(\textbf{w}=(w_1,w_2)\)</span> that load on the variables and create a natural linear separation in the plane. In the example above, we show three separations. The red one is not a good classifier because there are circles and squares above and beneath it. The blue line is a good classifier: all circles are to its left and all squares to its right. Likewise, the green line achieves a perfect classification score. Yet, there is a notable difference between the two.</p>
+<p>The grey star at the top of the graph is a mystery point and given its location, if the data pattern holds, it should be a circle. The blue model fails to recognize it as such while the green one succeeds. The interesting features of the scheme are those that we have not mentioned yet, that is, the grey dotted lines. These lines represent the no-man’s land in which no observation falls when the green model is enforced. In this area, each strip above and below the green line can be viewed as a margin of error for the model. Typically, the grey star is located inside this margin.</p>
+<p>The two margins are computed as the parallel lines that maximize the distance between the model and the closest points that are correctly classified (on both sides). These points are called <strong>support vectors</strong>, which justifies the name of the technique. Obviously, the green model has a greater margin than the blue one. The core idea of SVMs is to maximize the margin, under the constraint that the classifier does not make any mistake. Said differently, SVMs try to pick the most robust model among all those that yield a correct classification.</p>
+<p>More formally, if we numerically define circles as +1 and squares as -1, any ‘good’ linear model is expected to satisfy:
+<span class="math display" id="eq:svm0">\[\begin{equation}
+\tag{8.1}
+\left\{\begin{array}{lll}
+\sum_{k=1}^Kw_kx_{i,k}+b \ge +1 &amp; \text{ when } y_i=+1 \\
+\sum_{k=1}^Kw_kx_{i,k}+b \le -1 &amp; \text{ when } y_i=-1,
+\end{array}\right.
+\end{equation}\]</span></p>
+<p>which can be summarized in compact form <span class="math inline">\(y_i \times \left(\sum_{k=1}^K w_kx_{i,k}+b \right)\ge 1\)</span>. Now, the margin between the green model and a support vector on the dashed grey line is equal to <span class="math inline">\(||\textbf{w}||^{-1}=\left(\sum_{k=1}^Kw_k^2\right)^{-1/2}\)</span>. This value comes from the fact that the distance between a point <span class="math inline">\((x_0,y_0)\)</span> and a line parametrized by <span class="math inline">\(ax+by+c=0\)</span> is equal to <span class="math inline">\(d=\frac{|ax_0+by_0+c|}{\sqrt{a^2+b^2}}\)</span>. In the case of the model defined above <a href="svm.html#eq:svm0">(8.1)</a>, the numerator is equal to 1 and the norm is that of <span class="math inline">\(\textbf{w}\)</span>. Thus, the final problem is the following:</p>
+<p><span class="math display" id="eq:svm1">\[\begin{equation}
+\tag{8.2}
+\underset{\textbf{w}, b}{\text{argmin}} \ \frac{1}{2} ||\textbf{w}||^2 \ \text{ s.t. } y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)\ge 1.
+\end{equation}\]</span></p>
+<p>The dual form of this program (see chapter 5 in <span class="citation"><a href="solutions-to-exercises.html#ref-boyd2004convex" role="doc-biblioref">Boyd and Vandenberghe</a> (<a href="solutions-to-exercises.html#ref-boyd2004convex" role="doc-biblioref">2004</a>)</span>) is</p>
+<p><span class="math display" id="eq:svm1b">\[\begin{equation}
+\tag{8.3}
+L(\textbf{w},b,\boldsymbol{\lambda})=
+ \frac{1}{2}||\textbf{w}||^2 + \sum_{i=1}^I\lambda_i\left(y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)- 1\right),
+\end{equation}\]</span>
+where either <span class="math inline">\(\lambda_i=0\)</span> or <span class="math inline">\(y_i\left(\sum_{k=1}^Kw_kx_{i,k}+b \right)= 1\)</span>. Thus, only some points will matter in the solution (the so-called support vectors). The first order conditions impose that the derivatives of this Lagrangian be null:
+<span class="math display">\[\frac{\partial L}{\partial \textbf{w}}L(\textbf{w},b,\boldsymbol{\lambda})=\textbf{0}, \quad \frac{\partial L}{\partial b}L(\textbf{w},b,\boldsymbol{\lambda})=0,\]</span>
+where the first condition leads to
+<span class="math display">\[\textbf{w}^*=\sum_{i=1}^I\lambda_iu_i\textbf{x}_i.\]</span>
+This solution is indeed a linear form of the features, but only some points are taken into account. They are those for which the inequalities <a href="svm.html#eq:svm0">(8.1)</a> are equalities.</p>
+<p>Naturally, this problem becomes infeasible whenever the condition cannot be satisfied, that is, when a simple line cannot perfectly separate the labels, no matter the choice of coefficients. This is the most common configuration and datasets are then called logically <em>not linearly separable</em>. This complicates the process but it is possible to resort to a trick. The idea is to introduce some flexbility in <a href="svm.html#eq:svm0">(8.1)</a> by adding correction variables that allow the conditions to be met:</p>
+<p><span class="math display" id="eq:svm2">\[\begin{equation}
+\tag{8.4}
+\left\{\begin{array}{lll}
+\sum_{k=1}^Kw_kx_{i,k}+b \ge +1-\xi_i &amp; \text{ when } y_i=+1 \\
+\sum_{k=1}^Kw_kx_{i,k}+b \le -1+\xi_i &amp; \text{ when } y_i=-1,
+\end{array}\right.
+\end{equation}\]</span></p>
+<p>where the novelties, the <span class="math inline">\(\xi_i\)</span> are positive so-called <strong>‘slack’ variables</strong> that make the conditions feasible. They are illustrated in Figure <a href="svm.html#fig:svmscheme2">8.2</a>. In this new configuration, there is no simple linear model that can perfectly discriminate between the two classes.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:svmscheme2"></span>
+<img src="images/svm2.png" alt="Diagram of binary classification with SVM - linearly inseparable data." width="500px"><p class="caption">
+FIGURE 8.2: Diagram of binary classification with SVM - linearly inseparable data.
+</p>
+</div>
+<p>The optimization program then becomes
+<span class="math display" id="eq:svm3">\[\begin{equation}
+\tag{8.5}
+\underset{\textbf{w},b, \boldsymbol{\xi}}{\text{argmin}} \ \frac{1}{2} ||\textbf{w}||^2+C\sum_{i=1}^I\xi_i \ \text{ s.t. } \left\{ y_i\left(\sum_{k=1}^Kw_k\phi(x_{i,k})+b \right)\ge 1-\xi_i \ \text{ and } \ \xi_i\ge 0, \ \forall i  \right\},
+\end{equation}\]</span>
+where the parameter <span class="math inline">\(C&gt;0\)</span> tunes the cost of mis-classification: as <span class="math inline">\(C\)</span> increases, errors become more penalizing.</p>
+<p>In addition, the program can be generalized to nonlinear models, via the kernel <span class="math inline">\(\phi\)</span> which is applied to the input points <span class="math inline">\(x_{i,k}\)</span>. Nonlinear kernels can help cope with patterns that are more complex than straight lines (see Figure <a href="svm.html#fig:svmscheme4">8.3</a>). Common kernels can be polynomial, radial or sigmoid. The solution is found using more or less standard techniques for constrained quadratic programs. Once the weights <span class="math inline">\(\textbf{w}\)</span> and bias <span class="math inline">\(b\)</span> are set via training, a prediction for a new vector <span class="math inline">\(\textbf{x}_j\)</span> is simply made by computing <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span> and choosing the class based on the sign of the expression.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:svmscheme4"></span>
+<img src="images/kernel.png" alt="Examples of nonlinear kernels." width="400px"><p class="caption">
+FIGURE 8.3: Examples of nonlinear kernels.
+</p>
+</div>
+</div>
+<div id="svm-for-regression" class="section level2" number="8.2">
+<h2>
+<span class="header-section-number">8.2</span> SVM for regression<a class="anchor" aria-label="anchor" href="#svm-for-regression"><i class="fas fa-link"></i></a>
+</h2>
+<p>The ideas of classification SVM can be transposed to regression exercises but the role of the margin is different. One general formulation is the following</p>
+<p><span class="math display" id="eq:svm4">\[\begin{align}
+\underset{\textbf{w},b, \boldsymbol{\xi}}{\text{argmin}} \  &amp; \frac{1}{2} ||\textbf{w}||^2+C\sum_{i=1}^I\left(\xi_i+\xi_i^* \right)\\
+ \text{ s.t. }&amp;  \sum_{k=1}^Kw_k\phi(x_{i,k})+b -y_i\le \epsilon+\xi_i \\ \tag{8.6}
+&amp;  y_i-\sum_{k=1}^Kw_k\phi(x_{i,k})-b \le \epsilon+\xi_i^* \\
+&amp;\xi_i,\xi_i^*\ge 0, \ \forall i  ,
+\end{align}\]</span></p>
+<p>and it is illustrated in Figure <a href="svm.html#fig:svmscheme3">8.4</a>. The user specifies a <strong>margin</strong> <span class="math inline">\(\epsilon\)</span> and the model will try to find the linear (up to kernel transformation) relationship between the labels <span class="math inline">\(y_i\)</span> and the input <span class="math inline">\(\textbf{x}_i\)</span>. Just as in the classification task, if the data points are inside the strip, the slack variables <span class="math inline">\(\xi_i\)</span> and <span class="math inline">\(\xi_i^*\)</span> are set to zero. When the points violate the threshold, the objective function (first line of the code) is penalized. Note that setting a large <span class="math inline">\(\epsilon\)</span> leaves room for more error. Once the model has been trained, a prediction for <span class="math inline">\(\textbf{x}_j\)</span> is simply <span class="math inline">\(\sum_{k=1}^Kw_k\phi(x_{j,k})+b\)</span>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:svmscheme3"></span>
+<img src="images/svm3.png" alt="Diagram of regression SVM." width="500px"><p class="caption">
+FIGURE 8.4: Diagram of regression SVM.
+</p>
+</div>
+<p>Let us take a step back and simplify what the algorithm does, that is: minimize the sum of squared weights <span class="math inline">\(||\textbf{w}||^2\)</span> subject to the error being small enough (modulo a slack variable). In spirit, this somewhat the opposite of the penalized linear regressions which seek to minimize the error, subject to the weights being small enough.</p>
+<p>The models laid out in this section are a preview of the universe of SVM engines and several other formulations have been developed. One reference library that is coded in C and C++ is <strong>LIBSVM</strong> and it is widely used by many other programming languages. The interested reader can have a look at the corresponding article <span class="citation"><a href="solutions-to-exercises.html#ref-chang2011libsvm" role="doc-biblioref">Chang and Lin</a> (<a href="solutions-to-exercises.html#ref-chang2011libsvm" role="doc-biblioref">2011</a>)</span> for more details on the SVM zoo (a more recent November 2019 version is also available online).</p>
+</div>
+<div id="practice" class="section level2" number="8.3">
+<h2>
+<span class="header-section-number">8.3</span> Practice<a class="anchor" aria-label="anchor" href="#practice"><i class="fas fa-link"></i></a>
+</h2>
+<p>In R the LIBSVM library is exploited in several packages. One of them, <em>e1071</em>, is a good choice because it also nests many other interesting functions, especially a naive Bayes classifier that we will see later on.</p>
+<p>In the implementation of LIBSVM, the package requires to specify the label and features separately. For this reason, we recycle the variables used for the boosted trees. Moreover, the training being slow, we perform it on a subsample of these sets (first thousand instances).</p>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">e1071</span><span class="op">)</span>
+<span class="va">fit_svm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/e1071/man/svm.html">svm</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">train_label_xgb</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span>,      <span class="co"># Train label</span>
+               x <span class="op">=</span> <span class="va">train_features_xgb</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span>,  <span class="co"># Training features</span>
+               type <span class="op">=</span> <span class="st">"eps-regression"</span>,          <span class="co"># SVM task type (see LIBSVM documentation)</span>
+               kernel <span class="op">=</span> <span class="st">"radial"</span>,                <span class="co"># SVM kernel (or: linear, polynomial, sigmoid)</span>
+               epsilon <span class="op">=</span> <span class="fl">0.1</span>,                    <span class="co"># Width of strip for errors</span>
+               gamma <span class="op">=</span> <span class="fl">0.5</span>,                      <span class="co"># Constant in the radial kernel </span>
+               cost <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>                       <span class="co"># Slack variable penalisation</span>
+<span class="va">test_feat_short</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>,<span class="va">features_short</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_svm</span>, <span class="va">test_feat_short</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
+<pre><code>## [1] 0.03839085</code></pre>
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_svm</span>, <span class="va">test_feat_short</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
+<pre><code>## [1] 0.5222197</code></pre>
+<p></p>
+<p>The results are slightly better than those of the boosted trees. All parameters are completely arbitrary, especially the choice of the kernel. We finally turn to a classification example.</p>
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_svm_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/e1071/man/svm.html">svm</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span><span class="op">]</span>,   <span class="co"># Train label</span>
+               x <span class="op">=</span> <span class="va">training_sample</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">1000</span>,<span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+                   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span>,               <span class="co"># Training features</span>
+               type <span class="op">=</span> <span class="st">"C-classification"</span>,                 <span class="co"># SVM task type (see LIBSVM doc.)</span>
+               kernel <span class="op">=</span> <span class="st">"sigmoid"</span>,                        <span class="co"># SVM kernel</span>
+               gamma <span class="op">=</span> <span class="fl">0.5</span>,                               <span class="co"># Parameter in the sigmoid kernel </span>
+               coef0 <span class="op">=</span> <span class="fl">0.3</span>,                               <span class="co"># Parameter in the sigmoid kernel </span>
+               cost <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>                                <span class="co"># Slack variable penalisation</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_svm_C</span>, 
+             <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>,<span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op">==</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Accuracy</span></code></pre></div>
+<pre><code>## [1] 0.5008973</code></pre>
+<p></p>
+<p>Both the small training sample and the arbitrariness in our choice of the parameters may
+explain why the predictive accuracy is so poor.</p>
+</div>
+<div id="coding-exercises-4" class="section level2" number="8.4">
+<h2>
+<span class="header-section-number">8.4</span> Coding exercises<a class="anchor" aria-label="anchor" href="#coding-exercises-4"><i class="fas fa-link"></i></a>
+</h2>
+<ol style="list-style-type: decimal">
+<li>From the simple example shown above, extend SVM models to other kernels and discuss the impact on the fit.<br>
+</li>
+<li>Train a vanilla SVM model with labels being the 12-month forward (i.e., future) return and evaluate it on the testing sample. Do the same with a simple random forest. Compare.</li>
+</ol>
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="NN.html"><span class="header-section-number">7</span> Neural networks</a></div>
+<div class="next"><a href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#svm"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="nav-link" href="#svm-for-classification"><span class="header-section-number">8.1</span> SVM for classification</a></li>
+<li><a class="nav-link" href="#svm-for-regression"><span class="header-section-number">8.2</span> SVM for regression</a></li>
+<li><a class="nav-link" href="#practice"><span class="header-section-number">8.3</span> Practice</a></li>
+<li><a class="nav-link" href="#coding-exercises-4"><span class="header-section-number">8.4</span> Coding exercises</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

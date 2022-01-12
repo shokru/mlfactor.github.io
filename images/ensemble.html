@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 11 Ensemble models | Machine Learning for Factor Investing</title>
+<meta name="author" content="Guillaume Coqueret and Tony Guida">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 11 Ensemble models | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 11 Ensemble models | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } Let us be honest. When facing a prediction task, it is not obvious to determine the best choice between ML tools: penalized regressions, tree methods,...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } Let us be honest. When facing a prediction task, it is not obvious to determine the best choice between ML tools: penalized regressions, tree methods,...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } Let us be honest. When facing a prediction task, it is not obvious to determine the best choice between ML tools: penalized regressions, tree methods,...">
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Machine Learning for Factor Investing</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">Preface</a></li>
+<li class="book-part">Introduction</li>
+<li><a class="" href="notdata.html"><span class="header-section-number">1</span> Notations and data</a></li>
+<li><a class="" href="intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="factor.html"><span class="header-section-number">3</span> Factor investing and asset pricing anomalies</a></li>
+<li><a class="" href="Data.html"><span class="header-section-number">4</span> Data preprocessing</a></li>
+<li class="book-part">Common supervised algorithms</li>
+<li><a class="" href="lasso.html"><span class="header-section-number">5</span> Penalized regressions and sparse hedging for minimum variance portfolios</a></li>
+<li><a class="" href="trees.html"><span class="header-section-number">6</span> Tree-based methods</a></li>
+<li><a class="" href="NN.html"><span class="header-section-number">7</span> Neural networks</a></li>
+<li><a class="" href="svm.html"><span class="header-section-number">8</span> Support vector machines</a></li>
+<li><a class="" href="bayes.html"><span class="header-section-number">9</span> Bayesian methods</a></li>
+<li class="book-part">From predictions to portfolios</li>
+<li><a class="" href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></li>
+<li><a class="active" href="ensemble.html"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li><a class="" href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></li>
+<li class="book-part">Further important topics</li>
+<li><a class="" href="interp.html"><span class="header-section-number">13</span> Interpretability</a></li>
+<li><a class="" href="causality.html"><span class="header-section-number">14</span> Two key concepts: causality and non-stationarity</a></li>
+<li><a class="" href="unsup.html"><span class="header-section-number">15</span> Unsupervised learning</a></li>
+<li><a class="" href="RL.html"><span class="header-section-number">16</span> Reinforcement learning</a></li>
+<li class="book-part">Appendix</li>
+<li><a class="" href="data-description.html"><span class="header-section-number">17</span> Data description</a></li>
+<li><a class="" href="python.html"><span class="header-section-number">18</span> Python notebooks</a></li>
+<li><a class="" href="solutions-to-exercises.html"><span class="header-section-number">19</span> Solutions to exercises</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="ensemble" class="section level1" number="11">
+<h1>
+<span class="header-section-number">11</span> Ensemble models<a class="anchor" aria-label="anchor" href="#ensemble"><i class="fas fa-link"></i></a>
+</h1>
+<style>
+.container-fluid main {
+max-width: 60rem;
+}
+</style>
+<p>
+Let us be honest. When facing a prediction task, it is not obvious to determine the best choice between ML tools: penalized regressions, tree methods, neural networks, SVMs, etc. A natural and tempting alternative is to <strong>combine</strong> several algorithms (or the predictions that result from them) to try to extract value out of each engine (or learner). This intention is not new and contributions towards this goal go back at least to <span class="citation"><a href="solutions-to-exercises.html#ref-bates1969combination" role="doc-biblioref">Bates and Granger</a> (<a href="solutions-to-exercises.html#ref-bates1969combination" role="doc-biblioref">1969</a>)</span> (for the purpose of passenger flow forecasting).</p>
+<p>Below, we outline a few books on the topic of ensembles. The latter have many names and synonyms, such as <strong>forecast aggregation</strong>, <strong>model averaging</strong>, <strong>mixture of experts</strong> or <strong>prediction combination</strong>. The first four references below are monographs, while the last two are compilations of contributions:   </p>
+<ul>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-zhou2012ensemble" role="doc-biblioref">Zhou</a> (<a href="solutions-to-exercises.html#ref-zhou2012ensemble" role="doc-biblioref">2012</a>)</span>: a very didactic book that covers the main ideas of ensembles;<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-schapire2012boosting" role="doc-biblioref">Schapire and Freund</a> (<a href="solutions-to-exercises.html#ref-schapire2012boosting" role="doc-biblioref">2012</a>)</span>: the main reference for boosting (and hence, ensembling) with many theoretical results and thus strong mathematical groundings;<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-seni2010ensemble" role="doc-biblioref">Seni and Elder</a> (<a href="solutions-to-exercises.html#ref-seni2010ensemble" role="doc-biblioref">2010</a>)</span>: an introduction dedicated to tree methods mainly;<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-claeskens2008model" role="doc-biblioref">Claeskens and Hjort</a> (<a href="solutions-to-exercises.html#ref-claeskens2008model" role="doc-biblioref">2008</a>)</span>: an overview of model selection techniques with a few chapters focused on model averaging;<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-zhang2012ensemble" role="doc-biblioref">C. Zhang and Ma</a> (<a href="solutions-to-exercises.html#ref-zhang2012ensemble" role="doc-biblioref">2012</a>)</span>: a collection of thematic chapters on ensemble learning;<br>
+</li>
+<li>
+<span class="citation"><a href="solutions-to-exercises.html#ref-okun2011ensembles" role="doc-biblioref">Okun, Valentini, and Re</a> (<a href="solutions-to-exercises.html#ref-okun2011ensembles" role="doc-biblioref">2011</a>)</span>: examples of applications of ensembles.</li>
+</ul>
+<p>In this chapter, we cover the basic ideas and concepts behind the notion of ensembles. We refer to the above books for deeper treatments on the topic. We underline that several ensemble methods have already been mentioned and covered earlier, notably in Chapter <a href="trees.html#trees">6</a>. Indeed, random forests and boosted trees are examples of ensembles.  Hence, other early articles on the combination of learners are <span class="citation"><a href="solutions-to-exercises.html#ref-schapire1990strength" role="doc-biblioref">Schapire</a> (<a href="solutions-to-exercises.html#ref-schapire1990strength" role="doc-biblioref">1990</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-jacobs1991adaptive" role="doc-biblioref">R. A. Jacobs et al.</a> (<a href="solutions-to-exercises.html#ref-jacobs1991adaptive" role="doc-biblioref">1991</a>)</span> (for neural networks particularly), and <span class="citation"><a href="solutions-to-exercises.html#ref-freund1997decision" role="doc-biblioref">Freund and Schapire</a> (<a href="solutions-to-exercises.html#ref-freund1997decision" role="doc-biblioref">1997</a>)</span>. Ensembles can for instance be used to aggregate models that are built on different datasets (<span class="citation"><a href="solutions-to-exercises.html#ref-pesaran2011forecast" role="doc-biblioref">Pesaran and Pick</a> (<a href="solutions-to-exercises.html#ref-pesaran2011forecast" role="doc-biblioref">2011</a>)</span>), and can be made time-dependent (<span class="citation"><a href="solutions-to-exercises.html#ref-sun2020time" role="doc-biblioref">Sun et al.</a> (<a href="solutions-to-exercises.html#ref-sun2020time" role="doc-biblioref">2020</a>)</span>). For a theoretical view on ensembles with a Bayesian perspective, we refer to <span class="citation"><a href="solutions-to-exercises.html#ref-razin2020drowning" role="doc-biblioref">Razin and Levy</a> (<a href="solutions-to-exercises.html#ref-razin2020drowning" role="doc-biblioref">2020</a>)</span>. Finally, perspectives linked to asset pricing and factor modelling are provided in <span class="citation"><a href="solutions-to-exercises.html#ref-gospodinov2020generalized" role="doc-biblioref">Gospodinov and Maasoumi</a> (<a href="solutions-to-exercises.html#ref-gospodinov2020generalized" role="doc-biblioref">2020</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-de2020subsampled" role="doc-biblioref">De Nard, Hediger, and Leippold</a> (<a href="solutions-to-exercises.html#ref-de2020subsampled" role="doc-biblioref">2020</a>)</span> (subsampling and forecast aggregation).</p>
+<div id="linear-ensembles" class="section level2" number="11.1">
+<h2>
+<span class="header-section-number">11.1</span> Linear ensembles<a class="anchor" aria-label="anchor" href="#linear-ensembles"><i class="fas fa-link"></i></a>
+</h2>
+<div id="principles" class="section level3" number="11.1.1">
+<h3>
+<span class="header-section-number">11.1.1</span> Principles<a class="anchor" aria-label="anchor" href="#principles"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+In this chapter we adopt the following notations. We work with <span class="math inline">\(M\)</span> models where <span class="math inline">\(\tilde{y}_{i,m}\)</span> is the prediction of model <span class="math inline">\(m\)</span> for instance <span class="math inline">\(i\)</span> and errors <span class="math inline">\(\epsilon_{i,m}=y_i-\tilde{y}_{i,m}\)</span> are stacked into a <span class="math inline">\((I\times M)\)</span> matrix <span class="math inline">\(\textbf{E}\)</span>. A linear combination of models has sample errors equal to <span class="math inline">\(\textbf{Ew}\)</span>, where <span class="math inline">\(\textbf{w}=w_m\)</span> are the weights assigned to each model and we assume <span class="math inline">\(\textbf{w}'\textbf{1}_M=1\)</span>. Minimizing the total (squared) error is thus a simple quadratic program with unique constraint. The Lagrange function is <span class="math inline">\(L(\textbf{w})=\textbf{w}'\textbf{E}'\textbf{E}\textbf{w}-\lambda (\textbf{w}'\textbf{1}_M-1)\)</span> and hence
+<span class="math display">\[\frac{\partial}{\partial \textbf{w}}L(\textbf{w})=\textbf{E}'\textbf{E}\textbf{w}-\lambda \textbf{1}_M=0 \quad \Leftrightarrow \quad \textbf{w}=\lambda(\textbf{E}'\textbf{E})^{-1}\textbf{1}_M,\]</span></p>
+<p>and the constraint imposes <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}'\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M'\textbf{E}'\textbf{E})^{-1}\textbf{1}_M}\)</span>. This form is similar to that of minimum variance portfolios. If errors are unbiased (<span class="math inline">\(\textbf{1}_I'\textbf{E}=\textbf{0}_M'\)</span>), then <span class="math inline">\(\textbf{E}'\textbf{E}\)</span> is the covariance matrix of errors.</p>
+<p>This expression shows an important feature of optimized linear ensembles: they can only add value if the models tell different stories. If two models are redundant, <span class="math inline">\(\textbf{E}'\textbf{E}\)</span> will be close to singular and <span class="math inline">\(\textbf{w}^*\)</span> will arbitrage one against the other in a spurious fashion. This is the exact same problem as when mean-variance portfolios are constituted with highly correlated assets: in this case, diversification fails because when things go wrong, all assets go down. Another problem arises when the number of observations is too small compared to the number of assets so that the covariance matrix of returns is singular. This is not an issue for ensembles because the number of observations will usually be much larger than the number of models (<span class="math inline">\(I&gt;&gt;M\)</span>).</p>
+<p>In the limit when correlations increase to one, the above formulation becomes highly unstable and ensembles cannot be trusted. One heuristic way to see this is when <span class="math inline">\(M=2\)</span> and
+<span class="math display">\[\textbf{E}'\textbf{E}=\left[
+\begin{array}{cc} \sigma_1^2 &amp; \rho\sigma_1\sigma_2 \\
+\rho\sigma_1\sigma_2 &amp; \sigma_2^2 \\
+\end{array}
+\right] \quad \Leftrightarrow  \quad 
+(\textbf{E}'\textbf{E})^{-1}=\frac{1}{1-\rho^2}\left[
+\begin{array}{cc} \sigma_1^{-2} &amp; -\rho(\sigma_1\sigma_2)^{-1} \\
+-\rho(\sigma_1\sigma_2)^{-1} &amp; \sigma_2^{-2} \\
+\end{array}
+\right]\]</span></p>
+<p>so that when <span class="math inline">\(\rho \rightarrow 1\)</span>, the model with the smallest errors (minimum <span class="math inline">\(\sigma_i^2\)</span>) will see its weight increasing towards infinity while the other model will have a similarly large <strong>negative weight</strong>: the model arbitrages between two highly correlated variables. This seems like a very bad idea.</p>
+<p>There is another illustration of the issues caused by correlations. Let’s assume we face <span class="math inline">\(M\)</span> correlated errors <span class="math inline">\(\epsilon_m\)</span> with pairwise correlation <span class="math inline">\(\rho\)</span>, zero mean and variance <span class="math inline">\(\sigma^2\)</span>. The variance of errors is
+<span class="math display">\[\begin{align*}
+\mathbb{E}\left[\frac{1}{M}\sum_{m=1}^M \epsilon_m^2 \right]&amp;=\frac{1}{M^2}\left[\sum_{m=1}^M\epsilon_m^2+\sum_{m\neq n}\epsilon_n\epsilon_m\right] \\
+&amp;=\frac{\sigma^2}{M}+\frac{1}{M^2}\sum_{n\neq m} \rho \sigma^2 \\
+&amp; =\rho \sigma^2 +\frac{\sigma^2(1-\rho)}{M}
+\end{align*}\]</span>
+where while the second term converges to zero as <span class="math inline">\(M\)</span> increases, the first term remains and is <strong>linearly increasing</strong> with <span class="math inline">\(\rho\)</span>. In passing, because variances are always positive, this result implies that the common pairwise correlation between <span class="math inline">\(M\)</span> variables is bounded below by <span class="math inline">\(-(M-1)^{-1}\)</span>. This result is interesting but rarely found in textbooks.</p>
+<p>One improvement proposed to circumvent the trouble caused by correlations, advocated in a seminal publication (<span class="citation"><a href="solutions-to-exercises.html#ref-breiman1996stacked" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman1996stacked" role="doc-biblioref">1996</a>)</span>), is to enforce positivity constraints on the weights and solve</p>
+<p><span class="math display">\[\underset{\textbf{w}}{\text{argmin}} \ \textbf{w}'\textbf{E}'\textbf{E}\textbf{w} , \quad \text{s.t.} \quad \left\{ 
+\begin{array}{l} \textbf{w}'\textbf{1}_M=1 \\ w_m \ge 0 \quad \forall m \end{array}\right. .\]</span></p>
+<p>Mechanically, if several models are highly correlated, the constraint will impose that only one of them will have a nonzero weight. If there are many models, then just a few of them will be selected by the minimization program. In the context of portfolio optimization, <span class="citation"><a href="solutions-to-exercises.html#ref-jagannathan2003risk" role="doc-biblioref">Jagannathan and Ma</a> (<a href="solutions-to-exercises.html#ref-jagannathan2003risk" role="doc-biblioref">2003</a>)</span> have shown the counter-intuitive benefits of constraints in the construction of mean-variance allocations. In our setting, the constraint will similarly help discriminate wisely among the ‘best’ models.</p>
+<p>In the literature, forecast combination and model averaging (which are synonyms of ensembles) have been tested on stock markets as early as in <span class="citation"><a href="solutions-to-exercises.html#ref-von1972probabilistic" role="doc-biblioref">Von Holstein</a> (<a href="solutions-to-exercises.html#ref-von1972probabilistic" role="doc-biblioref">1972</a>)</span>. Surprisingly, the articles were not published in Finance journals but rather in fields such as Management (<span class="citation"><a href="solutions-to-exercises.html#ref-virtanen1987forecasting" role="doc-biblioref">Virtanen and Yli-Olli</a> (<a href="solutions-to-exercises.html#ref-virtanen1987forecasting" role="doc-biblioref">1987</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-wang2012stock" role="doc-biblioref">J.-J. Wang et al.</a> (<a href="solutions-to-exercises.html#ref-wang2012stock" role="doc-biblioref">2012</a>)</span>), Economics and Econometrics (<span class="citation"><a href="solutions-to-exercises.html#ref-donaldson1996forecast" role="doc-biblioref">Donaldson and Kamstra</a> (<a href="solutions-to-exercises.html#ref-donaldson1996forecast" role="doc-biblioref">1996</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-clark2009improving" role="doc-biblioref">Clark and McCracken</a> (<a href="solutions-to-exercises.html#ref-clark2009improving" role="doc-biblioref">2009</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-mascio2020market" role="doc-biblioref">Mascio, Fabozzi, and Zumwalt</a> (<a href="solutions-to-exercises.html#ref-mascio2020market" role="doc-biblioref">2020</a>)</span>), Operations Reasearch (<span class="citation"><a href="solutions-to-exercises.html#ref-huang2005forecasting" role="doc-biblioref">W. Huang, Nakamori, and Wang</a> (<a href="solutions-to-exercises.html#ref-huang2005forecasting" role="doc-biblioref">2005</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-leung2001using" role="doc-biblioref">Leung, Daouk, and Chen</a> (<a href="solutions-to-exercises.html#ref-leung2001using" role="doc-biblioref">2001</a>)</span>, and <span class="citation"><a href="solutions-to-exercises.html#ref-bonaccolto2019developing" role="doc-biblioref">Bonaccolto and Paterlini</a> (<a href="solutions-to-exercises.html#ref-bonaccolto2019developing" role="doc-biblioref">2019</a>)</span>), and Computer Science (<span class="citation"><a href="solutions-to-exercises.html#ref-harrald1997evolving" role="doc-biblioref">Harrald and Kamstra</a> (<a href="solutions-to-exercises.html#ref-harrald1997evolving" role="doc-biblioref">1997</a>)</span>, <span class="citation"><a href="solutions-to-exercises.html#ref-hassan2007fusion" role="doc-biblioref">Hassan, Nath, and Kirley</a> (<a href="solutions-to-exercises.html#ref-hassan2007fusion" role="doc-biblioref">2007</a>)</span>).</p>
+<p>In the general forecasting literature, many alternative (refined) methods for combining forecasts have been studied. Trimmed opinion pools (<span class="citation"><a href="solutions-to-exercises.html#ref-grushka2016ensembles" role="doc-biblioref">Grushka-Cockayne, Jose, and Lichtendahl Jr</a> (<a href="solutions-to-exercises.html#ref-grushka2016ensembles" role="doc-biblioref">2016</a>)</span>) compute averages over the predictions that are not too extreme (or not too noisy, see <span class="citation"><a href="solutions-to-exercises.html#ref-chiang2021modeling" role="doc-biblioref">Chiang, Liao, and Zhou</a> (<a href="solutions-to-exercises.html#ref-chiang2021modeling" role="doc-biblioref">2021</a>)</span>). Ensembles with weights that depend on previous past errors are developed in <span class="citation"><a href="solutions-to-exercises.html#ref-pike2020combining" role="doc-biblioref">Pike and Vazquez-Grande</a> (<a href="solutions-to-exercises.html#ref-pike2020combining" role="doc-biblioref">2020</a>)</span>. We refer to <span class="citation"><a href="solutions-to-exercises.html#ref-gaba2017combining" role="doc-biblioref">Gaba, Tsetlin, and Winkler</a> (<a href="solutions-to-exercises.html#ref-gaba2017combining" role="doc-biblioref">2017</a>)</span> for a more exhaustive list of combinations as well as for an empirical study of their respective efficiency. Finally, for a theoretical discussion on model averaging versus model selection, we point to <span class="citation"><a href="solutions-to-exercises.html#ref-pengimprovability" role="doc-biblioref">Peng and Yang</a> (<a href="solutions-to-exercises.html#ref-pengimprovability" role="doc-biblioref">2021</a>)</span>.
+Overall, findings are mixed and the heuristic simple average is, as usual, hard to beat (see, e.g., <span class="citation"><a href="solutions-to-exercises.html#ref-genre2013combining" role="doc-biblioref">Genre et al.</a> (<a href="solutions-to-exercises.html#ref-genre2013combining" role="doc-biblioref">2013</a>)</span>).</p>
+</div>
+<div id="example" class="section level3" number="11.1.2">
+<h3>
+<span class="header-section-number">11.1.2</span> Example<a class="anchor" aria-label="anchor" href="#example"><i class="fas fa-link"></i></a>
+</h3>
+<p>In order to build an ensemble, we must gather the predictions and the corresponding errors into the <span class="math inline">\(\textbf{E}\)</span> matrix. We will work with 5 models that were trained in the previous chapters: penalized regression, simple tree, random forest, xgboost and feed-forward neural network. The training errors have zero means, hence <span class="math inline">\(\textbf{E}'\textbf{E}\)</span> is the covariance matrix of errors between models.</p>
+<div class="sourceCode" id="cb146"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">err_pen_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pen_pred</span>, <span class="va">x_penalized_train</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>  <span class="co"># Reg.</span>
+<span class="va">err_tree_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree</span>, <span class="va">training_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>       <span class="co"># Tree</span>
+<span class="va">err_RF_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">training_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>           <span class="co"># RF</span>
+<span class="va">err_XGB_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">train_matrix_xgb</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>        <span class="co"># XGBoost</span>
+<span class="va">err_NN_train</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">NN_train_features</span><span class="op">)</span> <span class="op">-</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>          <span class="co"># NN</span>
+<span class="va">E</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">err_pen_train</span>, <span class="va">err_tree_train</span>, <span class="va">err_RF_train</span>, <span class="va">err_XGB_train</span>, <span class="va">err_NN_train</span><span class="op">)</span> <span class="co"># E matrix</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pen_reg"</span>, <span class="st">"Tree"</span>, <span class="st">"RF"</span>, <span class="st">"XGB"</span>, <span class="st">"NN"</span><span class="op">)</span>                               <span class="co"># Names</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span>                                                                               <span class="co"># Cor. mat.</span></code></pre></div>
+<pre><code>##           Pen_reg      Tree        RF       XGB        NN
+## Pen_reg 1.0000000 0.9984394 0.9968224 0.9310186 0.9933772
+## Tree    0.9984394 1.0000000 0.9974647 0.9296081 0.9952573
+## RF      0.9968224 0.9974647 1.0000000 0.9281725 0.9960774
+## XGB     0.9310186 0.9296081 0.9281725 1.0000000 0.9249837
+## NN      0.9933772 0.9952573 0.9960774 0.9249837 1.0000000</code></pre>
+<p></p>
+<p>As is shown by the correlation matrix, the models fail to generate heterogeneity in their predictions. The minimum correlation (though above 95%!) is obtained by the boosted tree models. Below, we compare the training accuracy of models by computing the average absolute value of errors.</p>
+<div class="sourceCode" id="cb148"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span>, <span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span> <span class="co"># Mean absolute error or columns of E </span></code></pre></div>
+<pre><code>##    Pen_reg       Tree         RF        XGB         NN 
+## 0.08345916 0.08362133 0.08327121 0.08986993 0.08444371</code></pre>
+<p></p>
+<p>The best performing ML engine is the random forest. The boosted tree model is the worst, by far. Below, we compute the optimal (non-constrained) weights for the combination of models.</p>
+<div class="sourceCode" id="cb150"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">w_ensemble</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html">solve</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/Matrix/man/matrix-products.html">%*%</a></span> <span class="va">E</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/Matrix/man/matrix-products.html">%*%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">5</span><span class="op">)</span>                             <span class="co"># Optimal weights</span>
+<span class="va">w_ensemble</span> <span class="op">&lt;-</span> <span class="va">w_ensemble</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">w_ensemble</span><span class="op">)</span>
+<span class="va">w_ensemble</span></code></pre></div>
+<pre><code>##                 [,1]
+## Pen_reg -0.523861499
+## Tree    -0.008467403
+## RF       1.409400628
+## XGB     -0.001480602
+## NN       0.124408875</code></pre>
+<p></p>
+<p>Because of the high correlations, the optimal weights are not balanced and diversified: they load heavily on the random forest learner (best in sample model) and ‘short’ a few models in order to compensate. As one could expect, the model with the largest negative weights (Pen_reg) has a very high correlation with the random forest algorithm (0.997).</p>
+<p>Note that the weights are of course computed with <strong>training errors</strong>. The optimal combination is then tested on the testing sample. Below, we compute out-of-sample (testing) errors and their average absolute value.</p>
+<div class="sourceCode" id="cb152"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">err_pen_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_pen_pred</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>     <span class="co"># Reg.</span>
+<span class="va">err_tree_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>          <span class="co"># Tree</span>
+<span class="va">err_RF_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>              <span class="co"># RF</span>
+<span class="va">err_XGB_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>                  <span class="co"># XGBoost</span>
+<span class="va">err_NN_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>             <span class="co"># NN</span>
+<span class="va">E_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">err_pen_test</span>, <span class="va">err_tree_test</span>, <span class="va">err_RF_test</span>, <span class="va">err_XGB_test</span>, <span class="va">err_NN_test</span><span class="op">)</span> <span class="co"># E matrix</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">E_test</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Pen_reg"</span>, <span class="st">"Tree"</span>, <span class="st">"RF"</span>, <span class="st">"XGB"</span>, <span class="st">"NN"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">E_test</span><span class="op">)</span>, <span class="fl">2</span>, <span class="va">mean</span><span class="op">)</span>             <span class="co"># Mean absolute error or columns of E </span></code></pre></div>
+<pre><code>##    Pen_reg       Tree         RF        XGB         NN 
+## 0.06618181 0.06653527 0.06710349 0.07170801 0.06889048</code></pre>
+<p></p>
+<p>The boosted tree model is still the worst performing algorithm while the simple models (regression and simple tree) are the ones that fare the best. The most naive combination is the simple average of model and predictions.</p>
+<div class="sourceCode" id="cb154"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">err_EW_test</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="va">E_test</span>, <span class="fl">1</span>, <span class="va">mean</span><span class="op">)</span>  <span class="co"># Equally weighted combination</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">err_EW_test</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.06717362</code></pre>
+<p></p>
+<p>Because the errors are very correlated, the equally weighted combination of forecasts yields an average error which lies ‘in the middle’ of individual errors. The diversification benefits are too small. Let us now test the ‘optimal’ combination <span class="math inline">\(\textbf{w}^*=\frac{(\textbf{E}'\textbf{E})^{-1}\textbf{1}_M}{(\textbf{1}_M'\textbf{E}'\textbf{E})^{-1}\textbf{1}_M}\)</span>.</p>
+<div class="sourceCode" id="cb156"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">err_opt_test</span> <span class="op">&lt;-</span> <span class="va">E_test</span> <span class="op"><a href="https://rdrr.io/pkg/Matrix/man/matrix-products.html">%*%</a></span> <span class="va">w_ensemble</span>   <span class="co"># Optimal unconstrained combination</span>
+<span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">err_opt_test</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.06837302</code></pre>
+<p></p>
+<p>Again, the result is disappointing because of the lack of diversification across models. The correlations between errors are high not only on the training sample, but also on the testing sample, as shown below.</p>
+<div class="sourceCode" id="cb158"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">E_test</span><span class="op">)</span></code></pre></div>
+<pre><code>##           Pen_reg      Tree        RF       XGB        NN
+## Pen_reg 1.0000000 0.9987069 0.9968882 0.9537914 0.9935255
+## Tree    0.9987069 1.0000000 0.9978366 0.9583641 0.9955690
+## RF      0.9968882 0.9978366 1.0000000 0.9606570 0.9966003
+## XGB     0.9537914 0.9583641 0.9606570 1.0000000 0.9626207
+## NN      0.9935255 0.9955690 0.9966003 0.9626207 1.0000000</code></pre>
+<p></p>
+<p>The leverage from the optimal solution only exacerbates the problem and underperforms the heuristic uniform combination. We end this section with the constrained formulation of <span class="citation"><a href="solutions-to-exercises.html#ref-breiman1996stacked" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman1996stacked" role="doc-biblioref">1996</a>)</span> using the <em>quadprog</em> package. If we write <span class="math inline">\(\mathbf{\Sigma}\)</span> for the covariance matrix of errors, we seek
+<span class="math display">\[\mathbf{w}^*=\underset{\mathbf{w}}{\text{argmin}} \ \mathbf{w}'\mathbf{\Sigma}\mathbf{w}, \quad \mathbf{1}'\mathbf{w}=1, \quad w_i\ge 0,\]</span>
+The constraints will be handled as:</p>
+<p><span class="math display">\[\mathbf{A} \mathbf{w}= \begin{bmatrix} 
+1 &amp; 1 &amp; 1 \\
+1 &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{bmatrix} \mathbf{w} \hspace{9mm} \text{ compared to} \hspace{9mm} \mathbf{b}=\begin{bmatrix} 1 \\ 0 \\ 0 \\ 0 \end{bmatrix},  \]</span></p>
+<p>where the first line will be an equality (weights sum to one) and the last three will be inequalities (weights are all positive).</p>
+<div class="sourceCode" id="cb160"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">quadprog</span><span class="op">)</span>                       <span class="co"># Package for quadratic programming</span>
+<span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">E</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/Matrix/man/matrix-products.html">%*%</a></span> <span class="va">E</span>                     <span class="co"># Unscaled covariance matrix</span>
+<span class="va">nb_mods</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">Sigma</span><span class="op">)</span>                  <span class="co"># Number of models</span>
+<span class="va">w_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/quadprog/man/solve.QP.html">solve.QP</a></span><span class="op">(</span>Dmat <span class="op">=</span> <span class="va">Sigma</span>,       <span class="co"># D matrix =  Sigma</span>
+              dvec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">nb_mods</span><span class="op">)</span>,   <span class="co"># Zero vector</span>
+              Amat <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">rbind</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="va">nb_mods</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">nb_mods</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="op">)</span>, <span class="co"># A matrix for constraints</span>
+              bvec <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="va">nb_mods</span><span class="op">)</span><span class="op">)</span>,                          <span class="co"># b vector for constraints</span>
+              meq <span class="op">=</span> <span class="fl">1</span>                   <span class="co"># 1 line of equality constraints, others = inequalities</span>
+              <span class="op">)</span>
+<span class="va">w_const</span><span class="op">$</span><span class="va">solution</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="fl">3</span><span class="op">)</span>           <span class="co"># Solution</span></code></pre></div>
+<pre><code>## [1] 0.000 0.000 0.906 0.000 0.094</code></pre>
+<p></p>
+<p>Compared to the unconstrained solution, the weights are sparse and concentrated in one or two models, usually those with small training sample errors.</p>
+</div>
+</div>
+<div id="stacked-ensembles" class="section level2" number="11.2">
+<h2>
+<span class="header-section-number">11.2</span> Stacked ensembles<a class="anchor" aria-label="anchor" href="#stacked-ensembles"><i class="fas fa-link"></i></a>
+</h2>
+<p></p>
+<div id="two-stage-training" class="section level3" number="11.2.1">
+<h3>
+<span class="header-section-number">11.2.1</span> Two-stage training<a class="anchor" aria-label="anchor" href="#two-stage-training"><i class="fas fa-link"></i></a>
+</h3>
+<p><strong>Stacked ensembles</strong> are a natural generalization of linear ensembles. The idea of generalizing linear ensembles goes back at least to <span class="citation"><a href="solutions-to-exercises.html#ref-wolpert1992stacked" role="doc-biblioref">Wolpert</a> (<a href="solutions-to-exercises.html#ref-wolpert1992stacked" role="doc-biblioref">1992b</a>)</span>. In the general case, the training is performed in two stages. The first stage is the simple one, whereby the <span class="math inline">\(M\)</span> models are trained independently, yielding the predictions <span class="math inline">\(\tilde{y}_{i,m}\)</span> for instance <span class="math inline">\(i\)</span> and model <span class="math inline">\(m\)</span>. The second step is to consider the output of the trained models as input for a new level of machine learning optimization. The second level predictions are <span class="math inline">\(\breve{y}_i=h(\tilde{y}_{i,1},\dots,\tilde{y}_{i,M})\)</span>, where <span class="math inline">\(h\)</span> is a new learner (see Figure <a href="ensemble.html#fig:stackscheme">11.1</a>). Linear ensembles are of course stacked ensembles in which the second layer is a linear regression.</p>
+<p>The same techniques are then applied to minimize the error between the true values <span class="math inline">\(y_i\)</span> and the predicted ones <span class="math inline">\(\breve{y}_i\)</span>.</p>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:stackscheme"></span>
+<img src="images/stack.png" alt="Scheme of stacked ensembles." width="350px"><p class="caption">
+FIGURE 11.1: Scheme of stacked ensembles.
+</p>
+</div>
+</div>
+<div id="code-and-results-4" class="section level3" number="11.2.2">
+<h3>
+<span class="header-section-number">11.2.2</span> Code and results<a class="anchor" aria-label="anchor" href="#code-and-results-4"><i class="fas fa-link"></i></a>
+</h3>
+<p>Below, we create a low-dimensional neural network which takes in the individual predictions of each model and compiles them into a synthetic forecast.</p>
+<div class="sourceCode" id="cb162"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_stack</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">model_stack</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> </code></pre></div>
+<p></p>
+<p>The configuration is very simple. We do not include any optional arguments and hence the model is likely to overfit. As we seek to predict returns, the loss function is the standard <span class="math inline">\(L^2\)</span> norm.</p>
+<div class="sourceCode" id="cb163"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_stack</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                       <span class="co"># Model specification</span>
+    loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
+    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_stack</span><span class="op">)</span>                           <span class="co"># Model architecture</span></code></pre></div>
+<pre><code>## Model: "sequential_29"
+## __________________________________________________________________________________________
+## Layer (type)                            Output Shape                        Param #       
+## ==========================================================================================
+## dense_74 (Dense)                        (None, 8)                           48            
+## __________________________________________________________________________________________
+## dense_73 (Dense)                        (None, 4)                           36            
+## __________________________________________________________________________________________
+## dense_72 (Dense)                        (None, 1)                           5             
+## ==========================================================================================
+## Total params: 89
+## Trainable params: 89
+## Non-trainable params: 0
+## __________________________________________________________________________________________</code></pre>
+<p></p>
+<div class="sourceCode" id="cb165"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">y_tilde</span> <span class="op">&lt;-</span> <span class="va">E</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="va">nb_mods</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span>    <span class="co"># Train preds</span>
+<span class="va">y_test</span> <span class="op">&lt;-</span> <span class="va">E_test</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>, <span class="va">nb_mods</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="va">nb_mods</span><span class="op">)</span> <span class="co"># Testing</span>
+<span class="va">fit_NN_stack</span> <span class="op">&lt;-</span> <span class="va">model_stack</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">y_tilde</span>,                                  <span class="co"># Train features</span>
+                     <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd</span>,                                 <span class="co"># Train labels</span>
+                     epochs <span class="op">=</span> <span class="fl">12</span>, batch_size <span class="op">=</span> <span class="fl">512</span>,                           <span class="co"># Train parameters</span>
+                     validation_data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">y_test</span>,                           <span class="co"># Test features</span>
+                                            <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span>           <span class="co"># Test labels</span>
+<span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NN_stack</span><span class="op">)</span>                                                            <span class="co"># Plot, evidently!</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:stackNN2"></span>
+<img src="ML_factor_files/figure-html/stackNN2-1.png" alt="Training metrics for the ensemble model." width="350px"><p class="caption">
+FIGURE 11.2: Training metrics for the ensemble model.
+</p>
+</div>
+<p></p>
+<p>The performance of the ensemble is again disappointing: the learning curve is flat in Figure <a href="ensemble.html#fig:stackNN2">11.2</a>, hence the rounds of back-propagation are useless. The training adds little value which means that the new overarching layer of ML does not enhance the original predictions. Again, this is because all ML engines seem to be capturing the same patterns and both their linear and non-linear combinations fail to improve their performance.</p>
+</div>
+</div>
+<div id="extensions-1" class="section level2" number="11.3">
+<h2>
+<span class="header-section-number">11.3</span> Extensions<a class="anchor" aria-label="anchor" href="#extensions-1"><i class="fas fa-link"></i></a>
+</h2>
+<div id="exogenous-variables" class="section level3" number="11.3.1">
+<h3>
+<span class="header-section-number">11.3.1</span> Exogenous variables<a class="anchor" aria-label="anchor" href="#exogenous-variables"><i class="fas fa-link"></i></a>
+</h3>
+<p>In a financial context, macro-economic indicators could add value to the process. It is possible that some models perform better under certain conditions and exogenous predictors can help introduce a flavor of <strong>economic-driven conditionality</strong> in the predictions.</p>
+<p>Adding macro-variables to the set of predictors (here, predictions) <span class="math inline">\(\tilde{y}_{i,m}\)</span> could seem like one way to achieve this. However, this would amount to mix predicted values with (possibly scaled) economic indicators and that would not make much sense.</p>
+<p>One alternative outside the perimeter of ensembles is to train simple trees on a set of macro-economic indicators. If the labels are the (possibly absolute) errors stemming from the original predictions, then the trees will create clusters of homogeneous error values. This will hint towards which conditions lead to the best and worst forecasts.
+We test this idea below, using aggregate data from the Federal Reserve of Saint Louis. A simple downloading function is available in the <em>quantmod</em> package. We download and format the data in the next chunk. CPIAUCSL is a code for consumer price index and T10Y2YM is a code for the term spread (10Y minus 2Y).</p>
+<div class="sourceCode" id="cb166"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.quantmod.com">quantmod</a></span><span class="op">)</span>                                     <span class="co"># Package that extracts the data</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://lubridate.tidyverse.org">lubridate</a></span><span class="op">)</span>                                    <span class="co"># Package for date management</span>
+<span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.html">getSymbols</a></span><span class="op">(</span><span class="st">"CPIAUCSL"</span>, src <span class="op">=</span> <span class="st">"FRED"</span><span class="op">)</span>                  <span class="co"># FRED is the Fed of St Louis</span></code></pre></div>
+<pre><code>## [1] "CPIAUCSL"</code></pre>
+<div class="sourceCode" id="cb168"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.html">getSymbols</a></span><span class="op">(</span><span class="st">"T10Y2YM"</span>, src <span class="op">=</span> <span class="st">"FRED"</span><span class="op">)</span> </code></pre></div>
+<pre><code>## [1] "T10Y2YM"</code></pre>
+<div class="sourceCode" id="cb170"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">cpi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/fortify.html">fortify</a></span><span class="op">(</span><span class="va">CPIAUCSL</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span> <span class="op">(</span>inflation <span class="op">=</span> <span class="va">CPIAUCSL</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/lead-lag.html">lag</a></span><span class="op">(</span><span class="va">CPIAUCSL</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># Inflation via Consumer Price Index</span>
+<span class="va">ts</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/fortify.html">fortify</a></span><span class="op">(</span><span class="va">T10Y2YM</span><span class="op">)</span>                                <span class="co"># Term spread (10Y minus 2Y rates)</span>
+<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"termspread"</span>                       <span class="co"># To make things clear</span>
+<span class="va">ens_data</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                        <span class="co"># Creating aggregate dataset</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">err_NN_test</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>Index <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/make_datetime.html">make_date</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,  <span class="co"># Change date to first day of month</span>
+                             month <span class="op">=</span> <span class="fu">lubridate</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/month.html">month</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span>, 
+                             day <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">cpi</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                <span class="co"># Add CPI to the dataset</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">ts</span><span class="op">)</span>                                     <span class="co"># Add termspread</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">ens_data</span><span class="op">)</span>                                        <span class="co"># Show first lines</span></code></pre></div>
+<pre><code>##         date  err_NN_test      Index CPIAUCSL   inflation termspread
+## 1 2014-01-31 -0.151823168 2014-01-01  235.288 0.002424175       2.47
+## 2 2014-02-28  0.076599573 2014-02-01  235.547 0.001100779       2.38
+## 3 2014-03-31  0.002358824 2014-03-01  236.028 0.002042055       2.32
+## 4 2014-04-30 -0.059511532 2014-04-01  236.468 0.001864186       2.29
+## 5 2014-05-31 -0.076865514 2014-05-01  236.918 0.001903006       2.17
+## 6 2014-06-30  0.050708934 2014-06-01  237.231 0.001321132       2.15</code></pre>
+<p></p>
+<p>We can now build a tree that tries to explain the accuracy of models as a function of macro-variables.</p>
+<div class="sourceCode" id="cb172"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.milbo.org/rpart-plot/index.html">rpart.plot</a></span><span class="op">)</span>     <span class="co"># Load package for tree plotting</span>
+<span class="va">fit_ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">err_NN_test</span><span class="op">)</span> <span class="op">~</span> <span class="va">inflation</span> <span class="op">+</span> <span class="va">termspread</span>, <span class="co"># Tree model</span>
+                 data <span class="op">=</span> <span class="va">ens_data</span>,
+                 cp <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span>                                <span class="co"># Complexity param (size of tree)</span>
+<span class="fu"><a href="https://rdrr.io/pkg/rpart.plot/man/rpart.plot.html">rpart.plot</a></span><span class="op">(</span><span class="va">fit_ens</span><span class="op">)</span>                                         <span class="co"># Plot tree</span></code></pre></div>
+<div class="figure" style="text-align: center">
+<span style="display:block;" id="fig:ensfred2"></span>
+<img src="ML_factor_files/figure-html/ensfred2-1.png" alt="Conditional performance of a ML engine." width="250px"><p class="caption">
+FIGURE 11.3: Conditional performance of a ML engine.
+</p>
+</div>
+<p></p>
+<p>The tree creates clusters which have homogeneous values of absolute errors. One big cluster gathers 92% of predictions (the left one) and is the one with the smallest average. It corresponds to the periods when the term spread is above 0.29 (in percentage points). The other two groups (when the term spread is below 0.29%) are determined according to the level of inflation. If the latter is positive, then the average absolute error is 7%, if not, it is 12%. This last number, the highest of the three clusters, indicates that when the term spread is low and the inflation negative, the model’s predictions are not trustworthy because their errors have a magnitude twice as large as in other periods. Under these circumstances (which seem to be linked to a dire economic environment), it may be wiser not to use ML-based forecasts.</p>
+</div>
+<div id="shrinking-inter-model-correlations" class="section level3" number="11.3.2">
+<h3>
+<span class="header-section-number">11.3.2</span> Shrinking inter-model correlations<a class="anchor" aria-label="anchor" href="#shrinking-inter-model-correlations"><i class="fas fa-link"></i></a>
+</h3>
+<p>
+As shown earlier in this chapter, one major problem with ensembles arises when the first layer of predictions is highly correlated. In this case, ensembles are pretty much useless. There are several tricks that can help reduce this correlation, but the simplest and best is probably to alter training samples. If algorithms do not see the same data, they will probably infer different patterns.</p>
+<p>There are several ways to split the training data so as to build different subsets of training samples. The first dichotomy is between random versus deterministic splits. Random splits are easy and require only the target sample size to be fixed. Note that the training samples can be overlapping as long as the overlap is not too large. Hence if the original training sample has <span class="math inline">\(I\)</span> instance and the ensemble requires <span class="math inline">\(M\)</span> models, then a subsample size of <span class="math inline">\(\lfloor I/M \rfloor\)</span> may be too conservative especially if the training sample is not very large. In this case <span class="math inline">\(\lfloor I/\sqrt{M} \rfloor\)</span> may be a better alternative. Random forests are one example of ensembles built in random training samples.</p>
+<p>One advantage of deterministic splits is that they are easy to reproduce and their outcome does not depend on the random seed. By the nature of factor-based training samples, the second splitting dichotomy is between time and assets. A split within assets is straightforward: each model is trained on a different set of stocks. Note that the choices of sets can be random, or dictacted by some factor-based criterion: size, momentum, book-to-market ratio, etc.</p>
+<p>A split in dates requires other decisions: is the data split in large blocks (like years) and each model gets a block, which may stand for one particular kind of market condition? Or are the training dates divided more regularly? For instance, if there are 12 models in the ensemble, each model can be trained on data from a given month (e.g., January for the first models, February for the second, etc.).</p>
+<p>Below, we train four models on four different years to see if this helps reduce the inter-model correlations. This process is a bit lengthy because the samples and models need to be all redefined. We start by creating the four training samples. The third model works on the small subset of features, hence the sample is smaller.</p>
+<div class="sourceCode" id="cb173"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">training_sample_2007</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2006-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2008-01-01"</span><span class="op">)</span>
+<span class="va">training_sample_2009</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2008-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2010-01-01"</span><span class="op">)</span>
+<span class="va">training_sample_2011</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>,<span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2010-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2012-01-01"</span><span class="op">)</span>
+<span class="va">training_sample_2013</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;</span> <span class="st">"2012-12-31"</span>, <span class="va">date</span> <span class="op">&lt;</span> <span class="st">"2014-01-01"</span><span class="op">)</span></code></pre></div>
+<p></p>
+<p>Then, we proceed to the training of the models. The syntaxes are those used in the previous chapters, nothing new here. We start with a penalized regression. In all predictions below, the original testing sample is used <em>for all models</em>.</p>
+<div class="sourceCode" id="cb174"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">y_ens_2007</span> <span class="op">&lt;-</span> <span class="va">training_sample_2007</span><span class="op">$</span><span class="va">R1M_Usd</span>                                       <span class="co"># Dep. var.</span>
+<span class="va">x_ens_2007</span> <span class="op">&lt;-</span> <span class="va">training_sample_2007</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                           <span class="co"># Predictors</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
+<span class="va">fit_ens_2007</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://glmnet.stanford.edu/reference/glmnet.html">glmnet</a></span><span class="op">(</span><span class="va">x_ens_2007</span>, <span class="va">y_ens_2007</span>, alpha <span class="op">=</span> <span class="fl">0.1</span>, lambda <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>        <span class="co"># Model</span>
+<span class="va">err_ens_2007</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ens_2007</span>, <span class="va">x_penalized_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="co"># Pred. errs</span></code></pre></div>
+<p></p>
+<p>We continue with a random forest.</p>
+<div class="sourceCode" id="cb175"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_ens_2009</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula</span>,            <span class="co"># Same formula as for simple trees!</span>
+                 data <span class="op">=</span> <span class="va">training_sample_2009</span>,    <span class="co"># Data source: 2011 training sample</span>
+                 sampsize <span class="op">=</span> <span class="fl">4000</span>,                <span class="co"># Size of (random) sample for each tree</span>
+                 replace <span class="op">=</span> <span class="cn">FALSE</span>,                <span class="co"># Is the sampling done with replacement?</span>
+                 nodesize <span class="op">=</span> <span class="fl">100</span>,                 <span class="co"># Minimum size of terminal cluster</span>
+                 ntree <span class="op">=</span> <span class="fl">40</span>,                     <span class="co"># Nb of random trees</span>
+                 mtry <span class="op">=</span> <span class="fl">30</span>                       <span class="co"># Nb of predictive variables for each tree</span>
+    <span class="op">)</span>
+<span class="va">err_ens_2009</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ens_2009</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="co"># Pred. errs</span></code></pre></div>
+<p></p>
+<p>The third model is a boosted tree.</p>
+<div class="sourceCode" id="cb176"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">train_features_2011</span> <span class="op">&lt;-</span> <span class="va">training_sample_2011</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>               <span class="co"># Independent variable</span>
+<span class="va">train_label_2011</span> <span class="op">&lt;-</span> <span class="va">training_sample_2011</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>                      <span class="co"># Dependent variable</span>
+<span class="va">train_matrix_2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html">xgb.DMatrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_features_2011</span>, 
+                                label <span class="op">=</span> <span class="va">train_label_2011</span><span class="op">)</span>       <span class="co"># XGB format!</span>
+<span class="va">fit_ens_2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_2011</span>,             <span class="co"># Data source </span>
+              eta <span class="op">=</span> <span class="fl">0.4</span>,                                        <span class="co"># Learning rate</span>
+              objective <span class="op">=</span> <span class="st">"reg:linear"</span>,                         <span class="co"># Objective function</span>
+              max_depth <span class="op">=</span> <span class="fl">4</span>,                                    <span class="co"># Maximum depth of trees</span>
+              nrounds <span class="op">=</span> <span class="fl">18</span>                                      <span class="co"># Number of trees used</span>
+    <span class="op">)</span></code></pre></div>
+<pre><code>## [14:58:00] WARNING: amalgamation/../src/objective/regression_obj.cu:188: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
+<div class="sourceCode" id="cb178"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">err_ens_2011</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_ens_2011</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span>  <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="co"># Prediction errors</span></code></pre></div>
+<p></p>
+<p>Finally, the last model is a simple neural network.</p>
+<div class="sourceCode" id="cb179"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">NN_features_2013</span> <span class="op">&lt;-</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample_2013</span>, <span class="va">features</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>      <span class="co"># Matrix format is important</span>
+<span class="va">NN_labels_2013</span> <span class="op">&lt;-</span> <span class="va">training_sample_2013</span><span class="op">$</span><span class="va">R1M_Usd</span>
+<span class="va">model_ens_2013</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">model_ens_2013</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'relu'</span>, input_shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">ncol</a></span><span class="op">(</span><span class="va">NN_features_2013</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">'tanh'</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> 
+<span class="va">model_ens_2013</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                    <span class="co"># Model specification</span>
+    loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,               <span class="co"># Loss function</span>
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,           <span class="co"># Optimisation method (weight updating)</span>
+    metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>         <span class="co"># Output metric</span>
+<span class="op">)</span>
+<span class="va">model_ens_2013</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="va">NN_features_2013</span>,                        <span class="co"># Training features</span>
+                       <span class="va">NN_labels_2013</span>,                          <span class="co"># Training labels</span>
+                       epochs <span class="op">=</span> <span class="fl">9</span>, batch_size <span class="op">=</span> <span class="fl">128</span>             <span class="co"># Training parameters</span>
+<span class="op">)</span>
+<span class="va">err_ens_2013</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">model_ens_2013</span>, <span class="va">NN_test_features</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span></code></pre></div>
+<p></p>
+<p>Endowed with the errors of the four models, we can compute their correlation matrix.</p>
+<div class="sourceCode" id="cb180"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">E_subtraining</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/tibble.html">tibble</a></span><span class="op">(</span><span class="va">err_ens_2007</span>,
+                        <span class="va">err_ens_2009</span>,
+                        <span class="va">err_ens_2011</span>,
+                        <span class="va">err_ens_2013</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span><span class="va">E_subtraining</span><span class="op">)</span></code></pre></div>
+<pre><code>##              err_ens_2007 err_ens_2009 err_ens_2011 err_ens_2013
+## err_ens_2007    1.0000000    0.9570006    0.6460091    0.9993493
+## err_ens_2009    0.9570006    1.0000000    0.6290043    0.9589916
+## err_ens_2011    0.6460091    0.6290043    1.0000000    0.6458086
+## err_ens_2013    0.9993493    0.9589916    0.6458086    1.0000000</code></pre>
+<p></p>
+<p>The results are overall disappointing. Only one model manages to extract patterns that are somewhat different from the other ones, resulting in a 65% correlation across the board. Neural networks (on 2013 data) and penalized regressions (2007) remain highly correlated. One possible explanation could be that the models capture mainly noise and little signal. Working with long-term labels like annual returns could help improve diversification across models.  </p>
+</div>
+</div>
+<div id="exercise" class="section level2" number="11.4">
+<h2>
+<span class="header-section-number">11.4</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+</h2>
+<p>Build an integrated ensemble on top of 3 neural networks trained entirely with Keras. Each network obtains one third of predictors as input. The three networks yield a classification (yes/no or buy/sell). The overarching network aggregates the three outputs into a final decision. Evaluate its performance on the testing sample. Use the functional API.</p>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="valtune.html"><span class="header-section-number">10</span> Validating and tuning</a></div>
+<div class="next"><a href="backtest.html"><span class="header-section-number">12</span> Portfolio backtesting</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#ensemble"><span class="header-section-number">11</span> Ensemble models</a></li>
+<li>
+<a class="nav-link" href="#linear-ensembles"><span class="header-section-number">11.1</span> Linear ensembles</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#principles"><span class="header-section-number">11.1.1</span> Principles</a></li>
+<li><a class="nav-link" href="#example"><span class="header-section-number">11.1.2</span> Example</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#stacked-ensembles"><span class="header-section-number">11.2</span> Stacked ensembles</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#two-stage-training"><span class="header-section-number">11.2.1</span> Two-stage training</a></li>
+<li><a class="nav-link" href="#code-and-results-4"><span class="header-section-number">11.2.2</span> Code and results</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#extensions-1"><span class="header-section-number">11.3</span> Extensions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#exogenous-variables"><span class="header-section-number">11.3.1</span> Exogenous variables</a></li>
+<li><a class="nav-link" href="#shrinking-inter-model-correlations"><span class="header-section-number">11.3.2</span> Shrinking inter-model correlations</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">11.4</span> Exercise</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

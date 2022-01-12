@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>C References | Machine Learning for Factor Investing</title>
+  <meta name="description" content="C References | Machine Learning for Factor Investing" />
+  <meta name="generator" content="bookdown 0.16 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="C References | Machine Learning for Factor Investing" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="C References | Machine Learning for Factor Investing" />
+  
+  
+  
+
+<meta name="author" content="Guillaume Coqueret and Tony Guida" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="solution-to-exercises.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1" data-path="preface.html"><a href="preface.html#what-this-book-is-not-about"><i class="fa fa-check"></i><b>1.1</b> What this book is not about</a></li>
+<li class="chapter" data-level="1.2" data-path="preface.html"><a href="preface.html#the-targeted-audience"><i class="fa fa-check"></i><b>1.2</b> The targeted audience</a></li>
+<li class="chapter" data-level="1.3" data-path="preface.html"><a href="preface.html#how-this-book-is-structured"><i class="fa fa-check"></i><b>1.3</b> How this book is structured</a></li>
+<li class="chapter" data-level="1.4" data-path="preface.html"><a href="preface.html#companion-website"><i class="fa fa-check"></i><b>1.4</b> Companion website</a></li>
+<li class="chapter" data-level="1.5" data-path="preface.html"><a href="preface.html#why-r"><i class="fa fa-check"></i><b>1.5</b> Why R?</a></li>
+<li class="chapter" data-level="1.6" data-path="preface.html"><a href="preface.html#coding-instructions"><i class="fa fa-check"></i><b>1.6</b> Coding instructions</a></li>
+<li class="chapter" data-level="1.7" data-path="preface.html"><a href="preface.html#acknowledgements"><i class="fa fa-check"></i><b>1.7</b> Acknowledgements</a></li>
+<li class="chapter" data-level="1.8" data-path="preface.html"><a href="preface.html#future-developments"><i class="fa fa-check"></i><b>1.8</b> Future developments</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="notdata.html"><a href="notdata.html"><i class="fa fa-check"></i><b>2</b> Notations and data</a><ul>
+<li class="chapter" data-level="2.1" data-path="notdata.html"><a href="notdata.html#notations"><i class="fa fa-check"></i><b>2.1</b> Notations</a></li>
+<li class="chapter" data-level="2.2" data-path="notdata.html"><a href="notdata.html#dataset"><i class="fa fa-check"></i><b>2.2</b> Dataset</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>3</b> Introduction</a><ul>
+<li class="chapter" data-level="3.1" data-path="intro.html"><a href="intro.html#context"><i class="fa fa-check"></i><b>3.1</b> Context</a></li>
+<li class="chapter" data-level="3.2" data-path="intro.html"><a href="intro.html#portfolio-construction-the-workflow"><i class="fa fa-check"></i><b>3.2</b> Portfolio construction: the workflow</a></li>
+<li class="chapter" data-level="3.3" data-path="intro.html"><a href="intro.html#machine-learning-is-no-magic-wand"><i class="fa fa-check"></i><b>3.3</b> Machine Learning is no Magic Wand</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="factor.html"><a href="factor.html"><i class="fa fa-check"></i><b>4</b> Factor investing and asset pricing anomalies</a><ul>
+<li class="chapter" data-level="4.1" data-path="factor.html"><a href="factor.html#introduction"><i class="fa fa-check"></i><b>4.1</b> Introduction</a></li>
+<li class="chapter" data-level="4.2" data-path="factor.html"><a href="factor.html#detecting-anomalies"><i class="fa fa-check"></i><b>4.2</b> Detecting anomalies</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="factor.html"><a href="factor.html#simple-portfolio-sorts"><i class="fa fa-check"></i><b>4.2.1</b> Simple portfolio sorts</a></li>
+<li class="chapter" data-level="4.2.2" data-path="factor.html"><a href="factor.html#factors"><i class="fa fa-check"></i><b>4.2.2</b> Factors</a></li>
+<li class="chapter" data-level="4.2.3" data-path="factor.html"><a href="factor.html#predictive-regressions-sorts-and-p-value-issues"><i class="fa fa-check"></i><b>4.2.3</b> Predictive regressions, sorts, and p-value issues</a></li>
+<li class="chapter" data-level="4.2.4" data-path="factor.html"><a href="factor.html#fama-macbeth-regressions"><i class="fa fa-check"></i><b>4.2.4</b> Fama-Macbeth regressions</a></li>
+<li class="chapter" data-level="4.2.5" data-path="factor.html"><a href="factor.html#factor-competition"><i class="fa fa-check"></i><b>4.2.5</b> Factor competition</a></li>
+<li class="chapter" data-level="4.2.6" data-path="factor.html"><a href="factor.html#advanced-techniques"><i class="fa fa-check"></i><b>4.2.6</b> Advanced techniques</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="factor.html"><a href="factor.html#factors-or-characteristics"><i class="fa fa-check"></i><b>4.3</b> Factors or characteristics?</a></li>
+<li class="chapter" data-level="4.4" data-path="factor.html"><a href="factor.html#momentum-and-timing"><i class="fa fa-check"></i><b>4.4</b> Momentum and timing</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="factor.html"><a href="factor.html#factor-momentum"><i class="fa fa-check"></i><b>4.4.1</b> Factor momentum</a></li>
+<li class="chapter" data-level="4.4.2" data-path="factor.html"><a href="factor.html#factor-timing"><i class="fa fa-check"></i><b>4.4.2</b> Factor timing</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="factor.html"><a href="factor.html#the-link-with-machine-learning"><i class="fa fa-check"></i><b>4.5</b> The link with machine learning</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="factor.html"><a href="factor.html#a-short-list-of-recent-references"><i class="fa fa-check"></i><b>4.5.1</b> A short list of recent references</a></li>
+<li class="chapter" data-level="4.5.2" data-path="factor.html"><a href="factor.html#explicit-connexions-with-asset-pricing-models"><i class="fa fa-check"></i><b>4.5.2</b> Explicit connexions with asset pricing models</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="factor.html"><a href="factor.html#coding-exercises"><i class="fa fa-check"></i><b>4.6</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="Data.html"><a href="Data.html"><i class="fa fa-check"></i><b>5</b> Data preprocessing</a><ul>
+<li class="chapter" data-level="5.1" data-path="Data.html"><a href="Data.html#know-your-data"><i class="fa fa-check"></i><b>5.1</b> Know your data</a></li>
+<li class="chapter" data-level="5.2" data-path="Data.html"><a href="Data.html#missing-data"><i class="fa fa-check"></i><b>5.2</b> Missing data</a></li>
+<li class="chapter" data-level="5.3" data-path="Data.html"><a href="Data.html#outlier-detection"><i class="fa fa-check"></i><b>5.3</b> Outlier detection</a></li>
+<li class="chapter" data-level="5.4" data-path="Data.html"><a href="Data.html#feateng"><i class="fa fa-check"></i><b>5.4</b> Feature engineering</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="Data.html"><a href="Data.html#feature-selection"><i class="fa fa-check"></i><b>5.4.1</b> Feature selection</a></li>
+<li class="chapter" data-level="5.4.2" data-path="Data.html"><a href="Data.html#scaling"><i class="fa fa-check"></i><b>5.4.2</b> Scaling the predictors</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="Data.html"><a href="Data.html#labelling"><i class="fa fa-check"></i><b>5.5</b> Labelling</a><ul>
+<li class="chapter" data-level="5.5.1" data-path="Data.html"><a href="Data.html#simple-labels"><i class="fa fa-check"></i><b>5.5.1</b> Simple labels</a></li>
+<li class="chapter" data-level="5.5.2" data-path="Data.html"><a href="Data.html#categorical-labels"><i class="fa fa-check"></i><b>5.5.2</b> Categorical labels</a></li>
+<li class="chapter" data-level="5.5.3" data-path="Data.html"><a href="Data.html#the-triple-barrier-method"><i class="fa fa-check"></i><b>5.5.3</b> The triple barrier method</a></li>
+<li class="chapter" data-level="5.5.4" data-path="Data.html"><a href="Data.html#filtering-the-sample"><i class="fa fa-check"></i><b>5.5.4</b> Filtering the sample</a></li>
+<li class="chapter" data-level="5.5.5" data-path="Data.html"><a href="Data.html#horizons"><i class="fa fa-check"></i><b>5.5.5</b> Return horizons</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="Data.html"><a href="Data.html#pers"><i class="fa fa-check"></i><b>5.6</b> Handling persistence</a></li>
+<li class="chapter" data-level="5.7" data-path="Data.html"><a href="Data.html#extensions"><i class="fa fa-check"></i><b>5.7</b> Extensions</a><ul>
+<li class="chapter" data-level="5.7.1" data-path="Data.html"><a href="Data.html#transforming-features"><i class="fa fa-check"></i><b>5.7.1</b> Transforming features</a></li>
+<li class="chapter" data-level="5.7.2" data-path="Data.html"><a href="Data.html#macrovar"><i class="fa fa-check"></i><b>5.7.2</b> Macro-economic variables</a></li>
+</ul></li>
+<li class="chapter" data-level="5.8" data-path="Data.html"><a href="Data.html#additional-code-and-results"><i class="fa fa-check"></i><b>5.8</b> Additional code and results</a><ul>
+<li class="chapter" data-level="5.8.1" data-path="Data.html"><a href="Data.html#impact-of-rescaling-graphical-representation"><i class="fa fa-check"></i><b>5.8.1</b> Impact of rescaling: graphical representation</a></li>
+<li class="chapter" data-level="5.8.2" data-path="Data.html"><a href="Data.html#impact-of-rescaling-toy-example"><i class="fa fa-check"></i><b>5.8.2</b> Impact of rescaling: toy example</a></li>
+</ul></li>
+<li class="chapter" data-level="5.9" data-path="Data.html"><a href="Data.html#coding-exercises-1"><i class="fa fa-check"></i><b>5.9</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="lasso.html"><a href="lasso.html"><i class="fa fa-check"></i><b>6</b> Penalized regressions and sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.1" data-path="lasso.html"><a href="lasso.html#penalised-regressions"><i class="fa fa-check"></i><b>6.1</b> Penalised regressions</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="lasso.html"><a href="lasso.html#simple-regressions"><i class="fa fa-check"></i><b>6.1.1</b> Simple regressions</a></li>
+<li class="chapter" data-level="6.1.2" data-path="lasso.html"><a href="lasso.html#forms-of-penalizations"><i class="fa fa-check"></i><b>6.1.2</b> Forms of penalizations</a></li>
+<li class="chapter" data-level="6.1.3" data-path="lasso.html"><a href="lasso.html#illustrations"><i class="fa fa-check"></i><b>6.1.3</b> Illustrations</a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="lasso.html"><a href="lasso.html#sparse-hedging-for-minimum-variance-portfolios"><i class="fa fa-check"></i><b>6.2</b> Sparse hedging for minimum variance portfolios</a><ul>
+<li class="chapter" data-level="6.2.1" data-path="lasso.html"><a href="lasso.html#presentation-and-derivations"><i class="fa fa-check"></i><b>6.2.1</b> Presentation and derivations</a></li>
+<li class="chapter" data-level="6.2.2" data-path="lasso.html"><a href="lasso.html#sparseex"><i class="fa fa-check"></i><b>6.2.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="lasso.html"><a href="lasso.html#predictive-regressions"><i class="fa fa-check"></i><b>6.3</b> Predictive regressions</a><ul>
+<li class="chapter" data-level="6.3.1" data-path="lasso.html"><a href="lasso.html#literature-review-and-principle"><i class="fa fa-check"></i><b>6.3.1</b> Literature review and principle</a></li>
+<li class="chapter" data-level="6.3.2" data-path="lasso.html"><a href="lasso.html#code-and-results"><i class="fa fa-check"></i><b>6.3.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="6.4" data-path="lasso.html"><a href="lasso.html#coding-exercises-2"><i class="fa fa-check"></i><b>6.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="trees.html"><a href="trees.html"><i class="fa fa-check"></i><b>7</b> Tree-based methods</a><ul>
+<li class="chapter" data-level="7.1" data-path="trees.html"><a href="trees.html#simple-trees"><i class="fa fa-check"></i><b>7.1</b> Simple trees</a><ul>
+<li class="chapter" data-level="7.1.1" data-path="trees.html"><a href="trees.html#principle"><i class="fa fa-check"></i><b>7.1.1</b> Principle</a></li>
+<li class="chapter" data-level="7.1.2" data-path="trees.html"><a href="trees.html#further-details-on-classification"><i class="fa fa-check"></i><b>7.1.2</b> Further details on classification</a></li>
+<li class="chapter" data-level="7.1.3" data-path="trees.html"><a href="trees.html#pruning-criteria"><i class="fa fa-check"></i><b>7.1.3</b> Pruning criteria</a></li>
+<li class="chapter" data-level="7.1.4" data-path="trees.html"><a href="trees.html#code-and-interpretation"><i class="fa fa-check"></i><b>7.1.4</b> Code and interpretation</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="trees.html"><a href="trees.html#random-forests"><i class="fa fa-check"></i><b>7.2</b> Random forests</a><ul>
+<li class="chapter" data-level="7.2.1" data-path="trees.html"><a href="trees.html#principle-1"><i class="fa fa-check"></i><b>7.2.1</b> Principle</a></li>
+<li class="chapter" data-level="7.2.2" data-path="trees.html"><a href="trees.html#code-and-results-1"><i class="fa fa-check"></i><b>7.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="trees.html"><a href="trees.html#adaboost"><i class="fa fa-check"></i><b>7.3</b> Boosted trees: Adaboost</a><ul>
+<li class="chapter" data-level="7.3.1" data-path="trees.html"><a href="trees.html#methodology"><i class="fa fa-check"></i><b>7.3.1</b> Methodology</a></li>
+<li class="chapter" data-level="7.3.2" data-path="trees.html"><a href="trees.html#illustration"><i class="fa fa-check"></i><b>7.3.2</b> Illustration</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="trees.html"><a href="trees.html#boosted-trees-extreme-gradient-boosting"><i class="fa fa-check"></i><b>7.4</b> Boosted trees: extreme gradient boosting</a><ul>
+<li class="chapter" data-level="7.4.1" data-path="trees.html"><a href="trees.html#managing-loss"><i class="fa fa-check"></i><b>7.4.1</b> Managing Loss</a></li>
+<li class="chapter" data-level="7.4.2" data-path="trees.html"><a href="trees.html#penalisation"><i class="fa fa-check"></i><b>7.4.2</b> Penalisation</a></li>
+<li class="chapter" data-level="7.4.3" data-path="trees.html"><a href="trees.html#aggregation"><i class="fa fa-check"></i><b>7.4.3</b> Aggregation</a></li>
+<li class="chapter" data-level="7.4.4" data-path="trees.html"><a href="trees.html#tree-structure"><i class="fa fa-check"></i><b>7.4.4</b> Tree structure</a></li>
+<li class="chapter" data-level="7.4.5" data-path="trees.html"><a href="trees.html#boostext"><i class="fa fa-check"></i><b>7.4.5</b> Extensions</a></li>
+<li class="chapter" data-level="7.4.6" data-path="trees.html"><a href="trees.html#boostcode"><i class="fa fa-check"></i><b>7.4.6</b> Code and results</a></li>
+<li class="chapter" data-level="7.4.7" data-path="trees.html"><a href="trees.html#instweight"><i class="fa fa-check"></i><b>7.4.7</b> Instance weighting</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="trees.html"><a href="trees.html#discussion"><i class="fa fa-check"></i><b>7.5</b> Discussion</a></li>
+<li class="chapter" data-level="7.6" data-path="trees.html"><a href="trees.html#coding-exercises-3"><i class="fa fa-check"></i><b>7.6</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="NN.html"><a href="NN.html"><i class="fa fa-check"></i><b>8</b> Neural networks</a><ul>
+<li class="chapter" data-level="8.1" data-path="NN.html"><a href="NN.html#the-original-perceptron"><i class="fa fa-check"></i><b>8.1</b> The original perceptron</a></li>
+<li class="chapter" data-level="8.2" data-path="NN.html"><a href="NN.html#multilayer-perceptron"><i class="fa fa-check"></i><b>8.2</b> Multilayer perceptron</a><ul>
+<li class="chapter" data-level="8.2.1" data-path="NN.html"><a href="NN.html#introduction-and-notations"><i class="fa fa-check"></i><b>8.2.1</b> Introduction and notations</a></li>
+<li class="chapter" data-level="8.2.2" data-path="NN.html"><a href="NN.html#universal-approximation"><i class="fa fa-check"></i><b>8.2.2</b> Universal approximation</a></li>
+<li class="chapter" data-level="8.2.3" data-path="NN.html"><a href="NN.html#backprop"><i class="fa fa-check"></i><b>8.2.3</b> Learning via back-propagation</a></li>
+<li class="chapter" data-level="8.2.4" data-path="NN.html"><a href="NN.html#further-details-on-classification-1"><i class="fa fa-check"></i><b>8.2.4</b> Further details on classification</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="NN.html"><a href="NN.html#howdeep"><i class="fa fa-check"></i><b>8.3</b> How deep should we go? And other practical issues</a><ul>
+<li class="chapter" data-level="8.3.1" data-path="NN.html"><a href="NN.html#architectural-choices"><i class="fa fa-check"></i><b>8.3.1</b> Architectural choices</a></li>
+<li class="chapter" data-level="8.3.2" data-path="NN.html"><a href="NN.html#frequency-of-weight-updates-and-learning-duration"><i class="fa fa-check"></i><b>8.3.2</b> Frequency of weight updates and learning duration</a></li>
+<li class="chapter" data-level="8.3.3" data-path="NN.html"><a href="NN.html#penalizations-and-dropout"><i class="fa fa-check"></i><b>8.3.3</b> Penalizations and dropout</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="NN.html"><a href="NN.html#code-samples-and-comments-for-vanilla-mlp"><i class="fa fa-check"></i><b>8.4</b> Code samples and comments for vanilla MLP</a><ul>
+<li class="chapter" data-level="8.4.1" data-path="NN.html"><a href="NN.html#regression-example"><i class="fa fa-check"></i><b>8.4.1</b> Regression example</a></li>
+<li class="chapter" data-level="8.4.2" data-path="NN.html"><a href="NN.html#classification-example"><i class="fa fa-check"></i><b>8.4.2</b> Classification example</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="NN.html"><a href="NN.html#recurrent-networks"><i class="fa fa-check"></i><b>8.5</b> Recurrent networks</a><ul>
+<li class="chapter" data-level="8.5.1" data-path="NN.html"><a href="NN.html#presentation"><i class="fa fa-check"></i><b>8.5.1</b> Presentation</a></li>
+<li class="chapter" data-level="8.5.2" data-path="NN.html"><a href="NN.html#code-and-results-2"><i class="fa fa-check"></i><b>8.5.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="NN.html"><a href="NN.html#other-common-architectures"><i class="fa fa-check"></i><b>8.6</b> Other common architectures</a><ul>
+<li class="chapter" data-level="8.6.1" data-path="NN.html"><a href="NN.html#generative-aversarial-networks"><i class="fa fa-check"></i><b>8.6.1</b> Generative adversarial networks</a></li>
+<li class="chapter" data-level="8.6.2" data-path="NN.html"><a href="NN.html#autoencoders"><i class="fa fa-check"></i><b>8.6.2</b> Auto-encoders</a></li>
+<li class="chapter" data-level="8.6.3" data-path="NN.html"><a href="NN.html#a-word-on-convolutional-networks"><i class="fa fa-check"></i><b>8.6.3</b> A word on convolutional networks</a></li>
+<li class="chapter" data-level="8.6.4" data-path="NN.html"><a href="NN.html#advanced-architectures"><i class="fa fa-check"></i><b>8.6.4</b> Advanced architectures</a></li>
+</ul></li>
+<li class="chapter" data-level="8.7" data-path="NN.html"><a href="NN.html#coding-exercise"><i class="fa fa-check"></i><b>8.7</b> Coding exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="svm.html"><a href="svm.html"><i class="fa fa-check"></i><b>9</b> Support vector machines</a><ul>
+<li class="chapter" data-level="9.1" data-path="svm.html"><a href="svm.html#svm-for-classification"><i class="fa fa-check"></i><b>9.1</b> SVM for classification</a></li>
+<li class="chapter" data-level="9.2" data-path="svm.html"><a href="svm.html#svm-for-regression"><i class="fa fa-check"></i><b>9.2</b> SVM for regression</a></li>
+<li class="chapter" data-level="9.3" data-path="svm.html"><a href="svm.html#practice"><i class="fa fa-check"></i><b>9.3</b> Practice</a></li>
+<li class="chapter" data-level="9.4" data-path="svm.html"><a href="svm.html#coding-exercises-4"><i class="fa fa-check"></i><b>9.4</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="bayes.html"><a href="bayes.html"><i class="fa fa-check"></i><b>10</b> Bayesian methods</a><ul>
+<li class="chapter" data-level="10.1" data-path="bayes.html"><a href="bayes.html#the-bayesian-framework"><i class="fa fa-check"></i><b>10.1</b> The Bayesian framework</a></li>
+<li class="chapter" data-level="10.2" data-path="bayes.html"><a href="bayes.html#bayesian-sampling"><i class="fa fa-check"></i><b>10.2</b> Bayesian sampling</a><ul>
+<li class="chapter" data-level="10.2.1" data-path="bayes.html"><a href="bayes.html#gibbs-sampling"><i class="fa fa-check"></i><b>10.2.1</b> Gibbs sampling</a></li>
+<li class="chapter" data-level="10.2.2" data-path="bayes.html"><a href="bayes.html#metropolis-hastings-sampling"><i class="fa fa-check"></i><b>10.2.2</b> Metropolis-Hastings sampling</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="bayes.html"><a href="bayes.html#bayesian-linear-regression"><i class="fa fa-check"></i><b>10.3</b> Bayesian linear regression</a></li>
+<li class="chapter" data-level="10.4" data-path="bayes.html"><a href="bayes.html#naive-bayes-classifier"><i class="fa fa-check"></i><b>10.4</b> Naive Bayes classifier</a></li>
+<li class="chapter" data-level="10.5" data-path="bayes.html"><a href="bayes.html#BART"><i class="fa fa-check"></i><b>10.5</b> Bayesian additive trees</a><ul>
+<li class="chapter" data-level="10.5.1" data-path="bayes.html"><a href="bayes.html#general-formulation"><i class="fa fa-check"></i><b>10.5.1</b> General formulation</a></li>
+<li class="chapter" data-level="10.5.2" data-path="bayes.html"><a href="bayes.html#priors"><i class="fa fa-check"></i><b>10.5.2</b> Priors</a></li>
+<li class="chapter" data-level="10.5.3" data-path="bayes.html"><a href="bayes.html#sampling-and-predictions"><i class="fa fa-check"></i><b>10.5.3</b> Sampling and predictions</a></li>
+<li class="chapter" data-level="10.5.4" data-path="bayes.html"><a href="bayes.html#code"><i class="fa fa-check"></i><b>10.5.4</b> Code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="valtune.html"><a href="valtune.html"><i class="fa fa-check"></i><b>11</b> Validating and tuning</a><ul>
+<li class="chapter" data-level="11.1" data-path="valtune.html"><a href="valtune.html#mlmetrics"><i class="fa fa-check"></i><b>11.1</b> Learning metrics</a><ul>
+<li class="chapter" data-level="11.1.1" data-path="valtune.html"><a href="valtune.html#regression-analysis"><i class="fa fa-check"></i><b>11.1.1</b> Regression analysis</a></li>
+<li class="chapter" data-level="11.1.2" data-path="valtune.html"><a href="valtune.html#classification-analysis"><i class="fa fa-check"></i><b>11.1.2</b> Classification analysis</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="valtune.html"><a href="valtune.html#validation"><i class="fa fa-check"></i><b>11.2</b> Validation</a><ul>
+<li class="chapter" data-level="11.2.1" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-theory"><i class="fa fa-check"></i><b>11.2.1</b> The variance-bias tradeoff: theory</a></li>
+<li class="chapter" data-level="11.2.2" data-path="valtune.html"><a href="valtune.html#the-variance-bias-tradeoff-illustration"><i class="fa fa-check"></i><b>11.2.2</b> The variance-bias tradeoff: illustration</a></li>
+<li class="chapter" data-level="11.2.3" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-principle"><i class="fa fa-check"></i><b>11.2.3</b> The risk of overfitting: principle</a></li>
+<li class="chapter" data-level="11.2.4" data-path="valtune.html"><a href="valtune.html#the-risk-of-overfitting-some-solutions"><i class="fa fa-check"></i><b>11.2.4</b> The risk of overfitting: some solutions</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="valtune.html"><a href="valtune.html#the-search-for-good-hyperparameters"><i class="fa fa-check"></i><b>11.3</b> The search for good hyperparameters</a><ul>
+<li class="chapter" data-level="11.3.1" data-path="valtune.html"><a href="valtune.html#methods"><i class="fa fa-check"></i><b>11.3.1</b> Methods</a></li>
+<li class="chapter" data-level="11.3.2" data-path="valtune.html"><a href="valtune.html#example-grid-search"><i class="fa fa-check"></i><b>11.3.2</b> Example: grid search</a></li>
+<li class="chapter" data-level="11.3.3" data-path="valtune.html"><a href="valtune.html#example-bayesian-optimization"><i class="fa fa-check"></i><b>11.3.3</b> Example: Bayesian optimization</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="valtune.html"><a href="valtune.html#short-discussion-on-validation-in-backtests"><i class="fa fa-check"></i><b>11.4</b> Short discussion on validation in backtests</a></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="ensemble.html"><a href="ensemble.html"><i class="fa fa-check"></i><b>12</b> Ensemble models</a><ul>
+<li class="chapter" data-level="12.1" data-path="ensemble.html"><a href="ensemble.html#linear-ensembles"><i class="fa fa-check"></i><b>12.1</b> Linear ensembles</a><ul>
+<li class="chapter" data-level="12.1.1" data-path="ensemble.html"><a href="ensemble.html#principles"><i class="fa fa-check"></i><b>12.1.1</b> Principles</a></li>
+<li class="chapter" data-level="12.1.2" data-path="ensemble.html"><a href="ensemble.html#example"><i class="fa fa-check"></i><b>12.1.2</b> Example</a></li>
+</ul></li>
+<li class="chapter" data-level="12.2" data-path="ensemble.html"><a href="ensemble.html#stacked-ensembles"><i class="fa fa-check"></i><b>12.2</b> Stacked ensembles</a><ul>
+<li class="chapter" data-level="12.2.1" data-path="ensemble.html"><a href="ensemble.html#two-stage-training"><i class="fa fa-check"></i><b>12.2.1</b> Two stage training</a></li>
+<li class="chapter" data-level="12.2.2" data-path="ensemble.html"><a href="ensemble.html#code-and-results-3"><i class="fa fa-check"></i><b>12.2.2</b> Code and results</a></li>
+</ul></li>
+<li class="chapter" data-level="12.3" data-path="ensemble.html"><a href="ensemble.html#extensions-1"><i class="fa fa-check"></i><b>12.3</b> Extensions</a><ul>
+<li class="chapter" data-level="12.3.1" data-path="ensemble.html"><a href="ensemble.html#exogenous-variables"><i class="fa fa-check"></i><b>12.3.1</b> Exogenous variables</a></li>
+<li class="chapter" data-level="12.3.2" data-path="ensemble.html"><a href="ensemble.html#shrinking-inter-model-correlations"><i class="fa fa-check"></i><b>12.3.2</b> Shrinking inter-model correlations</a></li>
+</ul></li>
+<li class="chapter" data-level="12.4" data-path="ensemble.html"><a href="ensemble.html#exercise"><i class="fa fa-check"></i><b>12.4</b> Exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="backtest.html"><a href="backtest.html"><i class="fa fa-check"></i><b>13</b> Portfolio backtesting</a><ul>
+<li class="chapter" data-level="13.1" data-path="backtest.html"><a href="backtest.html#protocol"><i class="fa fa-check"></i><b>13.1</b> Setting the protocol</a></li>
+<li class="chapter" data-level="13.2" data-path="backtest.html"><a href="backtest.html#turning-signals-into-portfolio-weights"><i class="fa fa-check"></i><b>13.2</b> Turning signals into portfolio weights</a></li>
+<li class="chapter" data-level="13.3" data-path="backtest.html"><a href="backtest.html#perfmet"><i class="fa fa-check"></i><b>13.3</b> Performance metrics</a><ul>
+<li class="chapter" data-level="13.3.1" data-path="backtest.html"><a href="backtest.html#discussion-1"><i class="fa fa-check"></i><b>13.3.1</b> Discussion</a></li>
+<li class="chapter" data-level="13.3.2" data-path="backtest.html"><a href="backtest.html#pure-performance-and-risk-indicators"><i class="fa fa-check"></i><b>13.3.2</b> Pure performance and risk indicators</a></li>
+<li class="chapter" data-level="13.3.3" data-path="backtest.html"><a href="backtest.html#factor-based-evaluation"><i class="fa fa-check"></i><b>13.3.3</b> Factor-based evaluation</a></li>
+<li class="chapter" data-level="13.3.4" data-path="backtest.html"><a href="backtest.html#risk-adjusted-measures"><i class="fa fa-check"></i><b>13.3.4</b> Risk-adjusted measures</a></li>
+<li class="chapter" data-level="13.3.5" data-path="backtest.html"><a href="backtest.html#transaction-costs-and-turnover"><i class="fa fa-check"></i><b>13.3.5</b> Transaction costs and turnover</a></li>
+</ul></li>
+<li class="chapter" data-level="13.4" data-path="backtest.html"><a href="backtest.html#common-errors-and-issues"><i class="fa fa-check"></i><b>13.4</b> Common errors and issues</a><ul>
+<li class="chapter" data-level="13.4.1" data-path="backtest.html"><a href="backtest.html#forward-looking-data"><i class="fa fa-check"></i><b>13.4.1</b> Forward looking data</a></li>
+<li class="chapter" data-level="13.4.2" data-path="backtest.html"><a href="backtest.html#backtest-overfitting"><i class="fa fa-check"></i><b>13.4.2</b> Backtest overfitting</a></li>
+<li class="chapter" data-level="13.4.3" data-path="backtest.html"><a href="backtest.html#simple-saveguards"><i class="fa fa-check"></i><b>13.4.3</b> Simple saveguards</a></li>
+</ul></li>
+<li class="chapter" data-level="13.5" data-path="backtest.html"><a href="backtest.html#implication-of-non-stationarity-forecasting-is-hard"><i class="fa fa-check"></i><b>13.5</b> Implication of non-stationarity: forecasting is hard</a><ul>
+<li class="chapter" data-level="13.5.1" data-path="backtest.html"><a href="backtest.html#general-comments"><i class="fa fa-check"></i><b>13.5.1</b> General comments</a></li>
+<li class="chapter" data-level="13.5.2" data-path="backtest.html"><a href="backtest.html#the-no-free-lunch-theorem"><i class="fa fa-check"></i><b>13.5.2</b> The no free lunch theorem</a></li>
+</ul></li>
+<li class="chapter" data-level="13.6" data-path="backtest.html"><a href="backtest.html#example-1"><i class="fa fa-check"></i><b>13.6</b> Example</a></li>
+<li class="chapter" data-level="13.7" data-path="backtest.html"><a href="backtest.html#coding-exercises-5"><i class="fa fa-check"></i><b>13.7</b> Coding exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="14" data-path="interp.html"><a href="interp.html"><i class="fa fa-check"></i><b>14</b> Interpretability</a><ul>
+<li class="chapter" data-level="14.1" data-path="interp.html"><a href="interp.html#global-interpretations"><i class="fa fa-check"></i><b>14.1</b> Global interpretations</a><ul>
+<li class="chapter" data-level="14.1.1" data-path="interp.html"><a href="interp.html#variable-importance"><i class="fa fa-check"></i><b>14.1.1</b> Variable importance (tree-based)</a></li>
+<li class="chapter" data-level="14.1.2" data-path="interp.html"><a href="interp.html#variable-importance-agnostic"><i class="fa fa-check"></i><b>14.1.2</b> Variable importance (agnostic)</a></li>
+<li class="chapter" data-level="14.1.3" data-path="interp.html"><a href="interp.html#partial-dependence-plot"><i class="fa fa-check"></i><b>14.1.3</b> Partial dependence plot</a></li>
+</ul></li>
+<li class="chapter" data-level="14.2" data-path="interp.html"><a href="interp.html#local-interpretations"><i class="fa fa-check"></i><b>14.2</b> Local interpretations</a><ul>
+<li class="chapter" data-level="14.2.1" data-path="interp.html"><a href="interp.html#lime"><i class="fa fa-check"></i><b>14.2.1</b> LIME</a></li>
+<li class="chapter" data-level="14.2.2" data-path="interp.html"><a href="interp.html#shapley-values"><i class="fa fa-check"></i><b>14.2.2</b> Shapley values</a></li>
+<li class="chapter" data-level="14.2.3" data-path="interp.html"><a href="interp.html#breakdown"><i class="fa fa-check"></i><b>14.2.3</b> Breakdown</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="15" data-path="causality.html"><a href="causality.html"><i class="fa fa-check"></i><b>15</b> Two key concepts: causality and non-stationarity</a><ul>
+<li class="chapter" data-level="15.1" data-path="causality.html"><a href="causality.html#causality-1"><i class="fa fa-check"></i><b>15.1</b> Causality</a><ul>
+<li class="chapter" data-level="15.1.1" data-path="causality.html"><a href="causality.html#granger"><i class="fa fa-check"></i><b>15.1.1</b> Granger causality</a></li>
+<li class="chapter" data-level="15.1.2" data-path="causality.html"><a href="causality.html#causal-additive-models"><i class="fa fa-check"></i><b>15.1.2</b> Causal additive models</a></li>
+<li class="chapter" data-level="15.1.3" data-path="causality.html"><a href="causality.html#structural-time-series-models"><i class="fa fa-check"></i><b>15.1.3</b> Structural time-series models</a></li>
+</ul></li>
+<li class="chapter" data-level="15.2" data-path="causality.html"><a href="causality.html#nonstat"><i class="fa fa-check"></i><b>15.2</b> Dealing with changing environments</a><ul>
+<li class="chapter" data-level="15.2.1" data-path="causality.html"><a href="causality.html#non-stationarity-an-obvious-illustration"><i class="fa fa-check"></i><b>15.2.1</b> Non-stationarity: an obvious illustration</a></li>
+<li class="chapter" data-level="15.2.2" data-path="causality.html"><a href="causality.html#online-learning"><i class="fa fa-check"></i><b>15.2.2</b> Online learning</a></li>
+<li class="chapter" data-level="15.2.3" data-path="causality.html"><a href="causality.html#homogeneous-transfer-learning"><i class="fa fa-check"></i><b>15.2.3</b> Homogeneous transfer learning</a></li>
+<li class="chapter" data-level="15.2.4" data-path="causality.html"><a href="causality.html#active-learning"><i class="fa fa-check"></i><b>15.2.4</b> Active learning</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="16" data-path="unsup.html"><a href="unsup.html"><i class="fa fa-check"></i><b>16</b> Unsupervised learning</a><ul>
+<li class="chapter" data-level="16.1" data-path="unsup.html"><a href="unsup.html#corpred"><i class="fa fa-check"></i><b>16.1</b> The problem with correlated predictors</a></li>
+<li class="chapter" data-level="16.2" data-path="unsup.html"><a href="unsup.html#principal-component-analysis-and-autoencoders"><i class="fa fa-check"></i><b>16.2</b> Principal component analysis and autoencoders</a><ul>
+<li class="chapter" data-level="16.2.1" data-path="unsup.html"><a href="unsup.html#a-bit-of-algebra"><i class="fa fa-check"></i><b>16.2.1</b> A bit of algebra</a></li>
+<li class="chapter" data-level="16.2.2" data-path="unsup.html"><a href="unsup.html#pca"><i class="fa fa-check"></i><b>16.2.2</b> PCA</a></li>
+<li class="chapter" data-level="16.2.3" data-path="unsup.html"><a href="unsup.html#ae"><i class="fa fa-check"></i><b>16.2.3</b> Autoencoders</a></li>
+<li class="chapter" data-level="16.2.4" data-path="unsup.html"><a href="unsup.html#application"><i class="fa fa-check"></i><b>16.2.4</b> Application</a></li>
+</ul></li>
+<li class="chapter" data-level="16.3" data-path="unsup.html"><a href="unsup.html#clustering-via-k-means"><i class="fa fa-check"></i><b>16.3</b> Clustering via k-means</a></li>
+<li class="chapter" data-level="16.4" data-path="unsup.html"><a href="unsup.html#nearest-neighbors"><i class="fa fa-check"></i><b>16.4</b> Nearest neighbors</a></li>
+<li class="chapter" data-level="16.5" data-path="unsup.html"><a href="unsup.html#coding-exercise-1"><i class="fa fa-check"></i><b>16.5</b> Coding exercise</a></li>
+</ul></li>
+<li class="chapter" data-level="17" data-path="RL.html"><a href="RL.html"><i class="fa fa-check"></i><b>17</b> Reinforcement learning</a><ul>
+<li class="chapter" data-level="17.1" data-path="RL.html"><a href="RL.html#theoretical-layout"><i class="fa fa-check"></i><b>17.1</b> Theoretical layout</a><ul>
+<li class="chapter" data-level="17.1.1" data-path="RL.html"><a href="RL.html#general-framework"><i class="fa fa-check"></i><b>17.1.1</b> General framework</a></li>
+<li class="chapter" data-level="17.1.2" data-path="RL.html"><a href="RL.html#q-learning"><i class="fa fa-check"></i><b>17.1.2</b> Q-learning</a></li>
+<li class="chapter" data-level="17.1.3" data-path="RL.html"><a href="RL.html#sarsa"><i class="fa fa-check"></i><b>17.1.3</b> SARSA</a></li>
+</ul></li>
+<li class="chapter" data-level="17.2" data-path="RL.html"><a href="RL.html#the-curse-of-dimensionality"><i class="fa fa-check"></i><b>17.2</b> The curse of dimensionality</a></li>
+<li class="chapter" data-level="17.3" data-path="RL.html"><a href="RL.html#policy-gradient"><i class="fa fa-check"></i><b>17.3</b> Policy gradient</a><ul>
+<li class="chapter" data-level="17.3.1" data-path="RL.html"><a href="RL.html#principle-2"><i class="fa fa-check"></i><b>17.3.1</b> Principle</a></li>
+<li class="chapter" data-level="17.3.2" data-path="RL.html"><a href="RL.html#extensions-2"><i class="fa fa-check"></i><b>17.3.2</b> Extensions</a></li>
+</ul></li>
+<li class="chapter" data-level="17.4" data-path="RL.html"><a href="RL.html#simple-examples"><i class="fa fa-check"></i><b>17.4</b> Simple examples</a><ul>
+<li class="chapter" data-level="17.4.1" data-path="RL.html"><a href="RL.html#q-learning-with-simulations"><i class="fa fa-check"></i><b>17.4.1</b> Q-learning with simulations</a></li>
+<li class="chapter" data-level="17.4.2" data-path="RL.html"><a href="RL.html#RLemp2"><i class="fa fa-check"></i><b>17.4.2</b> Q-learning with market data</a></li>
+</ul></li>
+<li class="chapter" data-level="17.5" data-path="RL.html"><a href="RL.html#concluding-remarks"><i class="fa fa-check"></i><b>17.5</b> Concluding remarks</a></li>
+<li class="chapter" data-level="17.6" data-path="RL.html"><a href="RL.html#exercises"><i class="fa fa-check"></i><b>17.6</b> Exercises</a></li>
+</ul></li>
+<li class="chapter" data-level="18" data-path="NLP.html"><a href="NLP.html"><i class="fa fa-check"></i><b>18</b> Natural Language Processing</a></li>
+<li class="appendix"><span><b>Appendix</b></span></li>
+<li class="chapter" data-level="A" data-path="data-description.html"><a href="data-description.html"><i class="fa fa-check"></i><b>A</b> Data Description</a></li>
+<li class="chapter" data-level="B" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html"><i class="fa fa-check"></i><b>B</b> Solution to exercises</a><ul>
+<li class="chapter" data-level="B.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-4"><i class="fa fa-check"></i><b>B.1</b> Chapter 4</a></li>
+<li class="chapter" data-level="B.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-5"><i class="fa fa-check"></i><b>B.2</b> Chapter 5</a></li>
+<li class="chapter" data-level="B.3" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-6"><i class="fa fa-check"></i><b>B.3</b> Chapter 6</a></li>
+<li class="chapter" data-level="B.4" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-7"><i class="fa fa-check"></i><b>B.4</b> Chapter 7</a></li>
+<li class="chapter" data-level="B.5" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-8-the-autoencoder-model"><i class="fa fa-check"></i><b>B.5</b> Chapter 8: the autoencoder model</a></li>
+<li class="chapter" data-level="B.6" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-9"><i class="fa fa-check"></i><b>B.6</b> Chapter 9</a></li>
+<li class="chapter" data-level="B.7" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-12-ensemble-neural-network"><i class="fa fa-check"></i><b>B.7</b> Chapter 12: ensemble neural network</a></li>
+<li class="chapter" data-level="B.8" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-13"><i class="fa fa-check"></i><b>B.8</b> Chapter 13</a><ul>
+<li class="chapter" data-level="B.8.1" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#advanced-weighting-function"><i class="fa fa-check"></i><b>B.8.1</b> Advanced weighting function</a></li>
+<li class="chapter" data-level="B.8.2" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#functional-programming-in-the-backtest"><i class="fa fa-check"></i><b>B.8.2</b> Functional programming in the backtest</a></li>
+</ul></li>
+<li class="chapter" data-level="B.9" data-path="solution-to-exercises.html"><a href="solution-to-exercises.html#chapter-17"><i class="fa fa-check"></i><b>B.9</b> Chapter 17</a></li>
+</ul></li>
+<li class="chapter" data-level="C" data-path="references.html"><a href="references.html"><i class="fa fa-check"></i><b>C</b> References</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Machine Learning for Factor Investing</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="references" class="section level1">
+<h1><span class="header-section-number">C</span> References</h1>
+
+<div id="refs" class="references">
+<div>
+<p>Abbasi, Ahmed, Conan Albrecht, Anthony Vance, and James Hansen. 2012. “Metafraud: A Meta-Learning Framework for Detecting Financial Fraud.” <em>MIS Quarterly</em>, 1293–1327.</p>
+</div>
+<div>
+<p>Aboussalah, Amine Mohamed, and Chi-Guhn Lee. 2020. “Continuous Control with Stacked Deep Dynamic Recurrent Reinforcement Learning for Portfolio Optimization.” <em>Expert Systems with Applications</em> 140: 112891.</p>
+</div>
+<div>
+<p>Agarwal, Amit, Elad Hazan, Satyen Kale, and Robert E Schapire. 2006. “Algorithms for Portfolio Management Based on the Newton Method.” In <em>Proceedings of the 23rd International Conference on Machine Learning</em>, 9–16. ACM.</p>
+</div>
+<div>
+<p>Aggarwal, Charu C. 2013. <em>Outlier Analysis</em>. Springer.</p>
+</div>
+<div>
+<p>Aldridge, Irene, and Marco Avellaneda. 2019. “Neural Networks in Finance: Design and Performance.” <em>Journal of Financial Data Science</em> 1 (4): 39–62.</p>
+</div>
+<div>
+<p>Allison, Paul D. 2001. <em>Missing Data</em>. Vol. 136. Sage publications.</p>
+</div>
+<div>
+<p>Almahdi, Saud, and Steve Y Yang. 2017. “An Adaptive Portfolio Trading System: A Risk-Return Portfolio Optimization Using Recurrent Reinforcement Learning with Expected Maximum Drawdown.” <em>Expert Systems with Applications</em> 87: 267–79.</p>
+</div>
+<div>
+<p>———. 2019. “A Constrained Portfolio Trading System Using Particle Swarm Algorithm and Recurrent Reinforcement Learning.” <em>Expert Systems with Applications</em> 130: 145–56.</p>
+</div>
+<div>
+<p>Ammann, Manuel, Guillaume Coqueret, and Jan-Philip Schade. 2016. “Characteristics-Based Portfolio Choice with Leverage Constraints.” <em>Journal of Banking &amp; Finance</em> 70: 23–37.</p>
+</div>
+<div>
+<p>Amrhein, Valentin, Sander Greenland, and Blake McShane. 2019. “Scientists Rise up Against Statistical Significance.” <em>Nature</em> 567: 305–7.</p>
+</div>
+<div>
+<p>Anderson, James A, and Edward Rosenfeld. 2000. <em>Talking Nets: An Oral History of Neural Networks</em>. MIT Press.</p>
+</div>
+<div>
+<p>Ang, Andrew. 2014. <em>Asset Management: A Systematic Approach to Factor Investing</em>. Oxford University Press.</p>
+</div>
+<div>
+<p>Ang, Andrew, Robert J Hodrick, Yuhang Xing, and Xiaoyan Zhang. 2006. “The Cross-Section of Volatility and Expected Returns.” <em>Journal of Finance</em> 61 (1): 259–99.</p>
+</div>
+<div>
+<p>Ang, Andrew, and Dennis Kristensen. 2012. “Testing Conditional Factor Models.” <em>Journal of Financial Economics</em> 106 (1): 132–56.</p>
+</div>
+<div>
+<p>Ang, Andrew, Jun Liu, and Krista Schwarz. 2018. “Using Individual Stocks or Portfolios in Tests of Factor Models.” <em>SSRN Working Paper</em> 1106463.</p>
+</div>
+<div>
+<p>Arik, Sercan O, and Tomas Pfister. 2019. “TabNet: Attentive Interpretable Tabular Learning.” <em>arXiv Preprint</em>, no. 1908.07442.</p>
+</div>
+<div>
+<p>Arjovsky, Martin, Léon Bottou, Ishaan Gulrajani, and David Lopez-Paz. 2019. “Invariant Risk Minimization.” <em>arXiv Preprint</em>, no. 1907.02893.</p>
+</div>
+<div>
+<p>Arnott, Robert D, Mark Clements, Vitali Kalesnik, and Juhani T Linnainmaa. 2019. “Factor Momentum.” <em>SSRN Working Paper</em> 3116974.</p>
+</div>
+<div>
+<p>Arnott, Robert D, Jason C Hsu, Jun Liu, and Harry Markowitz. 2014. “Can Noise Create the Size and Value Effects?” <em>Management Science</em> 61 (11): 2569–79.</p>
+</div>
+<div>
+<p>Arnott, Rob, Campbell R Harvey, Vitali Kalesnik, and Juhani Linnainmaa. 2019. “Alice’s Adventures in Factorland: Three Blunders That Plague Factor Investing.” <em>The Journal of Portfolio Management</em> 45 (4): 18–36.</p>
+</div>
+<div>
+<p>Arnott, Rob, Campbell R Harvey, and Harry Markowitz. 2019. “A Backtesting Protocol in the Era of Machine Learning.” <em>Journal of Financial Data Science</em> 1 (1): 64–74.</p>
+</div>
+<div>
+<p>Asness, Clifford, Swati Chandra, Antti Ilmanen, and Ronen Israel. 2017. “Contrarian Factor Timing Is Deceptively Difficult.” <em>Journal of Portfolio Management</em> 43 (5): 72–87.</p>
+</div>
+<div>
+<p>Asness, Clifford, Andrea Frazzini, Ronen Israel, Tobias J Moskowitz, and Lasse H Pedersen. 2018. “Size Matters, If You Control Your Junk.” <em>Journal of Financial Economics</em> 129 (3): 479–509.</p>
+</div>
+<div>
+<p>Asness, Clifford S, Tobias J Moskowitz, and Lasse Heje Pedersen. 2013. “Value and Momentum Everywhere.” <em>Journal of Finance</em> 68 (3): 929–85.</p>
+</div>
+<div>
+<p>Astakhov, Anton, Tomas Havranek, and Jiri Novak. 2019. “Firm Size and Stock Returns: A Quantitative Survey.” <em>Journal of Economic Surveys</em> XXX: XX–XX.</p>
+</div>
+<div>
+<p>Back, Kerry. 2010. <em>Asset Pricing and Portfolio Choice Theory</em>. Oxford University Press.</p>
+</div>
+<div>
+<p>Baesens, Bart, Veronique Van Vlasselaer, and Wouter Verbeke. 2015. <em>Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques: A Guide to Data Science for Fraud Detection</em>. John Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Bailey, David H, and Marcos López de Prado. 2014. “The Deflated Sharpe Ratio: Correcting for Selection Bias, Backtest Overfitting, and Non-Normality.” <em>Journal of Portfolio Management</em> 40 (5): 39–59.</p>
+</div>
+<div>
+<p>Bailey, T, and A.K. Jain. 1978. “A Note on Distance-Weighted K-Nearest Neighbor Rules.” <em>IEEE Trans. On Systems, Man, Cybernetics</em> 8 (4): 311–13.</p>
+</div>
+<div>
+<p>Bajgrowicz, Pierre, and Olivier Scaillet. 2012. “Technical Trading Revisited: False Discoveries, Persistence Tests, and Transaction Costs.” <em>Journal of Financial Economics</em> 106 (3): 473–91.</p>
+</div>
+<div>
+<p>Baker, Malcolm, Brendan Bradley, and Jeffrey Wurgler. 2011. “Benchmarks as Limits to Arbitrage: Understanding the Low-Volatility Anomaly.” <em>Financial Analysts Journal</em> 67 (1): 40–54.</p>
+</div>
+<div>
+<p>Baker, Malcolm, Patrick Luo, and Ryan Taliaferro. 2017. “Detecting Anomalies: The Relevance and Power of Standard Asset Pricing Tests.”</p>
+</div>
+<div>
+<p>Bali, Turan G, Robert F Engle, and Scott Murray. 2016. <em>Empirical Asset Pricing: The Cross Section of Stock Returns</em>. John Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Ballings, Michel, Dirk Van den Poel, Nathalie Hespeels, and Ruben Gryp. 2015. “Evaluating Multiple Classifiers for Stock Price Direction Prediction.” <em>Expert Systems with Applications</em> 42 (20): 7046–56.</p>
+</div>
+<div>
+<p>Ban, Gah-Yi, Noureddine El Karoui, and Andrew EB Lim. 2016. “Machine Learning and Portfolio Optimization.” <em>Management Science</em> 64 (3): 1136–54.</p>
+</div>
+<div>
+<p>Bansal, Ravi, David A Hsieh, and S Viswanathan. 1993. “A New Approach to International Arbitrage Pricing.” <em>Journal of Finance</em> 48 (5): 1719–47.</p>
+</div>
+<div>
+<p>Bansal, Ravi, and Salim Viswanathan. 1993. “No Arbitrage and Arbitrage Pricing: A New Approach.” <em>Journal of Finance</em> 48 (4): 1231–62.</p>
+</div>
+<div>
+<p>Banz, Rolf W. 1981. “The Relationship Between Return and Market Value of Common Stocks.” <em>Journal of Financial Economics</em> 9 (1): 3–18.</p>
+</div>
+<div>
+<p>Barberis, Nicholas. 2018. “Psychology-Based Models of Asset Prices and Trading Volume.” In <em>Handbook of Behavioral Economics-Foundations and Applications</em>.</p>
+</div>
+<div>
+<p>Barberis, Nicholas, Robin Greenwood, Lawrence Jin, and Andrei Shleifer. 2015. “X-Capm: An Extrapolative Capital Asset Pricing Model.” <em>Journal of Financial Economics</em> 115 (1): 1–24.</p>
+</div>
+<div>
+<p>Barberis, Nicholas, Lawrence J Jin, and Baolian Wang. 2019. “Prospect Theory and Stock Market Anomalies.” <em>SSRN Working Paper</em> 3477463.</p>
+</div>
+<div>
+<p>Barberis, Nicholas, Abhiroop Mukherjee, and Baolian Wang. 2016. “Prospect Theory and Stock Returns: An Empirical Test.” <em>Review of Financial Studies</em> 29 (11): 3068–3107.</p>
+</div>
+<div>
+<p>Barberis, Nicholas, and Andrei Shleifer. 2003. “Style Investing.” <em>Journal of Financial Economics</em> 68 (2): 161–99.</p>
+</div>
+<div>
+<p>Barillas, Francisco, and Jay Shanken. 2018. “Comparing Asset Pricing Models.” <em>Journal of Finance</em> 73 (2): 715–54.</p>
+</div>
+<div>
+<p>Barron, Andrew R. 1993. “Universal Approximation Bounds for Superpositions of a Sigmoidal Function.” <em>IEEE Transactions on Information Theory</em> 39 (3): 930–45.</p>
+</div>
+<div>
+<p>———. 1994. “Approximation and Estimation Bounds for Artificial Neural Networks.” <em>Machine Learning</em> 14 (1): 115–33.</p>
+</div>
+<div>
+<p>Barroso, Pedro, and Pedro Santa-Clara. 2015. “Momentum Has Its Moments.” <em>Journal of Financial Economics</em> 116 (1): 111–20.</p>
+</div>
+<div>
+<p>Basak, Jayanta. 2004. “Online Adaptive Decision Trees.” <em>Neural Computation</em> 16 (9): 1959–81.</p>
+</div>
+<div>
+<p>Bates, John M, and Clive WJ Granger. 1969. “The Combination of Forecasts.” <em>Journal of the Operational Research Society</em> 20 (4): 451–68.</p>
+</div>
+<div>
+<p>Baz, Jamil, Nicolas Granger, Campbell R Harvey, Nicolas Le Roux, and Sandy Rattray. 2015. “Dissecting Investment Strategies in the Cross Section and Time Series.” <em>SSRN Working Paper</em> 2695101.</p>
+</div>
+<div>
+<p>Beery, Sara, Grant Van Horn, and Pietro Perona. 2018. “Recognition in Terra Incognita.” In <em>Proceedings of the European Conference on Computer Vision (Eccv)</em>, 456–73.</p>
+</div>
+<div>
+<p>Belsley, David A, Edwin Kuh, and Roy E Welsch. 2005. <em>Regression Diagnostics: Identifying Influential Data and Sources of Collinearity</em>. Vol. 571. John Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Ben-David, Shai, John Blitzer, Koby Crammer, Alex Kulesza, Fernando Pereira, and Jennifer Wortman Vaughan. 2010. “A Theory of Learning from Different Domains.” <em>Machine Learning</em> 79 (1-2): 151–75.</p>
+</div>
+<div>
+<p>Bengio, Yoshua. 2012. “Practical Recommendations for Gradient-Based Training of Deep Architectures.” In <em>Neural Networks: Tricks of the Trade</em>, 437–78. Springer.</p>
+</div>
+<div>
+<p>Bergstra, James, and Yoshua Bengio. 2012. “Random Search for Hyper-Parameter Optimization.” <em>Journal of Machine Learning Research</em> 13 (Feb): 281–305.</p>
+</div>
+<div>
+<p>Berk, Jonathan B, Richard C Green, and Vasant Naik. 1999. “Optimal Investment, Growth Options, and Security Returns.” <em>Journal of Finance</em> 54 (5): 1553–1607.</p>
+</div>
+<div>
+<p>Bertoluzzo, Francesco, and Marco Corazza. 2012. “Testing Different Reinforcement Learning Configurations for Financial Trading: Introduction and Applications.” <em>Procedia Economics and Finance</em> 3: 68–77.</p>
+</div>
+<div>
+<p>Bertsekas, Dimitri P. 2017. <em>Dynamic Programming and Optimal Control - Volume Ii, Fourth Edition</em>. Athena Scientific.</p>
+</div>
+<div>
+<p>Betermier, Sebastien, Laurent E Calvet, and Evan Jo. 2019. “A Supply and Demand Approach to Equity Pricing.” <em>SSRN Working Paper</em> 3440147.</p>
+</div>
+<div>
+<p>Betermier, Sebastien, Laurent E Calvet, and Paolo Sodini. 2017. “Who Are the Value and Growth Investors?” <em>Journal of Finance</em> 72 (1): 5–46.</p>
+</div>
+<div>
+<p>Bhamra, Harjoat S, and Raman Uppal. 2019. “Does Household Finance Matter? Small Financial Errors with Large Social Costs.” <em>American Economic Review</em> 109 (3): 1116–54.</p>
+</div>
+<div>
+<p>Bhatia, Nitin, and others. 2010. “Survey of Nearest Neighbor Techniques.” <em>arXiv Preprint</em>, no. 1007.0085.</p>
+</div>
+<div>
+<p>Bhattacharyya, Siddhartha, Sanjeev Jha, Kurian Tharakunnel, and J Christopher Westland. 2011. “Data Mining for Credit Card Fraud: A Comparative Study.” <em>Decision Support Systems</em> 50 (3): 602–13.</p>
+</div>
+<div>
+<p>Biau, Gérard. 2012. “Analysis of a Random Forests Model.” <em>Journal of Machine Learning Research</em> 13 (Apr): 1063–95.</p>
+</div>
+<div>
+<p>Biau, Gérard, Luc Devroye, and GAbor Lugosi. 2008. “Consistency of Random Forests and Other Averaging Classifiers.” <em>Journal of Machine Learning Research</em> 9 (Sep): 2015–33.</p>
+</div>
+<div>
+<p>Black, Fischer, and Robert Litterman. 1992. “Global Portfolio Optimization.” <em>Financial Analysts Journal</em> 48 (5): 28–43.</p>
+</div>
+<div>
+<p>Blank, Herbert, Richard Davis, and Shannon Greene. 2019. “Using Alternative Research Data in Real-World Portfolios.” <em>Journal of Investing</em> 28 (4): 95–103.</p>
+</div>
+<div>
+<p>Blum, Avrim, and Adam Kalai. 1999. “Universal Portfolios with and Without Transaction Costs.” <em>Machine Learning</em> 35 (3): 193–205.</p>
+</div>
+<div>
+<p>Boehmke, Brad, and Brandon Greenwell. 2019. <em>Hands-on Machine Learning with R</em>. Chapman; Hall.</p>
+</div>
+<div>
+<p>Boloorforoosh, Ali, Peter Christoffersen, Christian Gourieroux, and Mathieu Fournier. 2019. “Beta Risk in the Cross-Section of Equities.” <em>Review of Financial Studies</em> Forthcoming.</p>
+</div>
+<div>
+<p>Bonaccolto, Giovanni, and Sandra Paterlini. 2019. “Developing New Portfolio Strategies by Aggregation.” <em>Annals of Operations Research</em>, 1–39.</p>
+</div>
+<div>
+<p>Boriah, Shyam, Varun Chandola, and Vipin Kumar. 2008. “Similarity Measures for Categorical Data: A Comparative Evaluation.” In <em>Proceedings of the 2008 Siam International Conference on Data Mining</em>, 243–54.</p>
+</div>
+<div>
+<p>Boser, Bernhard E, Isabelle M Guyon, and Vladimir N Vapnik. 1992. “A Training Algorithm for Optimal Margin Classifiers.” In <em>Proceedings of the Fifth Annual Workshop on Computational Learning Theory</em>, 144–52. ACM.</p>
+</div>
+<div>
+<p>Bouchaud, Jean-philippe, Philipp Krueger, Augustin Landier, and David Thesmar. 2019. “Sticky Expectations and the Profitability Anomaly.” <em>The Journal of Finance</em> 74 (2): 639–74.</p>
+</div>
+<div>
+<p>Bouthillier, Xavier, and Gaël Varoquaux. 2020. “Survey of machine-learning experimental methods at NeurIPS2019 and ICLR2020.” Research Report. Inria Saclay Ile de France.</p>
+</div>
+<div>
+<p>Boyd, Stephen, and Lieven Vandenberghe. 2004. <em>Convex Optimization</em>. Cambridge University Press.</p>
+</div>
+<div>
+<p>Brandt, Michael W, Pedro Santa-Clara, and Rossen Valkanov. 2009. “Parametric Portfolio Policies: Exploiting Characteristics in the Cross-Section of Equity Returns.” <em>Review of Financial Studies</em> 22 (9): 3411–47.</p>
+</div>
+<div>
+<p>Braun, Helmut, and John S Chandler. 1987. “Predicting Stock Market Behavior Through Rule Induction: An Application of the Learning-from-Example Approach.” <em>Decision Sciences</em> 18 (3): 415–29.</p>
+</div>
+<div>
+<p>Breiman, Leo. 1996. “Stacked Regressions.” <em>Machine Learning</em> 24 (1): 49–64.</p>
+</div>
+<div>
+<p>———. 2001. “Random Forests.” <em>Machine Learning</em> 45 (1): 5–32.</p>
+</div>
+<div>
+<p>Breiman, Leo, Jerome Friedman, Charles J. Stone, and R.A. Olshen. 1984. <em>Classification and Regression Trees</em>. Chapman; Hall.</p>
+</div>
+<div>
+<p>Breiman, Leo, and others. 2004. “Population Theory for Boosting Ensembles.” <em>Annals of Statistics</em> 32 (1): 1–11.</p>
+</div>
+<div>
+<p>Brodersen, Kay H, Fabian Gallusser, Jim Koehler, Nicolas Remy, Steven L Scott, and others. 2015. “Inferring Causal Impact Using Bayesian Structural Time-Series Models.” <em>Annals of Applied Statistics</em> 9 (1): 247–74.</p>
+</div>
+<div>
+<p>Brodie, Joshua, Ingrid Daubechies, Christine De Mol, Domenico Giannone, and Ignace Loris. 2009. “Sparse and Stable Markowitz Portfolios.” <em>Proceedings of the National Academy of Sciences</em> 106 (30): 12267–72.</p>
+</div>
+<div>
+<p>Brown, Iain, and Christophe Mues. 2012. “An Experimental Comparison of Classification Algorithms for Imbalanced Credit Scoring Data Sets.” <em>Expert Systems with Applications</em> 39 (3): 3446–53.</p>
+</div>
+<div>
+<p>Bryzgalova, Svetlana. 2019. “Spurious Factors in Linear Asset Pricing Models.”</p>
+</div>
+<div>
+<p>Bryzgalova, Svetlana, Jiantao Huang, and Christian Julliard. 2019. “Bayesian Solutions for the Factor Zoo: We Just Ran Two Quadrillion Models.” <em>SSRN Working Paper</em> 3481736.</p>
+</div>
+<div>
+<p>Bryzgalova, Svetlana, Markus Pelger, and Jason Zhu. 2019. “Forest Through the Trees: Building Cross-Sections of Stock Returns.” <em>SSRN Working Paper</em> 3493458.</p>
+</div>
+<div>
+<p>Buehler, Hans, Lukas Gonon, Josef Teichmann, and Ben Wood. 2019. “Deep Hedging.” <em>Quantitative Finance</em>, 1–21.</p>
+</div>
+<div>
+<p>Burrell, Phillip R., and Bukola Otulayo Folarin. 1997. “The Impact of Neural Networks in Finance.” <em>Neural Computing &amp; Applications</em> 6 (4): 193–200.</p>
+</div>
+<div>
+<p>Bühlmann, Peter, Jonas Peters, Jan Ernest, and others. 2014. “CAM: Causal Additive Models, High-Dimensional Order Search and Penalized Regression.” <em>Annals of Statistics</em> 42 (6): 2526–56.</p>
+</div>
+<div>
+<p>Cao, Li-Juan, and Francis Eng Hock Tay. 2003. “Support Vector Machine with Adaptive Parameters in Financial Time Series Forecasting.” <em>IEEE Transactions on Neural Networks</em> 14 (6): 1506–18.</p>
+</div>
+<div>
+<p>Carhart, Mark M. 1997. “On Persistence in Mutual Fund Performance.” <em>Journal of Finance</em> 52 (1): 57–82.</p>
+</div>
+<div>
+<p>Carlson, Murray, Adlai Fisher, and Ron Giammarino. 2004. “Corporate Investment and Asset Price Dynamics: Implications for the Cross-Section of Returns.” <em>Journal of Finance</em> 59 (6): 2577–2603.</p>
+</div>
+<div>
+<p>Cattaneo, Matias D, Richard K Crump, Max Farrell, and Ernst Schaumburg. 2020. “Characteristic-Sorted Portfolios: Estimation and Inference” Forthcoming XXX. Review of Economics; Statistics.</p>
+</div>
+<div>
+<p>Cazalet, Zélia, and Thierry Roncalli. 2014. “Facts and Fantasies About Factor Investing.” <em>SSRN Working Paper</em> 2524547.</p>
+</div>
+<div>
+<p>Chandola, Varun, Arindam Banerjee, and Vipin Kumar. 2009. “Anomaly Detection: A Survey.” <em>ACM Computing Surveys (CSUR)</em> 41 (3): 15.</p>
+</div>
+<div>
+<p>Chang, Chih-Chung, and Chih-Jen Lin. 2011. “LIBSVM: A Library for Support Vector Machines.” <em>ACM Transactions on Intelligent Systems and Technology (TIST)</em> 2 (3): 27.</p>
+</div>
+<div>
+<p>Che, Zhengping, Sanjay Purushotham, Kyunghyun Cho, David Sontag, and Yan Liu. 2018. “Recurrent Neural Networks for Multivariate Time Series with Missing Values.” <em>Scientific Reports</em> 8 (1): 6085.</p>
+</div>
+<div>
+<p>Chen, Andrew Y, and Tom Zimmermann. 2019. “Publication Bias and the Cross-Section of Stock Returns.” <em>Review of Asset Pricing Studies</em> Forthcoming.</p>
+</div>
+<div>
+<p>———. 2020. “Publication Bias and the Cross-Section of Stock Returns.” <em>Review of Asset Pricing Studies</em> Forthcoming XXX.</p>
+</div>
+<div>
+<p>Chen, Huifen. 2001. “Initialization for Norta: Generation of Random Vectors with Specified Marginals and Correlations.” <em>INFORMS Journal on Computing</em> 13 (4). INFORMS: 312–31.</p>
+</div>
+<div>
+<p>Chen, Jianbo, Le Song, Martin J Wainwright, and Michael I Jordan. 2018. “L-Shapley and c-Shapley: Efficient Model Interpretation for Structured Data.” <em>arXiv Preprint</em>, no. 1808.02610.</p>
+</div>
+<div>
+<p>Chen, Jou-Fan, Wei-Lun Chen, Chun-Ping Huang, Szu-Hao Huang, and An-Pin Chen. 2016. “Financial Time-Series Data Analysis Using Deep Convolutional Neural Networks.” In <em>2016 7th International Conference on Cloud Computing and Big Data (Ccbd)</em>, 87–92. IEEE.</p>
+</div>
+<div>
+<p>Chen, Long, Zhi Da, and Richard Priestley. 2012. “Dividend Smoothing and Predictability.” <em>Management Science</em> 58 (10): 1834–53.</p>
+</div>
+<div>
+<p>Chen, Luyang, Markus Pelger, and Jason Zhu. 2019. “Deep Learning in Asset Pricing.” <em>SSRN Working Paper</em> 3350138.</p>
+</div>
+<div>
+<p>Chen, Tianqi, and Carlos Guestrin. 2016. “Xgboost: A Scalable Tree Boosting System.” In <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em>, 785–94. ACM.</p>
+</div>
+<div>
+<p>Chib, Siddhartha, Xiaming Zeng, and Lingxiao Zhao. 2019. “On Comparing Asset Pricing Models.” <em>Journal of Finance</em> Forthcoming.</p>
+</div>
+<div>
+<p>Chinco, Alexander, Adam D Clark-Joseph, and Mao Ye. 2019. “Sparse Signals in the Cross-Section of Returns.” <em>Journal of Finance</em> 74 (1): 449–92.</p>
+</div>
+<div>
+<p>Chinco, Alexander, Andreas Neuhierl, and Michael Weber. 2019. “Estimating the Anomaly Baserate.” <em>SSRN Working Paper</em> 3344499.</p>
+</div>
+<div>
+<p>Chinco, Alex, Samuel M Hartzmark, and Abigail B Sussman. 2019. “Risk-Factor Irrelevance.” <em>SSRN Working Paper</em> 3487624.</p>
+</div>
+<div>
+<p>Chipman, Hugh A, Edward I George, and Robert E McCulloch. 2010. “BART: Bayesian Additive Regression Trees.” <em>Annals of Applied Statistics</em> 4 (1): 266–98.</p>
+</div>
+<div>
+<p>Choi, Seung Mo, and Hwagyun Kim. 2014. “Momentum Effect as Part of a Market Equilibrium.” <em>Journal of Financial and Quantitative Analysis</em> 49 (1): 107–30.</p>
+</div>
+<div>
+<p>Chollet, François. 2017. <em>Deep Learning with Python</em>. Manning Publications Company.</p>
+</div>
+<div>
+<p>Chordia, Tarun, Amit Goyal, and Jay Shanken. 2015. “Cross-Sectional Asset Pricing with Individual Stocks: Betas Versus Characteristics.” <em>SSRN Working Paper</em> 2549578.</p>
+</div>
+<div>
+<p>Chung, Junyoung, Caglar Gulcehre, Kyunghyun Cho, and Yoshua Bengio. 2015. “Gated Feedback Recurrent Neural Networks.” In <em>International Conference on Machine Learning</em>, 2067–75.</p>
+</div>
+<div>
+<p>Claeskens, Gerda, and Nils Lid Hjort. 2008. <em>Model Selection and Model Averaging</em>. Cambridge University Press.</p>
+</div>
+<div>
+<p>Clark, Todd E, and Michael W McCracken. 2009. “Improving Forecast Accuracy by Combining Recursive and Rolling Forecasts.” <em>International Economic Review</em> 50 (2): 363–95.</p>
+</div>
+<div>
+<p>Cocco, Joao F, Francisco Gomes, and Paula Lopes. 2019. “Evidence on Expectations of Household Finances.” <em>SSRN Working Paper</em> 3362495.</p>
+</div>
+<div>
+<p>Cochrane, John H. 2009. <em>Asset Pricing: Revised Edition</em>. Princeton university press.</p>
+</div>
+<div>
+<p>Cong, Lin William, Tengyuan Liang, and Xiao Zhang. 2019a. “Analyzing Textual Information at Scale.” <em>SSRN Working Paper</em> 3449822.</p>
+</div>
+<div>
+<p>———. 2019b. “Textual Factors: A Scalable, Interpretable, and Data-Driven Approach to Analyzing Unstructured Information.” <em>SSRN Working Paper</em> 3307057.</p>
+</div>
+<div>
+<p>Cong, Lin William, and Douglas Xu. 2019. “Rise of Factor Investing: Asset Prices, Informational Efficiency, and Security Design.” <em>SSRN Working Paper</em> 2800590.</p>
+</div>
+<div>
+<p>Connor, Gregory, and Robert A Korajczyk. 1988. “Risk and Return in an Equilibrium Apt: Application of a New Test Methodology.” <em>Journal of Financial Economics</em> 21 (2): 255–89.</p>
+</div>
+<div>
+<p>Cont, Rama. 2007. “Volatility Clustering in Financial Markets: Empirical Facts and Agent-Based Models.” In <em>Long Memory in Economics</em>, 289–309. Springer.</p>
+</div>
+<div>
+<p>Cooper, Ilan, and Paulo F Maio. 2019. “New Evidence on Conditional Factor Models.” <em>Journal of Financial and Quantitative Analysis</em> 54 (5): 1975–2016.</p>
+</div>
+<div>
+<p>Coqueret, Guillaume. 2015. “Diversified Minimum-Variance Portfolios.” <em>Annals of Finance</em> 11 (2): 221–41.</p>
+</div>
+<div>
+<p>———. 2017. “Approximate Norta Simulations for Virtual Sample Generation.” <em>Expert Systems with Applications</em> 73: 69–81.</p>
+</div>
+<div>
+<p>———. 2018. “The Economic Value of Firm-Specific News Sentiment.” <em>SSRN Working Paper</em> 3248925.</p>
+</div>
+<div>
+<p>Coqueret, Guillaume, and Tony Guida. 2019. “Training Trees on Tails with Applications to Portfolio Choice.” <em>SSRN Working Paper</em> 3403009.</p>
+</div>
+<div>
+<p>Cornuejols, Antoine, Laurent Miclet, and Vincent Barra. 2018. <em>Apprentissage Artificiel: Deep Learning, Concepts et Algorithmes</em>. Eyrolles.</p>
+</div>
+<div>
+<p>Cortes, Corinna, and Vladimir Vapnik. 1995. “Support-Vector Networks.” <em>Machine Learning</em> 20 (3): 273–97.</p>
+</div>
+<div>
+<p>Costarelli, Danilo, Renato Spigler, and Gianluca Vinti. 2016. “A Survey on Approximation by Means of Neural Network Operators.” <em>Journal of NeuroTechnology</em> 1 (1).</p>
+</div>
+<div>
+<p>Cover, Thomas M. 1991. “Universal Portfolios.” <em>Mathematical Finance</em> 1 (1): 1–29.</p>
+</div>
+<div>
+<p>Cover, Thomas M, and Erik Ordentlich. 1996. “Universal Portfolios with Side Information.” <em>IEEE Transactions on Information Theory</em> 42 (2): 348–63.</p>
+</div>
+<div>
+<p>Crammer, Koby, Ofer Dekel, Joseph Keshet, Shai Shalev-Shwartz, and Yoram Singer. 2006. “Online Passive-Aggressive Algorithms.” <em>Journal of Machine Learning Research</em> 7 (Mar): 551–85.</p>
+</div>
+<div>
+<p>Cronqvist, Henrik, Alessandro Previtero, Stephan Siegel, and Roderick E White. 2015. “The Fetal Origins Hypothesis in Finance: Prenatal Environment, the Gender Gap, and Investor Behavior.” <em>Review of Financial Studies</em> 29 (3): 739–86.</p>
+</div>
+<div>
+<p>Cronqvist, Henrik, Stephan Siegel, and Frank Yu. 2015. “Value Versus Growth Investing: Why Do Different Investors Have Different Styles?” <em>Journal of Financial Economics</em> 117 (2): 333–49.</p>
+</div>
+<div>
+<p>Cuchiero, Christa, Irene Klein, and Josef Teichmann. 2016. “A New Perspective on the Fundamental Theorem of Asset Pricing for Large Financial Markets.” <em>Theory of Probability &amp; Its Applications</em> 60 (4): 561–79.</p>
+</div>
+<div>
+<p>Cybenko, George. 1989. “Approximation by Superpositions of a Sigmoidal Function.” <em>Mathematics of Control, Signals and Systems</em> 2 (4): 303–14.</p>
+</div>
+<div>
+<p>Dangl, Thomas, and Michael Halling. 2012. “Predictive Regressions with Time-Varying Coefficients.” <em>Journal of Financial Economics</em> 106 (1): 157–81.</p>
+</div>
+<div>
+<p>Daniel, Kent D, David Hirshleifer, and Avanidhar Subrahmanyam. 2001. “Overconfidence, Arbitrage, and Equilibrium Asset Pricing.” <em>Journal of Finance</em> 56 (3): 921–65.</p>
+</div>
+<div>
+<p>Daniel, Kent, David Hirshleifer, and Lin Sun. 2019. “Short and Long Horizon Behavioral Factors.” <em>Review of Financial Studies</em> XXX (XXX).</p>
+</div>
+<div>
+<p>Daniel, Kent, and Tobias J Moskowitz. 2016. “Momentum Crashes.” <em>Journal of Financial Economics</em> 122 (2): 221–47.</p>
+</div>
+<div>
+<p>Daniel, Kent, and Sheridan Titman. 1997. “Evidence on the Characteristics of Cross Sectional Variation in Stock Returns.” <em>Journal of Finance</em> 52 (1): 1–33.</p>
+</div>
+<div>
+<p>———. 2012. “Testing Factor-Model Explanations of Market Anomalies.” <em>Critical Finance Review</em> 1 (1): 103–39.</p>
+</div>
+<div>
+<p>Daniel, Kent, Sheridan Titman, and KC John Wei. 2001. “Explaining the Cross-Section of Stock Returns in Japan: Factors or Characteristics?” <em>Journal of Finance</em> 56 (2): 743–66.</p>
+</div>
+<div>
+<p>d’Aspremont, Alexandre. 2011. “Identifying Small Mean-Reverting Portfolios.” <em>Quantitative Finance</em> 11 (3). Taylor &amp; Francis: 351–64.</p>
+</div>
+<div>
+<p>Delbaen, Freddy, and Walter Schachermayer. 1994. “A General Version of the Fundamental Theorem of Asset Pricing.” <em>Mathematische Annalen</em> 300 (1): 463–520.</p>
+</div>
+<div>
+<p>DeMiguel, Victor, Lorenzo Garlappi, and Raman Uppal. 2009. “Optimal Versus Naive Diversification: How Inefficient Is the 1/N Portfolio Strategy?” <em>Review of Financial Studies</em> 22 (5): 1915–53.</p>
+</div>
+<div>
+<p>DeMiguel, Victor, Alberto Martin Utrera, and Raman Uppal. 2019. “What Alleviates Crowding in Factor Investing?” <em>SSRN Working Paper</em> 3392875.</p>
+</div>
+<div>
+<p>De Moor, Lieven, Geert Dhaene, and Piet Sercu. 2015. “On Comparing Zero-Alpha Tests Across Multifactor Asset Pricing Models.” <em>Journal of Banking &amp; Finance</em> 61: S235–S240.</p>
+</div>
+<div>
+<p>Denil, Misha, David Matheson, and Nando De Freitas. 2014. “Narrowing the Gap: Random Forests in Theory and in Practice.” In <em>International Conference on Machine Learning</em>, 665–73.</p>
+</div>
+<div>
+<p>De Prado, Marcos Lopez. 2018. <em>Advances in Financial Machine Learning</em>. John Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Dichtl, Hubert, Wolfgang Drobetz, Harald Lohre, Carsten Rother, and Patrick Vosskamp. 2019. “Optimal Timing and Tilting of Equity Factors.” <em>Financial Analysts Journal</em> 75 (4): 84–102.</p>
+</div>
+<div>
+<p>Dichtl, Hubert, Wolfgang Drobetz, Andreas Neuhierl, and Viktoria-Sophie Wendt. 2019. “Data Snooping in Equity Premium Prediction.” <em>SSRN Working Paper</em> 2972011.</p>
+</div>
+<div>
+<p>Dingli, Alexiei, and Karl Sant Fournier. 2017. “Financial Time Series Forecasting–a Deep Learning Approach.” <em>International Journal of Machine Learning and Computing</em> 7 (5): 118–22.</p>
+</div>
+<div>
+<p>Donaldson, R Glen, and Mark Kamstra. 1996. “Forecast Combining with Neural Networks.” <em>Journal of Forecasting</em> 15 (1): 49–61.</p>
+</div>
+<div>
+<p>Drucker, Harris. 1997. “Improving Regressors Using Boosting Techniques.” In <em>International Conference on Machine Learning</em>, 97:107–15.</p>
+</div>
+<div>
+<p>Drucker, Harris, Christopher JC Burges, Linda Kaufman, Alex J Smola, and Vladimir Vapnik. 1997. “Support Vector Regression Machines.” In <em>Advances in Neural Information Processing Systems</em>, 155–61.</p>
+</div>
+<div>
+<p>Du, Ke-Lin, and Madisetti NS Swamy. 2013. <em>Neural Networks and Statistical Learning</em>. Springer Science &amp; Business Media.</p>
+</div>
+<div>
+<p>Duchi, John, Elad Hazan, and Yoram Singer. 2011. “Adaptive Subgradient Methods for Online Learning and Stochastic Optimization.” <em>Journal of Machine Learning Research</em> 12 (Jul): 2121–59.</p>
+</div>
+<div>
+<p>Dunis, Christian L, Spiros D Likothanassis, Andreas S Karathanasopoulos, Georgios S Sermpinis, and Konstantinos A Theofilatos. 2013. “A Hybrid Genetic Algorithm–Support Vector Machine Approach in the Task of Forecasting and Trading.” <em>Journal of Asset Management</em> 14 (1): 52–71.</p>
+</div>
+<div>
+<p>Eakins, Stanley G, Stanley R Stansell, and James F Buck. 1998. “Analyzing the Nature of Institutional Demand for Common Stocks.” <em>Quarterly Journal of Business and Economics</em>. JSTOR, 33–48.</p>
+</div>
+<div>
+<p>Efimov, Dmitry, and Di Xu. 2019. “Using Generative Adversarial Networks to Synthesize Artificial Financial Datasets.” <em>Proceedings of the Conference on Neural Information Processing Systems</em>.</p>
+</div>
+<div>
+<p>Ehsani, Sina, and Juhani T Linnainmaa. 2019. “Factor Momentum and the Momentum Factor.” <em>SSRN Working Paper</em> 3014521.</p>
+</div>
+<div>
+<p>Elliott, Graham, Nikolay Kudrin, and Kaspar Wuthrich. 2019. “Detecting P-Hacking.” <em>arXiv Preprint</em>, no. 1906.06711.</p>
+</div>
+<div>
+<p>Elman, Jeffrey L. 1990. “Finding Structure in Time.” <em>Cognitive Science</em> 14 (2): 179–211.</p>
+</div>
+<div>
+<p>Enders, Craig K. 2001. “A Primer on Maximum Likelihood Algorithms Available for Use with Missing Data.” <em>Structural Equation Modeling</em> 8 (1). Taylor &amp; Francis: 128–41.</p>
+</div>
+<div>
+<p>———. 2010. <em>Applied Missing Data Analysis</em>. Guilford press.</p>
+</div>
+<div>
+<p>Engilberge, Martin, Louis Chevallier, Patrick Pérez, and Matthieu Cord. 2019. “SoDeep: A Sorting Deep Net to Learn Ranking Loss Surrogates.” In <em>Proceedings of the Ieee Conference on Computer Vision and Pattern Recognition</em>, 10792–10801.</p>
+</div>
+<div>
+<p>Engle, Robert F. 1982. “Autoregressive Conditional Heteroscedasticity with Estimates of the Variance of United Kingdom Inflation.” <em>Econometrica</em>, 987–1007.</p>
+</div>
+<div>
+<p>Enke, David, and Suraphan Thawornwong. 2005. “The Use of Data Mining and Neural Networks for Forecasting Stock Market Returns.” <em>Expert Systems with Applications</em> 29 (4): 927–40.</p>
+</div>
+<div>
+<p>Fabozzi, Frank J, and Marcos López de Prado. 2018. “Being Honest in Backtest Reporting: A Template for Disclosing Multiple Tests.” <em>Journal of Portfolio Management</em> 45 (1): 141–47.</p>
+</div>
+<div>
+<p>Fama, Eugene F, and Kenneth R French. 1992. “The Cross-Section of Expected Stock Returns.” <em>Journal of Finance</em> 47 (2): 427–65.</p>
+</div>
+<div>
+<p>———. 1993. “Common Risk Factors in the Returns on Stocks and Bonds.” <em>Journal of Financial Economics</em> 33 (1): 3–56.</p>
+</div>
+<div>
+<p>———. 2015. “A Five-Factor Asset Pricing Model.” <em>Journal of Financial Economics</em> 116 (1): 1–22.</p>
+</div>
+<div>
+<p>———. 2018. “Choosing Factors.” <em>Journal of Financial Economics</em> 128 (2): 234–52.</p>
+</div>
+<div>
+<p>Fama, Eugene F, and James D MacBeth. 1973. “Risk, Return, and Equilibrium: Empirical Tests.” <em>Journal of Political Economy</em> 81 (3): 607–36.</p>
+</div>
+<div>
+<p>Farmer, Leland, Lawrence Schmidt, and Allan Timmermann. 2019. “Pockets of Predictability.” <em>SSRN Working Paper</em> 3152386.</p>
+</div>
+<div>
+<p>Fastrich, Björn, Sandra Paterlini, and Peter Winker. 2015. “Constructing Optimal Sparse Portfolios Using Regularization Methods.” <em>Computational Management Science</em> 12 (3): 417–34.</p>
+</div>
+<div>
+<p>Feng, Guanhao, Stefano Giglio, and Dacheng Xiu. 2019. “Taming the Factor Zoo: A Test of New Factors.” <em>Journal of Finance</em> Forthcoming.</p>
+</div>
+<div>
+<p>Feng, Guanhao, Nicholas G Polson, and Jianeng Xu. 2019. “Deep Learning in Characteristics-Sorted Factor Models.” <em>SSRN Working Paper</em> 3243683.</p>
+</div>
+<div>
+<p>Fischer, Thomas, and Christopher Krauss. 2018. “Deep Learning with Long Short-Term Memory Networks for Financial Market Predictions.” <em>European Journal of Operational Research</em> 270 (2): 654–69.</p>
+</div>
+<div>
+<p>Fisher, Aaron, Cynthia Rudin, and Francesca Dominici. 2018. “All Models Are Wrong but Many Are Useful: Variable Importance for Black-Box, Proprietary, or Misspecified Prediction Models, Using Model Class Reliance.” <em>arXiv Preprint</em>, no. 1801.01489.</p>
+</div>
+<div>
+<p>Frazier, Peter I. 2018. “A Tutorial on Bayesian Optimization.” <em>arXiv Preprint</em>, no. 1807.02811.</p>
+</div>
+<div>
+<p>Frazzini, Andrea, and Lasse Heje Pedersen. 2014. “Betting Against Beta.” <em>Journal of Financial Economics</em> 111 (1): 1–25.</p>
+</div>
+<div>
+<p>Freeman, Robert N, and Senyo Y Tse. 1992. “A Nonlinear Model of Security Price Responses to Unexpected Earnings.” <em>Journal of Accounting Research</em>, 185–209.</p>
+</div>
+<div>
+<p>Freund, Yoav, and Robert E Schapire. 1996. “Experiments with a New Boosting Algorithm.” In <em>Machine Learning: Proceedings of the Thirteenth International Conference</em>, 96:148–56.</p>
+</div>
+<div>
+<p>———. 1997. “A Decision-Theoretic Generalization of on-Line Learning and an Application to Boosting.” <em>Journal of Computer and System Sciences</em> 55 (1): 119–39.</p>
+</div>
+<div>
+<p>Freyberger, Joachim, Andreas Neuhierl, and Michael Weber. 2020. “Dissecting Characteristics Nonparametrically.” <em>Review of Financial Studies</em> XXX-XXX.</p>
+</div>
+<div>
+<p>Friedman, Jerome H. 2001. “Greedy Function Approximation: A Gradient Boosting Machine.” <em>Annals of Statistics</em>, 1189–1232.</p>
+</div>
+<div>
+<p>———. 2002. “Stochastic Gradient Boosting.” <em>Computational Statistics &amp; Data Analysis</em> 38 (4): 367–78.</p>
+</div>
+<div>
+<p>Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 2008. “Sparse Inverse Covariance Estimation with the Graphical Lasso.” <em>Biostatistics</em> 9 (3): 432–41.</p>
+</div>
+<div>
+<p>Friedman, Jerome, Trevor Hastie, Robert Tibshirani, and others. 2000. “Additive Logistic Regression: A Statistical View of Boosting (with Discussion and a Rejoinder by the Authors).” <em>Annals of Statistics</em> 28 (2): 337–407.</p>
+</div>
+<div>
+<p>Friedman, Nir, Dan Geiger, and Moises Goldszmidt. 1997. “Bayesian Network Classifiers.” <em>Machine Learning</em> 29 (2-3): 131–63.</p>
+</div>
+<div>
+<p>Fu, XingYu, JinHong Du, YiFeng Guo, MingWen Liu, Tao Dong, and XiuWen Duan. 2018. “A Machine Learning Framework for Stock Selection.” <em>arXiv Preprint</em>, no. 1806.01743.</p>
+</div>
+<div>
+<p>Gaba, Anil, Ilia Tsetlin, and Robert L Winkler. 2017. “Combining Interval Forecasts.” <em>Decision Analysis</em> 14 (1): 1–20.</p>
+</div>
+<div>
+<p>Gagliardini, Patrick, Elisa Ossola, and Olivier Scaillet. 2016. “Time-Varying Risk Premium in Large Cross-Sectional Equity Data Sets.” <em>Econometrica</em> 84 (3): 985–1046.</p>
+</div>
+<div>
+<p>———. 2019. “Estimation of Large Dimensional Conditional Factor Models in Finance.” <em>SSRN Working Paper</em> 3443426.</p>
+</div>
+<div>
+<p>Galili, Tal, and Isaac Meilijson. 2016. “Splitting Matters: How Monotone Transformation of Predictor Variables May Improve the Predictions of Decision Tree Models.” <em>arXiv Preprint</em>, no. 1611.04561.</p>
+</div>
+<div>
+<p>Garcı'a-Galicia, Mauricio, Alin A Carsteanu, and Julio B Clempner. 2019. “Continuous-Time Reinforcement Learning Approach for Portfolio Management with Time Penalization.” <em>Expert Systems with Applications</em> 129: 27–36.</p>
+</div>
+<div>
+<p>Garcı'a-Laencina, Pedro J, José-Luis Sancho-Gómez, Anı'bal R Figueiras-Vidal, and Michel Verleysen. 2009. “K Nearest Neighbours with Mutual Information for Simultaneous Classification and Missing Data Imputation.” <em>Neurocomputing</em> 72 (7-9). Elsevier: 1483–93.</p>
+</div>
+<div>
+<p>Gelman, Andrew, John B Carlin, Hal S Stern, David B Dunson, Aki Vehtari, and Donald B Rubin. 2013. <em>Bayesian Data Analysis, 3rd Edition</em>. Chapman; Hall/CRC.</p>
+</div>
+<div>
+<p>Geman, Stuart, Elie Bienenstock, and René Doursat. 1992. “Neural Networks and the Bias/Variance Dilemma.” <em>Neural Computation</em> 4 (1): 1–58.</p>
+</div>
+<div>
+<p>Genre, Véronique, Geoff Kenny, Aidan Meyler, and Allan Timmermann. 2013. “Combining Expert Forecasts: Can Anything Beat the Simple Average?” <em>International Journal of Forecasting</em> 29 (1): 108–21.</p>
+</div>
+<div>
+<p>Gentzkow, Matthew, Bryan Kelly, and Matt Taddy. 2019. “Text as Data.” <em>Journal of Economic Literature</em> 57 (3): 535–74.</p>
+</div>
+<div>
+<p>Ghosh, Anil K. 2006. “On Optimum Choice of K in Nearest Neighbor Classification.” <em>Computational Statistics &amp; Data Analysis</em> 50 (11): 3113–23.</p>
+</div>
+<div>
+<p>Giglio, Stefano, and Dacheng Xiu. 2018. “Asset Pricing with Omitted Factors.” <em>SSRN Working Paper</em> 2865922.</p>
+</div>
+<div>
+<p>Gomes, Joao, Leonid Kogan, and Lu Zhang. 2003. “Equilibrium Cross Section of Returns.” <em>Journal of Political Economy</em> 111 (4): 693–732.</p>
+</div>
+<div>
+<p>Gong, Qiang, Ming Liu, and Qianqiu Liu. 2015. “Momentum Is Really Short-Term Momentum.” <em>Journal of Banking &amp; Finance</em> 50: 169–82.</p>
+</div>
+<div>
+<p>Gonzalo, Jesús, and Jean-Yves Pitarakis. 2018. “Predictive Regressions.” In <em>Oxford Research Encyclopedia of Economics and Finance</em>.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Yoshua Bengio, Aaron Courville, and Yoshua Bengio. 2016. <em>Deep Learning</em>. Vol. 1. MIT press Cambridge.</p>
+</div>
+<div>
+<p>Goodfellow, Ian, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. “Generative Adversarial Nets.” In <em>Advances in Neural Information Processing Systems</em>, 2672–80.</p>
+</div>
+<div>
+<p>Gospodinov, Nikolay, Raymond Kan, and Cesare Robotti. 2019. “Too Good to Be True? Fallacies in Evaluating Risk Factor Models.” <em>Journal of Financial Economics</em> 132 (2): 451–71.</p>
+</div>
+<div>
+<p>Goto, Shingo, and Yan Xu. 2015. “Improving Mean Variance Optimization Through Sparse Hedging Restrictions.” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1415–41.</p>
+</div>
+<div>
+<p>Gower, John C. 1971. “A General Coefficient of Similarity and Some of Its Properties.” <em>Biometrics</em>, 857–71.</p>
+</div>
+<div>
+<p>Goyal, Amit. 2012. “Empirical Cross-Sectional Asset Pricing: A Survey.” <em>Financial Markets and Portfolio Management</em> 26 (1): 3–38.</p>
+</div>
+<div>
+<p>Goyal, Amit, and Sunil Wahal. 2015. “Is Momentum an Echo?” <em>Journal of Financial and Quantitative Analysis</em> 50 (6): 1237–67.</p>
+</div>
+<div>
+<p>Granger, Clive WJ. 1969. “Investigating Causal Relations by Econometric Models and Cross-Spectral Methods.” <em>Econometrica</em>, 424–38.</p>
+</div>
+<div>
+<p>Green, Jeremiah, John RM Hand, and X Frank Zhang. 2013. “The Supraview of Return Predictive Signals.” <em>Review of Accounting Studies</em> 18 (3): 692–730.</p>
+</div>
+<div>
+<p>Greene, William H. 2018. <em>Econometric Analysis, Eighth Edition</em>. Pearson Education.</p>
+</div>
+<div>
+<p>Greenwood, Robin, and Samuel G Hanson. 2012. “Share Issuance and Factor Timing.” <em>Journal of Finance</em> 67 (2): 761–98.</p>
+</div>
+<div>
+<p>Grinblatt, Mark, and Bing Han. 2005. “Prospect Theory, Mental Accounting, and Momentum.” <em>Journal of Financial Economics</em> 78 (2). Elsevier: 311–39.</p>
+</div>
+<div>
+<p>Grushka-Cockayne, Yael, Victor Richmond R Jose, and Kenneth C Lichtendahl Jr. 2016. “Ensembles of Overfit and Overconfident Forecasts.” <em>Management Science</em> 63 (4): 1110–30.</p>
+</div>
+<div>
+<p>Gu, Shihao, Bryan T Kelly, and Dacheng Xiu. 2018. “Empirical Asset Pricing via Machine Learning.” <em>SSRN Working Paper</em> 3159577.</p>
+</div>
+<div>
+<p>———. 2019. “Autoencoder Asset Pricing Models.” <em>SSRN Working Paper</em> 3335536.</p>
+</div>
+<div>
+<p>Guida, Tony, and Guillaume Coqueret. 2018a. “Ensemble Learning Applied to Quant Equity: Gradient Boosting in a Multifactor Framework.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 129–48. Wiley.</p>
+</div>
+<div>
+<p>———. 2018b. “Machine Learning in Systematic Equity Allocation: A Model Comparison.” <em>Wilmott</em> 2018 (98): 24–33.</p>
+</div>
+<div>
+<p>Guliyev, Namig J, and Vugar E Ismailov. 2018. “On the Approximation by Single Hidden Layer Feedforward Neural Networks with Fixed Weights.” <em>Neural Networks</em> 98: 296–304.</p>
+</div>
+<div>
+<p>Gupta, Manish, Jing Gao, Charu Aggarwal, and Jiawei Han. 2014. “Outlier Detection for Temporal Data.” <em>IEEE Transactions on Knowledge and Data Engineering</em> 26 (9): 2250–67.</p>
+</div>
+<div>
+<p>Gupta, Tarun, and Bryan Kelly. 2019. “Factor Momentum Everywhere.” <em>Journal of Portfolio Management</em> 45 (3): 13–36.</p>
+</div>
+<div>
+<p>Guresen, Erkam, Gulgun Kayakutlu, and Tugrul U Daim. 2011. “Using Artificial Neural Network Models in Stock Market Index Prediction.” <em>Expert Systems with Applications</em> 38 (8): 10389–97.</p>
+</div>
+<div>
+<p>Guyon, Isabelle, and André Elisseeff. 2003. “An Introduction to Variable and Feature Selection.” <em>Journal of Lachine Learning Research</em> 3 (Mar): 1157–82.</p>
+</div>
+<div>
+<p>Hahn, P Richard, Jared S Murray, and Carlos Carvalho. 2019. “Bayesian Regression Tree Models for Causal Inference: Regularization, Confounding, and Heterogeneous Effects.” <em>arXiv Preprint</em>, no. 1706.09523.</p>
+</div>
+<div>
+<p>Hall, Patrick, and Navdeep Gill. 2019. <em>An Introduction to Machine Learning Interpretability-Second Edition</em>. O’Reilly.</p>
+</div>
+<div>
+<p>Hall, Peter, Byeong U Park, Richard J Samworth, and others. 2008. “Choice of Neighbor Order in Nearest-Neighbor Classification.” <em>Annals of Statistics</em> 36 (5): 2135–52.</p>
+</div>
+<div>
+<p>Halperin, Igor, and Ilya Feldshteyn. 2018. “Market Self-Learning of Signals, Impact and Optimal Trading: Invisible Hand Inference with Free Energy.” <em>arXiv Preprint</em>, no. 1805.06126.</p>
+</div>
+<div>
+<p>Han, Yufeng, Ai He, D Rapach, and Guofu Zhou. 2019. “Firm Characteristics and Expected Stock Returns.” <em>SSRN Working Paper</em> 3185335.</p>
+</div>
+<div>
+<p>Hansen, Lars Peter. 1982. “Large Sample Properties of Generalized Method of Moments Estimators.” <em>Econometrica</em>, 1029–54.</p>
+</div>
+<div>
+<p>Harrald, Paul G, and Mark Kamstra. 1997. “Evolving Artificial Neural Networks to Combine Financial Forecasts.” <em>IEEE Transactions on Evolutionary Computation</em> 1 (1): 40–52.</p>
+</div>
+<div>
+<p>Hartzmark, Samuel M, and David H Solomon. 2019. “The Dividend Disconnect.” <em>Journal of Finance</em>.</p>
+</div>
+<div>
+<p>Harvey, Campbell, and Yan Liu. 2017. “Lucky Factors.” <em>SSRN Working Paper</em> 2528780.</p>
+</div>
+<div>
+<p>Harvey, Campbell R. 2017. “Presidential Address: The Scientific Outlook in Financial Economics.” <em>Journal of Finance</em> 72 (4): 1399–1440.</p>
+</div>
+<div>
+<p>Harvey, Campbell R, John C Liechty, Merrill W Liechty, and Peter Müller. 2010. “Portfolio Selection with Higher Moments.” <em>Quantitative Finance</em> 10 (5): 469–85.</p>
+</div>
+<div>
+<p>Harvey, Campbell R, and Yan Liu. 2015. “Backtesting.” <em>Journal of Portfolio Management</em> 42 (1): 13–28.</p>
+</div>
+<div>
+<p>———. 2019. “A Census of the Factor Zoo.” <em>SSRN Working Paper</em> 3341728.</p>
+</div>
+<div>
+<p>Harvey, Campbell R, Yan Liu, and Heqing Zhu. 2016. “… And the Cross-Section of Expected Returns.” <em>Review of Financial Studies</em> 29 (1): 5–68.</p>
+</div>
+<div>
+<p>Hassan, Md Rafiul, Baikunth Nath, and Michael Kirley. 2007. “A Fusion Model of Hmm, Ann and Ga for Stock Market Forecasting.” <em>Expert Systems with Applications</em> 33 (1): 171–80.</p>
+</div>
+<div>
+<p>Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. <em>The Elements of Statistical Learning</em>. Springer.</p>
+</div>
+<div>
+<p>Haykin, Simon S. 2009. <em>Neural Networks and Learning Machines</em>. Prentice Hall.</p>
+</div>
+<div>
+<p>Hazan, Elad, Amit Agarwal, and Satyen Kale. 2007. “Logarithmic Regret Algorithms for Online Convex Optimization.” <em>Machine Learning</em> 69 (2-3): 169–92.</p>
+</div>
+<div>
+<p>Hazan, Elad, and others. 2016. “Introduction to Online Convex Optimization.” <em>Foundations and Trends in Optimization</em> 2 (3-4). Now Publishers, Inc.: 157–325.</p>
+</div>
+<div>
+<p>He, Ai, Dashan Huang, and Guofu Zhou. 2019. “New Factors Wanted: Evidence from a Simple Specification Test.” <em>SSRN Working Paper</em> 3143752.</p>
+</div>
+<div>
+<p>Head, Megan L, Luke Holman, Rob Lanfear, Andrew T Kahn, and Michael D Jennions. 2015. “The Extent and Consequences of P-Hacking in Science.” <em>PLoS Biology</em> 13 (3): e1002106.</p>
+</div>
+<div>
+<p>Heinze-Deml, Christina, Jonas Peters, and Nicolai Meinshausen. 2018. “Invariant Causal Prediction for Nonlinear Models.” <em>Journal of Causal Inference</em> 6 (2).</p>
+</div>
+<div>
+<p>Henkel, Sam James, J Spencer Martin, and Federico Nardari. 2011. “Time-Varying Short-Horizon Predictability.” <em>Journal of Financial Economics</em> 99 (3): 560–80.</p>
+</div>
+<div>
+<p>Henrique, Bruno Miranda, Vinicius Amorim Sobreiro, and Herbert Kimura. 2019. “Literature Review: Machine Learning Techniques Applied to Financial Market Prediction.” <em>Expert Systems with Applications</em> XXX (XXX).</p>
+</div>
+<div>
+<p>Hiemstra, Craig, and Jonathan D Jones. 1994. “Testing for Linear and Nonlinear Granger Causality in the Stock Price-Volume Relation.” <em>Journal of Finance</em> 49 (5): 1639–64.</p>
+</div>
+<div>
+<p>Hjalmarsson, Erik, and Petar Manchev. 2012. “Characteristic-Based Mean-Variance Portfolio Choice.” <em>Journal of Banking &amp; Finance</em> 36 (5): 1392–1401.</p>
+</div>
+<div>
+<p>Ho, Tin Kam. 1995. “Random Decision Forests.” In <em>Proceedings of 3rd International Conference on Document Analysis and Recognition</em>, 1:278–82. IEEE.</p>
+</div>
+<div>
+<p>Ho, Yu-Chi, and David L Pepyne. 2002. “Simple Explanation of the No-Free-Lunch Theorem and Its Implications.” <em>Journal of Optimization Theory and Applications</em> 115 (3): 549–70.</p>
+</div>
+<div>
+<p>Hochreiter, Sepp, and Jürgen Schmidhuber. 1997. “Long Short-Term Memory.” <em>Neural Computation</em> 9 (8). MIT Press: 1735–80.</p>
+</div>
+<div>
+<p>Hodge, Victoria, and Jim Austin. 2004. “A Survey of Outlier Detection Methodologies.” <em>Artificial Intelligence Review</em> 22 (2): 85–126.</p>
+</div>
+<div>
+<p>Hodges, Philip, Ked Hogan, Justin R Peterson, and Andrew Ang. 2017. “Factor Timing with Cross-Sectional and Time-Series Predictors.” <em>Journal of Portfolio Management</em> 44 (1): 30–43.</p>
+</div>
+<div>
+<p>Hoechle, Daniel, Markus Schmid, and Heinz Zimmermann. 2018. “Correcting Alpha Misattribution in Portfolio Sorts.” <em>SSRN Working Paper</em> 3190310.</p>
+</div>
+<div>
+<p>Hoi, Steven CH, Doyen Sahoo, Jing Lu, and Peilin Zhao. 2018. “Online Learning: A Comprehensive Survey.” <em>arXiv Preprint</em>, no. 1802.02871.</p>
+</div>
+<div>
+<p>Honaker, James, and Gary King. 2010. “What to Do About Missing Values in Time-Series Cross-Section Data.” <em>American Journal of Political Science</em> 54 (2): 561–81.</p>
+</div>
+<div>
+<p>Horel, Enguerrand, and Kay Giesecke. 2019. “Towards Explainable AI: Significance Tests for Neural Networks.” <em>arXiv Preprint</em>, no. 1902.06021.</p>
+</div>
+<div>
+<p>Hoseinzade, Ehsan, and Saman Haratizadeh. 2019. “CNNpred: CNN-Based Stock Market Prediction Using a Diverse Set of Variables.” <em>Expert Systems with Applications</em> XXX.</p>
+</div>
+<div>
+<p>Hou, Kewei, Chen Xue, and Lu Zhang. 2015. “Digesting Anomalies: An Investment Approach.” <em>Review of Financial Studies</em> 28 (3): 650–705.</p>
+</div>
+<div>
+<p>———. 2019. “Replicating Anomalies.” <em>Review of Financial Studies</em> XX (XX): XXX–XX.</p>
+</div>
+<div>
+<p>Hsu, Po-Hsuan, Qiheng Han, Wensheng Wu, and Zhiguang Cao. 2018. “Asset Allocation Strategies, Data Snooping, and the 1/N Rule.” <em>Journal of Banking &amp; Finance</em> 97: 257–69.</p>
+</div>
+<div>
+<p>Huang, Wei, Yoshiteru Nakamori, and Shou-Yang Wang. 2005. “Forecasting Stock Market Movement Direction with Support Vector Machine.” <em>Computers &amp; Operations Research</em> 32 (10): 2513–22.</p>
+</div>
+<div>
+<p>Huck, Nicolas. 2019. “Large Data Sets and Machine Learning: Applications to Statistical Arbitrage.” <em>European Journal of Operational Research</em> 278 (1). Elsevier: 330–42.</p>
+</div>
+<div>
+<p>Hübner, Georges. 2005. “The Generalized Treynor Ratio.” <em>Review of Finance</em> 9 (3): 415–35.</p>
+</div>
+<div>
+<p>Hünermund, Paul, and Elias Bareinboim. 2019. “Causal Inference and Data-Fusion in Econometrics.” <em>arXiv Preprint</em>, no. 1912.09104.</p>
+</div>
+<div>
+<p>Ilmanen, Antti. 2011. <em>Expected Returns: An Investor’s Guide to Harvesting Market Rewards</em>. John Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Ilmanen, Antti, Ronen Israel, Tobias J Moskowitz, Ashwin K Thapar, and Franklin Wang. 2019. “Factor Premia and Factor Timing: A Century of Evidence.” <em>SSRN Working Paper</em> 3400998.</p>
+</div>
+<div>
+<p>Jacobs, Heiko, and Sebastian Müller. 2019. “Anomalies Across the Globe: Once Public, No Longer Existent?” <em>Journal of Financial Economics</em> XXX (XXX): XXX–XXX.</p>
+</div>
+<div>
+<p>Jacobs, Robert A, Michael I Jordan, Steven J Nowlan, Geoffrey E Hinton, and others. 1991. “Adaptive Mixtures of Local Experts.” <em>Neural Computation</em> 3 (1): 79–87.</p>
+</div>
+<div>
+<p>Jagannathan, Ravi, and Tongshu Ma. 2003. “Risk Reduction in Large Portfolios: Why Imposing the Wrong Constraints Helps.” <em>Journal of Finance</em> 58 (4): 1651–83.</p>
+</div>
+<div>
+<p>Jagannathan, Ravi, and Zhenyu Wang. 1998. “An Asymptotic Theory for Estimating Beta-Pricing Models Using Cross-Sectional Regression.” <em>Journal of Finance</em> 53 (4): 1285–1309.</p>
+</div>
+<div>
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Vol. 112. Springer.</p>
+</div>
+<div>
+<p>Jegadeesh, Narasimhan, Joonki Noh, Kuntara Pukthuanthong, Richard Roll, and Junbo L Wang. 2019. “Empirical Tests of Asset Pricing Models with Individual Assets: Resolving the Errors-in-Variables Bias in Risk Premium Estimation.” <em>Journal of Financial Economics</em> Forthcoming (XXXX).</p>
+</div>
+<div>
+<p>Jegadeesh, Narasimhan, and Sheridan Titman. 1993. “Returns to Buying Winners and Selling Losers: Implications for Stock Market Efficiency.” <em>Journal of Finance</em> 48 (1): 65–91.</p>
+</div>
+<div>
+<p>Jensen, Michael C. 1968. “The Performance of Mutual Funds in the Period 1945–1964.” <em>Journal of Finance</em> 23 (2): 389–416.</p>
+</div>
+<div>
+<p>Jha, Vinesh. 2019. “Implementing Alternative Data in an Investment Process.” In <em>Big Data and Machine Learning in Quantitative Investment</em>, 51–74. Wiley.</p>
+</div>
+<div>
+<p>Jiang, Zhengyao, Dixing Xu, and Jinjun Liang. 2017. “A Deep Reinforcement Learning Framework for the Financial Portfolio Management Problem.” <em>arXiv Preprint</em>, no. 1706.10059.</p>
+</div>
+<div>
+<p>Johnson, Timothy C. 2002. “Rational Momentum Effects.” <em>Journal of Finance</em> 57 (2). Wiley Online Library: 585–608.</p>
+</div>
+<div>
+<p>Jordan, Michael I. 1997. “Serial Order: A Parallel Distributed Processing Approach.” In <em>Advances in Psychology</em>, 121:471–95. Elsevier.</p>
+</div>
+<div>
+<p>Jurczenko, Emmanuel. 2017. <em>Factor Investing: From Traditional to Alternative Risk Premia</em>. Elsevier.</p>
+</div>
+<div>
+<p>Kalisch, Markus, Martin Mächler, Diego Colombo, Marloes H Maathuis, Peter Bühlmann, and others. 2012. “Causal Inference Using Graphical Models with the R Package Pcalg.” <em>Journal of Statistical Software</em> 47 (11): 1–26.</p>
+</div>
+<div>
+<p>Ke, Guolin, Qi Meng, Thomas Finley, Taifeng Wang, Wei Chen, Weidong Ma, Qiwei Ye, and Tie-Yan Liu. 2017. “Lightgbm: A Highly Efficient Gradient Boosting Decision Tree.” In <em>Advances in Neural Information Processing Systems</em>, 3146–54.</p>
+</div>
+<div>
+<p>Ke, Zheng Tracy, Bryan T Kelly, and Dacheng Xiu. 2019. “Predicting Returns with Text Data.” <em>SSRN Working Paper</em> 3388293.</p>
+</div>
+<div>
+<p>Kearns, Michael, and Yuriy Nevmyvaka. 2013. “Machine Learning for Market Microstructure and High Frequency Trading.” <em>High Frequency Trading: New Realities for Traders, Markets, and Regulators</em>.</p>
+</div>
+<div>
+<p>Kelly, Bryan T, Seth Pruitt, and Yinan Su. 2019. “Characteristics Are Covariances: A Unified Model of Risk and Return.” <em>Journal of Financial Economics</em> 134 (3): 501–24.</p>
+</div>
+<div>
+<p>Kim, Kyoung-jae. 2003. “Financial Time Series Forecasting Using Support Vector Machines.” <em>Neurocomputing</em> 55 (1-2). Elsevier: 307–19.</p>
+</div>
+<div>
+<p>Kim, Soohun, Robert A Korajczyk, and Andreas Neuhierl. 2019. “Arbitrage Portfolios.” <em>SSRN Working Paper</em> 3263001.</p>
+</div>
+<div>
+<p>Kimoto, Takashi, Kazuo Asakawa, Morio Yoda, and Masakazu Takeoka. 1990. “Stock Market Prediction System with Modular Neural Networks.” In <em>1990 Ijcnn International Joint Conference on Neural Networks</em>, 1–6. IEEE.</p>
+</div>
+<div>
+<p>Kingma, Diederik P, and Jimmy Ba. 2014. “Adam: A Method for Stochastic Optimization.” <em>arXiv Preprint</em>, no. 1412.6980.</p>
+</div>
+<div>
+<p>Koijen, Ralph SJ, Robert J Richmond, and Motohiro Yogo. 2019. “Which Investors Matter for Global Equity Valuations and Expected Returns?” <em>SSRN Working Paper</em> 3378340.</p>
+</div>
+<div>
+<p>Koijen, Ralph S.J., and Motohiro Yogo. 2019. “A Demand System Approach to Asset Pricing.” <em>Journal of Political Economy</em> 127 (4): 1475–1515.</p>
+</div>
+<div>
+<p>Kolm, Petter N, and Gordon Ritter. 2019a. “Dynamic Replication and Hedging: A Reinforcement Learning Approach.” <em>The Journal of Financial Data Science</em> 1 (1): 159–71.</p>
+</div>
+<div>
+<p>———. 2019b. “Modern Perspectives on Reinforcement Learning in Finance.” <em>Journal of Machine Learning in Finance</em> 1 (1).</p>
+</div>
+<div>
+<p>Kong, Weiwei, Christopher Liaw, Aranyak Mehta, and D Sivakumar. 2019. “A New Dog Learns Old Tricks: RL Finds Classic Optimization Algorithms.” <em>Proceedings of the ICLR Conference</em>, 1–25.</p>
+</div>
+<div>
+<p>Kozak, Serhiy, Stefan Nagel, and Shrihari Santosh. 2018. “Interpreting Factor Models.” <em>Journal of Finance</em> 73 (3): 1183–1223.</p>
+</div>
+<div>
+<p>———. 2019. “Shrinking the Cross-Section.” <em>Journal of Financial Economics</em> 135: 271–92.</p>
+</div>
+<div>
+<p>Krauss, Christopher, Xuan Anh Do, and Nicolas Huck. 2017. “Deep Neural Networks, Gradient-Boosted Trees, Random Forests: Statistical Arbitrage on the S&amp;P 500.” <em>European Journal of Operational Research</em> 259 (2): 689–702.</p>
+</div>
+<div>
+<p>Kremer, Philipp J, Sangkyun Lee, Małgorzata Bogdan, and Sandra Paterlini. 2019. “Sparse Portfolio Selection via the Sorted L1-Norm.” <em>Journal of Banking &amp; Finance</em>, 105687.</p>
+</div>
+<div>
+<p>Krkoska, Eduard, and Klaus Reiner Schenk-Hoppé. 2019. “Herding in Smart-Beta Investment Products.” <em>Journal of Risk and Financial Management</em> 12 (1): 47.</p>
+</div>
+<div>
+<p>Kruschke, John. 2014. <em>Doing Bayesian Data Analysis: A Tutorial with R, Jags, and Stan (2nd Ed.)</em>. Academic Press.</p>
+</div>
+<div>
+<p>Kuhn, Max, and Kjell Johnson. 2019. <em>Feature Engineering and Selection: A Practical Approach for Predictive Models</em>. CRC Press.</p>
+</div>
+<div>
+<p>Lakonishok, Josef, Andrei Shleifer, and Robert W Vishny. 1994. “Contrarian Investment, Extrapolation, and Risk.” <em>Journal of Finance</em> 49 (5): 1541–78.</p>
+</div>
+<div>
+<p>Leary, Mark T, and Roni Michaely. 2011. “Determinants of Dividend Smoothing: Empirical Evidence.” <em>Review of Financial Studies</em> 24 (10): 3197–3249.</p>
+</div>
+<div>
+<p>Ledoit, Oliver, and Michael Wolf. 2008. “Robust Performance Hypothesis Testing with the Sharpe Ratio.” <em>Journal of Empirical Finance</em> 15 (5): 850–59.</p>
+</div>
+<div>
+<p>Ledoit, Olivier, and Michael Wolf. 2004. “A Well-Conditioned Estimator for Large-Dimensional Covariance Matrices.” <em>Journal of Multivariate Analysis</em> 88 (2): 365–411.</p>
+</div>
+<div>
+<p>———. 2017. “Nonlinear Shrinkage of the Covariance Matrix for Portfolio Selection: Markowitz Meets Goldilocks.” <em>Review of Financial Studies</em> 30 (12): 4349–88.</p>
+</div>
+<div>
+<p>Ledoit, Olivier, Michael Wolf, and Zhao Zhao. 2018. “Efficient Weighting: A More Powerful Test for Cross-Sectional Anomalies.” <em>SSRN Working Paper</em> 2881417.</p>
+</div>
+<div>
+<p>Legendre, Adrien Marie. 1805. <em>Nouvelles Méthodes Pour La détermination Des Orbites Des Comètes</em>. F. Didot.</p>
+</div>
+<div>
+<p>Lempérière, Yves, Cyril Deremble, Philip Seager, Marc Potters, and Jean-Philippe Bouchaud. 2014. “Two Centuries of Trend Following.” <em>arXiv Preprint</em>, no. 1404.3274.</p>
+</div>
+<div>
+<p>Lettau, Martin, and Markus Pelger. 2018. “Factors That Fit the Time Series and Cross-Section of Stock Returns.” <em>SSRN Working Paper</em> 3211106.</p>
+</div>
+<div>
+<p>———. n.d. “Estimating Latent Asset-Pricing Factors.” <em>Journal of Econometrics</em> XXX: XXX–XXX.</p>
+</div>
+<div>
+<p>Leung, Mark T, Hazem Daouk, and An-Sing Chen. 2001. “Using Investment Portfolio Return to Combine Forecasts: A Multiobjective Approach.” <em>European Journal of Operational Research</em> 134 (1): 84–102.</p>
+</div>
+<div>
+<p>Li, Bin, and Steven CH Hoi. 2014. “Online Portfolio Selection: A Survey.” <em>ACM Computing Surveys (CSUR)</em> 46 (3): 35.</p>
+</div>
+<div>
+<p>Li, Bin, and Steven Chu Hong Hoi. 2018. <em>Online Portfolio Selection: Principles and Algorithms</em>. CRC Press.</p>
+</div>
+<div>
+<p>Linnainmaa, Juhani T, and Michael R Roberts. 2018. “The History of the Cross-Section of Stock Returns.” <em>Review of Financial Studies</em> 31 (7): 2606–49.</p>
+</div>
+<div>
+<p>Lintner, John. 1965. “The Valuation of Risk Assets and the Selection of Risky Investments in Stock Portfolios and Capital Budgets.” <em>Review of Economics and Statistics</em> 47 (1): 13–37.</p>
+</div>
+<div>
+<p>Little, Roderick JA, and Donald B Rubin. 2014. <em>Statistical Analysis with Missing Data</em>. Vol. 333. John Wiley &amp; Sons.</p>
+</div>
+<div>
+<p>Lo, Andrew W, and A Craig MacKinlay. 1990. “When Are Contrarian Profits Due to Stock Market Overreaction?” <em>Review of Financial Studies</em> 3 (2): 175–205.</p>
+</div>
+<div>
+<p>Loreggia, Andrea, Yuri Malitsky, Horst Samulowitz, and Vijay Saraswat. 2016. “Deep Learning for Algorithm Portfolios.” In <em>Proceedings of the Thirtieth Aaai Conference on Artificial Intelligence</em>, 1280–6. AAAI Press.</p>
+</div>
+<div>
+<p>Loughran, Tim, and Bill McDonald. 2016. “Textual Analysis in Accounting and Finance: A Survey.” <em>Journal of Accounting Research</em> 54 (4): 1187–1230.</p>
+</div>
+<div>
+<p>Lundberg, Scott M, and Su-In Lee. 2017. “A Unified Approach to Interpreting Model Predictions.” In <em>Advances in Neural Information Processing Systems</em>, 4765–74.</p>
+</div>
+<div>
+<p>Ma, Shujie, Wei Lan, Liangjun Su, and Chih-Ling Tsai. 2018. “Testing Alphas in Conditional Time-Varying Factor Models with High Dimensional Assets.” <em>Journal of Business &amp; Economic Statistics</em> XXX (XXX). Taylor &amp; Francis: 1–34.</p>
+</div>
+<div>
+<p>Maathuis, Marloes, Mathias Drton, Steffen Lauritzen, and Martin Wainwright. 2018. <em>Handbook of Graphical Models</em>. CRC Press.</p>
+</div>
+<div>
+<p>Maclaurin, Dougal, David Duvenaud, and Ryan Adams. 2015. “Gradient-Based Hyperparameter Optimization Through Reversible Learning.” In <em>International Conference on Machine Learning</em>, 2113–22.</p>
+</div>
+<div>
+<p>Maillard, Sébastien, Thierry Roncalli, and Jérôme Teiletche. 2010. “The Properties of Equally Weighted Risk Contribution Portfolios.” <em>Journal of Portfolio Management</em> 36 (4): 60–70.</p>
+</div>
+<div>
+<p>Markowitz, Harry. 1952. “Portfolio Selection.” <em>Journal of Finance</em> 7 (1): 77–91.</p>
+</div>
+<div>
+<p>Martin, Evan A, and Audrey Qiuyan Fu. 2019. “A Bayesian Approach to Directed Acyclic Graphs with a Candidate Graph.” <em>arXiv Preprint</em>, no. 1909.10678.</p>
+</div>
+<div>
+<p>Martin, Ian, and Stefan Nagel. 2019. “Market Efficiency in the Age of Big Data.” <em>SSRN Working Paper</em> XXXXXXXXXXXXX.</p>
+</div>
+<div>
+<p>Martin Utrera, Alberto, Victor DeMiguel, Raman Uppal, and Francisco J Nogales. 2018. “A Transaction-Cost Perspective on the Multitude of Firm Characteristics.” <em>SSRN Working Paper</em> 2912819.</p>
+</div>
+<div>
+<p>Mason, Llew, Jonathan Baxter, Peter L Bartlett, and Marcus R Frean. 2000. “Boosting Algorithms as Gradient Descent.” In <em>Advances in Neural Information Processing Systems</em>, 512–18.</p>
+</div>
+<div>
+<p>Masters, Timothy. 1993. <em>Practical Neural Network Recipes in C++</em>. Morgan Kaufmann.</p>
+</div>
+<div>
+<p>Matı'as, José M, and Juan C Reboredo. 2012. “Forecasting Performance of Nonlinear Models for Intraday Stock Returns.” <em>Journal of Forecasting</em> 31 (2). Wiley Online Library: 172–88.</p>
+</div>
+<div>
+<p>McLean, R David, and Jeffrey Pontiff. 2016. “Does Academic Research Destroy Stock Return Predictability?” <em>Journal of Finance</em> 71 (1). Wiley Online Library: 5–32.</p>
+</div>
+<div>
+<p>Meng, Terry Lingze, and Matloob Khushi. 2019. “Reinforcement Learning in Financial Markets.” <em>Data</em> 4 (3): 110.</p>
+</div>
+<div>
+<p>Metropolis, Nicholas, and Stanislaw Ulam. 1949. “The Monte Carlo Method.” <em>Journal of the American Statistical Association</em> 44 (247): 335–41.</p>
+</div>
+<div>
+<p>Meyer, Carl D. 2000. <em>Matrix Analysis and Applied Linear Algebra</em>. Vol. 71. SIAM.</p>
+</div>
+<div>
+<p>Mohri, Mehryar, Afshin Rostamizadeh, and Ameet Talwalkar. 2018. <em>Foundations of Machine Learning</em>. MIT press.</p>
+</div>
+<div>
+<p>Molnar, Christoph. 2019. “Interpretable Machine Learning: A Guide for Making Black Box Models Explainable.” LeanPub / Lulu.</p>
+</div>
+<div>
+<p>Moody, John, and Lizhong Wu. 1997. “Optimization of Trading Systems and Portfolios.” In <em>Proceedings of the Ieee/Iafe 1997 Computational Intelligence for Financial Engineering (Cifer)</em>, 300–307. IEEE.</p>
+</div>
+<div>
+<p>Moody, John, Lizhong Wu, Yuansong Liao, and Matthew Saffell. 1998. “Performance Functions and Reinforcement Learning for Trading Systems and Portfolios.” <em>Journal of Forecasting</em> 17 (5-6): 441–70.</p>
+</div>
+<div>
+<p>Moritz, Benjamin, and Tom Zimmermann. 2016. “Tree-Based Conditional Portfolio Sorts: The Relation Between Past and Future Stock Returns.” <em>SSRN Working Paper</em> 2740751.</p>
+</div>
+<div>
+<p>Moskowitz, Tobias J, and Mark Grinblatt. 1999. “Do Industries Explain Momentum?” <em>Journal of Finance</em> 54 (4): 1249–90.</p>
+</div>
+<div>
+<p>Moskowitz, Tobias J, Yao Hua Ooi, and Lasse Heje Pedersen. 2012. “Time Series Momentum.” <em>Journal of Financial Economics</em> 104 (2): 228–50.</p>
+</div>
+<div>
+<p>Mossin, Jan. 1966. “Equilibrium in a Capital Asset Market.” <em>Econometrica: Journal of the Econometric Society</em> 34 (4). JSTOR: 768–83.</p>
+</div>
+<div>
+<p>Nesterov, Yurii. 1983. “A Method for Unconstrained Convex Minimization Problem with the Rate of Convergence O (1/K^ 2).” In <em>Doklady an Ussr</em>, 269:543–47.</p>
+</div>
+<div>
+<p>Neuneier, Ralph. 1996. “Optimal Asset Allocation Using Adaptive Dynamic Programming.” In <em>Advances in Neural Information Processing Systems</em>, 952–58.</p>
+</div>
+<div>
+<p>———. 1998. “Enhancing Q-Learning for Optimal Asset Allocation.” In <em>Advances in Neural Information Processing Systems</em>, 936–42.</p>
+</div>
+<div>
+<p>Ngai, Eric WT, Yong Hu, YH Wong, Yijun Chen, and Xin Sun. 2011. “The Application of Data Mining Techniques in Financial Fraud Detection: A Classification Framework and an Academic Review of Literature.” <em>Decision Support Systems</em> 50 (3). Elsevier: 559–69.</p>
+</div>
+<div>
+<p>Novy-Marx, Robert. 2012. “Is Momentum Really Momentum?” <em>Journal of Financial Economics</em> 103 (3): 429–53.</p>
+</div>
+<div>
+<p>Novy-Marx, Robert, and Mihail Velikov. 2015. “A Taxonomy of Anomalies and Their Trading Costs.” <em>Review of Financial Studies</em> 29 (1): 104–47.</p>
+</div>
+<div>
+<p>Nuti, Giuseppe, Lluı's Antoni Jiménez Rugama, and Kaspar Thommen. 2019. “Adaptive Reticulum.” <em>arXiv Preprint</em>, no. 1912.05901.</p>
+</div>
+<div>
+<p>Okun, Oleg, Giorgio Valentini, and Matteo Re. 2011. <em>Ensembles in Machine Learning Applications</em>. Vol. 373. Springer Science &amp; Business Media.</p>
+</div>
+<div>
+<p>Olazaran, Mikel. 1996. “A Sociological Study of the Official History of the Perceptrons Controversy.” <em>Social Studies of Science</em> 26 (3). Sage Publications London: 611–59.</p>
+</div>
+<div>
+<p>Olson, Randal S, William La Cava, Zairah Mustahsan, Akshay Varik, and Jason H Moore. 2018. “Data-Driven Advice for Applying Machine Learning to Bioinformatics Problems.” <em>arXiv Preprint</em>, no. 1708.05070.</p>
+</div>
+<div>
+<p>Orimoloye, Larry Olanrewaju, Ming-Chien Sung, Tiejun Ma, and Johnnie EV Johnson. 2019. “Comparing the Effectiveness of Deep Feedforward Neural Networks and Shallow Architectures for Predicting Stock Price Indices.” <em>Expert Systems with Applications</em>. Elsevier, 112828.</p>
+</div>
+<div>
+<p>Pan, Sinno Jialin, and Qiang Yang. 2009. “A Survey on Transfer Learning.” <em>IEEE Transactions on Knowledge and Data Engineering</em> 22 (10): 1345–59.</p>
+</div>
+<div>
+<p>Patel, Jigar, Sahil Shah, Priyank Thakkar, and K Kotecha. 2015a. “Predicting Stock and Stock Price Index Movement Using Trend Deterministic Data Preparation and Machine Learning Techniques.” <em>Expert Systems with Applications</em> 42 (1): 259–68.</p>
+</div>
+<div>
+<p>Patel, Jigar, Sahil Shah, Priyank Thakkar, and Ketan Kotecha. 2015b. “Predicting Stock Market Index Using Fusion of Machine Learning Techniques.” <em>Expert Systems with Applications</em> 42 (4): 2162–72.</p>
+</div>
+<div>
+<p>Patton, Andrew J, and Allan Timmermann. 2010. “Monotonicity in Asset Returns: New Tests with Applications to the Term Structure, the CAPM, and Portfolio Sorts.” <em>Journal of Financial Economics</em> 98 (3). Elsevier: 605–25.</p>
+</div>
+<div>
+<p>Pearl, Judea. 2009. <em>Causality: Models, Reasoning and Inference. Second Edition</em>. Vol. 29. Cambridge University Press.</p>
+</div>
+<div>
+<p>Penasse, Julien. 2018. “Understanding Alpha Decay.” <em>SSRN Working Paper</em> 2953614.</p>
+</div>
+<div>
+<p>Pendharkar, Parag C, and Patrick Cusatis. 2018. “Trading Financial Indices with Reinforcement Learning Agents.” <em>Expert Systems with Applications</em> 103: 1–13.</p>
+</div>
+<div>
+<p>Perrin, Sarah, and Thierry Roncalli. 2019. “Machine Learning Optimization Algorithms &amp; Portfolio Allocation.” <em>SSRN Working Paper</em> 3425827.</p>
+</div>
+<div>
+<p>Peters, Jonas, Dominik Janzing, and Bernhard Schölkopf. 2017. <em>Elements of Causal Inference: Foundations and Learning Algorithms</em>. MIT press.</p>
+</div>
+<div>
+<p>Petersen, Mitchell A. 2009. “Estimating Standard Errors in Finance Panel Data Sets: Comparing Approaches.” <em>Review of Financial Studies</em> 22 (1): 435–80.</p>
+</div>
+<div>
+<p>Plyakha, Yuliya, Raman Uppal, and Grigory Vilkov. 2014. “Equal or Value Weighting? Implications for Asset-Pricing Tests.” <em>SSRN Working Paper</em> 1787045.</p>
+</div>
+<div>
+<p>Polyak, Boris T. 1964. “Some Methods of Speeding up the Convergence of Iteration Methods.” <em>USSR Computational Mathematics and Mathematical Physics</em> 4 (5): 1–17.</p>
+</div>
+<div>
+<p>Popov, Sergei, Stanislav Morozov, and Artem Babenko. 2019. “Neural Oblivious Decision Ensembles for Deep Learning on Tabular Data.” <em>arXiv Preprint</em>, no. 1909.06312.</p>
+</div>
+<div>
+<p>Powell, Warren B, and Jun Ma. 2011. “A Review of Stochastic Algorithms with Continuous Value Function Approximation and Some New Approximate Policy Iteration Algorithms for Multidimensional Continuous Applications.” <em>Journal of Control Theory and Applications</em> 9 (3): 336–52.</p>
+</div>
+<div>
+<p>Probst, Philipp, Bernd Bischl, and Anne-Laure Boulesteix. 2018. “Tunability: Importance of Hyperparameters of Machine Learning Algorithms.” <em>arXiv Preprint</em>, no. 1802.09596.</p>
+</div>
+<div>
+<p>Pukthuanthong, Kuntara, Richard Roll, and Avanidhar Subrahmanyam. 2018. “A Protocol for Factor Identification.” <em>Review of Financial Studies</em> 32 (4): 1573–1607.</p>
+</div>
+<div>
+<p>Quionero-Candela, Joaquin, Masashi Sugiyama, Anton Schwaighofer, and Neil D Lawrence. 2009. <em>Dataset Shift in Machine Learning</em>. The MIT Press.</p>
+</div>
+<div>
+<p>Rapach, David E, Jack K Strauss, and Guofu Zhou. 2013. “International Stock Return Predictability: What Is the Role of the United States?” <em>Journal of Finance</em> 68 (4): 1633–62.</p>
+</div>
+<div>
+<p>Rapach, David, and Guofu Zhou. 2019. “Time-Series and Cross-Sectional Stock Return Forecasting: New Machine Learning Methods.” <em>SSRN Working Paper</em> 3428095.</p>
+</div>
+<div>
+<p>Rashmi, Korlakai Vinayak, and Ran Gilad-Bachrach. 2015. “DART: Dropouts Meet Multiple Additive Regression Trees.” In <em>AISTATS</em>, 489–97.</p>
+</div>
+<div>
+<p>Ravisankar, Pediredla, Vadlamani Ravi, G Raghava Rao, and Indranil Bose. 2011. “Detection of Financial Statement Fraud and Feature Selection Using Data Mining Techniques.” <em>Decision Support Systems</em> 50 (2): 491–500.</p>
+</div>
+<div>
+<p>Reboredo, Juan C, José M Matı'as, and Raquel Garcia-Rubio. 2012. “Nonlinearity in Forecasting of High-Frequency Stock Returns.” <em>Computational Economics</em> 40 (3): 245–64.</p>
+</div>
+<div>
+<p>Regenstein, Jonathan K. 2018. <em>Reproducible Finance with R: Code Flows and Shiny Apps for Portfolio Analysis</em>. Chapman; Hall/CRC.</p>
+</div>
+<div>
+<p>Ribeiro, Marco Tulio, Sameer Singh, and Carlos Guestrin. 2016. “Why Should I Trust You?: Explaining the Predictions of Any Classifier.” In <em>Proceedings of the 22nd Acm Sigkdd International Conference on Knowledge Discovery and Data Mining</em>, 1135–44. ACM.</p>
+</div>
+<div>
+<p>Ridgeway, Greg, David Madigan, and Thomas Richardson. 1999. “Boosting Methodology for Regression Problems.” In <em>AISTATS</em>.</p>
+</div>
+<div>
+<p>Ripley, Brian D. 2007. <em>Pattern Recognition and Neural Networks</em>. Cambridge University Press.</p>
+</div>
+<div>
+<p>Roberts, Gareth O, and Adrian FM Smith. 1994. “Simple Conditions for the Convergence of the Gibbs Sampler and Metropolis-Hastings Algorithms.” <em>Stochastic Processes and Their Applications</em> 49 (2): 207–16.</p>
+</div>
+<div>
+<p>Romano, Joseph P, and Michael Wolf. 2005. “Stepwise Multiple Testing as Formalized Data Snooping.” <em>Econometrica</em> 73 (4): 1237–82.</p>
+</div>
+<div>
+<p>———. 2013. “Testing for Monotonicity in Expected Asset Returns.” <em>Journal of Empirical Finance</em> 23: 93–116.</p>
+</div>
+<div>
+<p>Rosenblatt, Frank. 1958. “The Perceptron: A Probabilistic Model for Information Storage and Organization in the Brain.” <em>Psychological Review</em> 65 (6): 386.</p>
+</div>
+<div>
+<p>Ross, Stephen A. 1976. “The Arbitrage Theory of Capital Asset Pricing.” <em>Journal of Economic Theory</em> 13 (3): 341–60.</p>
+</div>
+<div>
+<p>Rousseeuw, Peter J, and Annick M Leroy. 2005. <em>Robust Regression and Outlier Detection</em>. Vol. 589. Wiley.</p>
+</div>
+<div>
+<p>Ruf, Johannes, and Weiguan Wang. 2019. “Neural Networks for Option Pricing and Hedging: A Literature Review.” <em>arXiv Preprint</em>, no. 1911.05620.</p>
+</div>
+<div>
+<p>Santi, Caterina, and Remco CJ Zwinkels. 2018. “Exploring Style Herding by Mutual Funds.” <em>SSRN Working Paper</em> 2986059.</p>
+</div>
+<div>
+<p>Sato, Yoshiharu. 2019. “Model-Free Reinforcement Learning for Financial Portfolios: A Brief Survey.” <em>arXiv Preprint</em>, no. 1904.04973.</p>
+</div>
+<div>
+<p>Schafer, Joseph L. 1999. “Multiple Imputation: A Primer.” <em>Statistical Methods in Medical Research</em> 8 (1): 3–15.</p>
+</div>
+<div>
+<p>Schapire, Robert E. 1990. “The Strength of Weak Learnability.” <em>Machine Learning</em> 5 (2): 197–227.</p>
+</div>
+<div>
+<p>———. 2003. “The Boosting Approach to Machine Learning: An Overview.” In <em>Nonlinear Estimation and Classification</em>, 149–71. Springer.</p>
+</div>
+<div>
+<p>Schapire, Robert E, and Yoav Freund. 2012. <em>Boosting: Foundations and Algorithms</em>. MIT press.</p>
+</div>
+<div>
+<p>Schnaubelt, Matthias. 2019. “A Comparison of Machine Learning Model Validation Schemes for Non-Stationary Time Series Data.” FAU Discussion Papers in Economics.</p>
+</div>
+<div>
+<p>Scornet, Erwan, Gérard Biau, Jean-Philippe Vert, and others. 2015. “Consistency of Random Forests.” <em>Annals of Statistics</em> 43 (4). Institute of Mathematical Statistics: 1716–41.</p>
+</div>
+<div>
+<p>Seni, Giovanni, and John F Elder. 2010. “Ensemble Methods in Data Mining: Improving Accuracy Through Combining Predictions.” <em>Synthesis Lectures on Data Mining and Knowledge Discovery</em> 2 (1): 1–126.</p>
+</div>
+<div>
+<p>Settles, Burr. 2009. “Active Learning Literature Survey.” University of Wisconsin-Madison Department of Computer Sciences.</p>
+</div>
+<div>
+<p>———. 2012. “Active Learning.” <em>Synthesis Lectures on Artificial Intelligence and Machine Learning</em> 6 (1): 1–114.</p>
+</div>
+<div>
+<p>Shah, Anoop D, Jonathan W Bartlett, James Carpenter, Owen Nicholas, and Harry Hemingway. 2014. “Comparison of Random Forest and Parametric Imputation Models for Imputing Missing Data Using Mice: A Caliber Study.” <em>American Journal of Epidemiology</em> 179 (6): 764–74.</p>
+</div>
+<div>
+<p>Shanken, Jay. 1992. “On the Estimation of Beta-Pricing Models.” <em>Review of Financial Studies</em> 5 (1): 1–33.</p>
+</div>
+<div>
+<p>Shapley, Lloyd S. 1953. “A Value for N-Person Games.” <em>Contributions to the Theory of Games</em> 2 (28): 307–17.</p>
+</div>
+<div>
+<p>Sharpe, William F. 1964. “Capital Asset Prices: A Theory of Market Equilibrium Under Conditions of Risk.” <em>Journal of Finance</em> 19 (3): 425–42.</p>
+</div>
+<div>
+<p>———. 1966. “Mutual Fund Performance.” <em>Journal of Business</em> 39 (1): 119–38.</p>
+</div>
+<div>
+<p>Silver, David, Aja Huang, Chris J Maddison, Arthur Guez, Laurent Sifre, George Van Den Driessche, Julian Schrittwieser, Ioannis Antonoglou, Veda Panneershelvam, and Marc Lanctot. 2016. “Mastering the Game of Go with Deep Neural Networks and Tree Search.” <em>Nature</em> 529: 484–89.</p>
+</div>
+<div>
+<p>Simonian, Joseph, Chenwei Wu, Daniel Itano, and Vyshaal Narayanam. 2019. “A Machine Learning Approach to Risk Factors: A Case Study Using the Fama-French-Carhart Model.” <em>Journal of Financial Data Science</em> 1 (1): 32–44.</p>
+</div>
+<div>
+<p>Simonsohn, Uri, Leif D Nelson, and Joseph P Simmons. 2014. “P-Curve: A Key to the File-Drawer.” <em>Journal of Experimental Psychology: General</em> 143 (2): 534.</p>
+</div>
+<div>
+<p>Sirignano, Justin, and Rama Cont. 2019. “Universal Features of Price Formation in Financial Markets: Perspectives from Deep Learning.” <em>Quantitative Finance</em> 19 (9): 1449–59.</p>
+</div>
+<div>
+<p>Smith, Leslie N. 2018. “A Disciplined Approach to Neural Network Hyper-Parameters: Part 1–Learning Rate, Batch Size, Momentum, and Weight Decay.” <em>arXiv Preprint</em>, no. 1803.09820.</p>
+</div>
+<div>
+<p>Snoek, Jasper, Hugo Larochelle, and Ryan P Adams. 2012. “Practical Bayesian Optimization of Machine Learning Algorithms.” In <em>Advances in Neural Information Processing Systems</em>, 2951–9.</p>
+</div>
+<div>
+<p>Sparapani, Rodney, Charles Spanbauer, and Robert McCulloch. 2019. “The Bart R Package.” Comprehensive R Archive Network. <a href="https://cran.r-project.org/web/packages/BART/vignettes/the-BART-R-package.pdf">https://cran.r-project.org/web/packages/BART/vignettes/the-BART-R-package.pdf</a>.</p>
+</div>
+<div>
+<p>Spirtes, Peter, Clark N Glymour, Richard Scheines, and David Heckerman. 2000. <em>Causation, Prediction, and Search</em>. MIT press.</p>
+</div>
+<div>
+<p>Srivastava, Nitish, Geoffrey Hinton, Alex Krizhevsky, Ilya Sutskever, and Ruslan Salakhutdinov. 2014. “Dropout: A Simple Way to Prevent Neural Networks from Overfitting.” <em>Journal of Machine Learning Research</em> 15 (1): 1929–58.</p>
+</div>
+<div>
+<p>Stambaugh, Robert F. 1999. “Predictive Regressions.” <em>Journal of Financial Economics</em> 54 (3): 375–421.</p>
+</div>
+<div>
+<p>Staniak, Mateusz, and Przemyslaw Biecek. 2018. “Explanations of Model Predictions with Live and breakDown Packages.” <em>arXiv Preprint</em>, no. 1804.01955.</p>
+</div>
+<div>
+<p>Stekhoven, Daniel J, and Peter Bühlmann. 2011. “MissForest—Non-Parametric Missing Value Imputation for Mixed-Type Data.” <em>Bioinformatics</em> 28 (1): 112–18.</p>
+</div>
+<div>
+<p>Stevens, Guy VG. 1998. “On the Inverse of the Covariance Matrix in Portfolio Analysis.” <em>Journal of Finance</em> 53 (5): 1821–7.</p>
+</div>
+<div>
+<p>Suhonen, Antti, Matthias Lennkh, and Fabrice Perez. 2017. “Quantifying Backtest Overfitting in Alternative Beta Strategies.” <em>Journal of Portfolio Management</em> 43 (2): 90–104.</p>
+</div>
+<div>
+<p>Sutton, Richard S, and Andrew G Barto. 2018. <em>Reinforcement Learning: An Introduction (2nd Edition)</em>. MIT press.</p>
+</div>
+<div>
+<p>Tibshirani, Robert. 1996. “Regression Shrinkage and Selection via the Lasso.” <em>Journal of the Royal Statistical Society. Series B (Methodological)</em>, 267–88.</p>
+</div>
+<div>
+<p>Tierney, Luke. 1994. “Markov Chains for Exploring Posterior Distributions.” <em>Annals of Statistics</em>, 1701–28.</p>
+</div>
+<div>
+<p>Tikka, Santtu, and Juha Karvanen. 2017. “Identifying Causal Effects with the R Package Causaleffect.” <em>Journal of Statistical Software</em> 76 (1): 1–30.</p>
+</div>
+<div>
+<p>Timmermann, Allan. 2018. “Forecasting Methods in Finance.” <em>Annual Review of Financial Economics</em> 10: 449–79.</p>
+</div>
+<div>
+<p>Ting, Kai Ming. 2002. “An Instance-Weighting Method to Induce Cost-Sensitive Trees.” <em>IEEE Transactions on Knowledge &amp; Data Engineering</em>, no. 3: 659–65.</p>
+</div>
+<div>
+<p>Treynor, Jack L. 1965. “How to Rate Management of Investment Funds.” <em>Harvard Business Review</em> 43 (1): 63–75.</p>
+</div>
+<div>
+<p>Tsantekidis, Avraam, Nikolaos Passalis, Anastasios Tefas, Juho Kanniainen, Moncef Gabbouj, and Alexandros Iosifidis. 2017. “Forecasting Stock Prices from the Limit Order Book Using Convolutional Neural Networks.” In <em>2017 Ieee 19th Conference on Business Informatics (Cbi)</em>, 1:7–12.</p>
+</div>
+<div>
+<p>Uematsu, Yoshimasa, and Shinya Tanaka. 2019. “High-Dimensional Macroeconomic Forecasting and Variable Selection via Penalized Regression.” <em>Econometrics Journal</em> 22 (1): 34–56.</p>
+</div>
+<div>
+<p>Van Buuren, Stef. 2018. <em>Flexible Imputation of Missing Data</em>. Chapman; Hall/CRC.</p>
+</div>
+<div>
+<p>Van Dijk, Mathijs A. 2011. “Is Size Dead? A Review of the Size Effect in Equity Returns.” <em>Journal of Banking &amp; Finance</em> 35 (12): 3263–74.</p>
+</div>
+<div>
+<p>Vapnik, Vladimir, and A. Lerner. 1963. “Pattern Recognition Using Generalized Portrait Method.” <em>Automation and Remote Control</em> 24: 774–80.</p>
+</div>
+<div>
+<p>Vayanos, Dimitri, and Paul Woolley. 2013. “An Institutional Theory of Momentum and Reversal.” <em>Review of Financial Studies</em> 26 (5): 1087–1145.</p>
+</div>
+<div>
+<p>Virtanen, Ilkka, and Paavo Yli-Olli. 1987. “Forecasting Stock Market Prices in a Thin Security Market.” <em>Omega</em> 15 (2): 145–55.</p>
+</div>
+<div>
+<p>Volpati, Valerio, Michael Benzaquen, Zoltan Eisler, Iacopo Mastromatteo, Bence Toth, and Jean-Philippe Bouchaud. 2020. “Zooming in on Equity Factor Crowding.” <em>arXiv Preprint</em>, no. 2001.04185.</p>
+</div>
+<div>
+<p>Von Holstein, Carl-Axel S Staël. 1972. “Probabilistic Forecasting: An Experiment Related to the Stock Market.” <em>Organizational Behavior and Human Performance</em> 8 (1): 139–58.</p>
+</div>
+<div>
+<p>Wang, Gang, Jinxing Hao, Jian Ma, and Hongbing Jiang. 2011. “A Comparative Assessment of Ensemble Learning for Credit Scoring.” <em>Expert Systems with Applications</em> 38 (1): 223–30.</p>
+</div>
+<div>
+<p>Wang, Haoran, and Xun Yu Zhou. 2019. “Continuous-Time Mean-Variance Portfolio Selection: A Reinforcement Learning Framework.” <em>SSRN Working Paper</em> 3382932.</p>
+</div>
+<div>
+<p>Wang, Ju-Jie, Jian-Zhou Wang, Zhe-George Zhang, and Shu-Po Guo. 2012. “Stock Index Forecasting Based on a Hybrid Model.” <em>Omega</em> 40 (6): 758–66.</p>
+</div>
+<div>
+<p>Wang, Wuyu, Weizi Li, Ning Zhang, and Kecheng Liu. 2019. “Portfolio Formation with Preselection Using Deep Learning from Long-Term Financial Data.” <em>Expert Systems with Applications</em> Forthcoming: XXX–XXX.</p>
+</div>
+<div>
+<p>Watkins, Christopher JCH, and Peter Dayan. 1992. “Q-Learning.” <em>Machine Learning</em> 8 (3-4): 279–92.</p>
+</div>
+<div>
+<p>Weiss, Karl, Taghi M Khoshgoftaar, and DingDing Wang. 2016. “A Survey of Transfer Learning.” <em>Journal of Big Data</em> 3 (1): 9.</p>
+</div>
+<div>
+<p>White, Halbert. 1988. “Economic Prediction Using Neural Networks: The Case of Ibm Daily Stock Returns.”</p>
+</div>
+<div>
+<p>———. 2000. “A Reality Check for Data Snooping.” <em>Econometrica</em> 68 (5): 1097–1126.</p>
+</div>
+<div>
+<p>Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, L McGowan, Romain François, Garrett Grolemund, et al. 2019. “Welcome to the Tidyverse.” <em>Journal of Open Source Software</em> 4 (43): 1686.</p>
+</div>
+<div>
+<p>Widrow, Bernard, and Marcian E Hoff. 1960. “Adaptive Switching Circuits.” In <em>IRE Wescon Convention Record</em>, 4:96–104.</p>
+</div>
+<div>
+<p>Wolpert, David H. 1992a. “On the Connection Between in-Sample Testing and Generalization Error.” <em>Complex Systems</em> 6 (1): 47.</p>
+</div>
+<div>
+<p>———. 1992b. “Stacked Generalization.” <em>Neural Networks</em> 5 (2): 241–59.</p>
+</div>
+<div>
+<p>Wolpert, David H, and William G Macready. 1997. “No Free Lunch Theorems for Optimization.” <em>IEEE Transactions on Evolutionary Computation</em> 1 (1): 67–82.</p>
+</div>
+<div>
+<p>Xiong, Zhuoran, Xiao-Yang Liu, Shan Zhong, Hongyang Yang, and Anwar Walid. 2018. “Practical Deep Reinforcement Learning Approach for Stock Trading.” <em>arXiv Preprint</em>, no. 1811.07522.</p>
+</div>
+<div>
+<p>Yang, Steve Y, Yangyang Yu, and Saud Almahdi. 2018. “An Investor Sentiment Reward-Based Trading System Using Gaussian Inverse Reinforcement Learning Algorithm.” <em>Expert Systems with Applications</em> 114: 388–401.</p>
+</div>
+<div>
+<p>Yu, Pengqian, Joon Sern Lee, Ilya Kulyatin, Zekun Shi, and Sakyasingha Dasgupta. 2019. “Model-Based Deep Reinforcement Learning for Dynamic Portfolio Optimization.” <em>arXiv Preprint</em>, no. 1901.08740.</p>
+</div>
+<div>
+<p>Zeiler, Matthew D. 2012. “ADADELTA: An Adaptive Learning Rate Method.” <em>arXiv Preprint</em>, no. 1212.5701.</p>
+</div>
+<div>
+<p>Zhang, Cha, and Yunqian Ma. 2012. <em>Ensemble Machine Learning: Methods and Applications</em>. Springer.</p>
+</div>
+<div>
+<p>Zhang, Yudong, and Lenan Wu. 2009. “Stock Market Prediction of S&amp;P 500 via Combination of Improved Bco Approach and Bp Neural Network.” <em>Expert Systems with Applications</em> 36 (5): 8849–54.</p>
+</div>
+<div>
+<p>Zhao, Qingyuan, and Trevor Hastie. 2019. “Causal Interpretations of Black-Box Models.” <em>Journal of Business &amp; Economic Statistics</em>, nos. just-accepted: 1–19.</p>
+</div>
+<div>
+<p>Zhou, Zhi-Hua. 2012. <em>Ensemble Methods: Foundations and Algorithms</em>. Chapman; Hall/CRC.</p>
+</div>
+<div>
+<p>Zou, Hui, and Trevor Hastie. 2005. “Regularization and Variable Selection via the Elastic Net.” <em>Journal of the Royal Statistical Society: Series B (Statistical Methodology)</em> 67 (2): 301–20.</p>
+</div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="solution-to-exercises.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": false,
+"twitter": true,
+"linkedin": true,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": null,
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["ML_factor.pdf"],
+"toc": {
+"collapse": "section",
+"scroll_highlight": true
+},
+"toolbar": {
+"position": "fixed"
+},
+"search": true,
+"info": true
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
