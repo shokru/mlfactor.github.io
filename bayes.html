@@ -6,11 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Chapter 9 Bayesian methods | Machine Learning for Factor Investing</title>
 <meta name="author" content="Guillaume Coqueret and Tony Guida">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.2"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.8/header-attrs.js"></script><script src="libs/jquery-3.5.1/jquery-3.5.1.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.5.3/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.3.9000/tabs.js"></script><script src="libs/bs3compat-0.2.3.9000/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 9 Bayesian methods | Machine Learning for Factor Investing">
+<meta property="og:type" content="book">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 9 Bayesian methods | Machine Learning for Factor Investing">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/kePrint-0.0.1/kePrint.js"></script><link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/mark.js@8.11.1/dist/mark.min.js"></script><!-- CSS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><meta name="description" content=".container-fluid main { max-width: 60rem; } This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be...">
+<meta property="og:description" content=".container-fluid main { max-width: 60rem; } This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be...">
+<meta name="twitter:description" content=".container-fluid main { max-width: 60rem; } This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be...">
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -73,7 +80,7 @@
 max-width: 60rem;
 }
 </style>
-<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concepts in the subsection below. Good references for Bayesian analysis are <span class="citation"><a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">Gelman et al.</a> (<a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">Kruschke</a> (<a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code.</p>
+<p>This section is dedicated to the subset of machine learning that makes prior assumptions on parameters. Before we explain how Bayes’ theorem can be applied to simple building blocks in machine learning, we introduce some notations and concepts in the subsection below. Good references for Bayesian analysis are <span class="citation"><a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">Gelman et al.</a> (<a href="solutions-to-exercises.html#ref-gelman2013bayesian" role="doc-biblioref">2013</a>)</span> and <span class="citation"><a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">Kruschke</a> (<a href="solutions-to-exercises.html#ref-kruschke2014doing" role="doc-biblioref">2014</a>)</span>. The latter, like the present book, illustrates the concepts with many lines of R code. Bayesian inference is used in <span class="citation"><a href="solutions-to-exercises.html#ref-feng2021factor" role="doc-biblioref">Feng and He</a> (<a href="solutions-to-exercises.html#ref-feng2021factor" role="doc-biblioref">2021</a>)</span> to estimate conditional expected returns and residual covariance matrices with a view to portfolio choice.</p>
 <div id="the-bayesian-framework" class="section level2" number="9.1">
 <h2>
 <span class="header-section-number">9.1</span> The Bayesian framework<a class="anchor" aria-label="anchor" href="#the-bayesian-framework"><i class="fas fa-link"></i></a>
@@ -205,9 +212,9 @@ b_* &amp;=b_0+\frac{1}{2}\left(\textbf{y}'\textbf{y}+ \textbf{b}_0'\boldsymbol{\
 <p>The formulae above can be long and risky to implement. Luckily, there is an R package (<span class="math inline">\(spBayes\)</span>) that performs Bayesian inference for linear regression using the conjugate priors. Below, we provide one example of how it works. To simplify the code and curtail computation times, we consider two predictors: market capitalization (size anomaly) and price-to-book ratio (value anomaly). In statistics, the <strong>precision matrix</strong> is the inverse of the covariance matrix. In the parameters, the first two priors relate to the Gaussian law and the last two to the inverse gamma distribution:
 <span class="math display">\[f_\text{invgamma}(x, \alpha, \beta)=\frac{\beta^\alpha}{\Gamma(\alpha)}x^{-1-\alpha}e^{-\frac{\beta}{x}},\]</span>
 where <span class="math inline">\(\alpha\)</span> is the shape and <span class="math inline">\(\beta\)</span> is the scale.</p>
-<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">prior_mean</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0.01</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span><span class="op">)</span>                    <span class="co"># Average value of parameters (prior)</span>
-<span class="va">precision_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">prior_mean</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/solve.html">solve</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Inverse cov matrix of parameters (prior)</span>
+<span class="va">precision_mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">prior_mean</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html">solve</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Inverse cov matrix of parameters (prior)</span>
 <span class="va">fit_lmBayes</span> <span class="op">&lt;-</span> <span class="fu">bayesLMConjugate</span><span class="op">(</span>
     <span class="va">R1M_Usd</span> <span class="op">~</span> <span class="va">Mkt_Cap_3M_Usd</span> <span class="op">+</span> <span class="va">Pb</span>,          <span class="co"># Model: size and value</span>
     data <span class="op">=</span> <span class="va">testing_sample</span>,                  <span class="co"># Data source, here, the test sample</span>
@@ -218,13 +225,13 @@ where <span class="math inline">\(\alpha\)</span> is the shape and <span class="
     prior.rate <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>                       <span class="co"># Scale for prior distribution of sigma</span></code></pre></div>
 <p></p>
 <p>In the above specification, we must also provide a prior for the constant. By default, we set its average value to 0.01, which corresponds to a 1% average monthly return. Once the model has been estimated, we can plot the distribution of coefficient estimates.</p>
-<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">fit_lmBayes</span><span class="op">$</span><span class="va">p.beta.tauSq.samples</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op">%&gt;%</span> <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Intercept"</span>, <span class="st">"Size"</span>, <span class="st">"Value"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">gather</span><span class="op">(</span>key <span class="op">=</span> <span class="va">coefficient</span>, value <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">coefficient</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_histogram</span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">fit_lmBayes</span><span class="op">$</span><span class="va">p.beta.tauSq.samples</span><span class="op">[</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/tibble/man/as_tibble.html">as_tibble</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Intercept"</span>, <span class="st">"Size"</span>, <span class="st">"Value"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">coefficient</span>, value <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">coefficient</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:lmBayesplot"></span>
+<span style="display:block;" id="fig:lmBayesplot"></span>
 <img src="ML_factor_files/figure-html/lmBayesplot-1.png" alt="Distribution of linear regression coefficients (betas)." width="320px"><p class="caption">
 FIGURE 9.1: Distribution of linear regression coefficients (betas).
 </p>
@@ -248,7 +255,7 @@ and then split the input matrix into its column vectors <span class="math inline
 \tag{9.9}
 P[\textbf{y} | \textbf{x}_1,\dots,\textbf{x}_K] \propto P[\textbf{x}_1,\dots,\textbf{x}_K| \textbf{y}]P[\textbf{y}].
 \end{equation}\]</span></p>
-<p>The ‘naive’ qualification of the method comes from a simplifying assumption on the features.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;This assumption can be relaxed, but the algorithms then become more complex and are out of the scope of the current book. One such example that generalizes the naive Bayes approach is &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-friedman1997bayesian" role="doc-biblioref"&gt;N. Friedman, Geiger, and Goldszmidt&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-friedman1997bayesian" role="doc-biblioref"&gt;1997&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>19</sup></a> If they are all mutually independent, then the likelihood in the above expression can be expanded into 
+<p>The ‘naive’ qualification of the method comes from a simplifying assumption on the features.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;This assumption can be relaxed, but the algorithms then become more complex and are out of the scope of the current book. One such example that generalizes the naive Bayes approach is &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-friedman1997bayesian" role="doc-biblioref"&gt;N. Friedman, Geiger, and Goldszmidt&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-friedman1997bayesian" role="doc-biblioref"&gt;1997&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>20</sup></a> If they are all mutually independent, then the likelihood in the above expression can be expanded into 
 <span class="math display" id="eq:naivebayes3">\[\begin{equation}
 \tag{9.10}
 P[\textbf{y} | \textbf{x}_1,\dots,\textbf{x}_K] \propto P[\textbf{y}]\prod_{k=1}^K P[\textbf{x}_k| \textbf{y}].
@@ -264,14 +271,14 @@ will have a standard normal law whenever <span class="math inline">\(F_{\textbf{
 <p>Lastly, the prior <span class="math inline">\(P[\textbf{y}]\)</span> in Equation <a href="bayes.html#eq:naivebayes3">(9.10)</a> is often either taken to be uniform across the classes (<span class="math inline">\(1/K\)</span> for all <span class="math inline">\(k\)</span>) or equal to the sample distribution.</p>
 <p>We illustrate the naive Bayes classification tool with a simple example. While the package <em>e1071</em> embeds such a classifier, the <em>naivebayes</em> library offers more options (Gaussian, Bernoulli, multinomial and nonparametric likelihoods). Below, since the features are uniformly distributed, thus the transformation in <a href="bayes.html#eq:transf">(9.11)</a> amounts to apply the Gaussian quantile function (inverse cdf).</p>
 <p>For visual clarity, we only use the small set of features.</p>
-<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/majkamichal/naivebayes">naivebayes</a></span><span class="op">)</span>                           <span class="co"># Load package</span>
-<span class="va">gauss_features_train</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op">%&gt;%</span>   <span class="co"># Build sample</span>
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">`*`</span><span class="op">(</span><span class="fl">0.999</span><span class="op">)</span> <span class="op">%&gt;%</span>                            <span class="co"># Features smaller than 1</span>
-    <span class="op">+</span> <span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span> <span class="op">%&gt;%</span>                            <span class="co"># Features larger than 0</span>
-    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>                               <span class="co"># Inverse Gaussian cdf</span>
+<span class="va">gauss_features_train</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>   <span class="co"># Build sample</span>
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`*`</span><span class="op">(</span><span class="fl">0.999</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Features smaller than 1</span>
+    <span class="op">+</span> <span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Features larger than 0</span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>                               <span class="co"># Inverse Gaussian cdf</span>
     <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>
 <span class="va">fit_NB_gauss</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://majkamichal.github.io/naivebayes//reference/naive_bayes.html">naive_bayes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">gauss_features_train</span>,      <span class="co"># Transformed features</span>
                             y <span class="op">=</span> <span class="va">training_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Label</span>
@@ -280,7 +287,7 @@ will have a standard normal law whenever <span class="math inline">\(F_{\textbf{
 <span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fit_NB_gauss</span>, prob <span class="op">=</span> <span class="st">"conditional"</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
-<span id="fig:NB"></span>
+<span style="display:block;" id="fig:NB"></span>
 <img src="ML_factor_files/figure-html/NB-1.png" alt="Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return." width="500px"><p class="caption">
 FIGURE 9.2: Distributions of predictor variables, conditional on the class of the label. TRUE is when the instance corresponds to an above median return and FALSE to a below median return.
 </p>
@@ -288,13 +295,13 @@ FIGURE 9.2: Distributions of predictor variables, conditional on the class of th
 <p></p>
 <p>The plots in Figure <a href="bayes.html#fig:NB">9.2</a> show the distributions of the features, conditionally on each value of the label. Essentially, those are the densities <span class="math inline">\(P[\textbf{x}_k| \textbf{y}]\)</span>. For each feature, both distributions are very similar.</p>
 <p>As usual, once the model has been trained, the accuracy of predictions can be evaluated.</p>
-<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gauss_features_test</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op">%&gt;%</span> 
-    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">`*`</span><span class="op">(</span><span class="fl">0.999</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="op">+</span> <span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gauss_features_test</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span> 
+    <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu">`*`</span><span class="op">(</span><span class="fl">0.999</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="op">+</span> <span class="op">(</span><span class="fl">0.0001</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
     <span class="fu">`colnames&lt;-`</span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_NB_gauss</span>, <span class="va">gauss_features_test</span><span class="op">)</span> <span class="op">==</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.4956985</code></pre>
@@ -411,7 +418,7 @@ where <span class="math inline">\(\textbf{R}_{m}=\textbf{y}-\sum_{l \neq m}\math
 </table></div>
 <p>At each step <span class="math inline">\(m\)</span>, the residual <span class="math inline">\(\textbf{R}_{m}\)</span> is updated with the values from step <span class="math inline">\(m-1\)</span>. We illustrate this process in Figure <a href="bayes.html#fig:bartfig">9.3</a> in which <span class="math inline">\(M=3\)</span>. At step 1, a partition is proposed for the first tree, which is a simple node. In this particular case, the tree is accepted. In this scheme, the terminal weights are omitted for simplicity. At step 2, another partition is proposed for the tree, but it is rejected. In the third step, the proposition for the third is accepted. After the third step, a new value for <span class="math inline">\(\sigma^2\)</span> is drawn and a new round of Gibbs sampling can commence.</p>
 <div class="figure" style="text-align: center">
-<span id="fig:bartfig"></span>
+<span style="display:block;" id="fig:bartfig"></span>
 <img src="images/bart.png" alt="Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed tree is not validated." width="260px"><p class="caption">
 FIGURE 9.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed tree is not validated.
 </p>
@@ -422,14 +429,14 @@ FIGURE 9.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed t
 <span class="header-section-number">9.5.4</span> Code<a class="anchor" aria-label="anchor" href="#code"><i class="fas fa-link"></i></a>
 </h3>
 <p>There are several R packages that implement BART methods: <em>BART</em>, <em>bartMachine</em> and an older one (the original), <em>BayesTree</em>. The first one is highly efficient, hence we work with it. We resort to only a few parameters, like the power and base, which are the <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\alpha\)</span> defined in <a href="bayes.html#eq:bartnode">(9.15)</a>. The program is a bit verbose and delivers a few parametric details.</p>
-<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">BART</span><span class="op">)</span>                                                           <span class="co"># Load package</span>
 <span class="va">fit_bart</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/BART/man/gbart.html">gbart</a></span><span class="op">(</span>                                                      <span class="co"># Main function</span>
-    x.train <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">features_short</span><span class="op">)</span> <span class="op">%&gt;%</span>        <span class="co"># Training features</span>
+    x.train <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>        <span class="co"># Training features</span>
         <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span>, 
-    y.train <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">R1M_Usd</span><span class="op">)</span> <span class="op">%&gt;%</span>               <span class="co"># Training label</span>
+    y.train <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">training_sample</span>, <span class="va">R1M_Usd</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>               <span class="co"># Training label</span>
         <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> ,        
-    x.test <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>, <span class="va">features_short</span><span class="op">)</span>  <span class="op">%&gt;%</span>         <span class="co"># Testing features</span>
+    x.test <span class="op">=</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">testing_sample</span>, <span class="va">features_short</span><span class="op">)</span>  <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>         <span class="co"># Testing features</span>
         <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="op">)</span>,  
     type <span class="op">=</span> <span class="st">"wbart"</span>,                                          <span class="co"># Option: label is continuous</span>
     ntree <span class="op">=</span> <span class="fl">20</span>,                                              <span class="co"># Number of trees in the model </span>
@@ -456,20 +463,20 @@ FIGURE 9.3: Diagram of the MH/Gibbs sampling of BARTs. At step 2, the proposed t
 ## done 0 (out of 300)
 ## done 100 (out of 300)
 ## done 200 (out of 300)
-## time: 29s
+## time: 36s
 ## trcnt,tecnt: 200,200</code></pre>
 <p></p>
-<p>Once the model is trained,<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In the case of BARTs, the training consists exactly in the drawing of posterior samples.&lt;/p&gt;"><sup>20</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>.’</p>
-<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<p>Once the model is trained,<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content="&lt;p&gt;In the case of BARTs, the training consists exactly in the drawing of posterior samples.&lt;/p&gt;"><sup>21</sup></a> we evaluated its performance. We simply compute the hit ratio. The predictions are embedded within the fit variable, under the name ‘<em>yhat.test</em>.’</p>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">fit_bart</span><span class="op">$</span><span class="va">yhat.test</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 0.5432794</code></pre>
 <p></p>
 <p>The performance <em>seems</em> reasonable but is by no means impressive. The data from all sampled trees is available in the <em>fit_bart</em> variable. It has nonetheless a complex structure (as is often the case with trees). The simplest information we can extract is the value of <span class="math inline">\(\sigma\)</span> across all 300 simulations (see Figure <a href="bayes.html#fig:bartsigplot">9.4</a>).</p>
-<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">300</span>, sigma <span class="op">=</span> <span class="va">fit_bart</span><span class="op">$</span><span class="va">sigma</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">simulation</span>, y <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>simulation <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">300</span>, sigma <span class="op">=</span> <span class="va">fit_bart</span><span class="op">$</span><span class="va">sigma</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/torch/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">simulation</span>, y <span class="op">=</span> <span class="va">sigma</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_point.html">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">0.7</span><span class="op">)</span></code></pre></div>
 <div class="figure">
-<span id="fig:bartsigplot"></span>
+<span style="display:block;" id="fig:bartsigplot"></span>
 <img src="ML_factor_files/figure-html/bartsigplot-1.png" alt="Evolution of sigma across BART simulations." width="384"><p class="caption">
 FIGURE 9.4: Evolution of sigma across BART simulations.
 </p>
@@ -531,7 +538,7 @@ max-width: 60rem;
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2021-10-13.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
@@ -551,6 +558,22 @@ max-width: 60rem;
     script.src = src;
     document.getElementsByTagName("head")[0].appendChild(script);
   })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
 </script>
 </body>
 </html>
