@@ -95,7 +95,7 @@ Beyond first order moments, second order quantities (variances and covariances/c
 <li>track outliers in the summary statistics (when the maximum/median or median/minimum ratios seem suspicious).</li>
 </ul>
 <p>Below, in Figure <a href="Data.html#fig:boxcorr">4.1</a>, we show a box plot that illustrates the distribution of correlations between features and the one month ahead return. The correlations are computed on a date-by-date basis, over the whole cross-section of stocks. They are mostly located close to zero, but some dates seem to experience extreme shifts (outliers are shown with black circles). The market capitalization has the median which is the most negative while volatility is the only predictor with positive median correlation (this particular example seems to refute the low risk anomaly).</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">features_short</span>, <span class="st">"R1M_Usd"</span>, <span class="st">"date"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>     <span class="co"># Keep few features, label &amp; date</span>
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                          <span class="co"># Group: dates!</span>
@@ -118,7 +118,7 @@ FIGURE 4.1: Boxplot of correlations with the 1M forward return (label).
 f(x)=\mathbb{E}[Y|X=x].
 \end{equation}\]</span></p>
 <p>In Figure <a href="Data.html#fig:regfun">4.2</a>, we plot two illustrations of this function when the dependent variable (<span class="math inline">\(Y\)</span>) is the one month ahead return. The first one pertains to the average market capitalization over the past year and the second to the volatility over the past year as well. Both predictors have been uniformized (see Section <a href="Data.html#scaling">4.4.2</a> below) so that their values are uniformly distributed in the cross-section of assets for any given time period. Thus, the range of features is <span class="math inline">\([0,1]\)</span> and is shown on the <span class="math inline">\(x\)</span>-axis of the plot. The grey corridors around the lines show 95% level confidence interval for the computation of the mean. Essentially, it is narrow when both (i) many data points are available and (ii) these points are not too dispersed.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                                      <span class="co"># From dataset:</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>                                     <span class="co"># Plot</span>
   <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">geom_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Mkt_Cap_12M_Usd</span>, color <span class="op">=</span> <span class="st">"Market Cap"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># Cond. Exp. Mkt_cap</span>
@@ -135,7 +135,7 @@ FIGURE 4.2: Conditional expectations: average returns as smooth functions of fea
 <p></p>
 <p>The two variables have a close to monotonic impact on future returns. Returns, on average, decrease with market capitalization (thereby corroborating the so-called <em>size</em> effect). The reverse pattern is less pronounced for volatility: the curve is rather flat for the first half of volatility scores and progressively increases, especially over the last quintile of volatility values (thereby contradicting the low-volatility anomaly).</p>
 <p>One important empirical property of features is <strong>autocorrelation</strong> (or absence thereof). A high level of autocorrelation for one predictor makes it plausible to use simple imputation techniques when some data points are missing. But autocorrelation is also important when moving towards prediction tasks and we discuss this issue shortly below in Section <a href="Data.html#pers">4.6</a>. In Figure <a href="Data.html#fig:histcorr">4.3</a>, we build the histogram of autocorrelations, computed stock-by-stock and feature-by-feature.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">autocorrs</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                         <span class="co"># From dataset:</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="va">features</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                     <span class="co"># Keep ids &amp; features</span>
   <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/gather.html">gather</a></span><span class="op">(</span>key <span class="op">=</span> <span class="va">feature</span>, value <span class="op">=</span> <span class="va">value</span>, <span class="op">-</span><span class="va">stock_id</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>            <span class="co"># Put in tidy format</span>
@@ -516,7 +516,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <span class="header-section-number">4.8.1</span> Impact of rescaling: graphical representation<a class="anchor" aria-label="anchor" href="#impact-of-rescaling-graphical-representation"><i class="fas fa-link"></i></a>
 </h3>
 <p>We start with a simple illustration of the different scaling methods. We generate an arbitrary series and then rescale it. The series is not random so that each time the code chunk is executed, the output remains the same.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Length</span> <span class="op">&lt;-</span> <span class="fl">100</span>                                 <span class="co"># Length of the sequence</span>
 <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">Length</span><span class="op">)</span><span class="op">)</span>                       <span class="co"># Original data</span>
 <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>index <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="va">Length</span>, x <span class="op">=</span> <span class="va">x</span><span class="op">)</span>   <span class="co"># Data framed into dataframe</span>
@@ -525,7 +525,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <div class="inline-figure"><img src="ML_factor_files/figure-html/scale_ex-1.png" width="672"></div>
 <p></p>
 <p>We define and plot the scaled variables below.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">norm_unif</span> <span class="op">&lt;-</span>  <span class="kw">function</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">{</span>  <span class="co"># This is a function that uniformalises a vector.</span>
     <span class="va">v</span> <span class="op">&lt;-</span> <span class="va">v</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span>
     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/ecdf.html">ecdf</a></span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">(</span><span class="va">v</span><span class="op">)</span><span class="op">)</span>
@@ -547,7 +547,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <div class="inline-figure"><img src="ML_factor_files/figure-html/data_norm-1.png" width="672"></div>
 <p></p>
 <p>Finally, we look at the histogram of the newly created variables.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">data_norm</span>, <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">value</span>, fill <span class="op">=</span> <span class="va">Type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>position <span class="op">=</span> <span class="st">"dodge"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="ML_factor_files/figure-html/data_norm_dist-1.png" width="672"></div>
 <p></p>
@@ -558,7 +558,7 @@ If this expression is not too complicated to compute, the learner can query the 
 <span class="header-section-number">4.8.2</span> Impact of rescaling: toy example<a class="anchor" aria-label="anchor" href="#impact-of-rescaling-toy-example"><i class="fas fa-link"></i></a>
 </h3>
 <p>To illustrate the impact of choosing one particular rescaling method,<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;For a more thorough technical discussion on the impact of feature engineering, we refer to &lt;span class="citation"&gt;&lt;a href="solutions-to-exercises.html#ref-galili2016splitting" role="doc-biblioref"&gt;Galili and Meilijson&lt;/a&gt; (&lt;a href="solutions-to-exercises.html#ref-galili2016splitting" role="doc-biblioref"&gt;2016&lt;/a&gt;)&lt;/span&gt;.&lt;/p&gt;'><sup>13</sup></a> we build a simple dataset, comprising 3 firms and 3 dates.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">firm</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>             <span class="co"># Firms (3 lines for each)</span>
 <span class="va">date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span>,<span class="fl">3</span><span class="op">)</span>,<span class="fl">3</span><span class="op">)</span>                             <span class="co"># Dates</span>
 <span class="va">cap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">50</span>, <span class="fl">100</span>,                               <span class="co"># Market capitalization</span>
@@ -792,7 +792,7 @@ cap_u
 </ol>
 <p>While the relationship is not always perfectly monotonous, there seems to be a link between size and return and, typically, investing in the smallest firm would be a very good strategy with this sample.</p>
 <p>Now let us look at the output of simple regressions. Below, the package <em>broom</em> is part of the <em>tidyverse</em>. It is great to format regression outputs.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">return</span> <span class="op">~</span> <span class="va">cap_0_1</span>, data <span class="op">=</span> <span class="va">data_toy</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="co"># First regression (min-max rescaling)</span>
     <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">'Regression output when the independent var. comes 
@@ -859,7 +859,7 @@ cap_0_1
 <p></p>
 <p>
 </p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">return</span> <span class="op">~</span> <span class="va">cap_u</span>, data <span class="op">=</span> <span class="va">data_toy</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>   <span class="co"># Second regression (uniformised feature)</span>
     <span class="fu">broom</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/generics/man/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>   
     <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span>caption <span class="op">=</span> <span class="st">'Regression output when the indep. var. comes from uniformization'</span>,
@@ -1008,7 +1008,7 @@ max-width: 60rem;
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-05-08.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

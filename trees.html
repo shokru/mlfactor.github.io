@@ -170,7 +170,8 @@ When building a tree, the splitting process can be pursued until the full tree i
 <span class="header-section-number">6.1.4</span> Code and interpretation<a class="anchor" aria-label="anchor" href="#code-and-interpretation"><i class="fas fa-link"></i></a>
 </h3>
 <p>We start with a simple tree and its interpretation. We use the package <em>rpart</em> and its plotting engine <em>rpart.plot</em>. The label is the future 1-month return and the features are all predictors available in the sample. The tree is trained on the full sample.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<pre><code>## Loading required package: rpart</code></pre>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bethatkinson/rpart">rpart</a></span><span class="op">)</span>              <span class="co"># Tree package  </span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.milbo.org/rpart-plot/index.html">rpart.plot</a></span><span class="op">)</span>         <span class="co"># Tree plot package</span>
 <span class="va">formula</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"R1M_Usd ~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">features</span>, collapse <span class="op">=</span> <span class="st">" + "</span><span class="op">)</span><span class="op">)</span> <span class="co"># Defines the model </span>
@@ -204,14 +205,14 @@ FIGURE 6.2: Simple characteristics-based tree. The dependent variable is the 1 m
 <p>This is why we imposed restrictions during the construction of the tree. The first one (minbucket = 3500 in the code) imposes that each cluster consists of at least 3500 instances. The second one (minsplit) further imposes that a cluster comprises at least 8000 observations in order to pursue the splitting process. These values logically depend on the size of the training sample. The cp = 0.0001 parameter in the code requires any split to reduce the loss below 0.9999 times its original value before the split. Finally, the maximum depth of three essentially means that there are at most three splits between the root of the tree and any terminal leaf.</p>
 <p>The complexity of the tree (measured by the number of terminal leaves) is a decreasing function of minbucket, minsplit and cp and an increasing function of maximum depth.</p>
 <p>Once the model has been trained (i.e., the tree is grown), a prediction for any instance is the average value of the label within the cluster where the instance should land.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree</span>, <span class="va">data_ml</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span>,<span class="op">]</span><span class="op">)</span> <span class="co"># Test (prediction) on the first six instances of the sample</span></code></pre></div>
 <pre><code>##          1          2          3          4          5          6 
 ## 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066 0.01088066</code></pre>
 <p></p>
 <p>Given the figure, we immediately conclude that these first six instances all belong to the second cluster (starting from the left).</p>
 <p>As a verification of the first splits, we plot the smoothed average of future returns, conditionally on market capitalization, price-to-book ratio and trading volume.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">stat_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Mkt_Cap_3M_Usd</span>, y <span class="op">=</span> <span class="va">R1M_Usd</span>, color <span class="op">=</span> <span class="st">"Market Cap"</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_smooth.html">stat_smooth</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Pb</span>, y <span class="op">=</span> <span class="va">R1M_Usd</span>, color <span class="op">=</span> <span class="st">"Price-to-Book"</span><span class="op">)</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
@@ -226,7 +227,7 @@ FIGURE 6.3: Average of 1-month future returns, conditionally on market capitaliz
 <p></p>
 <p>The graph shows the relevance of clusters based on market capitalizations and price-to-book ratios. For low score values of these two features, the average return is high (close to +4% on a monthly basis on the left of the curves). The pattern is more pronounced compared to volume for instance.</p>
 <p>Finally, we assess the predictive quality of a single tree on the testing set (the tree is grown on the training set). We use a deeper tree, with a maximum depth of five.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_tree2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>, 
              data <span class="op">=</span> <span class="va">training_sample</span>,     <span class="co"># Data source: training sample</span>
              minbucket <span class="op">=</span> <span class="fl">1500</span>,           <span class="co"># Min nb of obs required in each terminal node (leaf)</span>
@@ -236,7 +237,7 @@ FIGURE 6.3: Average of 1-month future returns, conditionally on market capitaliz
              <span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree2</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
 <pre><code>## [1] 0.03700039</code></pre>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_tree2</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.5416619</code></pre>
 <p></p>
@@ -281,7 +282,7 @@ where the left part is the average number of votes based on the <span class="mat
 </h3>
 <p>Several implementations of random forests exist. For simplicity, we choose to work with the original R library, but another choice could be the one developed by h2o, which is a highly efficient meta-environment for machine learning (coded in Java).</p>
 <p>The syntax of randomForest follows that of many ML libraries. The full list of options for some random forest implementations is prohibitively large.<a class="footnote-ref" tabindex="0" data-toggle="popover" data-content='&lt;p&gt;See, e.g., &lt;a href="http://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/reference/h2o.randomForest.html" class="uri"&gt;http://docs.h2o.ai/h2o/latest-stable/h2o-r/docs/reference/h2o.randomForest.html&lt;/a&gt;&lt;/p&gt;'><sup>16</sup></a> Below, we train a model and exhibit the predictions for the first 5 instances of the testing sample.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://www.stat.berkeley.edu/~breiman/RandomForests/">randomForest</a></span><span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>                                <span class="co"># Sets the random seed</span>
 <span class="va">fit_RF</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula</span>,             <span class="co"># Same formula as for simple trees!</span>
@@ -300,16 +301,16 @@ where the left part is the average number of votes based on the <span class="mat
 <p>In the above example, each individual learner (tree) is built on 10,000 randomly chosen instances (without replacement) and each terminal leaf (cluster) must comprise at least 240 elements (observations). In total, 40 trees are aggregated and each tree is constructed based on 30 randomly chosen predictors (out of the whole set of features).</p>
 <p>Unlike for simple trees, it is not possible to simply illustrate the outcome of the learning process (though solutions exist, see Section <a href="interp.html#surr">13.1.1</a>). It could be possible to extract all 40 trees, but a synthetic visualization is out-of-reach. A simplified view can be obtained via variable importance, as is discussed in Section <a href="interp.html#variable-importance">13.1.2</a>.</p>
 <p>Finally, we can assess the accuracy of the model.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
 <pre><code>## [1] 0.03698197</code></pre>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.5370186</code></pre>
 <p></p>
 <p>The MSE is smaller than 4% and the hit ratio is close to 54%, which is reasonably above both 50% and 52% thresholds.</p>
 <p>Let’s see if we can improve the hit ratio by resorting to a classification exercise. We start by training the model on a new formula (the label is R1M_Usd_C).</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">formula_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"R1M_Usd_C ~"</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">features</span>, collapse <span class="op">=</span> <span class="st">" + "</span><span class="op">)</span><span class="op">)</span> <span class="co"># Defines the model </span>
 <span class="va">formula_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/formula.html">as.formula</a></span><span class="op">(</span><span class="va">formula_C</span><span class="op">)</span>                                   <span class="co"># Forcing formula object</span>
 <span class="va">fit_RF_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/randomForest/man/randomForest.html">randomForest</a></span><span class="op">(</span><span class="va">formula_C</span>,         <span class="co"># New formula! </span>
@@ -323,7 +324,7 @@ where the left part is the average number of votes based on the <span class="mat
 <p></p>
 <p>We can then assess the proportion of correct (binary) guesses.
 </p>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_RF_C</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">==</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.4971371</code></pre>
 <p></p>
@@ -438,7 +439,7 @@ w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
 <span class="header-section-number">6.3.2</span> Illustration<a class="anchor" aria-label="anchor" href="#illustration"><i class="fas fa-link"></i></a>
 </h3>
 <p>Below, we test an implementation of the original Adaboost classifier. As such, we work with the R1M_Usd_C variable and change the model formula. The computational cost of Adaboost is high on large datasets, thus we work with a smaller sample and we only impose three iterations.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/souravc83/fastAdaboost">fastAdaboost</a></span><span class="op">)</span>                                                     <span class="co"># Adaboost package </span>
 <span class="va">subsample</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">52000</span><span class="op">)</span><span class="op">*</span><span class="fl">4</span>                                                  <span class="co"># Target small sample</span>
 <span class="va">fit_adaboost_C</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/fastAdaboost/man/adaboost.html">adaboost</a></span><span class="op">(</span><span class="va">formula_C</span>,                                     <span class="co"># Model spec.</span>
@@ -446,7 +447,7 @@ w_i \leftarrow w_ie^{f_w(l_m(\textbf{x}_i), \textbf{y}_i)};
                          nIter <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>                                       <span class="co"># Number of trees              </span></code></pre></div>
 <p></p>
 <p>Finally, we evaluate the performance of the classifier. </p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_adaboost_C</span>, <span class="va">testing_sample</span><span class="op">)</span><span class="op">$</span><span class="va">class</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 0.5028202</code></pre>
 <p></p>
@@ -556,7 +557,7 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
 </h3>
 <p>In this section, we train a model using the <em>XGBoost</em> library. Other options include <em>catboost</em>, <em>gbm</em>, <em>lightgbm</em>, and <em>h2o</em>’s own version of boosted machines. Unlike many other packages, the XGBoost function requires a particular syntax and dedicated formats. The first step is thus to encapsulate the data accordingly.</p>
 <p>Moreover, because training times can be long, we shorten the training sample as advocated in <span class="citation"><a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">Coqueret and Guida</a> (<a href="solutions-to-exercises.html#ref-coqueret2019training" role="doc-biblioref">2020</a>)</span>. We retain only the 40% most extreme observations (in terms of label values: top 20% and bottom 20%) and work with the small subset of features. In all coding sections dedicated to boosted trees in this book, the models will be trained with only 7 features.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/dmlc/xgboost">xgboost</a></span><span class="op">)</span>                                                <span class="co"># The package for boosted trees</span>
 <span class="va">train_features_xgb</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="op">|</span> 
@@ -577,14 +578,14 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
 </li>
 <li>past annual returns (positive, because winners outperform losers under the momentum anomaly).</li>
 </ol>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mono_const</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">features</span><span class="op">)</span><span class="op">)</span>                   <span class="co"># Initialize the vector</span>
 <span class="va">mono_const</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">features</span> <span class="op">==</span> <span class="st">"Mkt_Cap_12M_Usd"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="co"># Decreasing in market cap</span>
 <span class="va">mono_const</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">features</span> <span class="op">==</span> <span class="st">"Pb"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span>              <span class="co"># Decreasing in price-to-book</span>
 <span class="va">mono_const</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">features</span> <span class="op">==</span> <span class="st">"Mom_11M_Usd"</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span>        <span class="co"># Increasing in past return</span></code></pre></div>
 <p></p>
 <p>The third step is to train the model on the formatted training data. We include the monotonicity constraints and the DART feature (via <em>rate_drop</em>). Just like random forests, boosted trees can grow individual trees on subsets of the data: both row-wise (by selecting random instances) and column-wise (by keeping a smaller portion of predictors). These options are implemented below with the <em>subsample</em> and <em>colsample_bytree</em> in the arguments of the function.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_xgb</span>,     <span class="co"># Data source </span>
               eta <span class="op">=</span> <span class="fl">0.3</span>,                          <span class="co"># Learning rate</span>
               objective <span class="op">=</span> <span class="st">"reg:squarederror"</span>,     <span class="co"># Objective function</span>
@@ -598,7 +599,7 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
               rate_drop <span class="op">=</span> <span class="fl">0.1</span>,                    <span class="co"># Drop rate for DART</span>
               verbose <span class="op">=</span> <span class="fl">0</span>                         <span class="co"># No comment from the algo </span>
     <span class="op">)</span></code></pre></div>
-<pre><code>## [14:55:38] WARNING: amalgamation/../src/learner.cc:576: 
+<pre><code>## [17:02:10] WARNING: amalgamation/../src/learner.cc:576: 
 ## Parameters: { "rate_drop" } might not be used.
 ## 
 ##   This could be a false alarm, with some parameters getting used by language bindings but
@@ -606,18 +607,18 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
 ##   but getting flagged wrongly here. Please open an issue if you find any such cases.</code></pre>
 <p></p>
 <p>Finally, we evaluate the performance of the model. Note that before that, a proper formatting of the testing sample is required.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">xgb_test</span> <span class="op">&lt;-</span> <span class="va">testing_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>                                <span class="co"># Test sample =&gt; XGB format</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/tidyselect/man/all_of.html">all_of</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># MSE</span></code></pre></div>
 <pre><code>## [1] 0.03908854</code></pre>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.5077626</code></pre>
 <p></p>
 <p>The performance is comparable to those observed for other predictive tools. As a final exercise, we show one implementation of a classification task under XGBoost. Only the label changes. In XGBoost, labels must be coded with integer number, starting at zero exactly. In R, factors are numerically coded as integer numbers starting from one, hence the mapping is simple.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">train_label_C</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">R1M_Usd</span> <span class="op">&lt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.2</span><span class="op">)</span> <span class="op">|</span>          <span class="co"># Either low 20% returns </span>
                <span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/quantile.html">quantile</a></span><span class="op">(</span><span class="va">R1M_Usd</span>, <span class="fl">0.8</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/magrittr/man/pipe.html">%&gt;%</a></span>   <span class="co"># Or top 20% returns</span>
@@ -626,7 +627,7 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
                               label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">train_label_C</span> <span class="op">==</span> <span class="st">"TRUE"</span><span class="op">)</span><span class="op">)</span> <span class="co"># XGB format!</span></code></pre></div>
 <p></p>
 <p>When working with categories, the loss function is usually the softmax function (see Section <a href="notdata.html#notations">1.1</a>).</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_xgb_C</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_C</span>,  <span class="co"># Data source (pipe input)</span>
               eta <span class="op">=</span> <span class="fl">0.8</span>,                        <span class="co"># Learning rate</span>
               objective <span class="op">=</span> <span class="st">"multi:softmax"</span>,      <span class="co"># Objective function</span>
@@ -637,7 +638,7 @@ FIGURE 6.6: Imposing monotonic constraints. The constraints are shown in bold bl
     <span class="op">)</span></code></pre></div>
 <p></p>
 <p>We can then proceed to the assessment of the quality of the model. We adjust the prediction to the value of the true label and count the proportion of accurate forecasts.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit_xgb_C</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span> <span class="op">==</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd_C</span><span class="op">)</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.495613</code></pre>
 <p></p>
@@ -652,7 +653,7 @@ In the computation of the aggregate loss, it is possible to introduce some flexi
 <span class="math display">\[O=\underbrace{\sum_{i=1}^I\mathcal{W}_i \times \text{loss}(y_i,\tilde{y}_i)}_{\text{weighted error term}} \quad + \underbrace{\sum_{j=1}^J\Omega(T_j)}_{\text{regularization term (unchanged)}}.\]</span></p>
 <p>In factor investing, these weights can very well depend on the feature values (<span class="math inline">\(\mathcal{W}_i=\mathcal{W}_i(\textbf{x}_i)\)</span>). For instance, for one particular characteristic <span class="math inline">\(\textbf{x}^k\)</span>, weights can be increasing thereby giving more importance to assets with high values of this characteristic (e.g., value stocks are favored compared to growth stocks). One other option is to increase weights when the values of the characteristic become more extreme (deep value and deep growth stocks have larger weights). If the features are uniform, the weights can simply be <span class="math inline">\(\mathcal{W}_i(x_i^k)\propto|x_i^k-0.5|\)</span>: firms with median value 0.5 have zero weight and as the feature value shifts towards 0 or 1, the weight increases. Specifying weights on instances biases the learning process just like views introduced à la <span class="citation"><a href="solutions-to-exercises.html#ref-black1992global" role="doc-biblioref">Black and Litterman</a> (<a href="solutions-to-exercises.html#ref-black1992global" role="doc-biblioref">1992</a>)</span> influence the asset allocation process. The difference is that the nudge is performed well ahead of the portfolio choice problem.</p>
 <p>In xgboost, the implementation instance weighting is done very early, in the definition of the xgb.DMatrix:</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">inst_weights</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Uniform.html">runif</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">train_features_xgb</span><span class="op">)</span><span class="op">)</span>               <span class="co"># Random weights</span>
 <span class="va">inst_weights</span> <span class="op">&lt;-</span> <span class="va">inst_weights</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">inst_weights</span><span class="op">)</span>              <span class="co"># Normalization</span>
 <span class="va">train_matrix_xgb</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.DMatrix.html">xgb.DMatrix</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_features_xgb</span>, 
@@ -739,7 +740,7 @@ In the computation of the aggregate loss, it is possible to introduce some flexi
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-05-08.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

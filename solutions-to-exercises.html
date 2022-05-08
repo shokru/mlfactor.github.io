@@ -86,7 +86,7 @@ max-width: 60rem;
 </h2>
 <p>For annual values, see <a href="solutions-to-exercises.html#fig:ex41b">19.1</a>:
 </p>
-<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                            
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>growth <span class="op">=</span> <span class="va">Pb</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">Pb</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>            <span class="co"># Creates the sort</span>
@@ -105,7 +105,7 @@ FIGURE 19.1: The value factor: annual returns.
 <p></p>
 <p>For monthly values, see <a href="solutions-to-exercises.html#fig:ex41">19.2</a>:
 </p>
-<div class="sourceCode" id="cb253"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">returns_m</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                            
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>growth <span class="op">=</span> <span class="va">Pb</span> <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">Pb</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                         <span class="co"># Creates the sort</span>
@@ -128,7 +128,7 @@ FIGURE 19.2: The value factor: portfolio values.
 </div>
 <p></p>
 <p>Portfolios based on quartiles, using the tidyverse only. We rely heavily on the fact that features are uniformized, i.e., that their distribution is uniform for each given date. Overall, small firms outperform heavily (see Figure <a href="solutions-to-exercises.html#fig:ex43">19.3</a>).</p>
-<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate.html">mutate</a></span><span class="op">(</span>small <span class="op">=</span> <span class="va">Mkt_Cap_6M_Usd</span> <span class="op">&lt;=</span> <span class="fl">0.25</span>,                        <span class="co"># Small firms...</span>
            medium <span class="op">=</span> <span class="va">Mkt_Cap_6M_Usd</span> <span class="op">&gt;</span> <span class="fl">0.25</span> <span class="op">&amp;</span> <span class="va">Mkt_Cap_6M_Usd</span> <span class="op">&lt;=</span> <span class="fl">0.5</span>, 
@@ -156,12 +156,12 @@ FIGURE 19.3: The value factor: portfolio values.
 </h2>
 <p>Below, we import a credit spread supplied by Bank of America. Its symbol/ticker is “BAMLC0A0CM.” We apply the data expansion on the small number of predictors to save memory space. One important trick that should not be overlooked is the uniformization step after the product <a href="Data.html#eq:macrocond">(4.3)</a> is computed. Indeed, we want the new features to have the same properties as the old ones. If we skip this step, distributions will be altered, as we show in one example below.</p>
 <p>We start with the data extraction and joining. It’s important to join early so as to keep the highest data frequency (daily) in order to replace missing points with <strong>close values</strong>. Joining with monthly data before replacing creates unnecessary lags.</p>
-<div class="sourceCode" id="cb255"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.FRED.html">getSymbols.FRED</a></span><span class="op">(</span><span class="st">"BAMLC0A0CM"</span>,                                    <span class="co"># Extract data</span>
                 env <span class="op">=</span> <span class="st">".GlobalEnv"</span>, 
                 return.class <span class="op">=</span> <span class="st">"xts"</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "BAMLC0A0CM"</code></pre>
-<div class="sourceCode" id="cb257"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb261"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">cred_spread</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/fortify.html">fortify</a></span><span class="op">(</span><span class="va">BAMLC0A0CM</span><span class="op">)</span>                               <span class="co"># Transform to dataframe</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">cred_spread</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>, <span class="st">"spread"</span><span class="op">)</span>                     <span class="co"># Change column name</span>
 <span class="va">cred_spread</span> <span class="op">&lt;-</span> <span class="va">cred_spread</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                   <span class="co"># Take extraction and...</span>
@@ -170,7 +170,7 @@ FIGURE 19.3: The value factor: portfolio values.
 <span class="va">cred_spread</span> <span class="op">&lt;-</span> <span class="va">cred_spread</span><span class="op">[</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/duplicated.html">duplicated</a></span><span class="op">(</span><span class="va">cred_spread</span><span class="op">)</span>,<span class="op">]</span>            <span class="co"># Remove duplicates</span></code></pre></div>
 <p></p>
 <p>The creation of the augmented dataset requires some manipulation. Features are no longer uniform as is shown in Figure <a href="solutions-to-exercises.html#fig:ex5b">19.4</a>.</p>
-<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_cond</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                    <span class="co"># Create new dataset</span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="st">"date"</span>, <span class="va">features_short</span><span class="op">)</span><span class="op">)</span>
 <span class="va">names_cred_spread</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">features_short</span>, <span class="st">"_cred_spread"</span><span class="op">)</span> <span class="co"># New column names</span>
@@ -194,7 +194,7 @@ FIGURE 19.4: Distribution of Eps after conditioning.
 </div>
 <p></p>
 <p>To prevent this issue, uniformization is required and is verified in Figure <a href="solutions-to-exercises.html#fig:ex51c">19.5</a>. </p>
-<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_cond</span> <span class="op">&lt;-</span> <span class="va">data_cond</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                   <span class="co"># From new dataset</span>
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                       <span class="co"># Group by date and...</span>
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate_all.html">mutate_at</a></span><span class="op">(</span><span class="va">names_cred_spread</span>, <span class="va">norm_unif</span><span class="op">)</span>  <span class="co"># Uniformize the new features</span>
@@ -207,12 +207,12 @@ FIGURE 19.5: Distribution of uniformized conditioned feature values.
 </div>
 <p></p>
 <p>The second question naturally requires the downloading of VIX series first and the joining with the original data.</p>
-<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/quantmod/man/getSymbols.FRED.html">getSymbols.FRED</a></span><span class="op">(</span><span class="st">"VIXCLS"</span>,                           <span class="co"># Extract data</span>
                 env <span class="op">=</span> <span class="st">".GlobalEnv"</span>, 
                 return.class <span class="op">=</span> <span class="st">"xts"</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] "VIXCLS"</code></pre>
-<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb266"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">vix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/fortify.html">fortify</a></span><span class="op">(</span><span class="va">VIXCLS</span><span class="op">)</span>                              <span class="co"># Transform to dataframe</span>
 <span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">vix</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"date"</span>, <span class="st">"vix"</span><span class="op">)</span>                   <span class="co"># Change column name</span>
 <span class="va">vix</span> <span class="op">&lt;-</span> <span class="va">vix</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                      <span class="co"># Take extraction and...</span>
@@ -224,7 +224,7 @@ FIGURE 19.5: Distribution of uniformized conditioned feature values.
     <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">vix</span>, by <span class="op">=</span> <span class="st">"date"</span><span class="op">)</span>                     <span class="co"># Via left_join()</span></code></pre></div>
 <p></p>
 <p>We can then proceed with the categorization. We create the vector label in a new (smaller) dataset but not attached to the large data_ml variable. Also, we check the balance of labels and its evolution through time (see Figure <a href="solutions-to-exercises.html#fig:ex52b">19.6</a>).</p>
-<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">delta</span> <span class="op">&lt;-</span> <span class="fl">0.5</span>                                       <span class="co"># Magnitude of vix correction</span>
 <span class="va">vix_bar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">vix</span><span class="op">$</span><span class="va">vix</span><span class="op">)</span>                         <span class="co"># Median of vix</span>
 <span class="va">data_vix</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                            <span class="co"># Smaller dataset</span>
@@ -248,7 +248,7 @@ FIGURE 19.6: Evolution of categories through time.
 </div>
 <p></p>
 <p>Finally, we switch to the outliers (Figure <a href="solutions-to-exercises.html#fig:ex53a">19.7</a>). </p>
-<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
     <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/ggplot.html">ggplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">R12M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/ggplot2/man/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -259,7 +259,7 @@ FIGURE 19.7: Outliers in the dependent variable.
 </div>
 <p></p>
 <p>Returns above 50 should indeed be rare.</p>
-<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">R12M_Usd</span> <span class="op">&gt;</span> <span class="fl">50</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">stock_id</span>, <span class="va">date</span>, <span class="va">R12M_Usd</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 8 × 3
 ##   stock_id date       R12M_Usd
@@ -274,7 +274,7 @@ FIGURE 19.7: Outliers in the dependent variable.
 ## 8      862 2009-02-28     58.0</code></pre>
 <p></p>
 <p>The largest return comes from stock #683. Let’s have a look at the stream of monthly returns in 2009.</p>
-<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb271"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op">==</span> <span class="fl">683</span>, <span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2009</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">date</span>, <span class="va">R1M_Usd</span><span class="op">)</span></code></pre></div>
@@ -301,7 +301,7 @@ FIGURE 19.7: Outliers in the dependent variable.
 <span class="header-section-number">19.3</span> Chapter 5<a class="anchor" aria-label="anchor" href="#chapter-5"><i class="fas fa-link"></i></a>
 </h2>
 <p>We recycle the training and testing data variables created in the chapter (coding section notably). In addition, we create a dedicated function and resort to the <em>map2</em>() function from the <em>purrr</em> package.</p>
-<div class="sourceCode" id="cb269"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb273"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">alpha_seq</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">/</span><span class="fl">10</span>                     <span class="co"># Sequence of alpha values</span>
 <span class="va">lambda_seq</span> <span class="op">&lt;-</span> <span class="fl">0.1</span><span class="op">^</span><span class="op">(</span><span class="fl">0</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>                    <span class="co"># Sequence of lambda values</span>
 <span class="va">pars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/expand.grid.html">expand.grid</a></span><span class="op">(</span><span class="va">alpha_seq</span>, <span class="va">lambda_seq</span><span class="op">)</span> <span class="co"># Exploring all combinations!</span>
@@ -334,19 +334,19 @@ FIGURE 19.8: Performance of elasticnet across parameter values.
 </h2>
 <p>
 </p>
-<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>, 
               data <span class="op">=</span> <span class="va">training_sample</span>,     <span class="co"># Data source: full sample</span>
               cp <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span>                 <span class="co"># Precision: smaller = more leaves</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit1</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> </code></pre></div>
 <pre><code>## [1] 0.04018973</code></pre>
-<div class="sourceCode" id="cb272"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>,
               data <span class="op">=</span> <span class="va">training_sample</span>,     <span class="co"># Data source: full sample</span>
               cp <span class="op">=</span> <span class="fl">0.01</span><span class="op">)</span>                  <span class="co"># Precision: smaller = more leaves</span>
 <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit2</span>, <span class="va">testing_sample</span><span class="op">)</span> <span class="op">-</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span> <span class="co"># Test!</span></code></pre></div>
 <pre><code>## [1] 0.03699696</code></pre>
-<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/rpart.plot/man/rpart.plot.html">rpart.plot</a></span><span class="op">(</span><span class="va">fit1</span><span class="op">)</span>                         <span class="co"># Plot the first tree</span></code></pre></div>
 <div class="figure" style="text-align: center">
 <span style="display:block;" id="fig:ex71"></span>
@@ -356,7 +356,7 @@ FIGURE 19.9: Sample (complex) tree.
 </div>
 <p></p>
 <p>The first model (Figure <a href="solutions-to-exercises.html#fig:ex71">19.9</a>) is <strong>too</strong> precise: going into the details of the training sample does not translate to good performance out-of-sample. The second, simpler model, yields better results.</p>
-<div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">n_trees</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">20</span>, <span class="fl">40</span>, <span class="fl">80</span>, <span class="fl">160</span><span class="op">)</span>
 <span class="va">mse_RF</span> <span class="op">&lt;-</span> <span class="fl">0</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">j</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">n_trees</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>       <span class="co"># No need for functional programming here...</span>
@@ -374,7 +374,7 @@ FIGURE 19.9: Sample (complex) tree.
 <p></p>
 <p>Trees are by definition random so results can vary from test to test. Overall, large numbers of trees are preferable and the reason is that each new tree tells a new story and diversifies the risk of the whole forest. Some more technical details of why that may be the case are outlined in the original paper by <span class="citation"><a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">Breiman</a> (<a href="solutions-to-exercises.html#ref-breiman2001random" role="doc-biblioref">2001</a>)</span>.</p>
 <p>For the last exercises, we recycle the <em>formula</em> used in Chapter <a href="trees.html#trees">6</a>. </p>
-<div class="sourceCode" id="cb277"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb281"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tree_2008</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>,
                    data <span class="op">=</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2008</span><span class="op">)</span>, <span class="co"># Data source: 2008</span>
                    cp <span class="op">=</span> <span class="fl">0.001</span>,
@@ -388,7 +388,7 @@ FIGURE 19.10: Tree for 2008.
 </div>
 <p></p>
 <p>The first splitting criterion in Figure <a href="solutions-to-exercises.html#fig:ex73a">19.10</a> is enterprise value (EV). EV is an indicator that adjusts market capitalization by substracting debt and adding cash. It is a more faithful account of the true value of a company. In 2008, the companies that fared the least poorly were those with the highest EV (i.e., large, robust firms).</p>
-<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb282"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tree_2009</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/rpart/man/rpart.html">rpart</a></span><span class="op">(</span><span class="va">formula</span>,
                    data <span class="op">=</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/lubridate/man/year.html">year</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">==</span> <span class="fl">2009</span><span class="op">)</span>, <span class="co"># Data source: 2009</span>
                    cp <span class="op">=</span> <span class="fl">0.001</span>,
@@ -409,7 +409,7 @@ FIGURE 19.11: Tree for 2009.
 </h2>
 <p>
 First, it is imperative to format the inputs properly. To avoid any issues, we work with perfectly rectangular data and hence restrict the investment set to the stocks with no missing points. Dimensions must also be in the correct order.</p>
-<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_short</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>         <span class="co"># Shorter dataset</span>
     <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">stock_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">stock_ids_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
     <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"stock_id"</span>, <span class="st">"date"</span>,<span class="va">features_short</span>, <span class="st">"R1M_Usd"</span><span class="op">)</span><span class="op">)</span>
@@ -431,30 +431,30 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 <span class="va">beta_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/aperm.html">aperm</a></span><span class="op">(</span><span class="va">beta_data</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span>,<span class="fl">3</span><span class="op">)</span><span class="op">)</span>   <span class="co"># Permutation</span></code></pre></div>
 <p></p>
 <p>Next, we turn to the specification of the network, using a functional API form.</p>
-<div class="sourceCode" id="cb280"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">main_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"main_input"</span><span class="op">)</span>  <span class="co"># Main input: returns      </span>
+<div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">main_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"main_input"</span><span class="op">)</span>  <span class="co"># Main input: returns      </span>
 <span class="va">factor_network</span> <span class="op">&lt;-</span> <span class="va">main_input</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                              <span class="co"># Def of factor side network</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_1_r"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">"tanh"</span>, name <span class="op">=</span> <span class="st">"layer_2_r"</span><span class="op">)</span> 
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_1_r"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">"tanh"</span>, name <span class="op">=</span> <span class="st">"layer_2_r"</span><span class="op">)</span> 
 
-<span class="va">aux_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">K</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"aux_input"</span><span class="op">)</span>  <span class="co"># Aux input: characteristics</span>
+<span class="va">aux_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">N</span>,<span class="va">K</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"aux_input"</span><span class="op">)</span>  <span class="co"># Aux input: characteristics</span>
 <span class="va">beta_network</span> <span class="op">&lt;-</span> <span class="va">aux_input</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                 <span class="co"># Def of beta side network</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_1_l"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">"tanh"</span>, name <span class="op">=</span> <span class="st">"layer_2_l"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_permute.html">layer_permute</a></span><span class="op">(</span>dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"layer_3_l"</span><span class="op">)</span>          <span class="co"># Permutation!</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_1_l"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">4</span>, activation <span class="op">=</span> <span class="st">"tanh"</span>, name <span class="op">=</span> <span class="st">"layer_2_l"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_permute.html">layer_permute</a></span><span class="op">(</span>dims <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"layer_3_l"</span><span class="op">)</span>          <span class="co"># Permutation!</span>
 
-<span class="va">main_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dot.html">layer_dot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">beta_network</span>, <span class="va">factor_network</span><span class="op">)</span>,     <span class="co"># Product of 2 networks</span>
+<span class="va">main_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dot.html">layer_dot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">beta_network</span>, <span class="va">factor_network</span><span class="op">)</span>,     <span class="co"># Product of 2 networks</span>
                          axes <span class="op">=</span> <span class="fl">1</span>, name <span class="op">=</span> <span class="st">"main_output"</span><span class="op">)</span> 
 
-<span class="va">model_ae</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model.html">keras_model</a></span><span class="op">(</span>                                      <span class="co"># AE Model specs</span>
+<span class="va">model_ae</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model.html">keras_model</a></span><span class="op">(</span>                                      <span class="co"># AE Model specs</span>
     inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">main_input</span>, <span class="va">aux_input</span><span class="op">)</span>,
     outputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">main_output</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <p></p>
 <p>Finally, we ask for the structure of the model, and train it.</p>
-<div class="sourceCode" id="cb281"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb285"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_ae</span><span class="op">)</span>                      <span class="co"># See model details / architecture</span></code></pre></div>
-<pre><code>## Model: "model_5"
+<pre><code>## Model: "model_1"
 ## __________________________________________________________________________________________
 ## Layer (type)                 Output Shape        Param #    Connected to                  
 ## ==========================================================================================
@@ -479,7 +479,7 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 ## Trainable params: 6,488
 ## Non-trainable params: 0
 ## __________________________________________________________________________________________</code></pre>
-<div class="sourceCode" id="cb283"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_ae</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                  <span class="co"># Learning parameters</span>
     optimizer <span class="op">=</span> <span class="st">"rmsprop"</span>,
     loss <span class="op">=</span> <span class="st">"mse"</span>
@@ -493,30 +493,30 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 <span class="op">)</span></code></pre></div>
 <p></p>
 <p>For the second exercise, we use a simple architecture. The activation function, number of epochs and batch size may matter…</p>
-<div class="sourceCode" id="cb284"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_ua</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb288"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_ua</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model_ua</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span>, input_shape <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">16</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span>, input_shape <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># </span>
 <span class="va">model_ua</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                             <span class="co"># Model specification</span>
     loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,                  <span class="co"># Loss function</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,              <span class="co"># Optimisation method (weight updating)</span>
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,              <span class="co"># Optimisation method (weight updating)</span>
     metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>            <span class="co"># Output metric</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_ua</span><span class="op">)</span>                                 <span class="co"># A simple model!</span></code></pre></div>
-<pre><code>## Model: "sequential_31"
+<pre><code>## Model: "sequential_7"
 ## __________________________________________________________________________________________
 ## Layer (type)                            Output Shape                        Param #       
 ## ==========================================================================================
-## dense_83 (Dense)                        (None, 16)                          32            
+## dense_22 (Dense)                        (None, 16)                          32            
 ## __________________________________________________________________________________________
-## dense_82 (Dense)                        (None, 1)                           17            
+## dense_21 (Dense)                        (None, 1)                           17            
 ## ==========================================================================================
 ## Total params: 49
 ## Trainable params: 49
 ## Non-trainable params: 0
 ## __________________________________________________________________________________________</code></pre>
-<div class="sourceCode" id="cb286"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_ua</span> <span class="op">&lt;-</span> <span class="va">model_ua</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span>, by <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,              <span class="co"># Training data = x</span>
         <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span>, by <span class="op">=</span> <span class="fl">0.001</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,         <span class="co"># Training label = y</span>
@@ -524,14 +524,14 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 <span class="op">)</span> </code></pre></div>
 <p></p>
 <p>In full disclosure, to improve the fit, we also increase the sample size. We show the improvement in the figure below.</p>
-<div class="sourceCode" id="cb287"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">model_ua2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
+<div class="sourceCode" id="cb291"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model_ua2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model_sequential.html">keras_model_sequential</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">model_ua2</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># This defines the structure of the network, i.e. how layers are organized</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">128</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span>, input_shape <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">128</span>, activation <span class="op">=</span> <span class="st">'sigmoid'</span>, input_shape <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="co"># </span>
 <span class="va">model_ua2</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                             <span class="co"># Model specification</span>
     loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,                  <span class="co"># Loss function</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,              <span class="co"># Optimisation method (weight updating)</span>
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_rmsprop.html">optimizer_rmsprop</a></span><span class="op">(</span><span class="op">)</span>,              <span class="co"># Optimisation method (weight updating)</span>
     metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>            <span class="co"># Output metric</span>
 <span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_ua2</span><span class="op">)</span>                                 <span class="co"># A simple model!</span></code></pre></div>
@@ -547,7 +547,7 @@ First, it is imperative to format the inputs properly. To avoid any issues, we w
 ## Trainable params: 385
 ## Non-trainable params: 0
 ## __________________________________________________________________________________________</code></pre>
-<div class="sourceCode" id="cb289"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb293"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_ua2</span> <span class="op">&lt;-</span> <span class="va">model_ua2</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
     <span class="fu"><a href="https://rdrr.io/pkg/generics/man/fit.html">fit</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span>, by <span class="op">=</span> <span class="fl">0.0002</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,            <span class="co"># Training data = x</span>
         <span class="fu"><a href="https://rdrr.io/r/base/Trig.html">sin</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span>, by <span class="op">=</span> <span class="fl">0.0002</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">matrix</a></span><span class="op">(</span>ncol <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,       <span class="co"># Training label = y</span>
@@ -572,7 +572,7 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
 <span class="header-section-number">19.6</span> Chapter 8<a class="anchor" aria-label="anchor" href="#chapter-8"><i class="fas fa-link"></i></a>
 </h2>
 <p>Since we are going to reproduce a similar analysis several times, let’s simplify the task with 2 tips. First, by using default parameter values that will be passed as common arguments to the <em>svm</em> function. Second, by creating a custom function that computes the MSE. Third, by resorting to functional calculus via the <em>map</em> function from the <em>purrr</em> package. Below, we recycle datasets created in Chapter <a href="trees.html#trees">6</a>. </p>
-<div class="sourceCode" id="cb290"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">mse</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">fit</span>, <span class="va">features</span>, <span class="va">label</span><span class="op">)</span><span class="op">{</span>             <span class="co"># MSE function</span>
     <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">fit</span>, <span class="va">features</span><span class="op">)</span><span class="op">-</span><span class="va">label</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span>
@@ -605,7 +605,7 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
 <p></p>
 <p>The first two kernels yield the best fit, while the last one should be avoided. Note that apart from the linear kernel, all other options require parameters. We have used the default ones, which may explain the poor performance of some nonlinear kernels.</p>
 <p>Below, we train an SVM model on a training sample with all observations but that is limited to the 7 major predictors. Even with a smaller number of features, the training is time consuming.</p>
-<div class="sourceCode" id="cb292"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">svm_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/e1071/man/svm.html">svm</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">train_label_xgb</span>,      <span class="co"># Train label</span>
                 x <span class="op">=</span> <span class="va">train_features_xgb</span>,   <span class="co"># Training features</span>
                 type <span class="op">=</span> <span class="st">"eps-regression"</span>,  <span class="co"># SVM task type (see LIBSVM documentation)</span>
@@ -617,7 +617,7 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
 <pre><code>## [1] 0.490343</code></pre>
 <p></p>
 <p>This figure is very low. Below, we test a very simple form of boosted trees, for comparison purposes.</p>
-<div class="sourceCode" id="cb294"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb298"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">xgb_full</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/xgboost/man/xgb.train.html">xgb.train</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_matrix_xgb</span>,    <span class="co"># Data source </span>
                       eta <span class="op">=</span> <span class="fl">0.3</span>,                          <span class="co"># Learning rate</span>
                       objective <span class="op">=</span> <span class="st">"reg:linear"</span>,           <span class="co"># Objective function</span>
@@ -625,7 +625,7 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
                       nrounds <span class="op">=</span> <span class="fl">60</span>                        <span class="co"># Number of trees used (bit low here)</span>
 <span class="op">)</span></code></pre></div>
 <pre><code>## [14:44:45] WARNING: amalgamation/../src/objective/regression_obj.cu:188: reg:linear is now deprecated in favor of reg:squarederror.</code></pre>
-<div class="sourceCode" id="cb296"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">xgb_full</span>, <span class="va">xgb_test</span><span class="op">)</span> <span class="op">*</span> <span class="va">testing_sample</span><span class="op">$</span><span class="va">R1M_Usd</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># Hit ratio</span></code></pre></div>
 <pre><code>## [1] 0.5017377</code></pre>
 <p></p>
@@ -642,7 +642,7 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
 </h2>
 <p></p>
 <p>First, we create the three feature sets. The first one gets all multiples of 3 between 3 and 93. The second one gets the same indices, minus one, and the third one, the initial indices minus two.</p>
-<div class="sourceCode" id="cb298"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">feat_train_1</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">[</span><span class="fl">3</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">31</span><span class="op">)</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>   <span class="co"># First set of feats</span>
     <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> 
 <span class="va">feat_train_2</span> <span class="op">&lt;-</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features</span><span class="op">[</span><span class="fl">3</span><span class="op">*</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">31</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="co"># Second set of feats</span>
@@ -657,34 +657,34 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
     <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> </code></pre></div>
 <p></p>
 <p>Then, we specify the network structure. First, the 3 independent networks, then the aggregation.</p>
-<div class="sourceCode" id="cb299"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">first_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">31</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"first_input"</span><span class="op">)</span>   <span class="co"># First input      </span>
+<div class="sourceCode" id="cb303"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">first_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">31</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"first_input"</span><span class="op">)</span>   <span class="co"># First input      </span>
 <span class="va">first_network</span> <span class="op">&lt;-</span> <span class="va">first_input</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Def of 1st network</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_1"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>                <span class="co"># Softmax for categ. output</span>
-<span class="va">second_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">31</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"second_input"</span><span class="op">)</span> <span class="co"># Second input      </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_1"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>                <span class="co"># Softmax for categ. output</span>
+<span class="va">second_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">31</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"second_input"</span><span class="op">)</span> <span class="co"># Second input      </span>
 <span class="va">second_network</span> <span class="op">&lt;-</span> <span class="va">second_input</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                <span class="co"># Def of 2nd network</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_2"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>                <span class="co"># Softmax for categ. output</span>
-<span class="va">third_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">31</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"third_input"</span><span class="op">)</span>  <span class="co"># Third input      </span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_2"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>                <span class="co"># Softmax for categ. output</span>
+<span class="va">third_input</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_input.html">layer_input</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">31</span><span class="op">)</span>, name <span class="op">=</span> <span class="st">"third_input"</span><span class="op">)</span>  <span class="co"># Third input      </span>
 <span class="va">third_network</span> <span class="op">&lt;-</span> <span class="va">third_input</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                                  <span class="co"># Def of 3rd network</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_3"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>                <span class="co"># Softmax for categ. output</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">8</span>, activation <span class="op">=</span> <span class="st">"relu"</span>, name <span class="op">=</span> <span class="st">"layer_3"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span><span class="op">)</span>                <span class="co"># Softmax for categ. output</span>
 
-<span class="va">main_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/layer_concatenate.html">layer_concatenate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">first_network</span>, 
+<span class="va">main_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_concatenate.html">layer_concatenate</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">first_network</span>, 
                                    <span class="va">second_network</span>,
                                    <span class="va">third_network</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>            <span class="co"># Combination</span>
-    <span class="fu"><a href="https://keras.rstudio.com/reference/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span>, name <span class="op">=</span> <span class="st">'main_output'</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/layer_dense.html">layer_dense</a></span><span class="op">(</span>units <span class="op">=</span> <span class="fl">2</span>, activation <span class="op">=</span> <span class="st">'softmax'</span>, name <span class="op">=</span> <span class="st">'main_output'</span><span class="op">)</span>
 
-<span class="va">model_ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model.html">keras_model</a></span><span class="op">(</span>                                          <span class="co"># Agg. Model specs</span>
+<span class="va">model_ens</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model.html">keras_model</a></span><span class="op">(</span>                                          <span class="co"># Agg. Model specs</span>
     inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">first_input</span>, <span class="va">second_input</span>, <span class="va">third_input</span><span class="op">)</span>,
     outputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">main_output</span><span class="op">)</span>
 <span class="op">)</span></code></pre></div>
 <p></p>
 <p>Lastly, we can train and evaluate (see Figure <a href="solutions-to-exercises.html#fig:ex12c">19.13</a>).</p>
-<div class="sourceCode" id="cb300"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">model_ens</span><span class="op">)</span>                      <span class="co"># See model details / architecture</span></code></pre></div>
-<pre><code>## Model: "model_6"
+<pre><code>## Model: "model_2"
 ## __________________________________________________________________________________________
 ## Layer (type)                 Output Shape        Param #    Connected to                  
 ## ==========================================================================================
@@ -700,25 +700,25 @@ FIGURE 19.12: Case with 128 units. The sine function in light blue and approxima
 ## __________________________________________________________________________________________
 ## layer_3 (Dense)              (None, 8)           256        third_input[0][0]             
 ## __________________________________________________________________________________________
-## dense_84 (Dense)             (None, 2)           18         layer_1[0][0]                 
+## dense_23 (Dense)             (None, 2)           18         layer_1[0][0]                 
 ## __________________________________________________________________________________________
-## dense_85 (Dense)             (None, 2)           18         layer_2[0][0]                 
+## dense_24 (Dense)             (None, 2)           18         layer_2[0][0]                 
 ## __________________________________________________________________________________________
-## dense_86 (Dense)             (None, 2)           18         layer_3[0][0]                 
+## dense_25 (Dense)             (None, 2)           18         layer_3[0][0]                 
 ## __________________________________________________________________________________________
-## concatenate_1 (Concatenate)  (None, 6)           0          dense_84[0][0]                
-##                                                             dense_85[0][0]                
-##                                                             dense_86[0][0]                
+## concatenate (Concatenate)    (None, 6)           0          dense_23[0][0]                
+##                                                             dense_24[0][0]                
+##                                                             dense_25[0][0]                
 ## __________________________________________________________________________________________
-## main_output (Dense)          (None, 2)           14         concatenate_1[0][0]           
+## main_output (Dense)          (None, 2)           14         concatenate[0][0]             
 ## ==========================================================================================
 ## Total params: 836
 ## Trainable params: 836
 ## Non-trainable params: 0
 ## __________________________________________________________________________________________</code></pre>
-<div class="sourceCode" id="cb302"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb306"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">model_ens</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>                  <span class="co"># Learning parameters</span>
-    optimizer <span class="op">=</span> <span class="fu"><a href="https://keras.rstudio.com/reference/optimizer_adam.html">optimizer_adam</a></span><span class="op">(</span><span class="op">)</span>,
+    optimizer <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/optimizer_adam.html">optimizer_adam</a></span><span class="op">(</span><span class="op">)</span>,
     loss <span class="op">=</span> <span class="st">"binary_crossentropy"</span>,
     metrics <span class="op">=</span> <span class="st">"categorical_accuracy"</span>
 <span class="op">)</span>
@@ -753,7 +753,7 @@ FIGURE 19.13: Learning an integrated ensemble.
 <p></p>
 <p>This one is incredibly easy; it’s simpler and more compact but close in spirit to the code that generates Figure <a href="factor.html#fig:factportsort">3.1</a>. The returns are plotted in Figure <a href="solutions-to-exercises.html#fig:ex130a">19.14</a>.
 </p>
-<div class="sourceCode" id="cb303"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
   <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/group_by.html">group_by</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>                     <span class="co"># Group by date</span>
   <span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/summarise.html">summarize</a></span><span class="op">(</span>return <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">R1M_Usd</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>  <span class="co"># Compute return</span>
@@ -771,7 +771,7 @@ FIGURE 19.14: Time series of returns.
 <span class="header-section-number">19.8.2</span> Advanced weighting function<a class="anchor" aria-label="anchor" href="#advanced-weighting-function"><i class="fas fa-link"></i></a>
 </h3>
 <p>First, we code the function with all inputs.</p>
-<div class="sourceCode" id="cb304"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">weights</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">Sigma</span>, <span class="va">mu</span>, <span class="va">Lambda</span>, <span class="va">lambda</span>, <span class="va">k_D</span>, <span class="va">k_R</span>, <span class="va">w_old</span><span class="op">)</span><span class="op">{</span>
     <span class="va">N</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">Sigma</span><span class="op">)</span>
     <span class="va">M</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Matrix/man/solve-methods.html">solve</a></span><span class="op">(</span><span class="va">lambda</span><span class="op">*</span><span class="va">Sigma</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">k_R</span><span class="op">*</span><span class="va">Lambda</span> <span class="op">+</span> <span class="fl">2</span><span class="op">*</span><span class="va">k_D</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">N</span><span class="op">)</span><span class="op">)</span> <span class="co"># Inverse matrix</span>
@@ -783,7 +783,7 @@ FIGURE 19.14: Time series of returns.
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Second, we test it on some random dataset. We use the returns created at the end of Chapter <a href="notdata.html#notdata">1</a> and used for the Lasso allocation in Section <a href="lasso.html#sparseex">5.2.2</a>. For <span class="math inline">\(\boldsymbol{\mu}\)</span>, we use the sample average, which is rarely a good idea in practice. It serves as illustration only.</p>
-<div class="sourceCode" id="cb305"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">Sigma</span> <span class="op">&lt;-</span> <span class="va">returns</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cov</a></span><span class="op">(</span><span class="op">)</span>  <span class="co"># Covariance matrix</span>
 <span class="va">mu</span> <span class="op">&lt;-</span> <span class="va">returns</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="op">-</span><span class="va">date</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html">apply</a></span><span class="op">(</span><span class="fl">2</span>,<span class="va">mean</span><span class="op">)</span>             <span class="co"># Vector of exp. returns</span>
 <span class="va">Lambda</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">Sigma</span><span class="op">)</span><span class="op">)</span>                                          <span class="co"># Trans. Cost matrix</span>
@@ -805,7 +805,7 @@ FIGURE 19.14: Time series of returns.
 - <strong>leverage</strong>, which we assess via the absolute sum of negative weights;<br>
 - <strong>in-sample volatility</strong>, which we compute as <span class="math inline">\(\textbf{w}' \boldsymbol{\Sigma} \textbf{x}\)</span></p>
 <p>To do so, we create a dedicated function below.</p>
-<div class="sourceCode" id="cb307"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb311"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sensi</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">lambda</span>, <span class="va">k_D</span>, <span class="va">Sigma</span>, <span class="va">mu</span>, <span class="va">Lambda</span>, <span class="va">k_R</span>, <span class="va">w_old</span><span class="op">)</span><span class="op">{</span>
     <span class="va">w</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/weights.html">weights</a></span><span class="op">(</span><span class="va">Sigma</span>, <span class="va">mu</span>, <span class="va">Lambda</span>, <span class="va">lambda</span>, <span class="va">k_D</span>, <span class="va">k_R</span>, <span class="va">w_old</span><span class="op">)</span>
     <span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">)</span>
@@ -816,7 +816,7 @@ FIGURE 19.14: Time series of returns.
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Instead of using the baseline <em>map2</em> function, we rely on a version thereof that concatenates results into a dataframe directly.</p>
-<div class="sourceCode" id="cb308"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb312"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">lambda</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">^</span><span class="op">(</span><span class="op">-</span><span class="fl">3</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>              <span class="co"># parameter values</span>
 <span class="va">k_D</span> <span class="op">&lt;-</span> <span class="fl">2</span><span class="op">*</span><span class="fl">10</span><span class="op">^</span><span class="op">(</span><span class="op">-</span><span class="fl">3</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span>               <span class="co"># parameter values</span>
 <span class="va">pars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/expand_grid.html">expand_grid</a></span><span class="op">(</span><span class="va">lambda</span>, <span class="va">k_D</span><span class="op">)</span> <span class="co"># parameter grid</span>
@@ -845,7 +845,7 @@ FIGURE 19.15: Indicators related to portfolio weights.
 </h3>
 <p>
 Often, programmers prefer to avoid loops. In order to avoid a loop in the backtest, we need to code what happens for one given date. This is encapsulated in the following function. For simplicity, we code it for only one strategy. Also, the function will assume the structure of the data is known, but the columns (features &amp; labels) could also be passed as arguments. We recycle the function <strong>weights_xgb</strong> from Chapter <a href="backtest.html#backtest">12</a>.</p>
-<div class="sourceCode" id="cb309"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb313"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">portf_map</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">t</span>, <span class="va">data_ml</span>, <span class="va">ticks</span>, <span class="va">t_oos</span>, <span class="va">m_offset</span>, <span class="va">train_size</span>, <span class="va">weight_func</span><span class="op">)</span><span class="op">{</span>
     <span class="va">train_data</span> <span class="op">&lt;-</span> <span class="va">data_ml</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&lt;</span> <span class="va">t_oos</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">-</span> <span class="va">m_offset</span> <span class="op">*</span> <span class="fl">30</span>,   <span class="co"># Roll. window w. buffer</span>
                                      <span class="va">date</span> <span class="op">&gt;</span> <span class="va">t_oos</span><span class="op">[</span><span class="va">t</span><span class="op">]</span> <span class="op">-</span> <span class="va">m_offset</span> <span class="op">*</span> <span class="fl">30</span> <span class="op">-</span> <span class="fl">365</span> <span class="op">*</span> <span class="va">train_size</span><span class="op">)</span>
@@ -862,13 +862,13 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <span class="op">}</span></code></pre></div>
 <p></p>
 <p>Next, we combine this function to <strong>map</strong>(). We only test the first 6 dates: this reduces the computation times.</p>
-<div class="sourceCode" id="cb310"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb314"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">back_test</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>             <span class="co"># Test on the first 100 out-of-sample dates</span>
     <span class="fu"><a href="https://rdrr.io/pkg/purrr/man/map.html">map</a></span><span class="op">(</span><span class="va">portf_map</span>, data_ml <span class="op">=</span> <span class="va">data_ml</span>, ticks <span class="op">=</span> <span class="va">ticks</span>, t_oos <span class="op">=</span> <span class="va">t_oos</span>,
         m_offset <span class="op">=</span> <span class="fl">1</span>, train_size <span class="op">=</span> <span class="fl">5</span>, weight_func <span class="op">=</span> <span class="va">weights_xgb</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="va">back_test</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">weights</span><span class="op">)</span>     <span class="co"># Sample weights</span></code></pre></div>
 <pre><code>## [1] 0.001675042 0.000000000 0.000000000 0.001675042 0.000000000 0.001675042</code></pre>
-<div class="sourceCode" id="cb312"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb316"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">back_test</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">returns</span>           <span class="co"># Return of first period</span></code></pre></div>
 <pre><code>## [1] 0.0189129</code></pre>
 <p></p>
@@ -881,27 +881,27 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 </h2>
 <p>We recycle the AE model trained in Chapter <a href="unsup.html#unsup">15</a>. Strangely, building smaller models (encoder) from larger ones (AE) requires to save and then reload the weights. This creates an external file, which we call “ae_weights.” We can check that the output does have 4 columns (compressed) instead of 7 (original data).
 </p>
-<div class="sourceCode" id="cb314"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://keras.rstudio.com/reference/save_model_weights_hdf5.html">save_model_weights_hdf5</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">ae_model</span>,filepath <span class="op">=</span><span class="st">"ae_weights.hdf5"</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="va">encoder_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://keras.rstudio.com/reference/keras_model.html">keras_model</a></span><span class="op">(</span>inputs <span class="op">=</span> <span class="va">input_layer</span>, outputs <span class="op">=</span> <span class="va">encoder</span><span class="op">)</span>
+<div class="sourceCode" id="cb318"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/keras/man/save_model_weights_hdf5.html">save_model_weights_hdf5</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">ae_model</span>,filepath <span class="op">=</span><span class="st">"ae_weights.hdf5"</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="va">encoder_model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/keras/man/keras_model.html">keras_model</a></span><span class="op">(</span>inputs <span class="op">=</span> <span class="va">input_layer</span>, outputs <span class="op">=</span> <span class="va">encoder</span><span class="op">)</span>
 <span class="va">encoder_model</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
-    <span class="fu"><a href="https://keras.rstudio.com/reference/save_model_weights_hdf5.html">load_model_weights_hdf5</a></span><span class="op">(</span>filepath <span class="op">=</span> <span class="st">"ae_weights.hdf5"</span>,skip_mismatch <span class="op">=</span> <span class="cn">TRUE</span>,by_name <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/keras/man/save_model_weights_hdf5.html">load_model_weights_hdf5</a></span><span class="op">(</span>filepath <span class="op">=</span> <span class="st">"ae_weights.hdf5"</span>,skip_mismatch <span class="op">=</span> <span class="cn">TRUE</span>,by_name <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="va">encoder_model</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/generics/man/compile.html">compile</a></span><span class="op">(</span>
     loss <span class="op">=</span> <span class="st">'mean_squared_error'</span>,
     optimizer <span class="op">=</span> <span class="st">'adam'</span>,
     metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">'mean_absolute_error'</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="va">encoder_model</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
-  <span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://keras.rstudio.com/reference/predict_on_batch.html">predict_on_batch</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">keras</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/keras/man/predict_on_batch.html">predict_on_batch</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">training_sample</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
                               <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dplyr/man/select.html">select</a></span><span class="op">(</span><span class="va">features_short</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span> 
                               <span class="fu"><a href="https://rdrr.io/r/base/matrix.html">as.matrix</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/ggpubr/man/pipe.html">%&gt;%</a></span>
     <span class="fu"><a href="https://rdrr.io/pkg/Rgraphviz/man/AgEdge-class.html">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></code></pre></div>
-<pre><code>##            [,1]      [,2]        [,3]      [,4]
-## [1,] -0.4481973 0.6415710 -0.08774725 -1.083881
-## [2,] -0.4586810 0.6319650 -0.07966632 -1.051239
-## [3,] -0.4436134 0.6245905 -0.07436219 -1.116247
-## [4,] -0.4438604 0.6197044 -0.07135797 -1.128985
-## [5,] -0.4508429 0.6114001 -0.07056579 -1.150953</code></pre>
+<pre><code>##           [,1]       [,2]       [,3]       [,4]
+## [1,] -1.232841 -0.2529348 -0.7880456 -0.6868325
+## [2,] -1.217112 -0.2716013 -0.7780969 -0.6926910
+## [3,] -1.231683 -0.2574854 -0.7857193 -0.6665546
+## [4,] -1.232973 -0.2587205 -0.7848129 -0.6640299
+## [5,] -1.241489 -0.2636907 -0.7832271 -0.6620186</code></pre>
 <p></p>
 <p></p>
 </div>
@@ -910,7 +910,7 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <span class="header-section-number">19.10</span> Chapter 16<a class="anchor" aria-label="anchor" href="#chapter-16"><i class="fas fa-link"></i></a>
 </h2>
 <p>All we need to do is change the rho coefficient in the code of Chapter <a href="RL.html#RL">16</a>. </p>
-<div class="sourceCode" id="cb316"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb320"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span>                                                 <span class="co"># Fixing the random seed</span>
 <span class="va">n_sample</span> <span class="op">&lt;-</span> <span class="fl">10</span><span class="op">^</span><span class="fl">5</span>                                             <span class="co"># Number of samples generated</span>
 <span class="va">rho</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="op">-</span><span class="fl">0.8</span><span class="op">)</span>                                                <span class="co"># Autoregressive parameter</span>
@@ -927,7 +927,7 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
     <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span>                                                <span class="co"># Remove one missing state</span></code></pre></div>
 <p></p>
 <p>The learning can then proceed.</p>
-<div class="sourceCode" id="cb317"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb321"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">control</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.1</span>,                        <span class="co"># Learning rate</span>
                 gamma <span class="op">=</span> <span class="fl">0.7</span>,                        <span class="co"># Discount factor for rewards</span>
                 epsilon <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span>                      <span class="co"># Exploration rate</span>
@@ -952,7 +952,7 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
 <p></p>
 <p>In this case, the constantly switching feature of the return process changes the outcome. The negative state is associated with large profits when the portfolio is fully invested, while the positive state has the best average reward when the agent refrains from investing.</p>
 <p>For the second exercise, the trick is to define all possible actions, that is all combinations (+1,0-1) for the two assets on all dates. We recycle the data from Chapter <a href="RL.html#RL">16</a>.</p>
-<div class="sourceCode" id="cb319"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb323"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pos_3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>                              <span class="co"># Possible alloc. to asset 1</span>
 <span class="va">pos_4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>,<span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>                              <span class="co"># Possible alloc. to asset 3</span>
 <span class="va">pos</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/tidyr/man/expand_grid.html">expand_grid</a></span><span class="op">(</span><span class="va">pos_3</span>, <span class="va">pos_4</span><span class="op">)</span>                <span class="co"># All combinations</span>
@@ -976,7 +976,7 @@ Often, programmers prefer to avoid loops. In order to avoid a loop in the backte
                   <span class="op">-</span><span class="va">pos_4</span>, <span class="op">-</span><span class="va">r3</span>, <span class="op">-</span><span class="va">r4</span><span class="op">)</span> </code></pre></div>
 <p></p>
 <p>We can the plug this data into the RL function.</p>
-<div class="sourceCode" id="cb320"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb324"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit_RL4</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/ReinforcementLearning/man/ReinforcementLearning.html">ReinforcementLearning</a></span><span class="op">(</span><span class="va">data_RL4</span>,           <span class="co"># Main RL function</span>
                                  s <span class="op">=</span> <span class="st">"state"</span>, 
                                  a <span class="op">=</span> <span class="st">"action"</span>, 
@@ -1077,7 +1077,7 @@ Arik, Sercan O, and Tomas Pfister. 2020. <span>“TabNet: Attentive Interpretabl
 Arjovsky, Martin, Léon Bottou, Ishaan Gulrajani, and David Lopez-Paz. 2019. <span>“Invariant Risk Minimization.”</span> <em>arXiv Preprint</em>, no. 1907.02893.
 </div>
 <div id="ref-arnott2019factor" class="csl-entry">
-Arnott, Robert D, Mark Clements, Vitali Kalesnik, and Juhani T Linnainmaa. 2020. <span>“Factor Momentum.”</span> <em>Journal of the American Statistical Association</em> 3116974.
+Arnott, Robert D, Mark Clements, Vitali Kalesnik, and Juhani T Linnainmaa. 2021. <span>“Factor Momentum.”</span> <em>SSRN Working Paper</em> 3116974.
 </div>
 <div id="ref-arnott2014can" class="csl-entry">
 Arnott, Robert D, Jason C Hsu, Jun Liu, and Harry Markowitz. 2014. <span>“Can Noise Create the Size and Value Effects?”</span> <em>Management Science</em> 61 (11): 2569–79.
@@ -1472,6 +1472,9 @@ Chen, Tianqi, and Carlos Guestrin. 2016. <span>“Xgboost: A Scalable Tree Boost
 <div id="ref-chen2017feature" class="csl-entry">
 Chen, Yingjun, and Yongtao Hao. 2017. <span>“A Feature Weighted Support Vector Machine and k-Nearest Neighbor Algorithm for Stock Market Indices Prediction.”</span> <em>Expert Systems with Applications</em> 80: 340–55.
 </div>
+<div id="ref-cheng2022stock" class="csl-entry">
+Cheng, Tingting, and Albert Bo Zhao. 2022. <span>“Stock Return Prediction: <span>S</span>tacking a Variety of Models.”</span> <em>Journal of Empirical Finance</em> Forthcoming.
+</div>
 <div id="ref-chiang2021modeling" class="csl-entry">
 Chiang, I-Hsuan Ethan, Yin Liao, and Qing Zhou. 2021. <span>“Modeling the Cross-Section of Stock Returns Using Sensible Models in a Model Pool.”</span> <em>Journal of Empirical Finance</em> 60: 56–73.
 </div>
@@ -1703,6 +1706,9 @@ Du, Jiayi, Muyang Jin, Petter N Kolm, Gordon Ritter, Yixuan Wang, and Bofei Zhan
 <div id="ref-du2013neural" class="csl-entry">
 Du, Ke-Lin, and Madisetti NS Swamy. 2013. <em>Neural Networks and Statistical Learning</em>. Springer Science &amp; Business Media.
 </div>
+<div id="ref-dubey2022comprehensive" class="csl-entry">
+Dubey, Shiv Ram, Satish Kumar Singh, and Bidyut Baran Chaudhuri. 2022. <span>“A Comprehensive Survey and Performance Analysis of Activation Functions in Deep Learning.”</span> <em>arXiv Preprint</em> 2109.14545.
+</div>
 <div id="ref-duchi2011adaptive" class="csl-entry">
 Duchi, John, Elad Hazan, and Yoram Singer. 2011. <span>“Adaptive Subgradient Methods for Online Learning and Stochastic Optimization.”</span> <em>Journal of Machine Learning Research</em> 12 (Jul): 2121–59.
 </div>
@@ -1716,7 +1722,7 @@ Eakins, Stanley G, Stanley R Stansell, and James F Buck. 1998. <span>“Analyzin
 Efimov, Dmitry, and Di Xu. 2019. <span>“Using Generative Adversarial Networks to Synthesize Artificial Financial Datasets.”</span> <em>Proceedings of the Conference on Neural Information Processing Systems</em>.
 </div>
 <div id="ref-ehsani2019factor" class="csl-entry">
-Ehsani, Sina, and Juhani T Linnainmaa. 2019. <span>“Factor Momentum and the Momentum Factor.”</span> <em>SSRN Working Paper</em> 3014521.
+Ehsani, Sina, and Juhani T Linnainmaa. 2022. <span>“Factor Momentum and the Momentum Factor.”</span> <em>Journal of Finance</em> Forthcoming.
 </div>
 <div id="ref-elliott2019detecting" class="csl-entry">
 Elliott, Graham, Nikolay Kudrin, and Kaspar Wuthrich. 2019. <span>“Detecting p-Hacking.”</span> <em>arXiv Preprint</em>, no. 1906.06711.
@@ -1912,6 +1918,9 @@ Goodfellow, Ian, Yoshua Bengio, Aaron Courville, and Yoshua Bengio. 2016. <em>De
 </div>
 <div id="ref-goodfellow2014generative" class="csl-entry">
 Goodfellow, Ian, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. <span>“Generative Adversarial Nets.”</span> In <em>Advances in Neural Information Processing Systems</em>, 2672–80.
+</div>
+<div id="ref-gorishniy2022embeddings" class="csl-entry">
+Gorishniy, Yura, Ivan Rubachev, and Artem Babenko. 2022. <span>“On Embeddings for Numerical Features in Tabular Deep Learning.”</span> <em>arXiv Preprint</em>, no. 2203.05556.
 </div>
 <div id="ref-gospodinov2019too" class="csl-entry">
 Gospodinov, Nikolay, Raymond Kan, and Cesare Robotti. 2019. <span>“Too Good to Be True? <span>F</span>allacies in Evaluating Risk Factor Models.”</span> <em>Journal of Financial Economics</em> 132 (2): 451–71.
@@ -2604,7 +2613,7 @@ Pearl, Judea. 2009. <em>Causality: Models, Reasoning and Inference. Second Editi
 Pedersen, Lasse Heje, Abhilash Babu, and Ari Levine. 2020. <span>“Enhanced Portfolio Optimization.”</span> <em>SSRN Working Paper</em> 3530390.
 </div>
 <div id="ref-penasse2018understanding" class="csl-entry">
-Penasse, Julien. 2019. <span>“Understanding Alpha Decay.”</span> <em>SSRN Working Paper</em> 2953614.
+Penasse, Julien. 2022. <span>“Understanding Alpha Decay.”</span> <em>Management Science</em> Forthcoming.
 </div>
 <div id="ref-pendharkar2018trading" class="csl-entry">
 Pendharkar, Parag C, and Patrick Cusatis. 2018. <span>“Trading Financial Indices with Reinforcement Learning Agents.”</span> <em>Expert Systems with Applications</em> 103: 1–13.
@@ -3002,6 +3011,9 @@ Zhang, Yudong, and Lenan Wu. 2009. <span>“Stock Market Prediction of s&amp;p 5
 <div id="ref-zhang2020deep" class="csl-entry">
 Zhang, Zihao, Stefan Zohren, and Stephen Roberts. 2020. <span>“Deep Reinforcement Learning for Trading.”</span> <em>Journal of Financial Data Science</em> 2 (2): 25–40.
 </div>
+<div id="ref-zhao2021efficient" class="csl-entry">
+Zhao, Long, and Rui Gao. 2022. <span>“An Efficient Dimension Reduction for Portfolio Optimization via the Most Robust Solution.”</span> <em>SSRN Working Paper</em> 3991393.
+</div>
 <div id="ref-zhao2019causal" class="csl-entry">
 Zhao, Qingyuan, and Trevor Hastie. 2020. <span>“Causal Interpretations of Black-Box Models.”</span> <em>Journal of Business &amp; Economic Statistics</em> Forthcoming.
 </div>
@@ -3097,7 +3109,7 @@ Zuckerman, Gregory. 2019. <em>The Man Who Solved the Market: How Jim Simons Laun
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-01-12.</p>
+    <p>"<strong>Machine Learning for Factor Investing</strong>" was written by Guillaume Coqueret and Tony Guida. It was last built on 2022-05-08.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">
